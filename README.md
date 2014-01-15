@@ -7,7 +7,7 @@ Web interface for songbook generation (see https://github.com/crep4ever/songbook
 
 Be sure you have python (version 2.7 I'm not sure it will work with python 3) and Django (1.6.1) installed.
 
-Then you can run a development server with the command python manage.py runserver. No web server(Apache, ...) needed.
+Then you can run a development server with the command 'python manage.py runserver'. No web server (e.g. Apache, ...) needed.
 
 ## This is a development version !
 
