@@ -1,0 +1,28 @@
+{% extends "generateur/generateur_base.html" %}
+
+{% block title %} Liste des chants de {{ chanteur.nom }} {% endblock %}
+
+{% block header %} <h1>Liste des chants de {{ chanteur.nom }} disponibles</h1> {% endblock %}
+
+{% block content %}
+	{% for chant in liste_chants %}
+		<div class="chant">
+			<h3>{{ chant.titre }}</h3>
+			<p>{{ chant.contenu|truncatewords_html:80 }}</p>
+			<p><a href="{% url "afficher_chant" slug=chant.slug chanteur=chant.chanteur.nom %}">Voir le chant</a>
+		</div>
+	{% endfor %}
+	
+{# Mise en forme de la pagination ici #}
+	
+	{% if is_paginated %}
+		<div class="pagination">
+			{% if page_obj.has_previous %}
+			<a href="?page={{ page_obj.previous_page_number }}">Précédente</a> — {% endif %}
+			Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+				{% if page_obj.has_next %}
+				— <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
+				{% endif %}
+		</div>
+	{% endif %}
+{% endblock %}
