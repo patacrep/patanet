@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.conf.urls import patterns, url ,include
-from generator.views import AfficherChant, ListeChantsParAuteur, ListeAuteurs
+from generator.views import AfficherChant, ListeChantsParAuteur, ListeAuteurs, view_profile
 
 urlpatterns = patterns('generator.views',
     url(r'^$', 'home', name="home"),                   
@@ -15,14 +15,12 @@ urlpatterns = patterns('generator.views',
 )
 
 urlpatterns += patterns('',
-    url(r'^user/', include(patterns('wiki.views',
-        url(r'^login$','django.contrib.auth.views.login',{'template_name': 'generator/login.html'}),
-        url(r'^logout/$', 'django.contrib.auth.views.logout',{'next_page': '/'}),
-        url(r'^change-password$', 'django.contrib.auth.views.password_change',{
-                                'template_name':'generator/password_change.html',
-                                #'post_change_redirect':'/'
-                                }),
-        url(r'^password-changed$', 'django.contrib.auth.views.password_change_done'),
+    url(r'^user/', include(patterns('django.contrib.auth.views',
+        url(r'/$',view_profile)
+        url(r'^login$','login',{'template_name': 'generator/login.html'}),
+        url(r'^logout/$', 'logout',{'next_page': '/'}),
+        url(r'^change-password$', 'password_change',{'template_name':'generator/password_change.html',}),
+        url(r'^password-changed$', 'password_change_done',{'template_name':'generator/password_change_done.html',}),
     ))),        
 )
 
