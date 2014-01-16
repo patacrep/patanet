@@ -4,7 +4,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.conf.urls import patterns, url #,include
+from django.conf.urls import patterns, url ,include
 from generator.views import AfficherChant, ListeChantsParAuteur, ListeAuteurs
 
 urlpatterns = patterns('generator.views',
@@ -15,8 +15,15 @@ urlpatterns = patterns('generator.views',
 )
 
 urlpatterns += patterns('',
-    url(r'^login/$', 'django.contrib.auth.views.login',{'template_name': 'generator/login.html'}),
-    url(r'^logout/$', 'django.contrib.auth.views.logout',{'next_page': '/'}),    
+    url(r'^user/', include(patterns('wiki.views',
+        url(r'^login$','django.contrib.auth.views.login',{'template_name': 'generator/login.html'}),
+        url(r'^logout/$', 'django.contrib.auth.views.logout',{'next_page': '/'}),
+        url(r'^change-password$', 'django.contrib.auth.views.password_change',{
+                                'template_name':'generator/password_change.html',
+                                #'post_change_redirect':'/'
+                                }),
+        url(r'^password-changed$', 'django.contrib.auth.views.password_change_done'),
+    ))),        
 )
 
 urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

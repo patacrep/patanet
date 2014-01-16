@@ -101,9 +101,6 @@ STATICFILES_FINDERS = (
 # Templates dans le dossier template
 TEMPLATE_DIRS = os.path.join(PROJECT_ROOT, 'templates/')
 
-# Ajout automatique des / à la fin des adresses.
-APPEND_SLASH = True
-
 TEMPLATE_CONTEXT_PROCESSORS = (
         "django.contrib.auth.context_processors.auth",
         "django.core.context_processors.debug",
