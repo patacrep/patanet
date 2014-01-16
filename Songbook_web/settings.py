@@ -111,8 +111,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
         "django.contrib.messages.context_processors.messages",
         )
 
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/user/login'
+LOGIN_REDIRECT_URL = '/user/'
 
 SONGS_LIBRARY_DIR = os.path.join(PROJECT_ROOT, 'songs/')
 

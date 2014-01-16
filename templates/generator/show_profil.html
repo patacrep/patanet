@@ -1,0 +1,16 @@
+{% extends "generator/generator_base.html" %}
+
+{% block title %} {{ song.title }} {% endblock %}
+
+{% block header %} <h1>Profil de {{ user.username }}</h1> {% endblock %}
+
+{% block content %}
+
+<ul>
+	<li><a href="{% url 'home' %}">Revenir à l'accueil</a></li>
+	<li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+	<li><a href="{% url 'password_change' %}">Changer de mot de passe</a></li>
+</ul>
+
+
+{% endblock %}

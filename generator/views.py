@@ -16,15 +16,9 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'generator/generator_base.html',locals())
 
-@login_required
+#@login_required
 def view_profile(request):
-    return render(request, 'generator/profil.html',locals())
-
-
-
-
-
-
+    return render(request, 'generator/show_profil.html',locals())
 
 
 
