@@ -27,9 +27,9 @@ urlpatterns += patterns('django.contrib.auth.views',
         ),
     url(r'^user/reset-password$', 'password_reset', 
         {'template_name':'generator/reset_password.html',
-         'email_template_name':'generator/reset_password_email.html',
+         'email_template_name':'generator/reset_password_email.html', # TODO:  Améliorer le template
          'subject_template_name':'Demande de réinitialisation de mot de passe', # TODO: Améliorer le sujet
-         'post_reset_direct':'/message:pswd-reset-ask'}, 
+         'post_reset_redirect':'/message:pswd-reset-ask'}, 
         name='reset_password'),     
 )
 
