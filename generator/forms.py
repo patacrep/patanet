@@ -3,11 +3,6 @@ from django import forms
 from models import Song
 from django.template.defaultfilters import slugify
 
-
-class LoginForm(forms.Form):
-    username = forms.CharField(label="Nom d'utilisateur",max_length=30)
-    password = forms.CharField(label="Mot de passe",widget=forms.PasswordInput)
-
 class SongForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea)
     class Meta:
@@ -28,7 +23,6 @@ class SongForm(forms.ModelForm):
     def make_sg_content(self):
         # TODO: Ajouter les commandes \capo, \beginsong, etc. au champ content
         pass
-    
     
     def make_sg_file(self, file_content,slug):
         # TODO: return a file instance
