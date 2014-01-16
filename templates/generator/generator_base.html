@@ -1,12 +1,27 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% block stylesheets %}<link type="text/css" rel="stylesheet" href="{% static "css/generator.css" %}" />{% endblock %}
+{% block extrahead %}
+	<link type="text/css" rel="stylesheet" href="{% static "css/generator.css" %}" />
+{% endblock %}
 
-{% block title %} {% endblock %}
+{% block title %}Songbook-web %% InDev version{% endblock %}
+{% block header %}<h1>Songbook-web</h1>{% endblock %}
 
 {% block nav %}
-
+<ul>
+	<li><a href="/login/">Se connecter</a></li>
+	<li><a href="/logout/">Se déconnecter</a></li>
+</ul>
 {% endblock %}
+
+{% block user %}
+	{% if user.is_authenticated %}
+		Bienvenue, {{ user.username }} ! 
+	{% else %}
+		Bonjour, utilisateur anonyme !
+	{% endif %}
+{% endblock %}
+
 
 {% block footer %} Générateur de carnets de chants en ligne{% endblock %}
 		

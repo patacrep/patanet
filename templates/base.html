@@ -2,7 +2,7 @@
 <html lang="fr">
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		{% block stylesheets %}{% endblock %}
+		{% block extrahead %}{% endblock %}
 		<title>{% block title %}{% endblock %}</title>
 	</head>
 	
@@ -17,6 +17,8 @@
 		</nav>
 		
 		<section id='content'>
+		{% block user %}
+		{% endblock %}
 		{% block content %}
 		{% endblock %}
 		</section>

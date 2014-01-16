@@ -1,13 +1,48 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaultfilters import slugify
 from django.views.generic import ListView, DetailView, CreateView
+from django.core.urlresolvers import reverse
+
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 from generator.models import Song, Artist
-from generator.forms import SongForm
+from generator.forms import SongForm, LoginForm
 
 # Create your views here.
+
+def home(request):
+    return render(request, 'generator/generator_base.html',locals())
+
+def login(request):
+    error = False
+    if request.method == "POST":
+        form = LoginForm(request.POST) 
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            user = authenticate(username=username, password=password)
+            if (user and user.is_active):
+                auth_login(request, user)
+            else: 
+                error = True 
+    else:
+        form = LoginForm()
+    return render(request, 'generator/login.html',locals())
+
+
+def logout(request):
+    auth_logout(request)
+    return redirect('home')
+
+
+
+
+
+
+
+
 
 class ListeChantsParAuteur(ListView):
     model = Song

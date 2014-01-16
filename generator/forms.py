@@ -3,6 +3,11 @@ from django import forms
 from models import Song
 from django.template.defaultfilters import slugify
 
+
+class LoginForm(forms.Form):
+    username = forms.CharField(label="Nom d'utilisateur",max_length=30)
+    password = forms.CharField(label="Mot de passe",widget=forms.PasswordInput)
+
 class SongForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea)
     class Meta:
