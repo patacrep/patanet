@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 from generator.models import Song, Artist
-from generator.forms import SongForm, LoginForm
+from generator.forms import SongForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
