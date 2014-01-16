@@ -13,14 +13,22 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+all_messages = {'pswd-changed':'Votre mot de passe a été changé',
+                'pswd-reset-ask':'La demande de réinitialisation a été envoyée. Vous allez recevoir un email.'}
+
 def home(request):
     return render(request, 'generator/generator_base.html',locals())
 
-#@login_required
+@login_required
 def view_profile(request):
     return render(request, 'generator/show_profil.html',locals())
 
-
+def show_message(request,message):
+    try:
+        message=all_messages[message]
+    except KeyError:
+        message = ''
+    return render(request, 'generator/message.html', {'message':message})
 
 class ListeChantsParAuteur(ListView):
     model = Song
@@ -46,13 +54,6 @@ class AfficherChant(DetailView):
 
     def get_queryset(self):
         return Song.objects.filter(chanteur__slug=self.kwargs['artist'],slug=self.kwargs['slug'])
-
-# 
-# class AjoutChant(CreateView): 
-#     model = Song
-#     template_name = 'generator/add_song.html'
-#     form_class = SongForm
-#    success_url = reverse_lazy()
 
 
 class ListeAuteurs(ListView):

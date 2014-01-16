@@ -1,0 +1,15 @@
+{% extends "generator/generator_base.html" %}
+
+{% block title %} {{ song.title }} {% endblock %}
+
+{% block header %} <h1>Se connecter</h1> {% endblock %}
+
+{% block content %}
+	<p><strong>{{ message }}</strong></p>
+
+	<p><a href="{% url 'home' %}">Retour à l'accueil</a></p>
+
+	{% if user.is_authenticated %}
+		<p><a href="{% url 'profil' %}">Retour au profil</a></p>
+	{% endif %}
+{% endblock %}

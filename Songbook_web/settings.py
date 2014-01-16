@@ -26,10 +26,13 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+APPEND_SLASH = False
+
 #Administrateurs
 ADMINS = (('Luthaf','luthaf@yahoo.fr'))
 
-# Application definition
+DEFAULT_FROM_EMAIL = '' # webmaster@nom.du.site
+
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -57,7 +60,6 @@ WSGI_APPLICATION = 'Songbook_web.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -71,7 +73,6 @@ DATABASES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
-
 LANGUAGE_CODE = 'fr-FR'
 
 TIME_ZONE = 'Europe/Paris'
@@ -81,7 +82,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT,'static')
