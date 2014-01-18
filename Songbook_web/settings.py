@@ -99,7 +99,7 @@ STATICFILES_FINDERS = (
 )
 
 # Templates dans le dossier template
-TEMPLATE_DIRS = os.path.join(PROJECT_ROOT, 'templates/')
+TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates/'),)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
         "django.contrib.auth.context_processors.auth",

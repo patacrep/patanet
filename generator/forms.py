@@ -1,6 +1,6 @@
 # # -*- coding: utf-8 -*-
 from django import forms 
-from models import Song
+from generator.models import Song
 from django.template.defaultfilters import slugify
 
 class SongForm(forms.ModelForm):
