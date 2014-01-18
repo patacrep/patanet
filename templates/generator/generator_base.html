@@ -9,8 +9,11 @@
 
 {% block nav %}
 <ul>
-	<li><a href="{% url 'login' %}">Se connecter</a></li>
-	<li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+	{% if user.is_authenticated %}
+		<li><a href="{% url 'logout' %}">Se déconnecter</a></li> 
+	{% else %}
+		<li><a href="{% url 'login' %}">Se connecter</a></li>
+	{% endif %}
 </ul>
 {% endblock %}
 
