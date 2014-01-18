@@ -10,7 +10,7 @@ song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
 songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
 
 ######################################################
-class Langage(models.Model):
+class Language(models.Model):
     name = models.CharField(max_length=20)
     code = models.CharField(max_length=6)
     
@@ -39,12 +39,12 @@ class Song(models.Model):
     title = models.CharField(max_length=100,verbose_name='titre')
     slug = models.SlugField(max_length=100,unique=True)
     artist = models.ForeignKey('Artist',verbose_name='artiste')
-    langage = models.ForeignKey('Langage',verbose_name='langue')
+    language = models.ForeignKey('Language',verbose_name='langue')
     capo = models.IntegerField(null=True,blank=True)
 
     content_file = models.FileField(storage=song_library,upload_to=get_song_path,verbose_name='contenu')    
     def __unicode__(self): 
-        return self.titre
+        return self.title
     
     class Meta:
         verbose_name = "chant"    
@@ -56,13 +56,13 @@ def get_songbook_path(songbook, filename):
     return os.path.join(user_directory, filename)
     
 class Songbook(models.Model):
-    titre = models.CharField(max_length=100)  
+    title = models.CharField(max_length=100)  
     description = models.TextField(blank=True)
     
     content_file = models.FileField(storage=songbooks_library,upload_to=get_songbook_path)
     
     def __unicode__(self): 
-        return self.titre
+        return self.title
     
     class Meta:
         verbose_name = "carnet de chants"    

@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 from django.contrib import admin
-from generator.models import Song , Langage, Artist
+from generator.models import Song , Language, Artist
 from generator.forms import SongForm
 
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('title','langage','artist')
+    list_display = ('title','language','artist')
     list_filter = ('artist',) 
     ordering = ('artist','title')
     
@@ -16,7 +16,7 @@ class SongAdmin(admin.ModelAdmin):
 #     fieldsets = (
 #                  # Fieldset 1 : meta-info (titre, auteur...)
 #                  ('Général', {
-#                  'fields': ('title', 'artist','langage','capo') }),
+#                  'fields': ('title', 'artist','language','capo') }),
 #                  # Fieldset 2 : contenu du chant
 #                  ('Contenu du chant', {
 #                  'fields': ('content', ) }),
@@ -35,4 +35,4 @@ class ArtistAdmin(admin.ModelAdmin):
 
 admin.site.register(Song,SongAdmin)
 admin.site.register(Artist,ArtistAdmin)
-admin.site.register(Langage)
+admin.site.register(Language)
