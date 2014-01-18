@@ -1,34 +1,57 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.core.urlresolvers import reverse_lazy
+from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
-from django.views.generic import ListView, DetailView, CreateView
-from django.core.urlresolvers import reverse
-
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.contrib.auth.decorators import login_required
 
 from generator.models import Song, Artist
 from generator.forms import SongForm
-from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-
-all_messages = {'pswd-changed':'Votre mot de passe a été changé',
-                'pswd-reset-ask':'La demande de réinitialisation a été envoyée. Vous allez recevoir un email.'}
 
 def home(request):
     return render(request, 'generator/generator_base.html',locals())
 
+## User specifics views
+#######################
 @login_required
 def view_profile(request):
     return render(request, 'generator/show_profil.html',locals())
 
-def show_message(request,message):
-    try:
-        message=all_messages[message]
-    except KeyError:
-        message = ''
-    return render(request, 'generator/message.html', {'message':message})
+class PasswordChange(FormView):
+    template_name = 'generator/password_change.html'
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('profil')
+
+    def get_form_kwargs(self):
+        kwargs = super(PasswordChange, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Votre mot de passe a bien été modifié.")
+        return super(FormView, self).form_valid(form)
+
+class PasswordReset(FormView):
+    template_name = 'generator/reset_password.html'
+    email_template_name = 'generator/reset_password_email.html', # TODO:  Améliorer le template
+    subject_template_name = 'Demande de réinitialisation de mot de passe' # TODO: Améliorer le sujet
+    form_class = PasswordResetForm
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Un email de confirmation vous a été envoyé.")
+        return super(FormView, self).form_valid(form)
+
+
+## Songs views
+#######################
 
 class SongListByArtist(ListView):
     model = Song
