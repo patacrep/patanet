@@ -6,7 +6,7 @@
 
 {% block content %}
 	{% for artist in artist_list %} {# TODO: utiliser un tableau #}
-		<div class="auteur">
+		<div class="artist">
 			<h3>{{ artist.name }}</h3>
 			<p><a href="{% url "song_list_by_artist" artist=artist.slug %}">Voir la liste des chants de cet artiste</a>
 		</div>

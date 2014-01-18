@@ -7,7 +7,7 @@ class SongForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea)
     class Meta:
         model = Song
-        fields = ('title','artist','langage','capo','content',)
+        fields = ('title','artist','language','capo','content',)
     
     def save(self, force_insert=False, force_update=False, commit=True):
         new_song = super(SongForm, self).save(commit=False)

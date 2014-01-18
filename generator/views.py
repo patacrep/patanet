@@ -30,33 +30,33 @@ def show_message(request,message):
         message = ''
     return render(request, 'generator/message.html', {'message':message})
 
-class ListeChantsParAuteur(ListView):
+class SongListByArtist(ListView):
     model = Song
     context_object_name = "liste_chants" 
     template_name = "generator/song_list_by_artist.html"
     paginate_by = 10
     
     def get_queryset(self):
-        self.auteur = get_object_or_404(Artist, slug=self.kwargs['artist'])
-        return Song.objects.filter(chanteur=self.auteur)
+        self.artist = get_object_or_404(Artist, slug=self.kwargs['artist'])
+        return Song.objects.filter(artist=self.artist)
     
     def get_context_data(self, **kwargs):
-        context = super(ListeChantsParAuteur,self).get_context_data(**kwargs)
+        context = super(SongListByArtist,self).get_context_data(**kwargs)
         context['artist'] = Artist.objects.get(slug=self.kwargs['artist']) 
         # FIXME: Si l'objet n'existe pas ? Déjà géré par le get_object_or_404 ?
         return context
 
 
-class AfficherChant(DetailView):
+class SongView(DetailView):
     context_object_name = "song" 
     model = Song
     template_name = "generator/show_song.html"
 
     def get_queryset(self):
-        return Song.objects.filter(chanteur__slug=self.kwargs['artist'],slug=self.kwargs['slug'])
+        return Song.objects.filter(artist__slug=self.kwargs['artist'],slug=self.kwargs['slug'])
 
 
-class ListeAuteurs(ListView):
+class ArtistList(ListView):
     model = Artist
     context_object_name = "liste_auteurs" 
     template_name = "generator/artist_list.html"

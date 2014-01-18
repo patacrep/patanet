@@ -1,15 +1,15 @@
 {% extends "generateur/generateur_base.html" %}
 
-{% block title %} Liste des chants de {{ chanteur.nom }} {% endblock %}
+{% block title %} Liste des chants de {{ artist.name }} {% endblock %}
 
-{% block header %} <h1>Liste des chants de {{ chanteur.nom }} disponibles</h1> {% endblock %}
+{% block header %} <h1>Liste des chants de {{ artist.name }} disponibles</h1> {% endblock %}
 
 {% block content %}
-	{% for chant in liste_chants %}
-		<div class="chant">
-			<h3>{{ chant.titre }}</h3>
-			<p>{{ chant.contenu|truncatewords_html:80 }}</p>
-			<p><a href="{% url "afficher_chant" slug=chant.slug chanteur=chant.chanteur.nom %}">Voir le chant</a>
+	{% for song in song_list %}
+		<div class="song">
+			<h3>{{ song.title }}</h3>
+			<p>{{ song.content|truncatewords_html:80 }}</p>
+			<p><a href="{% url "song_view" slug=song.slug artist=song.artist.name %}">Voir le chant</a>
 		</div>
 	{% endfor %}
 	
