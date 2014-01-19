@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import messages
-from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm, UserCreationForm
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
@@ -15,6 +15,7 @@ from django.utils.decorators import method_decorator
 # Create your views here.
 
 def home(request):
+    headertitle = 'Accueil'
     return render(request, 'generator/generator_base.html',locals())
 
 ## User specifics views
@@ -23,7 +24,11 @@ def home(request):
 def view_profile(request):
     return render(request, 'generator/show_profil.html',locals())
 
-
+class NewUser(FormView):
+    template_name = ''
+    form_class = UserCreationForm
+    success_url = reverse_lazy('profil')
+    
 class PasswordChange(FormView):
     template_name = 'generator/password_change.html'
     form_class = PasswordChangeForm

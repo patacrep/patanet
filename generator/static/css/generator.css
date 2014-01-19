@@ -53,3 +53,9 @@ header {
     color: #008000;
     padding-top: 2.5em;
 }
+
+#user_informations {
+    float: right;
+    margin-top: -1.5em;
+    color:black;
+}
