@@ -12,9 +12,7 @@
 			<p><a href="{% url "song_view" slug=song.slug artist=song.artist.name %}">Voir le chant</a>
 		</div>
 	{% endfor %}
-	
 {# Mise en forme de la pagination ici #}
-	
 	{% if is_paginated %}
 		<div class="pagination">
 			{% if page_obj.has_previous %}

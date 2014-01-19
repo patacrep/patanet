@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import messages
-from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm, UserCreationForm
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
@@ -10,10 +10,12 @@ from django.contrib.auth.decorators import login_required
 
 from generator.models import Song, Artist
 from generator.forms import SongForm
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
 def home(request):
+    headertitle = 'Accueil'
     return render(request, 'generator/generator_base.html',locals())
 
 ## User specifics views
@@ -22,6 +24,11 @@ def home(request):
 def view_profile(request):
     return render(request, 'generator/show_profil.html',locals())
 
+class NewUser(FormView):
+    template_name = ''
+    form_class = UserCreationForm
+    success_url = reverse_lazy('profil')
+    
 class PasswordChange(FormView):
     template_name = 'generator/password_change.html'
     form_class = PasswordChangeForm
@@ -36,17 +43,32 @@ class PasswordChange(FormView):
         form.save()
         messages.success(self.request, "Votre mot de passe a bien été modifié.")
         return super(FormView, self).form_valid(form)
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PasswordChange, self).dispatch(*args, **kwargs)
 
 class PasswordReset(FormView):
-    template_name = 'generator/reset_password.html'
-    email_template_name = 'generator/reset_password_email.html', # TODO:  Améliorer le template
-    subject_template_name = 'Demande de réinitialisation de mot de passe' # TODO: Améliorer le sujet
+    template_name = 'generator/password_reset.html'
+    email_template_name = 'generator/password_reset_email.html', # TODO:  Améliorer le template
+    subject_template_name = 'generator/password_reset_email_subject.txt' # TODO: Améliorer le sujet
     form_class = PasswordResetForm
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         form.save()
         messages.success(self.request, "Un email de confirmation vous a été envoyé.")
+        return super(FormView, self).form_valid(form)
+
+
+class PasswordResetConfirm(FormView): # TODO: Tester si ça fonctionne
+    template_name = 'generator/password_reset_confirm.html'
+    form_class = SetPasswordForm
+    success_url = reverse_lazy('profil')
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Votre mot de passe a bien été modifié.")
         return super(FormView, self).form_valid(form)
 
 

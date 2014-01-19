@@ -32,6 +32,8 @@ APPEND_SLASH = False
 ADMINS = (('Luthaf','luthaf@yahoo.fr'))
 
 DEFAULT_FROM_EMAIL = '' # webmaster@nom.du.site
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
 
 
 INSTALLED_APPS = (
