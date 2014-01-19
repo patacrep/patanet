@@ -70,7 +70,7 @@ class Songbook(models.Model):
         
         
 ###############################################################
-class Profil(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User)
     songbooks = models.ManyToManyField(Songbook,blank=True,through='SongbooksByUser')    
     
@@ -79,7 +79,7 @@ class Profil(models.Model):
 
 class SongbooksByUser(models.Model):
     is_owner = models.BooleanField(default=False)
-    user = models.ForeignKey('Profil')
+    user = models.ForeignKey('Profile')
     songbook = models.ForeignKey('Songbook')
 
     def __unicode__(self): 
