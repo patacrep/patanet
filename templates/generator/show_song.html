@@ -5,12 +5,12 @@
 {% block header %} <h1>{{ song.title }} chanté par {{ song.artist.name }}</h1> {% endblock %}
 
 {% block content %}
-<p class="infos">Chantée par {{ song.artist.name }}, en {{ song.language.name }} <br />
-{% if song.capo != None %}
-Utiliser un capodastre en position {{ song.capo }}.
-{% else %}
-Pas de capo pour ce chant
-{% endif %}
-</p>
-<div class="contenu">{{ content|linebreaks}}</div>
+	<p class="infos">Chantée par {{ song.artist.name }}, en {{ song.language.name }} <br />
+	{% if song.capo != None %}
+		Utiliser un capodastre en position {{ song.capo }}.
+	{% else %}
+		Pas de capo pour ce chant
+	{% endif %}
+	</p>
+	<div class="song_content">{{ content|linebreaks}}</div>
 {% endblock %}

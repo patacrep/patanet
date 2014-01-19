@@ -20,6 +20,7 @@ urlpatterns += patterns('django.contrib.auth.views',
     url(r'^user/logout/$', 'logout',{'next_page': '/'}, name='logout'),
     url(r'^user/change-password$', PasswordChange.as_view(),name='password_change'),
     url(r'^user/reset-password$', PasswordReset.as_view(),name='password_reset'),
+    url(r'^user/reset-password-do?uid=(?P<uidb36>.+)&token=(?P<token>.+)$', PasswordReset.as_view(),name='password_reset_confirm'),
 )
 
 urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
