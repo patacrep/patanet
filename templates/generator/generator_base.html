@@ -15,13 +15,15 @@
 		{% else %}
 			<p>Bonjour, utilisateur anonyme !</p>
 			<a href="{% url 'login' %}">Se connecter</a>
+			<a href="{% url 'register' %}">S'inscrire</a>
 		{% endif %}
 	</div>
 {% endblock %}
 
 {% block nav %}
 	<ul>
-		<li><a href="{% url 'home' %}">Page d'accueil</a></li> 
+		<li><a href="{% url 'home' %}">Page d'accueil</a></li>
+		<li><a href="{% url 'artist_list' %}">Liste des chants</a></li> 
 		{% if user.is_authenticated %}
 			<li><a href="{% url 'profil' %}">Mon profil</a></li> 
 		{% endif %}

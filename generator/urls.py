@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.conf.urls import patterns, url ,include
-from generator.views import SongView, SongListByArtist, ArtistList, view_profile, PasswordChange, PasswordReset
+from generator.views import SongView, SongListByArtist, ArtistList, view_profile, PasswordChange, PasswordReset#, Register
 
 urlpatterns = patterns('generator.views',
     url(r'^$', 'home', name="home"),
@@ -17,10 +17,11 @@ urlpatterns = patterns('generator.views',
 urlpatterns += patterns('django.contrib.auth.views',
     url(r'^user/$',view_profile, name='profil'),
     url(r'^user/login$','login',{'template_name': 'generator/login.html'}, name='login'),
-    url(r'^user/logout/$', 'logout',{'next_page': '/'}, name='logout'),
+    url(r'^user/logout$', 'logout',{'next_page': '/'}, name='logout'),
     url(r'^user/change-password$', PasswordChange.as_view(),name='password_change'),
     url(r'^user/reset-password$', PasswordReset.as_view(),name='password_reset'),
     url(r'^user/reset-password-do?uid=(?P<uidb36>.+)&token=(?P<token>.+)$', PasswordReset.as_view(),name='password_reset_confirm'),
+#    url(r'^user/register$', Register.as_view(),name='register'),
 )
 
 urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

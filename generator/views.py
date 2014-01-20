@@ -24,10 +24,10 @@ def home(request):
 def view_profile(request):
     return render(request, 'generator/show_profil.html',locals())
 
-class NewUser(FormView):
-    template_name = ''
-    form_class = UserCreationForm
-    success_url = reverse_lazy('profil')
+# class Register(FormView):
+#     template_name = 'generator/new_user.html'
+#     form_class = UserCreationForm
+#     success_url = reverse_lazy('home')
     
 class PasswordChange(FormView):
     template_name = 'generator/password_change.html'
@@ -77,7 +77,7 @@ class PasswordResetConfirm(FormView): # TODO: Tester si ça fonctionne
 
 class SongListByArtist(ListView):
     model = Song
-    context_object_name = "liste_chants" 
+    context_object_name = "song_list" 
     template_name = "generator/song_list_by_artist.html"
     paginate_by = 10
     
@@ -103,7 +103,7 @@ class SongView(DetailView):
 
 class ArtistList(ListView):
     model = Artist
-    context_object_name = "liste_auteurs" 
+    context_object_name = "artist_list" 
     template_name = "generator/artist_list.html"
     paginate_by = 20
     queryset = Artist.objects.order_by('name')
