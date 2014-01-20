@@ -1,15 +1,15 @@
-{% extends "generateur/generateur_base.html" %}
+{% extends "generator/generator_base.html" %}
 
 {% block title %} Liste des chants de {{ artist.name }} {% endblock %}
 
-{% block header %} <h1>Liste des chants de {{ artist.name }} disponibles</h1> {% endblock %}
+{% block headertitle %} Liste des chants de {{ artist.name }} disponibles {% endblock %}
 
 {% block content %}
 	{% for song in song_list %}
 		<div class="song">
 			<h3>{{ song.title }}</h3>
 			<p>{{ song.content|truncatewords_html:80 }}</p>
-			<p><a href="{% url "song_view" slug=song.slug artist=song.artist.name %}">Voir le chant</a>
+			<p><a href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">Voir le chant</a>
 		</div>
 	{% endfor %}
 {# Mise en forme de la pagination ici #}
