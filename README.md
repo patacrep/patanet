@@ -9,7 +9,7 @@ Be sure you have Python and Django (1.6.1) installed.
 
 Then you can run a development server with the command `python manage.py runserver`. No web server (e.g. Apache, ...) required.
 
-You can may fill db with some data using on of the fixture files, like : `./manage.py loaddata few_songs.json`
+You can may fill db with some data using on of the fixture files, like : `./manage.py loaddata generator/fixtures/few_songs.json`
 
 ## This is a development version !
 
