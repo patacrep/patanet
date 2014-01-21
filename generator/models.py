@@ -41,7 +41,7 @@ def get_song_path(song, filename):
 
 class Song(models.Model):
     title = models.CharField(max_length=100,verbose_name='titre')
-    slug = models.SlugField(max_length=100,unique=True)
+    slug = models.SlugField(max_length=100,unique=True) # FIXME: cas de deux chants de même slug et d'artistes différents ...
     artist = models.ForeignKey('Artist',verbose_name='artiste')
     language = models.ForeignKey('Language',verbose_name='langue')
     capo = models.IntegerField(null=True,blank=True)
