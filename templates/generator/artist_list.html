@@ -1,27 +1,15 @@
-{% extends "generator/generator_base.html" %}
+{% extends "generator/generator_base.html" %} {% load i18n %}
 
-{% block title %} Liste des auteurs {% endblock %}
+{% block title %} {% trans "Liste des auteurs" %} {% endblock %}
 
-{% block headertitle %} Liste des auteurs {% endblock %}
+{% block headertitle %} {% trans "Liste des auteurs" %} {% endblock %}
 
 {% block content %}
 	{% for artist in artist_list %} {# TODO: utiliser un tableau #}
 		<div class="artist">
 			<h3>{{ artist.name }}</h3>
-			<p><a href="{% url "song_list_by_artist" artist=artist.slug %}">Voir la liste des chants de cet artiste</a>
+			<p><a href="{% url "song_list_by_artist" artist=artist.slug %}">{% trans "Voir la liste des chants de cet artiste" %}</a>
 		</div>
 	{% endfor %}
-	
-{# Mise en forme de la pagination ici #}
-	
-	{% if is_paginated %}
-		<div class="pagination">
-			{% if page_obj.has_previous %}
-			<a href="?page={{ page_obj.previous_page_number }}">Précédente</a> — {% endif %}
-			Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
-				{% if page_obj.has_next %}
-				— <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
-				{% endif %}
-		</div>
-	{% endif %}
+{% include "generator/pagination.html" %}
 {% endblock %}

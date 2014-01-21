@@ -1,12 +1,16 @@
-{% extends "generator/generator_base.html" %}
+{% extends "generator/generator_base.html" %} {% load i18n %}
 
-{% block title %} Profil de {{ user.username }} {% endblock %}
+{% block title %} {% blocktrans with username=user.username %}
+Profil de {{ username }}
+{% endblocktrans %}{% endblock %}
 
-{% block headertitle %} Profil de {{ user.username }} {% endblock %}
+{% block headertitle %}{% blocktrans with username=user.username %}
+Profil de {{ username }}
+{% endblocktrans %}{% endblock %}
 
 {% block content %}
 	<ul>
-		<li><a href="{% url 'home' %}">Revenir à l'accueil</a></li>
-		<li><a href="{% url 'password_change' %}">Changer de mot de passe</a></li>
+		<li><a href="{% url 'home' %}">{% trans "Revenir à l'accueil" %}</a></li>
+		<li><a href="{% url 'password_change' %}">{% trans "Changer de mot de passe" %}</a></li>
 	</ul>
 {% endblock %}

@@ -1,31 +1,34 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% block extrahead %}
 	<link type="text/css" rel="stylesheet" href="{% static "css/generator.css" %}" />
 {% endblock %}
 
-{% block title %}Songbook-web %% InDev version{% endblock %}
+{% block title %}{% trans "Songbook-web %% InDev version" %}{% endblock %}
 
-{% block header %}<h1>Songbook-web</h1> - {% block headertitle %} {{ headertitle }} {% endblock headertitle %} -
+{% block header %}<h1>{% trans "Songbook-web" %}</h1> - {% block headertitle %} {{ headertitle }} {% endblock headertitle %} -
 	<div id="user_informations">
 		{% if user.is_authenticated %}
-			<p>Bienvenue, {{ user.username }} !</p>
+            <p>{% blocktrans with username=user.username %}
+			Bienvenue, {{ username }} !
+            {% endblocktrans %}</p>
 			<a href="{% url 'logout' %}">Se déconnecter</a> 
 		{% else %}
-			<p>Bonjour, utilisateur anonyme !</p>
-			<a href="{% url 'login' %}">Se connecter</a>
-			<a href="{% url 'register' %}">S'inscrire</a>
+			<p>{% trans "Bonjour, utilisateur anonyme !" %}</p>
+			<a href="{% url 'login' %}">{% trans "Se connecter"%}</a>
+			<a href="{% url 'register' %}">{% trans "S'inscrire" %}</a>
 		{% endif %}
 	</div>
 {% endblock %}
 
 {% block nav %}
 	<ul>
-		<li><a href="{% url 'home' %}">Page d'accueil</a></li>
-		<li><a href="{% url 'artist_list' %}">Liste des chants</a></li> 
+		<li><a href="{% url 'home' %}">{% trans "Page d'accueil"%}</a></li>
+		<li><a href="{% url 'artist_list' %}">{% trans "Liste des chants" %}</a></li> 
 		{% if user.is_authenticated %}
-			<li><a href="{% url 'profil' %}">Mon profil</a></li> 
+			<li><a href="{% url 'profil' %}">{% trans "Mon profil" %}</a></li> 
 		{% endif %}
 	</ul>
 {% endblock %}
@@ -40,5 +43,5 @@
 	{% endif %}
 {% endblock %}
 
-{% block footer %} Générateur de carnets de chants en ligne{% endblock %}
+{% block footer %} {% trans "Générateur de carnets de chants en ligne" %}{% endblock %}
 		

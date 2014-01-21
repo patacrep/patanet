@@ -1,8 +1,11 @@
-{% extends "generator/generator_base.html" %}
+{% extends "generator/generator_base.html" %} {% load i18n %}
 
 {% block title %} {{ song.title }} {% endblock %}
 
-{% block headertitle %} {{ song.title }} par {{ song.artist.name }} {% endblock %}
+{% block headertitle %}{% blocktrans with title=song.title artist=song.artist.name %}
+{{ title }} par {{ artist }}
+{% endblocktrans %}
+{% endblock %}
 
 {% block content %}
 	<p class="infos">Chantée par {{ song.artist.name }}, en {{ song.language.name }} <br />
@@ -12,5 +15,5 @@
 		Pas de capo pour ce chant
 	{% endif %}
 	</p>
-	<div class="song_content">{{ content|linebreaks}}</div>
+	<div class="song_content">{{ song.content|linebreaks }}</div>
 {% endblock %}

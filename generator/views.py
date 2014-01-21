@@ -7,15 +7,16 @@ from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext as _
 
 from generator.models import Song, Artist
 from generator.forms import SongForm, RegisterForm
-from django.utils.decorators import method_decorator
 
 # Create your views here.
 
 def home(request):
-    headertitle = 'Accueil'
+    headertitle = _('Accueil')
     return render(request, 'generator/generator_base.html',locals())
 
 ## User specifics views
@@ -31,7 +32,7 @@ class Register(CreateView):
     
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Vous êtes à présent inscrit. Connectez-vous pour accéder à votre profil.")
+        messages.success(self.request, _("Vous êtes à présent inscrit. Connectez-vous pour accéder à votre profil."))
         return super(CreateView, self).form_valid(form)
     
 class PasswordChange(FormView):
@@ -46,7 +47,7 @@ class PasswordChange(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Votre mot de passe a bien été modifié.")
+        messages.success(self.request, _("Votre mot de passe a bien été modifié."))
         return super(FormView, self).form_valid(form)
     
     @method_decorator(login_required)
@@ -62,7 +63,7 @@ class PasswordReset(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Un email de confirmation vous a été envoyé.")
+        messages.success(self.request, _("Un email de confirmation vous a été envoyé."))
         return super(FormView, self).form_valid(form)
 
 
@@ -73,7 +74,7 @@ class PasswordResetConfirm(FormView): # TODO: Tester si ça fonctionne
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Votre mot de passe a bien été modifié.")
+        messages.success(self.request, _("Votre mot de passe a bien été modifié."))
         return super(FormView, self).form_valid(form)
 
 

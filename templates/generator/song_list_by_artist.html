@@ -1,8 +1,15 @@
-{% extends "generator/generator_base.html" %}
+{% extends "generator/generator_base.html" %} {% load i18n %}
 
-{% block title %} Liste des chants de {{ artist.name }} {% endblock %}
+{% block title %}{% blocktrans with artist=artist.name %}
+Liste des chants de {{ artist }} 
+{% endblocktrans %}
+{% endblock %}
 
-{% block headertitle %} Liste des chants de {{ artist.name }} disponibles {% endblock %}
+{% block headertitle %}
+{% blocktrans with artist=artist.name %}
+Liste des chants de {{ artist }} disponibles
+{% endblocktrans %}
+{% endblock %}
 
 {% block content %}
 	{% for song in song_list %}
@@ -12,15 +19,5 @@
 			<p><a href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">Voir le chant</a>
 		</div>
 	{% endfor %}
-{# Mise en forme de la pagination ici #}
-	{% if is_paginated %}
-		<div class="pagination">
-			{% if page_obj.has_previous %}
-			<a href="?page={{ page_obj.previous_page_number }}">Précédente</a> — {% endif %}
-			Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
-				{% if page_obj.has_next %}
-				— <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
-				{% endif %}
-		</div>
-	{% endif %}
+{% include "generator/pagination.html" %}
 {% endblock %}

@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-
+from django.utils.translation import ugettext_lazy as _
 
 song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
 songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
@@ -19,7 +19,7 @@ class Language(models.Model):
         return self.name
     
     class Meta:
-        verbose_name = "langue"    
+        verbose_name = _("langue")    
 
 
 class Artist(models.Model):
@@ -30,7 +30,7 @@ class Artist(models.Model):
         return self.name
     
     class Meta:
-        verbose_name = "artiste"
+        verbose_name = _("artiste")
 
 
 def get_song_path(song, filename):
@@ -40,23 +40,24 @@ def get_song_path(song, filename):
 
 
 class Song(models.Model):
-    title = models.CharField(max_length=100,verbose_name='titre')
+    title = models.CharField(max_length=100,verbose_name=_('titre'))
     slug = models.SlugField(max_length=100,unique=True) # FIXME: cas de deux chants de même slug et d'artistes différents ...
-    artist = models.ForeignKey('Artist',verbose_name='artiste')
-    language = models.ForeignKey('Language',verbose_name='langue')
+    artist = models.ForeignKey('Artist',verbose_name=_('artiste'))
+    language = models.ForeignKey('Language',verbose_name=_('langue'))
     capo = models.IntegerField(null=True,blank=True)
 
-    content_file = models.FileField(storage=song_library,upload_to=get_song_path,verbose_name='contenu')    
+    content_file = models.FileField(storage=song_library,upload_to=get_song_path,verbose_name=_('contenu'))    
     def __unicode__(self): 
         return self.title
     
     class Meta:
-        verbose_name = "chant"    
+        verbose_name = _("chant")    
 
 ###############################################################
 
 def get_songbook_path(songbook, filename):
-    user_directory = songbook.user.username.replace(' ','_')
+    # TODO: Utiliser slugify plutôt pour être sûr de virer les caractère exotiques
+    user_directory = songbook.user.username.replace(' ','_') 
     filename = songbook.title.replace(' ','_')+".sb"
     return os.path.join(user_directory, filename)
     
@@ -71,8 +72,8 @@ class Songbook(models.Model):
         return self.title
     
     class Meta:
-        verbose_name = "carnet de chants"    
-        verbose_name_plural = "carnets de chants"    
+        verbose_name = _("carnet de chants")    
+        verbose_name_plural = _("carnets de chants")    
         
         
 ###############################################################
@@ -91,4 +92,4 @@ class SongbooksByUser(models.Model):
     songbook = models.ForeignKey('Songbook')
 
     def __unicode__(self): 
-        return "Songbook {0}, used by {1}".format(self.songbook,self.user)        
+        return _("Songbook {0}, used by {1}").format(self.songbook,self.user)        
