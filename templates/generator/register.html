@@ -1,0 +1,14 @@
+{% extends "generator/generator_base.html" %}
+
+{% block title %} S'inscrire {% endblock %}
+
+{% block headertitle %} Inscription {% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'register' %}">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="S'inscrire" />
+</form>
+
+{% endblock %}

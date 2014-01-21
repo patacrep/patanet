@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import messages
-from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm, UserCreationForm
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.decorators import login_required
 
 from generator.models import Song, Artist
-from generator.forms import SongForm
+from generator.forms import SongForm, RegisterForm
 from django.utils.decorators import method_decorator
 
 # Create your views here.
@@ -24,10 +24,15 @@ def home(request):
 def view_profile(request):
     return render(request, 'generator/show_profil.html',locals())
 
-# class Register(FormView):
-#     template_name = 'generator/new_user.html'
-#     form_class = UserCreationForm
-#     success_url = reverse_lazy('home')
+class Register(CreateView):
+    template_name = 'generator/register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('home')
+    
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Vous êtes à présent inscrit. Connectez-vous pour accéder à votre profil.")
+        return super(CreateView, self).form_valid(form)
     
 class PasswordChange(FormView):
     template_name = 'generator/password_change.html'

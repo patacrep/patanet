@@ -10,6 +10,7 @@ song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
 songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
 
 ######################################################
+
 class Language(models.Model):
     name = models.CharField(max_length=20)
     code = models.CharField(max_length=6)
@@ -19,6 +20,7 @@ class Language(models.Model):
     
     class Meta:
         verbose_name = "langue"    
+
 
 class Artist(models.Model):
     name = models.CharField(max_length=100, verbose_name='Nom')
@@ -30,10 +32,12 @@ class Artist(models.Model):
     class Meta:
         verbose_name = "artiste"
 
+
 def get_song_path(song, filename):
     filename = song.slug+'.sg'
     # Put song.sb in SONGS_LIBRARY/<artist-slug>/<filename>
     return os.path.join(song.artist.slug, filename)
+
 
 class Song(models.Model):
     title = models.CharField(max_length=100,verbose_name='titre')
@@ -50,10 +54,12 @@ class Song(models.Model):
         verbose_name = "chant"    
 
 ###############################################################
+
 def get_songbook_path(songbook, filename):
     user_directory = songbook.user.username.replace(' ','_')
     filename = songbook.title.replace(' ','_')+".sb"
     return os.path.join(user_directory, filename)
+    
     
 class Songbook(models.Model):
     title = models.CharField(max_length=100)  
@@ -70,12 +76,14 @@ class Songbook(models.Model):
         
         
 ###############################################################
+
 class Profile(models.Model):
     user = models.OneToOneField(User)
     songbooks = models.ManyToManyField(Songbook,blank=True,through='SongbooksByUser')    
     
     def __unicode__(self): 
         return self.name       
+
 
 class SongbooksByUser(models.Model):
     is_owner = models.BooleanField(default=False)
