@@ -92,4 +92,5 @@ class SongbooksByUser(models.Model):
     songbook = models.ForeignKey('Songbook')
 
     def __unicode__(self): 
-        return _("Songbook {0}, used by {1}").format(self.songbook,self.user)        
+        return _("Carnet de chant {songbook_name}, utilisé par {user}" \
+                 ).format(songbook_name=self.songbook,user=self.user)        
