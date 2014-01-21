@@ -2,7 +2,7 @@
 
 {% block title %} {{ song.title }} {% endblock %}
 
-{% block header %} <h1>{{ song.title }} chanté par {{ song.artist.name }}</h1> {% endblock %}
+{% block headertitle %} {{ song.title }} par {{ song.artist.name }} {% endblock %}
 
 {% block content %}
 	<p class="infos">Chantée par {{ song.artist.name }}, en {{ song.language.name }} <br />
