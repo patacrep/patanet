@@ -9,8 +9,8 @@ from generator.views import SongView, SongListByArtist, ArtistList, view_profile
 
 urlpatterns = patterns('generator.views',
     url(r'^$', 'home', name="home"),
-    url(r'^songs/(?P<artist>.+)/(?P<slug>.+)/$', SongView.as_view(), name='show_song'),
-    url(r'^songs/(?P<artist>.+)/$', SongListByArtist.as_view(), name="song_list_by_artist"),
+    url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/$', SongView.as_view(), name='show_song'),
+    url(r'^songs/(?P<artist>[\w-]+)/$', SongListByArtist.as_view(), name="song_list_by_artist"),
     url(r'^songs/$', ArtistList.as_view(), name="artist_list"),
 )
 
