@@ -11,8 +11,8 @@ songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
 
 ######################################################
 class Language(models.Model):
-    name = models.CharField(max_length=20)
-    code = models.CharField(max_length=6)
+    name = models.CharField(max_length=20, unique=True, null=False)
+    code = models.CharField(max_length=6, unique=True, null=False)
     
     def __unicode__(self): 
         return self.name
@@ -21,8 +21,8 @@ class Language(models.Model):
         verbose_name = "langue"    
 
 class Artist(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Nom')
-    slug = models.SlugField(max_length=100,unique=True)
+    name = models.CharField(max_length=100, unique=True, verbose_name='Nom')
+    slug = models.SlugField(max_length=100, unique=True)
     
     def __unicode__(self): 
         return self.name
@@ -30,19 +30,14 @@ class Artist(models.Model):
     class Meta:
         verbose_name = "artiste"
 
-def get_song_path(song, filename):
-    filename = song.slug+'.sg'
-    # Put song.sb in SONGS_LIBRARY/<artist-slug>/<filename>
-    return os.path.join(song.artist.slug, filename)
-
 class Song(models.Model):
     title = models.CharField(max_length=100,verbose_name='titre')
     slug = models.SlugField(max_length=100,unique=True)
     artist = models.ForeignKey('Artist',verbose_name='artiste')
-    language = models.ForeignKey('Language',verbose_name='langue')
+    language = models.ForeignKey('Language', verbose_name='langue', null=True)
     capo = models.IntegerField(null=True,blank=True)
+    file = models.OneToOneField('GitFile', null=True, unique=True)
 
-    content_file = models.FileField(storage=song_library,upload_to=get_song_path,verbose_name='contenu')    
     def __unicode__(self): 
         return self.title
     
@@ -84,3 +79,17 @@ class SongbooksByUser(models.Model):
 
     def __unicode__(self): 
         return "Songbook {0}, used by {1}".format(self.songbook,self.user)        
+    
+class GitFile(models.Model):
+    
+    """Hold the information about the file object in a git repository.
+    Attributes:
+        file_path        string    path of the file in the songs repository
+        file_version     string    version of the file as currently known in db
+    """
+    
+    file_path = models.CharField(max_length=500) # not FileField, we take care of the file.
+    file_version = models.CharField(max_length=20)
+    
+    def __unicode__(self):
+        return "{0}:{1} (repository {2]".format(self.file_version, self.file_path, self.repo_id)

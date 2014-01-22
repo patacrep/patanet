@@ -87,7 +87,6 @@
     "artist": 9, 
     "title": "Bambi", 
     "capo": null, 
-    "content_file": "", 
     "slug": "bambi"
   }
 },
@@ -99,7 +98,6 @@
     "artist": 9, 
     "title": "Au caf\u00e9 de la paix", 
     "capo": null, 
-    "content_file": "", 
     "slug": "au-cafe-de-la-paix"
   }
 },
@@ -111,7 +109,6 @@
     "artist": 9, 
     "title": "Cosmos", 
     "capo": null, 
-    "content_file": "", 
     "slug": "cosmos"
   }
 },
@@ -123,7 +120,6 @@
     "artist": 11, 
     "title": "Dirty old town", 
     "capo": null, 
-    "content_file": "", 
     "slug": "dirty-old-town"
   }
 },
@@ -135,7 +131,6 @@
     "artist": 12, 
     "title": "Les prisons de Nantes", 
     "capo": null, 
-    "content_file": "", 
     "slug": "les-prisons-de-nantes"
   }
 },
@@ -147,7 +142,6 @@
     "artist": 12, 
     "title": "La jument de Michao", 
     "capo": null, 
-    "content_file": "", 
     "slug": "la-jument-de-michao"
   }
 },
@@ -159,7 +153,6 @@
     "artist": 12, 
     "title": "Si mort \u00e0 mors", 
     "capo": null, 
-    "content_file": "", 
     "slug": "si-mort-a-mors"
   }
 },
@@ -171,7 +164,6 @@
     "artist": 12, 
     "title": "Les filles de Redon", 
     "capo": null, 
-    "content_file": "", 
     "slug": "les-filles-de-redon"
   }
 },
@@ -183,7 +175,6 @@
     "artist": 12, 
     "title": "La ville que j'ai tant aim\u00e9e", 
     "capo": null, 
-    "content_file": "", 
     "slug": "la-ville-que-j-ai-tant-aimee"
   }
 },
@@ -195,8 +186,23 @@
     "artist": 16, 
     "title": "Piazza, New York catcher", 
     "capo": null, 
-    "content_file": "", 
     "slug": "piazza-new-york-catcher"
+  }
+},
+{
+  "pk": 1,
+  "model": "generator.language",
+  "fields": {
+    "name": "french",
+    "code": "fr_FR"
+  }
+},
+{
+  "pk": 2,
+  "model": "generator.language",
+  "fields": {
+    "name": "english",
+    "code": "en_UK"
   }
 }
 ]

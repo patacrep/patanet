@@ -118,5 +118,6 @@ LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = '/user/'
 
 SONGS_LIBRARY_DIR = os.path.join(PROJECT_ROOT, 'songs/')
+SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, '../songbook')
 
 SONGBOOKS_DIR = os.path.join(PROJECT_ROOT, 'songbooks/')
