@@ -36,7 +36,7 @@ class Song(models.Model):
     artist = models.ForeignKey('Artist',verbose_name='artiste')
     language = models.ForeignKey('Language', verbose_name='langue', null=True)
     capo = models.IntegerField(null=True,blank=True)
-    file = models.OneToOneField('GitFile', null=True, unique=True)
+    file = models.OneToOneField('GitFile', null=True)
 
     def __unicode__(self): 
         return self.title
