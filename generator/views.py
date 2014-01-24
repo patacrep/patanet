@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 
-from generator.models import Song, Artist, Songbook
+from generator.models import Song, Artist, Songbook, Profile
 from generator.forms import SongForm, RegisterForm, CreateSongbookForm
 
 # Create your views here.
@@ -23,7 +23,8 @@ def home(request):
 #######################
 @login_required
 def view_profile(request):
-    return render(request, 'generator/show_profil.html',locals())
+    profile = Profile.objects.get(user=request.user)
+    return render(request, 'generator/show_profile.html',locals())
 
 class Register(CreateView):
     template_name = 'generator/register.html'
@@ -31,7 +32,9 @@ class Register(CreateView):
     success_url = reverse_lazy('home')
     
     def form_valid(self, form):
-        form.save()
+        user = form.save()
+        profile = Profile(user=user)
+        profile.save()
         messages.success(self.request, _("Vous êtes à présent inscrit." 
                     "Connectez-vous pour accéder à votre profil."))
         return super(CreateView, self).form_valid(form)

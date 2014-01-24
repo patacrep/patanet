@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from django.contrib import admin
-from generator.models import Song , Language, Artist, Songbook
+from generator.models import Song , Language, Artist, Songbook, SongbooksByUser,\
+    Profile
 from generator.forms import SongForm
 
 class SongAdmin(admin.ModelAdmin):
@@ -37,3 +38,5 @@ admin.site.register(Song,SongAdmin)
 admin.site.register(Artist,ArtistAdmin)
 admin.site.register(Language)
 admin.site.register(Songbook)
+admin.site.register(SongbooksByUser)
+admin.site.register(Profile)

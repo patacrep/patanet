@@ -91,10 +91,12 @@ def songbook_post_delete_handler(sender, **kwargs):
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    songbooks = models.ManyToManyField(Songbook,blank=True,through='SongbooksByUser')    
+    songbooks = models.ManyToManyField(Songbook,blank=True,through='SongbooksByUser',related_name='songbooks')    
     
     def __unicode__(self): 
-        return self.name       
+        return self.user.username
+    class Meta:
+        verbose_name=_('profil')       
 
 
 class SongbooksByUser(models.Model):
