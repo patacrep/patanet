@@ -15,7 +15,7 @@ urlpatterns = patterns('generator.views',
 )
 
 urlpatterns += patterns('',
-    url(r'^user/$',view_profile, name='profil'),
+    url(r'^user/$',view_profile, name='profile'),
     url(r'^user/login$','django.contrib.auth.views.login',{'template_name': 'generator/login.html'}, name='login'),
     url(r'^user/logout$', 'django.contrib.auth.views.logout',{'next_page': '/'}, name='logout'),
     url(r'^user/change-password$', PasswordChange.as_view(),name='password_change'),
