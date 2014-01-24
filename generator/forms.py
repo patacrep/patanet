@@ -42,14 +42,16 @@ class CreateSongbookForm(forms.ModelForm):
         (LYRICS, _('Sans accords')),
         )
     
-    template=forms.CharField(initial='patacrep.tmpl')
+    template=forms.CharField(initial='patacrep.tmpl',label=_("Mise en forme avec le gabarit"))
     bookoptions = forms.MultipleChoiceField(
                                             choices=BOOK_OPTIONS,
                                             label=_('Options du receuil'),
                                             widget=forms.CheckboxSelectMultiple()
                                             ) 
     booktype = forms.ChoiceField(choices=BOOK_TYPES,
-                                initial=CHORDED)
+                                initial=CHORDED,
+                                label=_("Type de receuil")
+                                )
 
     #songbook['author']=''
     #songbook['lang']='lang'

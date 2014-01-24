@@ -64,8 +64,8 @@ def get_songbook_path(songbook, filename):
     
     
 class Songbook(models.Model):
-    title = models.CharField(max_length=100)  
-    description = models.TextField(blank=True)
+    title = models.CharField(max_length=100,verbose_name=_("titre"))  
+    description = models.TextField(blank=True,verbose_name=_("description"))
     
     content_file = models.FileField(storage=songbooks_library,upload_to=get_songbook_path)
     
