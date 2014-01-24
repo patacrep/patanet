@@ -1,6 +1,6 @@
 # # -*- coding: utf-8 -*-
 from django import forms 
-from generator.models import Profile, Song, Songbook
+from generator.models import Profile, Song, Songbook, SongbooksByUser
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -46,14 +46,13 @@ class CreateSongbookForm(forms.ModelForm):
     bookoptions = forms.MultipleChoiceField(
                                             choices=BOOK_OPTIONS,
                                             label=_('Options du receuil'),
-                                            widget=forms.CheckboxSelectMultiple()
+                                            widget=forms.CheckboxSelectMultiple(),
+                                            required=False
                                             ) 
     booktype = forms.ChoiceField(choices=BOOK_TYPES,
                                 initial=CHORDED,
                                 label=_("Type de receuil")
                                 )
-
-    #songbook['author']=''
     #songbook['lang']='lang'
     # Other options are : web mail picture picturecopyright footer license (a .tex file) 
     # mainfontsize songnumberbgcolor notebgcolor indexbgcolor 
@@ -63,7 +62,7 @@ class CreateSongbookForm(forms.ModelForm):
         
     def save(self, force_insert=False, force_update=False, commit=True):
         new_songbook = super(CreateSongbookForm, self).save(commit=False)
-        new_songbook.user=self.user
+        new_songbook.user = self.user # User is gotten in the view
         songbook=self.cleaned_data.copy()
         songbook['title']=new_songbook.title
         songbook['subtitle']=new_songbook.description
@@ -71,9 +70,9 @@ class CreateSongbookForm(forms.ModelForm):
         songbook['songs']=[]
         # create the .sb file
         sb_content = json.dumps(songbook,sort_keys=True,encoding="utf-8",indent=4, separators=(',', ': '))
-        sb_name = new_songbook.title 
-        new_songbook.content_file.save(sb_name, ContentFile(sb_content))
-        # save the songbook
+        new_songbook.content_file.save(new_songbook.title , ContentFile(sb_content))
+        SongbooksByUser.objects.create(user=self.user.profile, songbook=new_songbook, is_owner=True)
+        #songbook_user.save()
         if commit:
             new_songbook.save()
         return new_songbook

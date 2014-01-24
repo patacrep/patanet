@@ -13,4 +13,14 @@ Profil de {{ username }}
 		<li><a href="{% url 'home' %}">{% trans "Revenir à l'accueil" %}</a></li>
 		<li><a href="{% url 'password_change' %}">{% trans "Changer de mot de passe" %}</a></li>
 	</ul>
+	
+	<div class='user-songbooks'>
+		<h2>{% trans "Mes carnets de chant" %}</h2>
+		<table>
+		<tr><th>{% trans "Titre" %}</th><th>{% trans "Description" %}</th><th>{% trans "Nombre de chants" %}</th></tr>
+		{% for songbook in profile.songbooks.all %}
+		<tr><td> {{ songbook.title }}</td><td> {{ songbook.description }}</td><td> ??? </td></tr>
+		{% endfor %}
+		</table>
+	</div>
 {% endblock %}
