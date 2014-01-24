@@ -10,8 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 
-from generator.models import Song, Artist
-from generator.forms import SongForm, RegisterForm
+from generator.models import Song, Artist, Songbook
+from generator.forms import SongForm, RegisterForm, CreateSongbookForm
 
 # Create your views here.
 
@@ -32,7 +32,8 @@ class Register(CreateView):
     
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, _("Vous êtes à présent inscrit. Connectez-vous pour accéder à votre profil."))
+        messages.success(self.request, _("Vous êtes à présent inscrit." 
+                    "Connectez-vous pour accéder à votre profil."))
         return super(CreateView, self).form_valid(form)
     
 class PasswordChange(FormView):
@@ -113,3 +114,23 @@ class ArtistList(ListView):
     template_name = "generator/artist_list.html"
     paginate_by = 20
     queryset = Artist.objects.order_by('name')
+
+## Songbooks views
+#######################
+
+class NewSongbook(CreateView):
+    model = Songbook
+    template_name = 'generator/songbook_options.html' 
+    form_class = CreateSongbookForm
+    success_url = reverse_lazy('profile')
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(NewSongbook, self).dispatch(*args, **kwargs)
+    
+    def form_valid(self, form):
+        form.user=self.request.user
+        messages.success(self.request, _("Le nouveau receuil a été créé."))
+        return super(NewSongbook, self).form_valid(form)
+    
+    
