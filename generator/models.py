@@ -6,6 +6,8 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
+from django.db.models.signals import post_delete
+from django.dispatch.dispatcher import receiver
 
 song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
 songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
@@ -76,7 +78,13 @@ class Songbook(models.Model):
     
     class Meta:
         verbose_name = _("carnet de chants")    
-        verbose_name_plural = _("carnets de chants")    
+        verbose_name_plural = _("carnets de chants")
+    
+@receiver(post_delete, sender=Songbook)
+def songbook_post_delete_handler(sender, **kwargs):
+    songbook = kwargs['instance']
+    storage, path = songbook.content_file.storage, songbook.content_file.path
+    storage.delete(path) 
         
         
 ###############################################################
