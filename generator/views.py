@@ -9,10 +9,12 @@ from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
+from django.db.models import Q
 
 from generator.models import Song, Artist, Songbook, Profile
-from generator.forms import SongForm, RegisterForm, CreateSongbookForm
+from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
 
+import json
 # Create your views here.
 
 def home(request):
@@ -121,11 +123,24 @@ class ArtistList(ListView):
 ## Songbooks views
 #######################
 
+class SongbookList(ListView):
+    model = Songbook
+    context_object_name = "songbooks" 
+    template_name = "generator/songbook_list.html"
+    
+    def get_queryset(self):
+        return Songbook.objects.filter(songbooksbyuser__user__user=self.request.user).order_by('is_public','title')
+                
+    def get_context_data(self, **kwargs):
+        context = super(SongbookList, self).get_context_data(**kwargs)
+        context['public_songbooks'] = Songbook.objects.filter(is_public=True).order_by('title')
+        return context
+
 class NewSongbook(CreateView):
     model = Songbook
     template_name = 'generator/songbook_options.html' 
-    form_class = CreateSongbookForm
-    success_url = reverse_lazy('profile')
+    form_class = SongbookOptionsForm
+    success_url = reverse_lazy('songbook_list')
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -135,5 +150,28 @@ class NewSongbook(CreateView):
         form.user=self.request.user
         messages.success(self.request, _("Le nouveau receuil a été créé."))
         return super(NewSongbook, self).form_valid(form)
+    
+    
+class ShowSongbook(DetailView):
+    model=Songbook
+    template_name = 'generator/show_songbook.html'
+    songbook_options={}
+    context_object_name = 'songbook'
+    
+    def get_object(self):
+        songbook = super(ShowSongbook, self).get_object()
+        options = songbook.content_file.read()
+        self.songbook_options=json.loads(options)
+        return songbook
+    
+    def get_queryset(self):
+        return Songbook.objects.filter(pk=self.kwargs['pk'],
+                                       slug=self.kwargs['slug']
+                                       )
+    
+    def get_context_data(self, **kwargs):
+        context = super(ShowSongbook, self).get_context_data(**kwargs)        
+        context['options'] = self.songbook_options
+        return context
     
     

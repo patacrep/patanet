@@ -26,7 +26,8 @@
 {% block nav %}
 	<ul>
 		<li><a href="{% url 'home' %}">{% trans "Page d'accueil"%}</a></li>
-		<li><a href="{% url 'artist_list' %}">{% trans "Liste des chants" %}</a></li> 
+		<li><a href="{% url 'artist_list' %}">{% trans "Liste des chants" %}</a></li>
+		<li><a href="{% url 'songbook_list' %}">{% trans "Liste des carnets" %}</a></li> 
 		{% if user.is_authenticated %}
 			<li><a href="{% url 'profile' %}">{% trans "Mon profil" %}</a></li> 
 		{% endif %}

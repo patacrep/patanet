@@ -26,7 +26,7 @@ class RegisterForm(UserCreationForm):
     # TODO : add Captcha
 
 
-class CreateSongbookForm(forms.ModelForm):
+class SongbookOptionsForm(forms.ModelForm):
     BOOK_OPTIONS = [('diagram',_("Diagrammes d'accords")),
                     ('importantdiagramonly',_("Diagrammes important seulement")),
                     ('repeatchords',_("Accords sur tous les couplets")),
@@ -61,8 +61,9 @@ class CreateSongbookForm(forms.ModelForm):
         fields = ('title','description',)
         
     def save(self, force_insert=False, force_update=False, commit=True):
-        new_songbook = super(CreateSongbookForm, self).save(commit=False)
+        new_songbook = super(SongbookOptionsForm, self).save(commit=False)
         new_songbook.user = self.user # User is gotten in the view
+        new_songbook.slug = slugify(new_songbook.title)
         songbook=self.cleaned_data.copy()
         songbook['title']=new_songbook.title
         songbook['subtitle']=new_songbook.description
