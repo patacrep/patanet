@@ -70,8 +70,8 @@ class Songbook(models.Model):
     description = models.TextField(blank=True,verbose_name=_("description"))
     
     content_file = models.FileField(storage=songbooks_library,upload_to=get_songbook_path)
-    
-    #is_public = models.BooleanField(default=False)
+    slug = models.SlugField(max_length=100)
+    is_public = models.BooleanField(default=False)
     
     def __unicode__(self): 
         return self.title
