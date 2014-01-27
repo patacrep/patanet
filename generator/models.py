@@ -4,12 +4,16 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-
+from django.utils.translation import ugettext_lazy as _
+from django.template.defaultfilters import slugify
+from django.db.models.signals import post_delete
+from django.dispatch.dispatcher import receiver
 
 song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
 songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
 
 ######################################################
+
 class Language(models.Model):
     name = models.CharField(max_length=20, unique=True, null=False)
     code = models.CharField(max_length=6, unique=True, null=False)
@@ -18,23 +22,26 @@ class Language(models.Model):
         return self.name
     
     class Meta:
-        verbose_name = "langue"    
+        verbose_name = _("langue")    
+
 
 class Artist(models.Model):
-    name = models.CharField(max_length=100, unique=True, verbose_name='Nom')
-    slug = models.SlugField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, verbose_name='Nom')
+    # FIXME: cas de deux artistes de même slug
+    slug = models.SlugField(max_length=100,unique=True)
     
     def __unicode__(self): 
         return self.name
     
     class Meta:
-        verbose_name = "artiste"
+        verbose_name = _("artiste")
+
 
 class Song(models.Model):
-    title = models.CharField(max_length=100,verbose_name='titre')
+    title = models.CharField(max_length=100,verbose_name=_('titre'))
     slug = models.SlugField(max_length=100,unique=True)
-    artist = models.ForeignKey('Artist',verbose_name='artiste')
-    language = models.ForeignKey('Language', verbose_name='langue', null=True)
+    artist = models.ForeignKey('Artist',verbose_name=_('artiste'))
+    language = models.ForeignKey('Language',verbose_name=_('langue'),null=True)
     capo = models.IntegerField(null=True,blank=True)
     file = models.OneToOneField('GitFile', null=True)
 
@@ -42,43 +49,58 @@ class Song(models.Model):
         return self.title
     
     class Meta:
-        verbose_name = "chant"    
+        verbose_name = _("chant")    
 
 ###############################################################
+
 def get_songbook_path(songbook, filename):
-    user_directory = songbook.user.username.replace(' ','_')
-    filename = songbook.title.replace(' ','_')+".sb"
+    user_directory = slugify(songbook.user.username) 
+    filename = slugify(songbook.title)+".sb"
     return os.path.join(user_directory, filename)
     
+    
 class Songbook(models.Model):
-    title = models.CharField(max_length=100)  
-    description = models.TextField(blank=True)
+    title = models.CharField(max_length=100,verbose_name=_("titre"))  
+    description = models.TextField(blank=True,verbose_name=_("description"))
     
     content_file = models.FileField(storage=songbooks_library,upload_to=get_songbook_path)
+    slug = models.SlugField(max_length=100)
+    is_public = models.BooleanField(default=False)
     
     def __unicode__(self): 
         return self.title
     
     class Meta:
-        verbose_name = "carnet de chants"    
-        verbose_name_plural = "carnets de chants"    
+        verbose_name = _("carnet de chants")    
+        verbose_name_plural = _("carnets de chants")
+    
+@receiver(post_delete, sender=Songbook)
+def songbook_post_delete_handler(sender, **kwargs):
+    songbook = kwargs['instance']
+    storage, path = songbook.content_file.storage, songbook.content_file.path
+    storage.delete(path) 
         
         
 ###############################################################
+
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    songbooks = models.ManyToManyField(Songbook,blank=True,through='SongbooksByUser')    
+    songbooks = models.ManyToManyField(Songbook,blank=True,through='SongbooksByUser',related_name='songbooks')    
     
     def __unicode__(self): 
-        return self.name       
+        return self.user.username
+    class Meta:
+        verbose_name=_('profil')       
+
 
 class SongbooksByUser(models.Model):
     is_owner = models.BooleanField(default=False)
     user = models.ForeignKey('Profile')
     songbook = models.ForeignKey('Songbook')
 
-    def __unicode__(self): 
-        return "Songbook {0}, used by {1}".format(self.songbook,self.user)        
+    def __unicode__(self):
+        return _("Carnet de chant {songbook_name}, utilisé par {user}" \
+                 ).format(songbook_name=self.songbook,user=self.user)
     
 class GitFile(models.Model):
     
@@ -92,4 +114,5 @@ class GitFile(models.Model):
     file_version = models.CharField(max_length=20)
     
     def __unicode__(self):
-        return "{0}:{1} (repository {2]".format(self.file_version, self.file_path, self.repo_id)
+        return "{0}:{1}".format(self.file_version, self.file_path)
+

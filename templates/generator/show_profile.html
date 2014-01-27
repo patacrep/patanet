@@ -1,0 +1,27 @@
+{% extends "generator/generator_base.html" %} {% load i18n %}
+
+{% block title %} {% blocktrans with username=user.username %}
+Profil de {{ username }}
+{% endblocktrans %}{% endblock %}
+
+{% block headertitle %}{% blocktrans with username=user.username %}
+Profil de {{ username }}
+{% endblocktrans %}{% endblock %}
+
+{% block content %}
+	<ul>
+		<li><a href="{% url 'home' %}">{% trans "Revenir à l'accueil" %}</a></li>
+		<li><a href="{% url 'password_change' %}">{% trans "Changer de mot de passe" %}</a></li>
+		<li><a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet" %}</a></li>
+	</ul>
+	
+	<div class='user-songbooks'>
+		<h2>{% trans "Mes carnets de chant" %}</h2>
+		<table>
+		<tr><th>{% trans "Titre" %}</th><th>{% trans "Description" %}</th><th>{% trans "Nombre de chants" %}</th></tr>
+		{% for songbook in profile.songbooks.all %}
+		<tr><td> {{ songbook.title }}</td><td> {{ songbook.description }}</td><td> ??? </td></tr>
+		{% endfor %}
+		</table>
+	</div>
+{% endblock %}

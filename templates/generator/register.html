@@ -1,0 +1,13 @@
+{% extends "generator/generator_base.html" %} {% load i18n %}
+
+{% block title %}{% trans "S'inscrire "%}{% endblock %}
+
+{% block headertitle %}{% trans "Inscription" %}{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'register' %}">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="{% trans "S'inscrire" %}"/>
+</form>
+{% endblock %}

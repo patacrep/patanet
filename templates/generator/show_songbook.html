@@ -1,0 +1,23 @@
+{% extends "generator/generator_base.html" %} {% load i18n %}
+
+{% block title %} {{ songbook.title }} {% endblock %}
+
+{% block headertitle %} {{ songbook.title }}{% endblock %}
+
+{% block content %}
+	<div id='infos'>
+	<h3>{{ songbook.title }}</h3>
+	<p>{{ songbook.description }}</p>
+	</div>
+	<div id='options'>
+	<h3>{% trans "Options du carnet" %}</h3>
+	<p>{{ options }}</p>
+	</div>
+	<div id='songs'>
+	<h3>{% trans "Chants du carnet" %}</h3>
+		<ul>
+		{% for song in options.songs %}
+			<li>{{ song }} </li>
+		{% endfor %}	
+	</div>
+{% endblock %}

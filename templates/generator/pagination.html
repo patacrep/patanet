@@ -1,0 +1,12 @@
+{% load i18n %}
+{% if is_paginated %}
+	<div class="pagination">
+		{% if page_obj.has_previous %}
+		    <a href="?page={{ page_obj.previous_page_number }}">{% trans "Précédente" %}</a> — 
+        {% endif %}
+		{% trans "Page" %} {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}
+		{% if page_obj.has_next %}
+			— <a href="?page={{ page_obj.next_page_number }}">{% trans "Suivante" %}</a>
+		{% endif %}
+	</div>
+{% endif %}

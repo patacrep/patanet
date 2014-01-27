@@ -1,0 +1,20 @@
+{% extends "generator/generator_base.html" %} {% load i18n %}
+
+{% block title %} {% trans "Liste des carnets" %} {% endblock %}
+
+{% block headertitle %} {% trans "Liste des carnets de chants" %} {% endblock %}
+
+{% block content %}
+	<div class="songbooks">
+		<h3>{% trans "Mes carnets" %}</h3>
+		{% for songbook in songbooks %}
+			<p><a href="{% url "show_songbook" slug=songbook.slug pk=songbook.pk%}">{{ songbook.title }}</a>
+		{% endfor %}
+	</div>
+	<div class="publics-songbooks">
+		<h3>{% trans "Les carnets publics" %}</h3>
+		{% for songbook in public_songbooks %}
+			<p><a href="{% url "show_songbook" slug=songbook.slug pk=songbook.pk%}">{{ songbook.title }}</a>
+		{% endfor %}
+	</div>
+{% endblock %}
