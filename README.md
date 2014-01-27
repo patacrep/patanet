@@ -22,7 +22,8 @@ If wished, you can load some test data:
 ```
 Or, probably better, you can import songs from a songbook repository like that:
 
-1. set some variables in Songbook_web/settings.py :
+1. if not yet done, make a copy of `Songbook_web/local_settings.sample.py`to `Songbook_web/local_settings.py`
+1. set some variables in `local_settings.py` :
  * Path to the root of the songbook repo: 
  `SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, '../songbook/')`
  * Path to the songs in the songbook repo: 

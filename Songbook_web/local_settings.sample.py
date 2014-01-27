@@ -10,6 +10,9 @@
  See settings.py for more information about each value.
 """
 
+# import os
+# from django.conf import settings
+
 '''
 Runtime settings
 '''
@@ -35,7 +38,7 @@ Databases
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
+#         'NAME': os.path.join(settings.PROJECT_ROOT, 'db.sqlite3'),
 #         'USER':'',
 #         'PASSWORD':'',
 #         'HOST':'',
@@ -47,8 +50,8 @@ Databases
 Search paths
 '''
 # Path to the root of the songbook repo, where the tools are to be found
-#SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, '../songbook/')
+#SONG_PROCESSOR_DIR = os.path.join(settings.PROJECT_ROOT, '../songbook/')
 # Path to the songs directory (*.sg files) from the songbook repo
-#SONGS_LIBRARY_DIR = os.path.join(SONG_PROCESSOR_DIR, 'songs/')
+#SONGS_LIBRARY_DIR = os.path.join(settings.SONG_PROCESSOR_DIR, 'songs/')
 # Path to the location where songbooks are stored
-#SONGBOOKS_DIR = os.path.join(PROJECT_ROOT, 'songbooks/')
+#SONGBOOKS_DIR = os.path.join(settings.PROJECT_ROOT, 'songbooks/')
