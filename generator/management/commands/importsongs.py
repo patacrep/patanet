@@ -9,7 +9,7 @@ import os
 from generator import models
 from django.db import transaction
 from django.utils.text import slugify
-
+from django.utils.encoding import smart_text
 
 def _file_error(error):
     print(error)
@@ -28,23 +28,25 @@ class Command(BaseCommand):
                                              topdown=True,
                                              onerror=_file_error,
                                              followlinks=False):
-            for f in filenames:
-                self.stdout.write("- {0}".format(os.path.join(root, f)))
-                if f.lower().endswith(".sg"):
-                    filename = os.path.join(root, f)
+
+            for file in filenames:
+                if file.lower().endswith(".sg"):
+                    filename = os.path.join(root, file)
                     try:
                         data = parsetex(filename)
-                        self.stdout.write(pprint.pformat(data))
-                        self.stdout.write(pprint.pformat(data['titles'][0]))
+                        self.stdout.write("Processing " + pprint.pformat(data['titles'][0]))
+
+                        artist_name = smart_text(data['args']['by'], 'utf-8')
+                        artist_slug = slugify(artist_name)
 
                         with transaction.atomic():
-
-                            song_title = data['titles'][0]
-                            song_slug = slugify(unicode(song_title))
-                            song_model, created = models.Song.objects.get_or_create(slug=song_slug)
-                            if created:
-                                song_model.title = song_title
-
+                            artist_model, created = models.Artist.objects.get_or_create(slug=artist_slug,
+                                                                                        defaults={'name':artist_name})
+                            if not created:
+                                if (artist_model.name != artist_name):
+                                    self.stderr.write("*** Artist name differs though slugs are equal : "
+                                                      + artist_name + " / " 
+                                                      + artist_model.name)
 
                             if (len(data['languages']) > 1):
                                 self.stderr.write("*** Multiple languages " +
@@ -53,29 +55,24 @@ class Command(BaseCommand):
                                                   "Picking any.")
                             if (len(data['languages']) > 0):
                                 language_name = data["languages"].pop()
-                                self.stdout.write(pprint.pformat(language_name))
-                                language_model, created = models.Language.objects.get_or_create(name=language_name)
-                                if (created is True):
-                                    # TODO: fill with country code
-                                    language_model.code = language_name[:6]
-                                    language_model.save()
+                                language_model, created = models.Language.objects.get_or_create(name=language_name,
+                                                                                                defaults={'code':language_name[:6]})
+                                # TODO: fill with country code
 
-                            artist_name = data['args']['by']
-                            artist_slug = slugify(unicode(artist_name))
-
-                            artist_model, created = models.Artist.objects.get_or_create(slug=artist_slug)
-                            if (created is True):
-                                artist_model.name = artist_name
-                            else:
-                                if (artist_model.name != artist_name):
-                                    self.stderr.write("*** Artist name differs though slugs are equal : "
-                                                      + artist_name + " / " + artist_model.name)
-
-                            song_model.language = language_model
-                            song_model.artist = artist_model
+                            song_title = smart_text(data['titles'][0], 'utf-8')
+                            song_slug = slugify(song_title)
+                            song_model, created = models.Song.objects.get_or_create(slug=song_slug,
+                                                                                    defaults={'title':song_title,
+                                                                                              'language':language_model,
+                                                                                              'artist':artist_model})
+                            if not created:
+                                if (song_model.title != song_title):
+                                    self.stderr.write("*** Song names differs though slugs are equal : "
+                                                      + song_title + " / " 
+                                                      + song_model.title)
 
                             gitfile = models.GitFile()
-                            gitfile.file_path = f
+                            gitfile.file_path = filename
                             gitfile.file_version = filerev
 
                             song_model.file = gitfile
