@@ -20,6 +20,16 @@ If wished, you can load some test data:
 ```
 ./manage.py loaddata few_songs.json
 ```
+Or, probably better, you can import songs from a songbook repository like that:
+
+1. set some variables in Songbook_web/settings.py :
+ * Path to the root of the songbook repo: 
+ `SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, '../songbook/')`
+ * Path to the songs in the songbook repo: 
+ `SONGS_LIBRARY_DIR = os.path.join(SONG_PROCESSOR_DIR, 'songs/')`
+
+2. run `./manage.py importsongs`
+
 ## How to run
 
 Then you can run a development server with the command `python manage.py runserver`. No web server (e.g. Apache, ...) required.

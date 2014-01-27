@@ -124,7 +124,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = '/user/'
 
-SONGS_LIBRARY_DIR = os.path.join(PROJECT_ROOT, 'songs/')
-SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, '../songbook')
-
+# Path to the root of the songbook repo, where the tools are to be found
+SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, '../songbook/')
+# Path to the songs directory (*.sg files) from the songbook repo
+SONGS_LIBRARY_DIR = os.path.join(SONG_PROCESSOR_DIR, 'songs/')
+# Path to the location where songbooks are stored
 SONGBOOKS_DIR = os.path.join(PROJECT_ROOT, 'songbooks/')

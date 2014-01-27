@@ -31,9 +31,10 @@ class Command(BaseCommand):
 
             for file in filenames:
                 if file.lower().endswith(".sg"):
-                    filename = os.path.join(root, file)
+                    filepath = os.path.join(root, file)
+                    filepath_rel = os.path.relpath(filepath, settings.SONGS_LIBRARY_DIR)
                     try:
-                        data = parsetex(filename)
+                        data = parsetex(filepath)
                         self.stdout.write("Processing " + pprint.pformat(data['titles'][0]))
 
                         artist_name = smart_text(data['args']['by'], 'utf-8')
@@ -72,7 +73,7 @@ class Command(BaseCommand):
                                                       + song_model.title)
 
                             gitfile = models.GitFile()
-                            gitfile.file_path = filename
+                            gitfile.file_path = filepath_rel
                             gitfile.file_version = filerev
 
                             song_model.file = gitfile
@@ -83,5 +84,5 @@ class Command(BaseCommand):
                             song_model.save()
 
                     except IOError as e:
-                        self.stderr.write("*** Failed processing file : " + filename)
+                        self.stderr.write("*** Failed processing file : " + filepath)
                         self.stderr.write("    I/O error({0}): {1}".format(e.errno, e.strerror))
