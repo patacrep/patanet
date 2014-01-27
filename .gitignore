@@ -1,2 +1,4 @@
 *.pyc
 db.sqlite3
+Songbook_web/local_settings.py
+
