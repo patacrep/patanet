@@ -1,0 +1,39 @@
+
+
+a.back{
+	&:before{
+		content:"\2039  ";
+		font-style:normal;
+		padding-left:-1em;
+	}
+}
+
+.selection{
+	padding:0;
+	li{
+		list-style:none;
+		
+		&:hover{
+			background-color:rgba(0,0,0,0.1);
+		}
+		
+		label.selected, 
+		input:checked + label{
+			color:darken(@link-visited,10%);
+		}
+		input{
+			margin:0 0.4em;
+		}
+		label{
+			display:inline-block;
+			min-width:20em;
+			cursor:pointer;
+			padding:.2em 0;
+			//min-width:10em;
+		}
+		.details{
+			font-size:80%;
+		}
+	}
+	
+}

@@ -1,17 +1,30 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
 {% block title %}{% blocktrans with artist=artist.name %}
-Liste des chants de {{ artist }} 
+{{ artist }} 
 {% endblocktrans %}
 {% endblock %}
 
 {% block content %}
-	{% for song in song_list %}
-		<div class="song">
-			<h3>{{ song.title }}</h3>
-			<p>{{ song.content|truncatewords_html:80 }}</p>
-			<p><a href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">Voir le chant</a>
-		</div>
-	{% endfor %}
+	<a class="artist back" href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a>
+	<form method="post" action="404">
+		{% csrf_token %}
+		<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
+		
+		<ol class="songs selection">
+		{% for song in song_list %}
+			<li>
+				<input type="checkbox" name="songs[]" value="{{ song.id }}" id="song_{{ song.id }}">
+				<label class="song" for="song_{{ song.id }}">
+					{{ song.title }}
+				</label>
+				<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">{% trans "Paroles" %}</a>
+			</li>
+		{% endfor %}
+		</ol>
+		<input type="button" value="{% trans "Tout (dé)séléctionner" %}"/>
+		<input type="submit" value="{% trans "Ajouter au receuil" %}"/>
+	</form>
+	
 {% include "generator/layout/pagination.html" %}
 {% endblock %}

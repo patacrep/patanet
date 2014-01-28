@@ -8,7 +8,14 @@
 {% endblock %}
 
 {% block content %}
-	<p class="infos">Chantée par {{ song.artist.name }}, en {{ song.language.name }} <br />
+	<h2 class="artist"><a class="back" href="{% url "song_list_by_artist" artist=song.artist.slug %}">{{ song.artist.name }}</a></h2>
+	<form method="post" action="404">{% csrf_token %}
+		<input type="hidden" name="next" value="{% url "show_song" slug=song.slug artist=song.artist.slug %}">
+		<input type="hidden" name="songs[]" value="{{ song.id }}">
+		<input type="submit" value="{% trans "Ajouter au receuil" %}"/>
+	</form>
+
+	<p class="infos">en {{ song.language.name }} <br />
 	{% if song.capo != None %}
 		Utiliser un capodastre en position {{ song.capo }}.
 	{% else %}
