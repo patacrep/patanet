@@ -44,7 +44,7 @@ class Register(CreateView):
 class PasswordChange(FormView):
     template_name = 'generator/password_change.html'
     form_class = PasswordChangeForm
-    success_url = reverse_lazy('profil')
+    success_url = reverse_lazy('profile')
 
     def get_form_kwargs(self):
         kwargs = super(PasswordChange, self).get_form_kwargs()
