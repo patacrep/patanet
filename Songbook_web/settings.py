@@ -49,7 +49,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'generator',
     'south',
-    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -110,7 +109,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Templates dans le dossier template
@@ -130,7 +128,7 @@ LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = '/user/'
 
 # Path to the root of the songbook repo, where the tools are to be found
-SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, '../songbook/')
+SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, 'songbook-core/')
 # Path to the songs directory (*.sg files) from the songbook repo
 SONGS_LIBRARY_DIR = os.path.join(SONG_PROCESSOR_DIR, 'songs/')
 # Path to the location where songbooks are stored

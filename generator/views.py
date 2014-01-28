@@ -170,7 +170,7 @@ class ShowSongbook(DetailView):
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(NewSongbook, self).dispatch(*args, **kwargs)
+        return super(ShowSongbook, self).dispatch(*args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super(ShowSongbook, self).get_context_data(**kwargs)        

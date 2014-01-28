@@ -1,0 +1,4 @@
+[submodule "songbook-core"]
+	path = songbook-core
+	url = https://github.com/Luthaf/songbook.git
+	branch = next
