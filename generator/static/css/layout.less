@@ -1,0 +1,41 @@
+@global-width:1140px;
+
+@nav-width:160px;
+
+@nav-title-col:#444444;
+
+html{
+    width:100%;
+    font-family:sans-serif;
+    background-color:@menu-bg;
+}
+
+body{
+    max-width:@global-width;
+    margin:0 auto;
+    padding:1em 0;
+}
+header{
+    width:@nav-width;
+    float:left;
+    background-color:@menu-bg;
+    padding:0 5px;
+}
+main, .app-menu, footer{
+    margin-left:@nav-width + 10px;//padding
+}
+main{
+    background-color:white;
+}
+
+a{
+    text-decoration:none;
+    color:@link-col;
+    &:hover, &:focus{
+        text-decoration:underline;
+        color:@link-hover;
+    }
+    &:visited{
+        color:@link-visited;
+    }
+}
