@@ -1,0 +1,116 @@
+@hint-color:#555;
+@hint-color-bg:#aaa;
+
+main{
+    clear:right;
+    padding:1.5em;
+    
+    h1,.artist, .album{
+        font-weight:normal;
+        margin:0;
+        padding:0;
+    }
+    .artist{
+        border-bottom:solid 1px gray;
+        padding:.2em 0 .2em 0em;
+        font-size:1.4em;
+        margin-bottom:0.6em;
+        font-style:italic;
+    }
+    .album{
+        float:right;
+        text-align:center;
+        position:relative;
+        top:-35px;
+        font-style:italic;
+        font-size:1em;
+        img{
+            max-width:150px;
+        }
+    }
+    p{
+        padding-left:0.7em;
+    }
+    
+    .bridge{
+        border-left:dashed 2px @hint-color;
+    }
+    
+    .chord{
+        display:inline-block;
+    }
+    .chord-name{
+        display:block;
+        font-style:italic;
+        color:@hint-color;
+        sup{
+            font-size:0.9em;
+            top:-3px;
+        }
+    }
+    .chord-text{
+        display:block;
+    }
+    
+    .chorus{
+        font-weight:600;
+        border-left:solid 2px @hint-color;
+        .chord-name,
+        .echo, .rep{
+            font-weight:normal;
+        }
+    }
+    .echo{
+        &:before{
+            content:"(";
+        }
+        &:after{
+            content:")";
+        }
+    }
+    .rep{
+        color:@hint-color;
+        &:before{
+            content:"\00a0\00d7";
+        }
+    }
+    
+    .song-content {
+        counter-reset: verse-counter;
+        //font-family:serif;
+        .verse{
+            position:relative;
+            &:before {
+                color:@hint-color;
+                content: counter(verse-counter) + ".";
+                counter-increment: verse-counter;
+                position:absolute;
+                display:inline-block;
+                left: -.8em;
+            }
+        }
+    }
+    
+    .transposition,
+    .transposition-{
+        background-color:@hint-color-bg;
+        display:inline-block;
+        padding:0 1em;
+        &:before{
+            font-size:1.5em;
+        }
+    }
+    .transposition:before{
+        content:"\21d1";
+    }
+    
+    .transposition-:before{
+        content:"\21d3";
+    }
+    .unsupported{
+        color:#999;
+        &:hover{
+            color:#000;
+        }
+    }
+}
