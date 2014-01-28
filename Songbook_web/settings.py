@@ -23,6 +23,10 @@ SECRET_KEY = 'l%a%^4avc2f&yr*gs&)_0@ls#2__l8fx&qyn#t2jjyo^#x2%bo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TEMPLATE_CONTEXT': True,
+}
+
 
 ALLOWED_HOSTS = []
 
@@ -45,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'generator',
     'south',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,7 +110,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Templates dans le dossier template

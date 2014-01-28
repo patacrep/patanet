@@ -25,6 +25,7 @@ urlpatterns = patterns('generator.views',
     #url(r'^songbooks/(?P<pk>\d+)-(?P<slug>[\w-]+)/songs$', MISSING_VIEW, name=""),
     #url(r'^songbooks/(?P<pk>\d+)-(?P<slug>[\w-]+)/edit$', MISSING_VIEW, name=""),
     url(r'^songbooks/new$', NewSongbook.as_view(), name="new_songbook"),
+    url(r'^songbooks/add-song$', 'add_song_to_songbook', name='add_song_to_songbook'),
 )
 
 urlpatterns += patterns('',

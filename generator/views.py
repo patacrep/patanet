@@ -166,12 +166,31 @@ class ShowSongbook(DetailView):
     
     def get_queryset(self):
         return Songbook.objects.filter(pk=self.kwargs['pk'],
-                                       slug=self.kwargs['slug']
-                                       )
+                                       slug=self.kwargs['slug'])
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(NewSongbook, self).dispatch(*args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super(ShowSongbook, self).get_context_data(**kwargs)        
         context['options'] = self.songbook_options
         return context
-    
-    
+
+@login_required
+def add_song_to_songbook(request):
+    """Add a song to the songs list in session.
+    Add this song to a specific songbook.
+    """
+    if (request.GET['song']!=None and request.GET['songbook']!=None): 
+        song_id = request.GET['song']
+        songbook_id = request.GET['songbook']
+        song=Song.objects.get(pk=song_id)
+        songbook=Songbook.objects.get(pk=songbook_id)
+        try:
+            request.session.songs[str(songbook_id)].append(song_id)
+        except KeyError:
+            request.session.songs={str(songbook_id):[song_id]}
+    else:
+        messages.error(request, _("Ce chant ou ce carnet n'existent pas."))
+    return render(request, 'generator/add_song_to_songbook.html',locals())    

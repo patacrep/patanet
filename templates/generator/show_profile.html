@@ -15,7 +15,7 @@ Profil de {{ username }}
 		<table>
 		<tr><th>{% trans "Titre" %}</th><th>{% trans "Description" %}</th><th>{% trans "Nombre de chants" %}</th></tr>
 		{% for songbook in profile.songbooks.all %}
-		<tr><td> {{ songbook.title }}</td><td> {{ songbook.description }}</td><td> ??? </td></tr>
+		<tr><td> <a href="{% url "show_songbook" slug=songbook.slug pk=songbook.pk%}">{{ songbook.title }}</a></td><td> {{ songbook.description }}</td><td> ??? </td></tr>
 		{% endfor %}
 		</table>
 	</div>
