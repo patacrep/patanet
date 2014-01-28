@@ -37,8 +37,8 @@ class Register(CreateView):
         user = form.save()
         profile = Profile(user=user)
         profile.save()
-        messages.success(self.request, _("Vous êtes à présent inscrit." 
-                    "Connectez-vous pour accéder à votre profil."))
+        messages.success(self.request, _(u"Vous êtes à présent inscrit." 
+                    u"Connectez-vous pour accéder à votre profil."))
         return super(CreateView, self).form_valid(form)
     
 class PasswordChange(FormView):
@@ -53,7 +53,7 @@ class PasswordChange(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, _("Votre mot de passe a bien été modifié."))
+        messages.success(self.request, _(u"Votre mot de passe a bien été modifié."))
         return super(FormView, self).form_valid(form)
     
     @method_decorator(login_required)
@@ -69,7 +69,7 @@ class PasswordReset(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, _("Un email de confirmation vous a été envoyé."))
+        messages.success(self.request, _(u"Un email de confirmation vous a été envoyé."))
         return super(FormView, self).form_valid(form)
 
 
@@ -148,7 +148,7 @@ class NewSongbook(CreateView):
     
     def form_valid(self, form):
         form.user=self.request.user
-        messages.success(self.request, _("Le nouveau receuil a été créé."))
+        messages.success(self.request, _(u"Le nouveau receuil a été créé."))
         return super(NewSongbook, self).form_valid(form)
     
     
