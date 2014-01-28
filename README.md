@@ -9,6 +9,8 @@ Be sure you have Python and Django (1.6.1) installed.
 You will also need the 'south' package (see http://south.readthedocs.org/en/latest/installation.html). 
 In short : `pip install south` or `easy_install South`.
 
+In order to get the compilation engine, do `git submodule init` and `git submodule update`.
+
 ## Configuration
 
 Init the DB with:
