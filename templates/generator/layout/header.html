@@ -1,0 +1,77 @@
+{% load i18n %}
+
+
+<div class="logo">
+    {% trans "Songbook-web" %}
+</div>
+<nav>
+    <h2>
+        Menus de navigation
+    </h2>
+    <h3>
+        Navigation
+    </h3>
+    <ul>
+        <li>
+		<li><a href="{% url 'home' %}">{% trans "Page d'accueil"%}</a></li>
+		<li><a href="{% url 'artist_list' %}">{% trans "Liste des chants" %}</a></li>
+		<li><a href="{% url 'songbook_list' %}">{% trans "Liste des carnets" %}</a></li> 
+    </ul>
+    <!--
+    <h3>
+        Contribuer
+    </h3>
+    <ul>
+        <li>
+            <a href="#">
+                Premiers pas
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                Aide
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                Modifications récentes
+            </a>
+        </li>
+    </ul>
+    <h3>
+        Liens
+    </h3>
+    <ul>
+        <li>
+            <a href="#">
+                GithubSongBook
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                Patacrep
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                Songbook
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                LaTeX
+            </a>
+        </li>
+    </ul>
+    <h3>
+        Autres langues
+    </h3>
+    <ul>
+        <li>
+            <a href="#">
+                Anglais
+            </a>
+        </li>
+    </ul>
+    -->
+</nav>

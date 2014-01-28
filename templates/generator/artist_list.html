@@ -1,8 +1,6 @@
-{% extends "generator/generator_base.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
 {% block title %} {% trans "Liste des auteurs" %} {% endblock %}
-
-{% block headertitle %} {% trans "Liste des auteurs" %} {% endblock %}
 
 {% block content %}
 	{% for artist in artist_list %} {# TODO: utiliser un tableau #}
@@ -11,5 +9,5 @@
 			<p><a href="{% url "song_list_by_artist" artist=artist.slug %}">{% trans "Voir la liste des chants de cet artiste" %}</a>
 		</div>
 	{% endfor %}
-{% include "generator/pagination.html" %}
+{% include "generator/layout/pagination.html" %}
 {% endblock %}

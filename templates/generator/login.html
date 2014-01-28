@@ -1,8 +1,6 @@
-{% extends "generator/generator_base.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
 {% block title %}{% trans "Se connecter" %}{% endblock %}
-
-{% block headertitle %}{% trans "Se connecter"%}{% endblock %}
 
 {% block content %}
 	{% if next != '' %}

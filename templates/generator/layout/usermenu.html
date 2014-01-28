@@ -1,0 +1,28 @@
+{% load i18n %}
+
+
+{% if user.is_authenticated %}
+<ul class="user-menu">
+    <li>
+        {% blocktrans with username=user.username %}
+			Bienvenue, {{ username }} !
+        {% endblocktrans %}
+    </li>
+	<li>
+		<a href="{% url 'profile' %}">{% trans "Mon profil" %}</a>
+	</li> 
+    <li>
+        <a href="{% url 'logout' %}">{% trans "Se déconnecter" %}</a> 
+    </li>
+</ul>
+
+{% else %}
+<ul class="user-menu">
+    <li>
+        <a href="{% url 'register' %}">{% trans "Créer un compte" %}</a>
+    </li>
+    <li>
+        <a href="{% url 'login' %}">{% trans "Connexion" %}</a>
+    </li>
+</ul>
+{% endif %}

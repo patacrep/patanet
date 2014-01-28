@@ -1,0 +1,29 @@
+{% extends "generator/layout/doctype.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block extrahead %}
+	<link type="text/css" rel="stylesheet" href="{% static "css/generator.css" %}" />
+{% endblock %}
+
+{% block body %}
+	<header>
+		{% include "generator/layout/header.html" %}
+	</header>
+
+	<div class="app-menu">
+		{% include "generator/layout/usermenu.html" %}
+	</div>
+
+	{% include "generator/layout/messages.html" %}
+
+	<div id="content">
+	<h1> {% block title %}No title{% endblock %}</h1>
+		{% block content %}No content{% endblock %}
+	</div>
+
+	<footer>
+	{% include "generator/layout/footer.html" %}
+	</footer>
+		
+{% endblock %}

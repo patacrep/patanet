@@ -1,8 +1,6 @@
-{% extends "generator/generator_base.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
 {% block title %}{% trans "Nouveau receuil" %}{% endblock %}
-
-{% block headertitle %}{% trans "Nouveau receuil"%}{% endblock %}
 
 {% block content %}
 	<form method="post" action="{% url 'new_songbook' %}">

@@ -19,7 +19,7 @@ import json
 
 def home(request):
     headertitle = _('Accueil')
-    return render(request, 'generator/generator_base.html',locals())
+    return render(request, 'generator/home.html',locals())
 
 ## User specifics views
 #######################

@@ -1,13 +1,7 @@
-{% extends "generator/generator_base.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
 {% block title %}{% blocktrans with artist=artist.name %}
 Liste des chants de {{ artist }} 
-{% endblocktrans %}
-{% endblock %}
-
-{% block headertitle %}
-{% blocktrans with artist=artist.name %}
-Liste des chants de {{ artist }} disponibles
 {% endblocktrans %}
 {% endblock %}
 
@@ -19,5 +13,5 @@ Liste des chants de {{ artist }} disponibles
 			<p><a href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">Voir le chant</a>
 		</div>
 	{% endfor %}
-{% include "generator/pagination.html" %}
+{% include "generator/layout/pagination.html" %}
 {% endblock %}

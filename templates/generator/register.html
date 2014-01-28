@@ -1,8 +1,6 @@
-{% extends "generator/generator_base.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}{% trans "S'inscrire "%}{% endblock %}
-
-{% block headertitle %}{% trans "Inscription" %}{% endblock %}
+{% block title %}{% trans "Créer un compte" %}{% endblock %}
 
 {% block content %}
 <form method="post" action="{% url 'register' %}">
