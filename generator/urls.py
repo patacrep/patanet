@@ -33,7 +33,7 @@ urlpatterns += patterns('',
     url(r'^user/logout$', 'django.contrib.auth.views.logout',{'next_page': '/'}, name='logout'),
     url(r'^user/change-password$', PasswordChange.as_view(),name='password_change'),
     url(r'^user/reset-password$', PasswordReset.as_view(),name='password_reset'),
-    url(r'^user/reset-password-do?uid=(?P<uidb36>.+)&token=(?P<token>.+)$', PasswordReset.as_view(),name='password_reset_confirm'),
+    url(r'^user/reset-password-do$', PasswordReset.as_view(),name='password_reset_confirm'),
     url(r'^user/register$', Register.as_view(),name='register'),
     #url(r'^user/edit', MISSING_VIEW,name='profile_edit'),
 )
