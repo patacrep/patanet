@@ -9,13 +9,16 @@
 	</div>
 	<div id='options'>
 	<h3>{% trans "Options du carnet" %}</h3>
-	<p>{{ options }}</p>
+	<p>{% for option in songbook.bookoptions %}
+	{{ option }}
+	{% endfor %}</p>
 	</div>
 	<div id='songs'>
 	<h3>{% trans "Chants du carnet" %}</h3>
 		<ul>
-		{% for song in options.songs %}
+		{% for song in songbooks.songs %}
 			<li> {{ song }} </li>
-		{% endfor %}	
+		{% endfor %}
+		</ul>
 	</div>
 {% endblock %}
