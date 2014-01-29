@@ -10,6 +10,7 @@ from generator import models
 from django.db import transaction
 from django.utils.text import slugify
 from django.utils.encoding import smart_text
+from django.conf.global_settings import LANGUAGES
 
 def _file_error(error):
     print(error)
@@ -29,9 +30,9 @@ class Command(BaseCommand):
                                              onerror=_file_error,
                                              followlinks=False):
 
-            for file in filenames:
-                if file.lower().endswith(".sg"):
-                    filepath = os.path.join(root, file)
+            for filename in filenames:
+                if filename.lower().endswith(".sg"):
+                    filepath = os.path.join(root, filename)
                     filepath_rel = os.path.relpath(filepath, settings.SONGS_LIBRARY_DIR)
                     try:
                         data = parsetex(filepath)
@@ -56,17 +57,20 @@ class Command(BaseCommand):
                                                   "Picking any.")
                             if (len(data['languages']) > 0):
                                 language_name = data["languages"].pop()
-                                language_model, created = models.Language.objects.get_or_create(name=language_name,
-                                                                                                defaults={'code':language_name[:6]})
-                                # TODO: fill with country code
+                                language_code = next((x for x in LANGUAGES if x[1].lower() == language_name.lower()), ('',''))[0]
+                                if language_code == '':
+                                    self.stderr.write("*** No code found for language : '" + language_name + "'")
 
                             song_title = smart_text(data['titles'][0], 'utf-8')
                             song_slug = slugify(song_title)
                             song_model, created = models.Song.objects.get_or_create(slug=song_slug,
                                                                                     defaults={'title':song_title,
-                                                                                              'language':language_model,
+                                                                                              'language':language_code,
                                                                                               'artist':artist_model})
-                            if not created:
+                            if created:
+                                self.stdout.write("-> Created.")
+                            else:
+                                self.stdout.write("-> Already exists.")
                                 if (song_model.title != song_title):
                                     self.stderr.write("*** Song names differs though slugs are equal : "
                                                       + song_title + " / " 
@@ -79,7 +83,6 @@ class Command(BaseCommand):
                             song_model.file = gitfile
 
                             artist_model.save()
-                            language_model.save()
                             gitfile.save()
                             song_model.save()
 

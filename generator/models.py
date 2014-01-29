@@ -8,22 +8,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.db.models.signals import post_delete
 from django.dispatch.dispatcher import receiver
+from django.conf.global_settings import LANGUAGES
 
 song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
 songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
 
 ######################################################
-
-
-class Language(models.Model):
-    name = models.CharField(max_length=20, unique=True, null=False)
-    code = models.CharField(max_length=6, unique=True, null=False)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = _("langue")
 
 
 class Artist(models.Model):
@@ -42,9 +32,9 @@ class Song(models.Model):
     title = models.CharField(max_length=100, verbose_name=_('titre'))
     slug = models.SlugField(max_length=100, unique=True)
     artist = models.ForeignKey(Artist, verbose_name=_('artiste'))
-    language = models.ForeignKey(Language,
-                                 verbose_name=_('langue'),
-                                 null=True)
+    # Pick the language as e.g. fr-FR or sr-latn from the list
+    # provided by django
+    language = models.CharField(max_length=7, choices=LANGUAGES, null=True)
     capo = models.IntegerField(null=True, blank=True)
     file = models.OneToOneField('GitFile', null=True)
 
@@ -67,7 +57,8 @@ class Songbook(models.Model):
     title = models.CharField(max_length=100, verbose_name=_("titre"))
     description = models.TextField(blank=True, verbose_name=_("description"))
 
-    content_file = models.FileField(storage=songbooks_library, upload_to=get_songbook_path)
+    content_file = models.FileField(storage=songbooks_library,
+                                    upload_to=get_songbook_path)
     slug = models.SlugField(max_length=100)
     is_public = models.BooleanField(default=False)
 
@@ -90,12 +81,16 @@ def songbook_post_delete_handler(sender, **kwargs):
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    songbooks = models.ManyToManyField(Songbook,blank=True,through='SongbooksByUser',related_name='songbooks')    
+    songbooks = models.ManyToManyField(Songbook,
+                                       blank=True,
+                                       through='SongbooksByUser',
+                                       related_name='songbooks')
 
-    def __unicode__(self): 
+    def __unicode__(self):
         return self.user.username
+
     class Meta:
-        verbose_name=_('profil')       
+        verbose_name = _('profil')
 
 
 class SongbooksByUser(models.Model):
@@ -105,7 +100,7 @@ class SongbooksByUser(models.Model):
 
     def __unicode__(self):
         return _("Carnet de chant {songbook_name}, utilisé par {user}" \
-                 ).format(songbook_name=self.songbook,user=self.user)
+                 ).format(songbook_name=self.songbook, user=self.user)
 
 
 class GitFile(models.Model):
@@ -116,7 +111,8 @@ class GitFile(models.Model):
         file_version     string    version of the file as currently known in db
     """
 
-    file_path = models.CharField(max_length=500)  # not FileField, we take care of the file.
+    # We use a CharField here, not FileField, we take care of the file.
+    file_path = models.CharField(max_length=500)
     file_version = models.CharField(max_length=20)
 
     def __unicode__(self):
