@@ -1,0 +1,10 @@
+{% load i18n %}
+{% if is_paginated and page_obj.has_other_pages %}
+<div class="pagination by_name">
+    <ul>
+    {% for p in page_obj.paginator.pages %}<li {% if p == page_obj %}class="active"{% endif %}>
+		    <a href="?page={{ p.number }}">{{ p }}</a>
+		</li>{% endfor %}
+    </ul>
+</div>
+{% endif %}

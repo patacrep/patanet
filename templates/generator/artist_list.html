@@ -3,7 +3,7 @@
 {% block title %} {% trans "Tous les artistes" %} {% endblock %}
 
 {% block content %}
-<h2 class="artist"></h2>
+{% include "generator/layout/name_pagination.html" %}
 	<form method="post" action="404">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "artist_list" %}">
@@ -21,5 +21,4 @@
 		<input type="button" value="{% trans "Tout (dé)séléctionner" %}"/>
 		<input type="submit" value="{% trans "Ajouter au receuil" %}"/>
 	</form>
-{% include "generator/layout/pagination.html" %}
 {% endblock %}

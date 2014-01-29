@@ -3,6 +3,7 @@
 {% block title %} {% trans "Toutes les chansons" %} {% endblock %}
 
 {% block content %}
+{% include "generator/layout/name_pagination.html" %}
 	<form method="post" action="404">
 		{% csrf_token %}		
 		<ol class="songs selection">
@@ -20,5 +21,4 @@
 		<input type="submit" value="{% trans "Ajouter au receuil" %}"/>
 	</form>
 	
-{% include "generator/layout/pagination.html" %}
 {% endblock %}

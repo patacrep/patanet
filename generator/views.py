@@ -12,6 +12,7 @@ from django.utils.translation import ugettext as _
 
 from generator.models import Song, Artist, Songbook, Profile
 from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
+from generator.name_paginator import NamePaginator
 
 ##############################################
 ##############################################
@@ -91,6 +92,7 @@ class SongList(ListView):
     context_object_name = "song_list" 
     template_name = "generator/song_list.html"
     paginate_by=30
+    paginator_class = NamePaginator
     queryset=Song.objects.all().order_by('title')
 
 class SongListByArtist(ListView):
@@ -122,6 +124,7 @@ class ArtistList(ListView):
     context_object_name = "artist_list" 
     template_name = "generator/artist_list.html"
     paginate_by = 20
+    paginator_class = NamePaginator
     queryset = Artist.objects.order_by('name')
 
 ## Songbooks views

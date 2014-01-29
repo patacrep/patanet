@@ -19,6 +19,7 @@ class Artist(models.Model):
 
     class Meta:
         verbose_name = _("artiste")
+        ordering = ["name"]
 
 
 class Song(models.Model):
@@ -36,6 +37,7 @@ class Song(models.Model):
 
     class Meta:
         verbose_name = _("chant")
+        ordering = ["title"]
 
 ###############################################################
 

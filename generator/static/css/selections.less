@@ -53,3 +53,28 @@ a.back{
 	}
 	
 }
+
+.pagination{
+	&.by_name{
+        border-bottom:solid 1px gray;
+        margin-top:.5em;
+	}
+	ul{
+		padding:0;
+		margin:0;
+	}
+	li{
+		list-style:none;
+		display:inline-block;
+		
+		a{
+			padding:0 .3em;
+		}
+		&.active{
+			font-weight:bold;
+			a{
+				color:black;
+			}
+		}
+	}
+}
