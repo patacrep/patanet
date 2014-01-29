@@ -2,18 +2,11 @@
 import os
 from django.db import models
 from django.contrib.auth.models import User
-#from django.core.files.storage import FileSystemStorage
-#from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
-#from django.db.models.signals import post_delete
-#from django.dispatch.dispatcher import receiver
 from django.conf.global_settings import LANGUAGES
 
 from jsonfield import JSONField
-
-#song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
-#songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
 
 
 class Artist(models.Model):
@@ -103,13 +96,6 @@ class SongsInSongbooks(models.Model):
     def __unicode__(self):
         return _("Chant {song}, dans le carnet {songbook}" \
                  ).format(song=self.song, songbook=self.songbook)
-
-# @receiver(post_delete, sender=Songbook)
-# def songbook_post_delete_handler(sender, **kwargs):
-#     songbook = kwargs['instance']
-#     storage, path = songbook.content_file.storage, songbook.content_file.path
-#     storage.delete(path)
-
 
 ###############################################################
 

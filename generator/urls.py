@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.conf.urls import patterns, url
-from generator.views import SongView, SongListByArtist, ArtistList, \
+from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
      view_profile, PasswordChange, PasswordReset, Register, \
      NewSongbook, ShowSongbook, SongbookList
 
@@ -15,7 +15,7 @@ urlpatterns = patterns('generator.views',
     #url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/edit$', MISSING_VIEW, name='edit_song'),
     #url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/history$', MISSING_VIEW, name='song_history'),
     url(r'^songs/(?P<artist>[\w-]+)/$', SongListByArtist.as_view(), name="song_list_by_artist"),
-    #url(r'^songs/$', SongList.as_view(), name="song_list"),
+    url(r'^songs/$', SongList.as_view(), name="song_list"),
     #url(r'^songs/random$', MISSING_VIEW, name="random_song"),
     #url(r'^songs/search', MISSING_VIEW, name="song_search"),
     url(r'^artists/$', ArtistList.as_view(), name="artist_list"),

@@ -9,12 +9,9 @@ from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
-from django.db.models import Q
 
 from generator.models import Song, Artist, Songbook, Profile
 from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
-
-import json
 
 ##############################################
 ##############################################
@@ -89,6 +86,13 @@ class PasswordResetConfirm(FormView): # TODO: Tester si ça fonctionne
 ## Songs views
 ##############################################
 
+class SongList(ListView):
+    model = Song
+    context_object_name = "song_list" 
+    template_name = "generator/song_list.html"
+    paginate_by=30
+    queryset=Song.objects.all().order_by('title')
+
 class SongListByArtist(ListView):
     model = Song
     context_object_name = "song_list" 
@@ -102,9 +106,7 @@ class SongListByArtist(ListView):
     def get_context_data(self, **kwargs):
         context = super(SongListByArtist,self).get_context_data(**kwargs)
         context['artist'] = Artist.objects.get(slug=self.kwargs['artist']) 
-        # FIXME: Si l'objet n'existe pas ? Déjà géré par le get_object_or_404 ?
         return context
-
 
 class SongView(DetailView):
     context_object_name = "song" 
