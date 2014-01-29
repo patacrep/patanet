@@ -1,5 +1,6 @@
 import string
-from django.core.paginator import InvalidPage, EmptyPage
+from django.core.paginator import InvalidPage
+from unidecode import unidecode
 
 class NamePaginator(object):
     """Pagination for string-based objects"""
@@ -12,6 +13,8 @@ class NamePaginator(object):
 
         # chunk up the objects so we don't need to iterate over the whole list for each letter
         chunks = {}
+        numbers = "0123456789"
+        alphabet = numbers + string.ascii_uppercase
 
         # we sort them by the first model ordering key
         for obj in self.object_list:
@@ -26,29 +29,37 @@ class NamePaginator(object):
             except:
                 obj_str = unicode(getattr(obj, obj._meta.ordering[1]))
                 letter = unicode.upper(obj_str[1])
+            letter = unidecode(letter)
 
+            if letter not in alphabet: letter = "#"
             if letter not in chunks: chunks[letter] = []
 
             chunks[letter].append(obj)
 
         # the process for assigning objects to each page
         current_page = NamePage(self)
+        
+        special_cases = "#"
 
-        for letter in string.ascii_uppercase:
+        for letter in alphabet + special_cases:
             if letter not in chunks:
-                current_page.add([], letter)
-                continue
-
-            sub_list = chunks[letter] # the items in object_list starting with this letter
+                if letter in alphabet:
+                    current_page.add([], letter)
+                #continue
+                sub_list = []
+            else:
+                sub_list = chunks[letter] # the items in object_list starting with this letter
 
             new_page_count = len(sub_list) + current_page.count
             # first, check to see if sub_list will fit or it needs to go onto a new page.
             # if assigning this list will cause the page to overflow...
             # and an underflow is closer to per_page than an overflow...
             # and the page isn't empty (which means len(sub_list) > per_page)...
-            if new_page_count > paginate_by and \
+            if (new_page_count > paginate_by and \
                     abs(paginate_by - current_page.count) < abs(paginate_by - new_page_count) and \
-                    current_page.count > 0:
+                    current_page.count > 0) or \
+                    letter in special_cases or \
+                    letter == "A":
                 # make a new page
                 self.pages.append(current_page)
                 current_page = NamePage(self)
