@@ -20,14 +20,18 @@ a.back{
 		&:hover{
 			background-color:@selection-hover-bg;
 		}
+		
+		&:hover input,
+		input:checked{
+			opacity:1;
+		}
+		input{
+			opacity:0.5;
 		}
 		
 		label.selected, 
 		input:checked + label{
 			color:darken(@link-visited,10%);
-		}
-		input{
-			margin:0 0.4em;
 		}
 		label{
 			display:inline-block;
