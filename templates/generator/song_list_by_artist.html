@@ -21,7 +21,7 @@
 				<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">{% trans "Paroles" %}</a>
 			</li>
 		{% endfor %}
-		</ol>
+		</ol><br/>
 		<input type="button" value="{% trans "Tout (dé)séléctionner" %}"/>
 		<input type="submit" value="{% trans "Ajouter au receuil" %}"/>
 	</form>

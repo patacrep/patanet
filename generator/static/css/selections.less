@@ -10,11 +10,16 @@ a.back{
 
 .selection{
 	padding:0;
+	display:inline-block;
 	li{
 		list-style:none;
 		
+		&:nth-child(odd){
+			background-color:@selection-strip-bg;
+		}
 		&:hover{
-			background-color:rgba(0,0,0,0.1);
+			background-color:@selection-hover-bg;
+		}
 		}
 		
 		label.selected, 

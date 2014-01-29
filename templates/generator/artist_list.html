@@ -17,7 +17,7 @@
 				<a class="details songs" href="{% url "song_list_by_artist" artist=artist.slug %}">{% trans "Liste des chants" %}</a>
 			</li>
 		{% endfor %}
-		</ol>
+		</ol><br/>
 		<input type="button" value="{% trans "Tout (dé)séléctionner" %}"/>
 		<input type="submit" value="{% trans "Ajouter au receuil" %}"/>
 	</form>
