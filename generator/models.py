@@ -2,18 +2,18 @@
 import os
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
+#from django.core.files.storage import FileSystemStorage
+#from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
-from django.db.models.signals import post_delete
-from django.dispatch.dispatcher import receiver
+#from django.db.models.signals import post_delete
+#from django.dispatch.dispatcher import receiver
 from django.conf.global_settings import LANGUAGES
 
-song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
-songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
+from jsonfield import JSONField
 
-######################################################
+#song_library = FileSystemStorage(location=settings.SONGS_LIBRARY_DIR)
+#songbooks_library = FileSystemStorage(location=settings.SONGBOOKS_DIR)
 
 
 class Artist(models.Model):
@@ -52,16 +52,30 @@ def get_songbook_path(songbook, filename):
     filename = slugify(songbook.title) + ".sb"
     return os.path.join(user_directory, filename)
 
+CHRD='chrd'
+LYR='lyr'
+BOOKTYPES=((CHRD,_("Avec accords")),
+           (LYR,_("Sans accords"))
+           )
 
 class Songbook(models.Model):
     title = models.CharField(max_length=100, verbose_name=_("titre"))
-    description = models.TextField(blank=True, verbose_name=_("description"))
-
-    content_file = models.FileField(storage=songbooks_library,
-                                    upload_to=get_songbook_path)
     slug = models.SlugField(max_length=100)
-    is_public = models.BooleanField(default=False)
-
+    description = models.TextField(blank=True, verbose_name=_("description"))
+    is_public = models.BooleanField(default=False, verbose_name=_("carnet public"))
+    bookoptions = JSONField()
+    booktype = models.CharField(max_length=4, choices=BOOKTYPES, default=CHRD)
+    template = models.CharField(max_length=100,
+                                verbose_name=_("gabarit"),
+                                default="patacrep.tmpl")
+    #songbook['lang']='lang'
+    #other_options = SerializedDataField()
+    # Other options are : web mail picture picturecopyright footer license (a .tex file) 
+    # mainfontsize songnumberbgcolor notebgcolor indexbgcolor 
+    songs = models.ManyToManyField(Song,
+                                   blank=True,
+                                   through='SongsInSongbooks',
+                                   related_name='songs')
     def __unicode__(self):
         return self.title
 
@@ -70,11 +84,31 @@ class Songbook(models.Model):
         verbose_name_plural = _("carnets de chants")
 
 
-@receiver(post_delete, sender=Songbook)
-def songbook_post_delete_handler(sender, **kwargs):
-    songbook = kwargs['instance']
-    storage, path = songbook.content_file.storage, songbook.content_file.path
-    storage.delete(path)
+class SectionInSongbooks(models.Model):
+    name = models.CharField(max_length=200, 
+                            verbose_name=_("nom de section"),
+                            default="main section"
+                            )
+    
+    def __unicode__(self):
+        return self.name
+
+
+class SongsInSongbooks(models.Model): 
+    song = models.ForeignKey(Song)
+    songbook = models.ForeignKey(Songbook)
+    rank_in_section = models.IntegerField(verbose_name=_("position"))
+    section = models.ForeignKey(SectionInSongbooks)
+    
+    def __unicode__(self):
+        return _("Chant {song}, dans le carnet {songbook}" \
+                 ).format(song=self.song, songbook=self.songbook)
+
+# @receiver(post_delete, sender=Songbook)
+# def songbook_post_delete_handler(sender, **kwargs):
+#     songbook = kwargs['instance']
+#     storage, path = songbook.content_file.storage, songbook.content_file.path
+#     storage.delete(path)
 
 
 ###############################################################

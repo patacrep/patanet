@@ -15,14 +15,16 @@ from generator.models import Song, Artist, Songbook, Profile
 from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
 
 import json
-# Create your views here.
+
+##############################################
+##############################################
 
 def home(request):
     headertitle = _('Accueil')
     return render(request, 'generator/home.html',locals())
 
 ## User specifics views
-#######################
+##############################################
 @login_required
 def view_profile(request):
     profile = Profile.objects.get(user=request.user)
@@ -85,7 +87,7 @@ class PasswordResetConfirm(FormView): # TODO: Tester si ça fonctionne
 
 
 ## Songs views
-#######################
+##############################################
 
 class SongListByArtist(ListView):
     model = Song
@@ -121,7 +123,7 @@ class ArtistList(ListView):
     queryset = Artist.objects.order_by('name')
 
 ## Songbooks views
-#######################
+##############################################
 
 class SongbookList(ListView):
     model = Songbook
@@ -129,7 +131,8 @@ class SongbookList(ListView):
     template_name = "generator/songbook_list.html"
     
     def get_queryset(self):
-        return Songbook.objects.filter(songbooksbyuser__user__user__id=self.request.user.id).order_by('is_public','title')
+        return Songbook.objects.filter(songbooksbyuser__user__user__id=self.request.user.id
+                                       ).order_by('is_public','title')
                 
     def get_context_data(self, **kwargs):
         context = super(SongbookList, self).get_context_data(**kwargs)
@@ -155,14 +158,7 @@ class NewSongbook(CreateView):
 class ShowSongbook(DetailView):
     model=Songbook
     template_name = 'generator/show_songbook.html'
-    songbook_options={}
     context_object_name = 'songbook'
-    
-    def get_object(self):
-        songbook = super(ShowSongbook, self).get_object()
-        options = songbook.content_file.read()
-        self.songbook_options=json.loads(options)
-        return songbook
     
     def get_queryset(self):
         return Songbook.objects.filter(pk=self.kwargs['pk'],
@@ -171,11 +167,6 @@ class ShowSongbook(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ShowSongbook, self).dispatch(*args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        context = super(ShowSongbook, self).get_context_data(**kwargs)        
-        context['options'] = self.songbook_options
-        return context
 
 @login_required
 def add_song_to_songbook(request):
