@@ -129,7 +129,7 @@ class SongbookList(ListView):
     template_name = "generator/songbook_list.html"
     
     def get_queryset(self):
-        return Songbook.objects.filter(songbooksbyuser__user__user=self.request.user).order_by('is_public','title')
+        return Songbook.objects.filter(songbooksbyuser__user__user__id=self.request.user.id).order_by('is_public','title')
                 
     def get_context_data(self, **kwargs):
         context = super(SongbookList, self).get_context_data(**kwargs)
