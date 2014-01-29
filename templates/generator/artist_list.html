@@ -11,7 +11,7 @@
 		{% for artist in artist_list %} {# TODO: utiliser un tableau #}
 			<li>
 				<input type="checkbox" name="artists[]" value="{{ artist.id }}" id="artist_{{ artist.id }}">
-				<label class="artist" for="artist_{{ artist.id }}">
+				<label class="artist" for="artist_{{ artist.id }}" title="{{ artist.name }}">
 					{{ artist.name }}
 				</label>
 				<a class="details songs" href="{% url "song_list_by_artist" artist=artist.slug %}">{% trans "Liste des chants" %}</a>

@@ -13,6 +13,8 @@ a.back{
 	display:inline-block;
 	li{
 		list-style:none;
+		padding:0 0.5em;
+		
 		
 		&:nth-child(odd){
 			background-color:@selection-strip-bg;
@@ -27,6 +29,7 @@ a.back{
 		}
 		input{
 			opacity:0.5;
+			vertical-align:middle;
 		}
 		
 		label.selected, 
@@ -35,10 +38,14 @@ a.back{
 		}
 		label{
 			display:inline-block;
-			min-width:20em;
+			width:20em;
+			white-space: nowrap;
+			text-overflow:ellipsis;
+			overflow:hidden;
+			vertical-align: middle;
+			margin-bottom: 0;
 			cursor:pointer;
-			padding:.2em 0;
-			//min-width:10em;
+			padding:.4em .4em .3em .4em;
 		}
 		.details{
 			font-size:80%;
