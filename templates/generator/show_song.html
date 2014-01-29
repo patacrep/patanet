@@ -14,8 +14,8 @@
 		<input type="hidden" name="songs[]" value="{{ song.id }}">
 		<input type="submit" value="{% trans "Ajouter au receuil" %}"/>
 	</form>
-
-	<p class="infos">en {{ song.language.name }} <br />
+	{% get_language_info for song.language as lang %}
+	<p class="infos">en {{lang.name_local}}<br />
 	{% if song.capo != None %}
 		Utiliser un capodastre en position {{ song.capo }}.
 	{% else %}
