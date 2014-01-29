@@ -14,7 +14,7 @@ class NamePaginator(object):
         # chunk up the objects so we don't need to iterate over the whole list for each letter
         chunks = {}
         numbers = "0123456789"
-        alphabet = numbers + string.ascii_uppercase
+        alphabet = string.ascii_uppercase
 
         # we sort them by the first model ordering key
         for obj in self.object_list:
@@ -31,25 +31,24 @@ class NamePaginator(object):
                 letter = unicode.upper(obj_str[1])
             letter = unidecode(letter)
 
-            if letter not in alphabet: letter = "#"
+            if letter in numbers: letter = "0"
+            elif letter not in alphabet: letter = "#"
+            
             if letter not in chunks: chunks[letter] = []
 
             chunks[letter].append(obj)
 
         # the process for assigning objects to each page
         current_page = NamePage(self)
-        
-        special_cases = "#"
 
-        for letter in alphabet + special_cases:
+        for letter in "0" + alphabet + "#":
             if letter not in chunks:
                 if letter in alphabet:
                     current_page.add([], letter)
-                #continue
-                sub_list = []
-            else:
-                sub_list = chunks[letter] # the items in object_list starting with this letter
-
+                continue
+            
+            sub_list = chunks[letter] # the items in object_list starting with this letter
+            
             new_page_count = len(sub_list) + current_page.count
             # first, check to see if sub_list will fit or it needs to go onto a new page.
             # if assigning this list will cause the page to overflow...
@@ -58,13 +57,16 @@ class NamePaginator(object):
             if (new_page_count > paginate_by and \
                     abs(paginate_by - current_page.count) < abs(paginate_by - new_page_count) and \
                     current_page.count > 0) or \
-                    letter in special_cases or \
-                    letter == "A":
+                    letter == "#":
                 # make a new page
                 self.pages.append(current_page)
                 current_page = NamePage(self)
 
             current_page.add(sub_list, letter)
+            if letter == "0":
+                current_page.add([], "9")
+                self.pages.append(current_page)
+                current_page = NamePage(self)
 
         # if we finished the for loop with a page that isn't empty, add it
         if current_page.count > 0: self.pages.append(current_page)
