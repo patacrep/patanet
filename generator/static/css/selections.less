@@ -10,26 +10,42 @@ a.back{
 
 .selection{
 	padding:0;
+	display:inline-block;
 	li{
 		list-style:none;
+		padding:0 0.5em;
 		
+		
+		&:nth-child(odd){
+			background-color:@selection-strip-bg;
+		}
 		&:hover{
-			background-color:rgba(0,0,0,0.1);
+			background-color:@selection-hover-bg;
+		}
+		
+		&:hover input,
+		input:checked{
+			opacity:1;
+		}
+		input{
+			opacity:0.5;
+			vertical-align:middle;
 		}
 		
 		label.selected, 
 		input:checked + label{
 			color:darken(@link-visited,10%);
 		}
-		input{
-			margin:0 0.4em;
-		}
 		label{
 			display:inline-block;
-			min-width:20em;
+			width:20em;
+			white-space: nowrap;
+			text-overflow:ellipsis;
+			overflow:hidden;
+			vertical-align: middle;
+			margin-bottom: 0;
 			cursor:pointer;
-			padding:.2em 0;
-			//min-width:10em;
+			padding:.4em .4em .3em .4em;
 		}
 		.details{
 			font-size:80%;

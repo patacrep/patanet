@@ -15,13 +15,13 @@
 		{% for song in song_list %}
 			<li>
 				<input type="checkbox" name="songs[]" value="{{ song.id }}" id="song_{{ song.id }}">
-				<label class="song" for="song_{{ song.id }}">
+				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>
 				<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">{% trans "Paroles" %}</a>
 			</li>
 		{% endfor %}
-		</ol>
+		</ol><br/>
 		<input type="button" value="{% trans "Tout (dé)séléctionner" %}"/>
 		<input type="submit" value="{% trans "Ajouter au receuil" %}"/>
 	</form>
