@@ -54,6 +54,32 @@ a.back{
 	
 }
 
+.playlist{
+
+    @media(min-width:@screen-md){
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    
+    background-color:darken(@link-visited,10%);
+    color:white;
+    padding: 0 .5em;
+    font-size:90%;
+    max-height:@playlist-height;
+    overflow-y:auto;
+    overflow-x:hidden;
+    
+    box-shadow: -5px 5px 10px #888888;
+    
+    h2{
+        margin-bottom:0;
+    }
+    .selection{
+        display:block;
+    }
+}
+
 .pagination{
 	&.by_name{
         border-bottom:solid 1px gray;
