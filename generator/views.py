@@ -93,7 +93,7 @@ class SongList(ListView):
     template_name = "generator/song_list.html"
     paginate_by=30
     paginator_class = NamePaginator
-    queryset=Song.objects.all().order_by('title')
+    queryset=Song.objects.all().order_by('slug')
 
 class SongListByArtist(ListView):
     model = Song
@@ -103,7 +103,7 @@ class SongListByArtist(ListView):
     
     def get_queryset(self):
         self.artist = get_object_or_404(Artist, slug=self.kwargs['artist'])
-        return Song.objects.filter(artist=self.artist)
+        return Song.objects.filter(artist=self.artist).order_by('slug')
     
     def get_context_data(self, **kwargs):
         context = super(SongListByArtist,self).get_context_data(**kwargs)
@@ -125,7 +125,7 @@ class ArtistList(ListView):
     template_name = "generator/artist_list.html"
     paginate_by = 20
     paginator_class = NamePaginator
-    queryset = Artist.objects.order_by('name')
+    queryset = Artist.objects.order_by('slug')
 
 ## Songbooks views
 ##############################################
