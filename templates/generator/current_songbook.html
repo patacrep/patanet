@@ -1,5 +1,5 @@
 {% load i18n %}
-
+{% if user.is_authenticated %}
 <div class="playlist">
     <h2>{% trans "Recueil courant" %}</h2>
 		<ol class="artists selection">
@@ -55,3 +55,11 @@
 		</ol><br>
     </div>
 </div>
+{% else %}
+{% url 'login' as login %}{% url 'register' as register %}
+<div class="playlist"><h2>{% trans "Créer un carnet de chants" %}</h2>
+{% blocktrans %}
+Pour créer un nouveau carnet, <a href="{{login}}">connectez-vous</a> ou <a href="{{register}}">inscrivez-vous</a>.
+{% endblocktrans %}
+</div>
+{% endif %}
