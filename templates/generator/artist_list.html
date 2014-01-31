@@ -14,14 +14,9 @@
 				<label class="artist" for="artist_{{ artist.id }}" title="{{ artist.name }}">
 					{{ artist.name }}
 				</label>
-				<label>
-				{% blocktrans count n_songs=artist.songs.count %}
-				{{ n_songs }} chanson
-				{% plural %}
-				{{ n_songs }} chansons
-				{% endblocktrans %}
-				</label>
-				<a class="details songs" href="{% url "song_list_by_artist" artist=artist.slug %}">{% trans "Liste des chants" %}</a>
+				<a class="details songs" href="{% url "song_list_by_artist" artist=artist.slug %}">
+					{% trans "Tous les chants" %} ({{ artist.songs.count }})
+				</a>
 			</li>
 		{% endfor %}
 		</ol><br/>
