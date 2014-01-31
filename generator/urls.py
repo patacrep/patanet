@@ -23,7 +23,7 @@ urlpatterns = patterns('generator.views',
     url(r'^songbooks/$', SongbookList.as_view(), name="songbook_list"),
     url(r'^songbooks/(?P<pk>\d+)-(?P<slug>[\w-]+)/$', ShowSongbook.as_view(), name="show_songbook"),
     #url(r'^songbooks/(?P<pk>\d+)-(?P<slug>[\w-]+)/songs$', MISSING_VIEW, name=""),
-    url(r'^songbooks/(?P<pk>\d+)-(?P<slug>[\w-]+)/edit$', UpdateSongbook.as_view(), name="update_songbook"),
+    url(r'^songbooks/(?P<pk>\d+)-(?P<slug>[\w-]+)/edit$', UpdateSongbook.as_view(), name="edit_songbook"),
     url(r'^songbooks/new$', NewSongbook.as_view(), name="new_songbook"),
     url(r'^songbooks/add-song$', 'add_song_to_songbook', name='add_song_to_songbook'),
 )

@@ -2,6 +2,13 @@
 
 {% block title %} {{ songbook.title }} {% endblock %}
 
+{% block appmenu %}
+	<ul>
+		<li><a href="{% url 'edit_songbook' pk=songbook.pk slug=songbook.slug %}">{% trans "Modifier les options" %}</a></li>
+		<li><a href="">{% trans "Modifier les chants" %}</a></li>
+	</ul>
+{% endblock %}
+
 {% block content %}
 	<div id='infos'>
 	<h3>{{ songbook.title }}</h3>
