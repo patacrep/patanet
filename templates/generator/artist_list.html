@@ -8,11 +8,18 @@
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "artist_list" %}">
 		<ol class="artists selection">
-		{% for artist in artist_list %} {# TODO: utiliser un tableau #}
+		{% for artist in artist_list %}
 			<li>
 				<input type="checkbox" name="artists[]" value="{{ artist.id }}" id="artist_{{ artist.id }}">
 				<label class="artist" for="artist_{{ artist.id }}" title="{{ artist.name }}">
 					{{ artist.name }}
+				</label>
+				<label>
+				{% blocktrans count n_songs=artist.songs.count %}
+				{{ n_songs }} chanson
+				{% plural %}
+				{{ n_songs }} chansons
+				{% endblocktrans %}
 				</label>
 				<a class="details songs" href="{% url "song_list_by_artist" artist=artist.slug %}">{% trans "Liste des chants" %}</a>
 			</li>

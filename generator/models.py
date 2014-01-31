@@ -25,7 +25,7 @@ class Artist(models.Model):
 class Song(models.Model):
     title = models.CharField(max_length=100, verbose_name=_('titre'))
     slug = models.SlugField(max_length=100, unique=True)
-    artist = models.ForeignKey(Artist, verbose_name=_('artiste'))
+    artist = models.ForeignKey(Artist, verbose_name=_('artiste'),related_name="songs")
     # Pick the language as e.g. fr-FR or sr-latn from the list
     # provided by django
     language = models.CharField(max_length=7, choices=LANGUAGES, null=True)
