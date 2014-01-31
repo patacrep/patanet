@@ -1,3 +1,4 @@
+# adapted from https://djangosnippets.org/snippets/2732/
 import string
 from django.core.paginator import InvalidPage
 from unidecode import unidecode
@@ -41,7 +42,7 @@ class NamePaginator(object):
         # the process for assigning objects to each page
         current_page = NamePage(self)
 
-        for letter in "0" + alphabet + "#":
+        for letter in alphabet + "#0":
             if letter not in chunks:
                 if letter in alphabet:
                     current_page.add([], letter)
@@ -57,7 +58,8 @@ class NamePaginator(object):
             if (new_page_count > paginate_by and \
                     abs(paginate_by - current_page.count) < abs(paginate_by - new_page_count) and \
                     current_page.count > 0) or \
-                    letter == "#":
+                    letter == "#" or \
+                    letter == "0":
                 # make a new page
                 self.pages.append(current_page)
                 current_page = NamePage(self)
