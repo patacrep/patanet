@@ -2,10 +2,10 @@
 
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
-from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
@@ -146,7 +146,7 @@ class SongbookList(ListView):
 
 class NewSongbook(CreateView):
     model = Songbook
-    template_name = 'generator/songbook_options.html' 
+    template_name = 'generator/new_songbook.html' 
     form_class = SongbookOptionsForm
     success_url = reverse_lazy('songbook_list')
     
@@ -156,9 +156,33 @@ class NewSongbook(CreateView):
     
     def form_valid(self, form):
         form.user=self.request.user
-        messages.success(self.request, _(u"Le nouveau receuil a été créé."))
+        messages.success(self.request, _(u"Le nouveau carnet a été créé."))
         return super(NewSongbook, self).form_valid(form)
+
+
+class UpdateSongbook(UpdateView):
+    model = Songbook
+    template_name = 'generator/update_songbook.html' 
+    form_class = SongbookOptionsForm
+    #context_object_name = 'songbook'
     
+    def get_success_url(self):
+        return reverse('show_songbook',kwargs=self.kwargs)
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UpdateSongbook, self).dispatch(*args, **kwargs)
+    
+    def get_initial(self):
+        initial = super(UpdateSongbook, self).get_initial()
+        initial['bookoptions']=self.object.bookoptions
+        return initial
+    
+    def form_valid(self, form):
+        form.user=self.request.user
+        messages.success(self.request, _(u"Le carnet a été modifié."))
+        return super(UpdateSongbook, self).form_valid(form)
+        
     
 class ShowSongbook(DetailView):
     model=Songbook

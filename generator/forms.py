@@ -59,10 +59,12 @@ class SongbookOptionsForm(forms.ModelForm):
         
         if commit:
             new_songbook.save()
-            SongbooksByUser.objects.create(user=self.user.profile, songbook=new_songbook, is_owner=True)
+            try:
+                SongbooksByUser.objects.get(user=self.user.profile, songbook=new_songbook)
+            except Songbook.DoesNotExist:
+                SongbooksByUser.objects.create(user=self.user.profile, songbook=new_songbook, is_owner=True)
         return new_songbook
         
-
 class SongForm(forms.ModelForm):
     content = forms.CharField(widget=forms.Textarea)
     class Meta:
