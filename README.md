@@ -5,9 +5,7 @@ Web interface for songbook generation (see https://github.com/crep4ever/songbook
 
 ## Installation
 
-Be sure you have Python and Django (1.6.1) installed.
-You will also need the 'south' package (see http://south.readthedocs.org/en/latest/installation.html). 
-In short : `pip install south` or `easy_install South`.
+Be sure you have Python and pip installed. Then run `pip install Requirements.txt`.
 
 In order to get the compilation engine, do `git submodule init` and `git submodule update`.
 
