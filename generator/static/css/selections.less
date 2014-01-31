@@ -28,7 +28,7 @@ a.back{
 			opacity:1;
 		}
 		input{
-			opacity:0.5;
+			opacity:0.3;
 			vertical-align:middle;
 		}
 		
@@ -36,7 +36,8 @@ a.back{
 		input:checked + label{
 			color:darken(@link-visited,10%);
 		}
-		label{
+		label,
+		.details.artist{
 			display:inline-block;
 			width:15em;
 			white-space: nowrap;
@@ -49,6 +50,11 @@ a.back{
 		}
 		.details{
 			font-size:80%;
+			&.artist{
+				font-style:italic;
+				display:inline-block;
+				width:14em;
+			}
 		}
 	}
 	

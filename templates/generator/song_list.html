@@ -13,7 +13,7 @@
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>
-				<label>{{ song.artist.name }}</label>
+				<a class="details artist" href="{% url "song_list_by_artist" artist=song.artist.slug %}" title="{{ song.artist.name }}">{{ song.artist.name }}</a>
 				<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">{% trans "Paroles" %}</a>
 			</li>
 		{% endfor %}
