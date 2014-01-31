@@ -16,7 +16,7 @@ urlpatterns = patterns('generator.views',
     #url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/history$', MISSING_VIEW, name='song_history'),
     url(r'^songs/(?P<artist>[\w-]+)/$', SongListByArtist.as_view(), name="song_list_by_artist"),
     url(r'^songs/$', SongList.as_view(), name="song_list"),
-    #url(r'^songs/random$', MISSING_VIEW, name="random_song"),
+    url(r'^songs/random$', 'random_song', name="random_song"),
     #url(r'^songs/search', MISSING_VIEW, name="song_search"),
     url(r'^artists/$', ArtistList.as_view(), name="artist_list"),
     
@@ -25,7 +25,7 @@ urlpatterns = patterns('generator.views',
     #url(r'^songbooks/(?P<pk>\d+)-(?P<slug>[\w-]+)/songs$', MISSING_VIEW, name=""),
     url(r'^songbooks/(?P<pk>\d+)-(?P<slug>[\w-]+)/edit$', UpdateSongbook.as_view(), name="edit_songbook"),
     url(r'^songbooks/new$', NewSongbook.as_view(), name="new_songbook"),
-    url(r'^songbooks/add-song$', 'add_song_to_songbook', name='add_song_to_songbook'),
+    #url(r'^songbooks/add-song$', 'add_song_to_songbook', name='add_song_to_songbook'),
 )
 
 urlpatterns += patterns('',

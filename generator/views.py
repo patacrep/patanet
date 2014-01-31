@@ -3,7 +3,7 @@
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaultfilters import slugify
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 from django.contrib.auth.decorators import login_required
@@ -127,6 +127,11 @@ class ArtistList(ListView):
     paginator_class = NamePaginator
     queryset = Artist.objects.order_by('slug')
 
+
+def random_song(request):
+    song=Song.objects.order_by('?')[0]
+    return redirect(reverse('show_song', kwargs={'artist':song.artist.slug,'slug':song.slug}))
+
 ## Songbooks views
 ##############################################
 
@@ -197,20 +202,20 @@ class ShowSongbook(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(ShowSongbook, self).dispatch(*args, **kwargs)
 
-@login_required
-def add_song_to_songbook(request):
-    """Add a song to the songs list in session.
-    Add this song to a specific songbook.
-    """
-    if (request.GET['song']!=None and request.GET['songbook']!=None): 
-        song_id = request.GET['song']
-        songbook_id = request.GET['songbook']
-        song=Song.objects.get(pk=song_id)
-        songbook=Songbook.objects.get(pk=songbook_id)
-        try:
-            request.session.songs[str(songbook_id)].append(song_id)
-        except KeyError:
-            request.session.songs={str(songbook_id):[song_id]}
-    else:
-        messages.error(request, _("Ce chant ou ce carnet n'existent pas."))
-    return render(request, 'generator/add_song_to_songbook.html',locals())    
+# @login_required
+# def add_song_to_songbook(request):
+#     """Add a song to the songs list in session.
+#     Add this song to a specific songbook.
+#     """
+#     if (request.GET['song']!=None and request.GET['songbook']!=None): 
+#         song_id = request.GET['song']
+#         songbook_id = request.GET['songbook']
+#         song=Song.objects.get(pk=song_id)
+#         songbook=Songbook.objects.get(pk=songbook_id)
+#         try:
+#             request.session.songs[str(songbook_id)].append(song_id)
+#         except KeyError:
+#             request.session.songs={str(songbook_id):[song_id]}
+#     else:
+#         messages.error(request, _("Ce chant ou ce carnet n'existent pas."))
+#     return render(request, 'generator/add_song_to_songbook.html',locals())    
