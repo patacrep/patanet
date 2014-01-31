@@ -91,7 +91,7 @@ class SongList(ListView):
     model = Song
     context_object_name = "song_list" 
     template_name = "generator/song_list.html"
-    paginate_by=30
+    paginate_by = 10
     paginator_class = NamePaginator
     queryset=Song.objects.all().order_by('slug')
 
@@ -123,7 +123,7 @@ class ArtistList(ListView):
     model = Artist
     context_object_name = "artist_list" 
     template_name = "generator/artist_list.html"
-    paginate_by = 20
+    paginate_by = 10
     paginator_class = NamePaginator
     queryset = Artist.objects.order_by('slug')
 
