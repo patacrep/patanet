@@ -1,0 +1,4 @@
+Django==1.6.1
+South==0.8.4
+Unidecode==0.04.14
+jsonfield==0.9.20
