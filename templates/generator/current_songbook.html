@@ -1,65 +1,28 @@
 {% load i18n %}
-{% if user.is_authenticated %}
 <div class="playlist">
-    <h2>{% trans "Recueil courant" %}</h2>
-		<ol class="artists selection">
-		 
-			<li>
-				<label class="artist" title="Adele">
-					Adele
-				</label>
-			</li>
-		 
-			<li>
-				<label class="artist" title="Adele">
-					Adele
-				</label>
-			</li>
-		 
-			<li>
-				<label class="artist" title="Adele">
-					Adele
-				</label>
-			</li>
-		 
-			<li>
-				<label class="artist" title="Adele">
-					Adele
-				</label>
-			</li>
-		 
-			<li>
-				<label class="artist" title="Adele">
-					Adele
-				</label>
-			</li>
-		 
-			<li>
-				<label class="artist" title="Adele">
-					Adele
-				</label>
-			</li>
-		 
-			<li>
-				<label class="artist" title="Adele">
-					Adele
-				</label>
-			</li>
-		 
-			<li>
-				<label class="artist" title="Adele">
-					Adele
-				</label>
-			</li>
-		
-		</ol><br>
-    </div>
+	{% if user.is_authenticated %}
+		{% if current_songbook %}
+		<h2>{% trans "Recueil courant :" %}</h2>
+		<h3> {{ current_songbook.title }} </h3>
+			<ol class="artists selection">
+				<li>
+					<label class="artist" title="Adele">
+						Adele
+					</label>
+				</li>
+			</ol><br>
+		{% else %}
+		<h2>{% trans "Modifier un carnet de chants" %}</h2>
+		{% url 'choose_current_songbook' as set_current %}{% url 'new_songbook' as new_songbook %}
+		{% blocktrans %}
+		<a href="{{choose_current}}">Choisir</a> un carnet à modifier ou <a href="{{new_songbook}}">créer</a> un nouveau carnet.
+		{% endblocktrans %}
+		{% endif %}
+	{% else %}
+	{% url 'login' as login %}{% url 'register' as register %}
+	<h2>{% trans "Créer un carnet de chants" %}</h2>
+		{% blocktrans %}
+			Pour créer un carnet, <a href="{{login}}">connectez-vous</a> ou <a href="{{register}}">inscrivez-vous</a>.
+		{% endblocktrans %}
+	{% endif %}
 </div>
-{% else %}
-{% url 'login' as login %}{% url 'register' as register %}
-<div class="playlist"><h2>{% trans "Créer un carnet de chants" %}</h2>
-{% blocktrans %}
-Pour créer un nouveau carnet, <a href="{{login}}">connectez-vous</a> ou <a href="{{register}}">inscrivez-vous</a>.
-{% endblocktrans %}
-</div>
-{% endif %}

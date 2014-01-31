@@ -94,6 +94,14 @@ class SongList(ListView):
     paginate_by = 10
     paginator_class = NamePaginator
     queryset=Song.objects.all().order_by('slug')
+    
+    def get_context_data(self, **kwargs):
+        context = super(SongList,self).get_context_data(**kwargs)
+        try:
+            context['current_songbook'] = Songbook.objects.get(pk=self.request.session['current_songbook'])
+        except (KeyError, Songbook.DoesNotExist):
+            pass  
+        return context
 
 class SongListByArtist(ListView):
     model = Song
@@ -201,6 +209,18 @@ class ShowSongbook(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ShowSongbook, self).dispatch(*args, **kwargs)
+
+def set_current_songbook(request):
+    """Set a songbook for edition with sessions
+     """
+    if (request.GET['songbook']!=None): 
+        songbook_id = request.GET['songbook']
+        request.session['current_songbook'] = int(songbook_id)
+        return redirect('song_list')
+    else:
+        messages.error(request, _("Ce carnet n'existe pas."))
+        return redirect('songbook_list')
+    
 
 # @login_required
 # def add_song_to_songbook(request):
