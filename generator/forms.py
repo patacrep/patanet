@@ -61,7 +61,7 @@ class SongbookOptionsForm(forms.ModelForm):
             new_songbook.save()
             try:
                 SongbooksByUser.objects.get(user=self.user.profile, songbook=new_songbook)
-            except Songbook.DoesNotExist:
+            except SongbooksByUser.DoesNotExist:
                 SongbooksByUser.objects.create(user=self.user.profile, songbook=new_songbook, is_owner=True)
         return new_songbook
         

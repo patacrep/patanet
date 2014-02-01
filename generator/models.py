@@ -42,10 +42,10 @@ class Song(models.Model):
 ###############################################################
 
 
-def get_songbook_path(songbook, filename):
-    user_directory = slugify(songbook.user.username)
-    filename = slugify(songbook.title) + ".sb"
-    return os.path.join(user_directory, filename)
+# def get_songbook_path(songbook, filename):
+#     user_directory = slugify(songbook.user.username)
+#     filename = slugify(songbook.title) + ".sb"
+#     return os.path.join(user_directory, filename)
 
 CHRD='chrd'
 LYR='lyr'
@@ -71,6 +71,10 @@ class Songbook(models.Model):
                                    blank=True,
                                    through='SongsInSongbooks',
                                    related_name='songs')
+    
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in Songbook._meta.fields]
+    
     def __unicode__(self):
         return self.title
 

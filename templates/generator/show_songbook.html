@@ -23,8 +23,8 @@
 	<div id='songs'>
 	<h3>{% trans "Chants du carnet" %}</h3>
 		<ul>
-		{% for song in songbooks.songs %}
-			<li> {{ song }} </li>
+		{% for song in songbook.songs.all %}
+			<li> {{ song.title }} </li>
 		{% endfor %}
 		</ul>
 	</div>

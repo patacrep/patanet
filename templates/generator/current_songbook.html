@@ -5,11 +5,15 @@
 		<h2>{% trans "Recueil courant :" %}</h2>
 		<h3> {{ current_songbook.title }} </h3>
 			<ol class="artists selection">
-				<li>
-					<label class="artist" title="Adele">
-						Adele
-					</label>
-				</li>
+				{% for song in current_song_list %}
+					<li>
+						<label class="artist" title="{{song.title}}">
+							{{ song.title }}
+						</label>
+					</li>
+				{% empty %}
+					{% trans "Ce carnet est vide" %}
+				{% endfor %}
 			</ol><br>
 		{% else %}
 		<h2>{% trans "Modifier un carnet de chants" %}</h2>

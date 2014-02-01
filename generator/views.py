@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 
-from generator.models import Song, Artist, Songbook, Profile
+from generator.models import Song, Artist, Songbook, Profile, SongsInSongbooks
 from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
 from generator.name_paginator import NamePaginator
 
@@ -98,9 +98,14 @@ class SongList(ListView):
     def get_context_data(self, **kwargs):
         context = super(SongList,self).get_context_data(**kwargs)
         try:
-            context['current_songbook'] = Songbook.objects.get(pk=self.request.session['current_songbook'])
+            songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
+            context['current_songbook'] = songbook
         except (KeyError, Songbook.DoesNotExist):
-            pass  
+            pass
+        try:
+            context['current_song_list'] = songbook.songs.all()
+        except (KeyError, Songbook.DoesNotExist):
+            pass
         return context
 
 class SongListByArtist(ListView):
@@ -116,6 +121,15 @@ class SongListByArtist(ListView):
     def get_context_data(self, **kwargs):
         context = super(SongListByArtist,self).get_context_data(**kwargs)
         context['artist'] = Artist.objects.get(slug=self.kwargs['artist']) 
+        try:
+            songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
+            context['current_songbook'] = songbook
+        except (KeyError, Songbook.DoesNotExist):
+            pass
+        try:
+            context['current_song_list'] = songbook.songs.all()
+        except (KeyError, Songbook.DoesNotExist):
+            pass
         return context
 
 class SongView(DetailView):
@@ -134,6 +148,19 @@ class ArtistList(ListView):
     paginate_by = 10
     paginator_class = NamePaginator
     queryset = Artist.objects.order_by('slug')
+    
+    def get_context_data(self, **kwargs):
+        context = super(ArtistList,self).get_context_data(**kwargs)
+        try:
+            songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
+            context['current_songbook'] = songbook
+        except (KeyError, Songbook.DoesNotExist):
+            pass
+        try:
+            context['current_song_list'] = songbook.songs.all()
+        except (KeyError, Songbook.DoesNotExist):
+            pass
+        return context
 
 
 def random_song(request):
@@ -210,6 +237,8 @@ class ShowSongbook(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(ShowSongbook, self).dispatch(*args, **kwargs)
 
+
+@login_required
 def set_current_songbook(request):
     """Set a songbook for edition with sessions
      """
@@ -222,20 +251,56 @@ def set_current_songbook(request):
         return redirect('songbook_list')
     
 
-# @login_required
-# def add_song_to_songbook(request):
-#     """Add a song to the songs list in session.
-#     Add this song to a specific songbook.
-#     """
-#     if (request.GET['song']!=None and request.GET['songbook']!=None): 
-#         song_id = request.GET['song']
-#         songbook_id = request.GET['songbook']
-#         song=Song.objects.get(pk=song_id)
-#         songbook=Songbook.objects.get(pk=songbook_id)
-#         try:
-#             request.session.songs[str(songbook_id)].append(song_id)
-#         except KeyError:
-#             request.session.songs={str(songbook_id):[song_id]}
-#     else:
-#         messages.error(request, _("Ce chant ou ce carnet n'existent pas."))
-#     return render(request, 'generator/add_song_to_songbook.html',locals())    
+def _add_song(song,songbook,section,rank,current_song_list):
+    if song not in current_song_list:
+        song_in_songbook = SongsInSongbooks(song=song,
+                                            songbook=songbook,
+                                            rank_in_section=rank,
+                                            section_id=section)
+        song_in_songbook.save()
+        return True
+    else:
+        return False
+
+@login_required
+def add_song_to_songbook(request):
+    """Add a list of songs to the 'songslist' of the current songbook.
+    """ 
+    try:
+        next_url=request.GET['next']
+    except:
+        next_url=reverse('song_list')
+        
+    try:
+        songbook_id = request.session['current_songbook']
+        songbook = Songbook.objects.get(id=songbook_id)
+    except (KeyError, Songbook.DoesNotExist):
+        messages.error(request, _("Choisissez un carnet pour ajouter ces chants"))
+        return redirect(next_url)
+    
+    song_list = request.POST.getlist('songs[]')
+    current_song_list = songbook.songs.all()
+    rank=0 # TODO: Get last rank
+    section_id=0# TODO: get current section
+    for song_id in song_list:
+        try:    
+            song=Song.objects.get(id=song_id)
+            added = _add_song(song, songbook, section_id, rank, current_song_list)
+            if added:
+                rank+=1
+        except Song.DoesNotExist: # May be useless
+            pass
+        
+    artist_list = request.POST.getlist('artists[]')
+    for artist_id in artist_list:
+        try:
+            artist=Artist.objects.get(id=artist_id)
+            song_list=artist.songs.all()
+            for song in song_list:
+                added = _add_song(song, songbook, section_id, rank, current_song_list)
+                if added:
+                    rank+=1
+        except Artist.DoesNotExist:
+            pass
+        
+    return redirect(next_url)

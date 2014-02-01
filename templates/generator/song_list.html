@@ -4,12 +4,13 @@
 
 {% block content %}
 {% include "generator/layout/name_pagination.html" %}
-	<form method="post" action="404">
+	<form method="post" action="{% url 'add_song_to_songbook' %}?next={{ request.get_full_path|urlencode }}">
 		{% csrf_token %}		
 		<ol class="songs selection">
 		{% for song in song_list %}
 			<li>
-				<input type="checkbox" name="songs[]" value="{{ song.id }}" id="song_{{ song.id }}">
+				<input type="checkbox" name="songs[]" value="{{ song.id }}" 
+				id="song_{{ song.id }}" {% if song in current_song_list %}checked{% endif %}>
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>

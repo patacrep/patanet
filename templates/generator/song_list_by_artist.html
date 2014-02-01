@@ -7,14 +7,15 @@
 
 {% block content %}
 	<a class="artist back" href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a>
-	<form method="post" action="404">
+	<form method="post" action="{% url 'add_song_to_songbook' %}?next={{ request.get_full_path|urlencode }}">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
 		
 		<ol class="songs selection">
 		{% for song in song_list %}
 			<li>
-				<input type="checkbox" name="songs[]" value="{{ song.id }}" id="song_{{ song.id }}">
+				<input type="checkbox" name="songs[]" value="{{ song.id }}" 
+				id="song_{{ song.id }}" {% if song in current_song_list %}checked{% endif %}>
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>
