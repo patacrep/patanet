@@ -72,9 +72,6 @@ class Songbook(models.Model):
                                    through='SongsInSongbooks',
                                    related_name='songs')
     
-    def get_fields(self):
-        return [(field.name, field.value_to_string(self)) for field in Songbook._meta.fields]
-    
     def __unicode__(self):
         return self.title
 
