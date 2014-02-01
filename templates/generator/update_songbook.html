@@ -3,7 +3,7 @@
 {% block title %}{% trans "Mise à jour du receuil" %}{% endblock %}
 
 {% block content %}
-	<form method="post" action="{% url 'update_songbook' pk=songbook.pk slug=songbook.slug%}">
+	<form method="post" action="{% url 'edit_songbook' pk=songbook.pk slug=songbook.slug%}">
 		{% csrf_token %}
 		{{ form.as_p }}
 		<input type="submit" value="{% trans "Modifier le receuil" %}"/>
