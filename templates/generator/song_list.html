@@ -10,7 +10,7 @@
 		{% for song in song_list %}
 			<li>
 				<input type="checkbox" name="songs[]" value="{{ song.id }}" 
-				id="song_{{ song.id }}" {% if song in current_song_list %}checked{% endif %}>
+				id="song_{{ song.id }}" {% if song in current_song_list %}checked disabled{% endif %}>
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>
