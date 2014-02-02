@@ -11,14 +11,22 @@
 					{% trans "Modifier les options" %}
 				</a>
 			</small>
-			<ol class="artists selection">
-				{% for song in current_song_list %}
-					<li>
-						<a href="{% url 'show_song' slug=song.slug artist=song.artist.slug %}">
-						<label class="artist" title="{{song.title}}">
-							{{ song.title }}
-						</label>
-						</a>
+			<ol class="artists selection"> <!-- Il ne faudrait pas changer la classe ici ? -->
+				<li>
+				{% for section,song_list in current_song_list.items %}
+					<label for="section{{section.id}}"><h4>{{section.name}}</h4></label>
+					<input type="checkbox" name="section{{section.id}}" class="section_checker" />
+						<ul class="section">			
+							{% for song in song_list %}
+								<li>
+									<a href="{% url 'show_song' slug=song.slug artist=song.artist.slug %}">
+									<label class="artist" title="{{song.title}}">
+										{{ song.title }}
+									</label>
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
 					</li>
 				{% empty %}
 					<p>

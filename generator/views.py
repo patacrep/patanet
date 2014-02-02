@@ -32,8 +32,12 @@ def render_with_current_songbook(View):
             try:
                 songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
                 context['current_songbook'] = songbook
-                context['current_song_list'] = songbook.songs.all().order_by('songsinsongbooks__section',
-                                                                             'songsinsongbooks__rank_in_section')
+                current_song_list={}
+                sections_list = SectionInSongbooks.objects.filter(section__songbook=songbook)
+                for section in sections_list:
+                    songs = songbook.songs.filter(songsinsongbooks__section=section).order_by('songsinsongbooks__rank_in_section')
+                    current_song_list[section]=songs
+                context['current_song_list'] = current_song_list
             except (KeyError, Songbook.DoesNotExist):
                 pass
             return context

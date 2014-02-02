@@ -96,8 +96,8 @@ class SongsInSongbooks(models.Model):
     """
     song = models.ForeignKey(Song)
     songbook = models.ForeignKey(Songbook)
-    section = models.ForeignKey(SectionInSongbooks,blank=False)
-    rank_in_section = models.IntegerField(_("position"),)
+    section = models.ForeignKey(SectionInSongbooks,blank=False, related_name='section')
+    rank_in_section = models.IntegerField(_("position"))
     
     def __unicode__(self):
         return _("Chant {song}, dans le carnet {songbook}" \
