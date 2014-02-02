@@ -1,9 +1,16 @@
 {% load i18n %}
 <div class="playlist">
 	{% if user.is_authenticated %}
+		{% with user_songbooks=user.profile.songbooks.all %}
 		{% if current_songbook %}
-		<h2>{% trans "Recueil courant :" %}</h2>
-		<h3> {{ current_songbook.title }} </h3>
+			<h2>
+				{{ current_songbook.title }}
+				<small>
+					<a href="{% url "show_songbook" slug=current_songbook.slug pk=current_songbook.pk %}">
+						{% trans "Modifier" %}
+					</a>
+				</small>
+			</h2>
 			<ol class="artists selection">
 				{% for song in current_song_list %}
 					<li>
@@ -16,12 +23,33 @@
 				{% endfor %}
 			</ol><br>
 		{% else %}
-		<h2>{% trans "Modifier un carnet de chants" %}</h2>
-		{% url 'choose_current_songbook' as set_current %}{% url 'new_songbook' as new_songbook %}
-		{% blocktrans %}
-		<a href="{{choose_current}}">Choisir</a> un carnet à modifier ou <a href="{{new_songbook}}">créer</a> un nouveau carnet.
-		{% endblocktrans %}
+			<h2>{% trans "Carnets de chants" %}</h2>
 		{% endif %}
+			{% if user_songbooks.count > 1 or user_songbooks.count > 0 and not current_songbook %}
+				<p>
+					{% if current_songbook %}
+						{% trans "Changer de carnet de chants :" %}
+					{% else %}
+						{% trans "Choisissez un carnet de chants à modifier :" %}
+					{% endif %}
+				</p>
+				<form method="get" action="{% url 'set_current_songbook' %}">
+						<select name="songbook">
+							{% for songbook in user_songbooks %}
+								{% if songbook != current_songbook %}
+									<option value="{{ songbook.pk }}">
+										{{ songbook.title }}
+									</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					<input type="submit" value="{% trans "Choisir" %}"/>
+				</form>
+			{% endif %}
+			<p>
+				<a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet de chant" %}</a>
+			</p>
+		{% endwith %}
 	{% else %}
 	{% url 'login' as login %}{% url 'register' as register %}
 	<h2>{% trans "Créer un carnet de chants" %}</h2>
