@@ -207,6 +207,7 @@ class UpdateSongbook(UpdateView):
     #context_object_name = 'songbook'
     
     def get_success_url(self):
+        self.kwargs["slug"] = self.object.slug
         return reverse('show_songbook',kwargs=self.kwargs)
     
     @method_decorator(login_required)
