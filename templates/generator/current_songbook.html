@@ -14,9 +14,11 @@
 			<ol class="artists selection">
 				{% for song in current_song_list %}
 					<li>
+						<a href="{% url 'show_song' slug=song.slug artist=song.artist.slug %}">
 						<label class="artist" title="{{song.title}}">
 							{{ song.title }}
 						</label>
+						</a>
 					</li>
 				{% empty %}
 					<p>
