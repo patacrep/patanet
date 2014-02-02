@@ -4,6 +4,7 @@
 
 {% block appmenu %}
 	<ul>
+		<li><a href="{% url 'show_songbook' pk=songbook.pk slug=songbook.slug %}" class="active">{% trans "Voir le carnet" %}</a></li>
 		<li><a href="{% url 'edit_songbook' pk=songbook.pk slug=songbook.slug %}">{% trans "Modifier les options" %}</a></li>
 		<li><a href="">{% trans "Modifier les chants" %}</a></li>
 	</ul>

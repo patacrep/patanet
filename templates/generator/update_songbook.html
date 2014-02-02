@@ -1,6 +1,14 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}{% trans "Mise à jour du receuil" %}{% endblock %}
+{% block title %}{% trans "Modifier les options du carnet" %}{% endblock %}
+
+{% block appmenu %}
+	<ul>
+		<li><a href="{% url 'show_songbook' pk=songbook.pk slug=songbook.slug %}">{% trans "Voir le carnet" %}</a></li>
+		<li><a href="{% url 'edit_songbook' pk=songbook.pk slug=songbook.slug %}" class="active">{% trans "Modifier les options" %}</a></li>
+		<li><a href="">{% trans "Modifier les chants" %}</a></li>
+	</ul>
+{% endblock %}
 
 {% block content %}
 	<form method="post" action="{% url 'edit_songbook' pk=songbook.pk slug=songbook.slug%}">
