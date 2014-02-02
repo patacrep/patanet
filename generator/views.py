@@ -100,9 +100,6 @@ class SongList(ListView):
         try:
             songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
             context['current_songbook'] = songbook
-        except (KeyError, Songbook.DoesNotExist):
-            pass
-        try:
             context['current_song_list'] = songbook.songs.all()
         except (KeyError, Songbook.DoesNotExist):
             pass
@@ -154,9 +151,6 @@ class ArtistList(ListView):
         try:
             songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
             context['current_songbook'] = songbook
-        except (KeyError, Songbook.DoesNotExist):
-            pass
-        try:
             context['current_song_list'] = songbook.songs.all()
         except (KeyError, Songbook.DoesNotExist):
             pass
