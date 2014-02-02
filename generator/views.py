@@ -121,9 +121,6 @@ class SongListByArtist(ListView):
         try:
             songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
             context['current_songbook'] = songbook
-        except (KeyError, Songbook.DoesNotExist):
-            pass
-        try:
             context['current_song_list'] = songbook.songs.all()
         except (KeyError, Songbook.DoesNotExist):
             pass
@@ -133,6 +130,16 @@ class SongView(DetailView):
     context_object_name = "song" 
     model = Song
     template_name = "generator/show_song.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super(SongView,self).get_context_data(**kwargs)
+        try:
+            songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
+            context['current_songbook'] = songbook
+            context['current_song_list'] = songbook.songs.all()
+        except (KeyError, Songbook.DoesNotExist):
+            pass
+        return context
 
     def get_queryset(self):
         return Song.objects.filter(artist__slug=self.kwargs['artist'],slug=self.kwargs['slug'])
