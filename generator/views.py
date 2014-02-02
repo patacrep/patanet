@@ -21,6 +21,26 @@ def home(request):
     headertitle = _('Accueil')
     return render(request, 'generator/home.html',locals())
 
+## Decorators
+##############################################
+def render_with_current_songbook(View):
+    def wrapper(previous_function):
+        def add_songbook_to_context(self, **kwargs):
+            context = previous_function(self, **kwargs)
+            context['show_current_songbook'] = True
+            try:
+                songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
+                context['current_songbook'] = songbook
+                context['current_song_list'] = songbook.songs.all()
+            except (KeyError, Songbook.DoesNotExist):
+                pass
+            return context
+        return add_songbook_to_context
+    
+    View.get_context_data = wrapper(View.get_context_data)
+    
+    return View
+
 ## User specifics views
 ##############################################
 @login_required
@@ -86,7 +106,7 @@ class PasswordResetConfirm(FormView): # TODO: Tester si ça fonctionne
 
 ## Songs views
 ##############################################
-
+@render_with_current_songbook
 class SongList(ListView):
     model = Song
     context_object_name = "song_list" 
@@ -95,16 +115,7 @@ class SongList(ListView):
     paginator_class = NamePaginator
     queryset=Song.objects.all().order_by('slug')
     
-    def get_context_data(self, **kwargs):
-        context = super(SongList,self).get_context_data(**kwargs)
-        try:
-            songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
-            context['current_songbook'] = songbook
-            context['current_song_list'] = songbook.songs.all()
-        except (KeyError, Songbook.DoesNotExist):
-            pass
-        return context
-
+@render_with_current_songbook
 class SongListByArtist(ListView):
     model = Song
     context_object_name = "song_list" 
@@ -118,33 +129,18 @@ class SongListByArtist(ListView):
     def get_context_data(self, **kwargs):
         context = super(SongListByArtist,self).get_context_data(**kwargs)
         context['artist'] = Artist.objects.get(slug=self.kwargs['artist']) 
-        try:
-            songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
-            context['current_songbook'] = songbook
-            context['current_song_list'] = songbook.songs.all()
-        except (KeyError, Songbook.DoesNotExist):
-            pass
         return context
 
+@render_with_current_songbook
 class SongView(DetailView):
     context_object_name = "song" 
     model = Song
     template_name = "generator/show_song.html"
-    
-    def get_context_data(self, **kwargs):
-        context = super(SongView,self).get_context_data(**kwargs)
-        try:
-            songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
-            context['current_songbook'] = songbook
-            context['current_song_list'] = songbook.songs.all()
-        except (KeyError, Songbook.DoesNotExist):
-            pass
-        return context
 
     def get_queryset(self):
         return Song.objects.filter(artist__slug=self.kwargs['artist'],slug=self.kwargs['slug'])
 
-
+@render_with_current_songbook
 class ArtistList(ListView):
     model = Artist
     context_object_name = "artist_list" 
@@ -152,17 +148,6 @@ class ArtistList(ListView):
     paginate_by = 10
     paginator_class = NamePaginator
     queryset = Artist.objects.order_by('slug')
-    
-    def get_context_data(self, **kwargs):
-        context = super(ArtistList,self).get_context_data(**kwargs)
-        try:
-            songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
-            context['current_songbook'] = songbook
-            context['current_song_list'] = songbook.songs.all()
-        except (KeyError, Songbook.DoesNotExist):
-            pass
-        return context
-
 
 def random_song(request):
     song=Song.objects.order_by('?')[0]
