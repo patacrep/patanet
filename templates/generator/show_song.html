@@ -9,10 +9,17 @@
 
 {% block content %}
 	<h2 class="artist"><a class="back" href="{% url "song_list_by_artist" artist=song.artist.slug %}">{{ song.artist.name }}</a></h2>
+	{% if song in current_song_list %}
+		<form method="post" action="TODO?next={{ request.get_full_path|urlencode }}">{% csrf_token %}
+			<input type="hidden" name="songs[]" value="{{ song.id }}">
+			<input type="submit" value="{% trans "Retirer du carnet" %}"/>
+		</form>
+	{% else %}
 		<form method="post" action="{% url 'add_song_to_songbook' %}?next={{ request.get_full_path|urlencode }}">{% csrf_token %}
 			<input type="hidden" name="songs[]" value="{{ song.id }}">
 			<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
 		</form>
+	{% endif %}
 	{% get_language_info for song.language as lang %}
 	<p class="infos">en {{lang.name_local}}<br />
 	{% if song.capo != None %}

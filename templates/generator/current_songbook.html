@@ -3,14 +3,14 @@
 	{% if user.is_authenticated %}
 		{% with user_songbooks=user.profile.songbooks.all %}
 		{% if current_songbook %}
-			<h2>
+			<h2 title="{{ current_songbook.title }}">
 				{{ current_songbook.title }}
-				<small>
-					<a href="{% url "show_songbook" slug=current_songbook.slug pk=current_songbook.pk %}">
-						{% trans "Modifier" %}
-					</a>
-				</small>
 			</h2>
+			<small>
+				<a href="{% url "edit_songbook" slug=current_songbook.slug pk=current_songbook.pk %}">
+					{% trans "Modifier les options" %}
+				</a>
+			</small>
 			<ol class="artists selection">
 				{% for song in current_song_list %}
 					<li>
@@ -19,7 +19,9 @@
 						</label>
 					</li>
 				{% empty %}
-					{% trans "Ce carnet est vide" %}
+					<p>
+						{% trans "Ce carnet est vide" %}
+					</p>
 				{% endfor %}
 			</ol><br>
 		{% else %}

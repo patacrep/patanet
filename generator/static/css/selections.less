@@ -80,10 +80,28 @@ a.back{
     
     h2{
         margin-bottom:0;
+		width:13em;
+		white-space: nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		vertical-align: middle;
+		margin-bottom: 0;
+		& + small{
+			display:inline-block;
+			float:right;
+		}
+    }
+    select{
+    	max-width:13em;
     }
     .selection{
         display:block;
     }
+    
+    a{
+    	color:lighten(@link-col, 10%);
+    }
+    
 }
 
 .pagination{
