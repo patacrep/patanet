@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 
-from generator.models import Song, Artist, Songbook, Profile, SongsInSongbooks
+from generator.models import Song, Artist, Songbook, Profile, SongsInSongbooks,\
+    SectionInSongbooks
 from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
 from generator.name_paginator import NamePaginator
 
@@ -31,7 +32,8 @@ def render_with_current_songbook(View):
             try:
                 songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
                 context['current_songbook'] = songbook
-                context['current_song_list'] = songbook.songs.all()
+                context['current_song_list'] = songbook.songs.all().order_by('songsinsongbooks__section',
+                                                                             'songsinsongbooks__rank_in_section')
             except (KeyError, Songbook.DoesNotExist):
                 pass
             return context
@@ -249,6 +251,14 @@ def _add_song(song,songbook,section,rank,current_song_list):
     else:
         return False
 
+def get_new_rank(section):
+        """Get the last song in the section, and return this rank plus 1."""
+        rank = SongsInSongbooks.objects.filter(section=section).count()
+        if rank == None:
+            return 1
+        else:
+            return rank + 1
+
 @login_required
 def add_song_to_songbook(request):
     """Add a list of songs to the 'songslist' of the current songbook.
@@ -267,8 +277,10 @@ def add_song_to_songbook(request):
     
     song_list = request.POST.getlist('songs[]')
     current_song_list = songbook.songs.all()
-    rank=0 # TODO: Get last rank
-    section_id=0# TODO: get current section
+    section_id=1 # TODO: get current section id
+    section = SectionInSongbooks.objects.get_or_create(id=section_id)
+    rank=get_new_rank(section)
+    
     for song_id in song_list:
         try:    
             song=Song.objects.get(id=song_id)

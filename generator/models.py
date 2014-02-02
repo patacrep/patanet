@@ -88,17 +88,22 @@ class SectionInSongbooks(models.Model):
     
     def __unicode__(self):
         return self.name
+    
 
-
-class SongsInSongbooks(models.Model): 
+class SongsInSongbooks(models.Model):
+    """Songs in songbooks model
+    Every song has a rank in the section, and a section ("main section" as default)
+    """
     song = models.ForeignKey(Song)
     songbook = models.ForeignKey(Songbook)
-    rank_in_section = models.IntegerField(verbose_name=_("position"))
-    section = models.ForeignKey(SectionInSongbooks)
+    section = models.ForeignKey(SectionInSongbooks,blank=False)
+    rank_in_section = models.IntegerField(_("position"),)
     
     def __unicode__(self):
         return _("Chant {song}, dans le carnet {songbook}" \
                  ).format(song=self.song, songbook=self.songbook)
+    class Meta:
+        unique_together = ('section','rank_in_section')
 
 ###############################################################
 
