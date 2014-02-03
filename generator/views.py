@@ -308,3 +308,15 @@ def add_song_to_songbook(request):
             pass
         
     return redirect(next_url)
+
+
+class DeleteSongbook(DeleteView):
+    model = Songbook
+    context_object_name = "songbook" 
+    template_name = 'generator/delete_songbook.html' 
+    success_url = reverse_lazy('profile')
+    
+    def get_object(self, queryset=None):
+        id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        return get_object_or_404(Songbook, id=id, slug=slug)
