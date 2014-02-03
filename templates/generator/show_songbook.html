@@ -7,8 +7,10 @@
 {% endblock %}
 
 {% block content %}
+	<a href="{% url "songbook_private_list" %}" class="back">
+		{% trans "Mes carnets" %}
+	</a>
 	<div id='infos'>
-	<h3>{{ songbook.title }}</h3>
 	<p>{{ songbook.description }}</p>
 	</div>
 	<div id='options'>
@@ -24,5 +26,6 @@
 			<li> {{ song.title }} </li>
 		{% endfor %}
 		</ul>
+		<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants au carnet" %}</a>
 	</div>
 {% endblock %}

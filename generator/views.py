@@ -164,25 +164,29 @@ def random_song(request):
 ## Songbooks views
 ##############################################
 
-class SongbookList(ListView):
+class SongbookPublicList(ListView):
     model = Songbook
     context_object_name = "songbooks" 
-    template_name = "generator/songbook_list.html"
+    template_name = "generator/songbook_public_list.html"
+    
+    def get_queryset(self):
+        return Songbook.objects.filter(is_public=True
+                                       ).order_by('title')
+
+class SongbookPrivateList(ListView):
+    model = Songbook
+    context_object_name = "songbooks" 
+    template_name = "generator/songbook_private_list.html"
     
     def get_queryset(self):
         return Songbook.objects.filter(songbooksbyuser__user__user__id=self.request.user.id
-                                       ).order_by('is_public','title')
-                
-    def get_context_data(self, **kwargs):
-        context = super(SongbookList, self).get_context_data(**kwargs)
-        context['public_songbooks'] = Songbook.objects.filter(is_public=True).order_by('title')
-        return context
+                                       ).order_by('title')
 
 class NewSongbook(CreateView):
     model = Songbook
     template_name = 'generator/new_songbook.html' 
     form_class = SongbookOptionsForm
-    success_url = reverse_lazy('songbook_list')
+    success_url = reverse_lazy('songbook_private_list')
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

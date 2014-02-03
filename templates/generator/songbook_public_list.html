@@ -1,0 +1,22 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %} {% trans "Carnets publics" %} {% endblock %}
+
+{% block content %}
+	{% if user.is_authenticated %}
+		<a href="{% url "songbook_private_list" %}" class="back">
+			{% trans "Mes carnets" %}
+		</a>
+	{% endif %}
+	<ul class="public songbooks">
+		{% for songbook in songbooks %}
+			<li>
+			<a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a>
+			{% if user.profile in songbook.users.all %}
+				<small>[<a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">{% trans "Paramètres" %}</a>]</small>
+			{% endif %}
+			<p class="description">{{ songbook.description|truncatewords:40 }}</p>
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

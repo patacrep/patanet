@@ -1,6 +1,10 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}{% trans "Modifier les options du carnet" %}{% endblock %}
+{% block title %}
+	{% blocktrans with songbook=songbook.title%}
+	 Paramètres du carnet <em>{{songbook}}</em>
+	{% endblocktrans %}
+{% endblock %}
 
 {% block appmenu %}
 	{% include "generator/menu/songbook.html" %}
@@ -10,6 +14,6 @@
 	<form method="post" action="{% url 'edit_songbook' id=songbook.id slug=songbook.slug%}">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<input type="submit" value="{% trans "Modifier le receuil" %}"/>
+		<input type="submit" value="{% trans "Changer les options" %}"/>
 	</form>
 {% endblock %}

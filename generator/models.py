@@ -71,6 +71,11 @@ class Songbook(models.Model):
                                    blank=True,
                                    through='SongsInSongbooks',
                                    related_name='songs')
+                                   
+    users = models.ManyToManyField('Profile',
+                                       blank=True,
+                                       through='SongbooksByUser',
+                                       related_name='users')
     
     def __unicode__(self):
         return self.title
