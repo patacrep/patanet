@@ -7,28 +7,6 @@ Profil de {{ username }}
 {% block content %}
 	<ul>
 		<li><a href="{% url 'password_change' %}">{% trans "Changer de mot de passe" %}</a></li>
-		<li><a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet" %}</a></li>
+		<li><a href="{% url 'songbook_private_list' %}">{% trans "Mes carnets de chants" %}</a></li>
 	</ul>
-	
-	<div class='user-songbooks'>
-		<h2>{% trans "Mes carnets de chant" %}</h2>
-		<table>
-		<tr>
-			<th>{% trans "Titre" %}</th>
-			<th>{% trans "Description" %}</th>
-			<th>{% trans "Nombre de chants" %}</th>
-			<th></th>
-			<th></th>
-		</tr>
-		{% for songbook in profile.songbooks.all %}
-		<tr>
-			<td> <a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a></td>
-			<td> {{ songbook.description|truncatewords:40 }}</td>
-			<td> {{songbook.songs.all.count}} </td>
-			<td><a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants" %}</a></td>
-			<td><a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}"><img src="{% static "img/delete.png" %}" width=20px></a></td>
-		</tr>
-		{% endfor %}
-		</table>
-	</div>
 {% endblock %}
