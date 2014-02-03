@@ -273,10 +273,7 @@ def get_new_rank(section):
 def add_song_to_songbook(request):
     """Add a list of songs to the 'songslist' of the current songbook.
     """ 
-    try:
-        next_url=request.GET['next']
-    except:
-        next_url=reverse('song_list')
+    next_url=request.POST['next']
         
     try:
         songbook_id = request.session['current_songbook']
