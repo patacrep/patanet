@@ -1,0 +1,17 @@
+{% load i18n %}
+<ul>
+{% with id=songbook.id slug=songbook.slug %}
+	{% url 'show_songbook' id=id slug=slug as url %}
+		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
+			&nbsp;{{ songbook.title }}&nbsp;
+		</a>
+	{% url 'edit_songbook' id=id slug=slug as url%}
+		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
+			{% trans "Paramètres" %}
+		</a>
+	{% url 'delete_songbook' id=id slug=slug as url %}
+		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
+			{% trans "Suppression" %}
+		</a>
+{% endwith %}
+</ul>

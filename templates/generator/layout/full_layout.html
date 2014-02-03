@@ -19,13 +19,13 @@
 	<header>
 		{% include "generator/layout/header.html" %}
 	</header>
-
+	
 	<div class="app-menu">
-		{% include "generator/layout/usermenu.html" %}
+		{% include "generator/menu/user.html" %}
 		{% block appmenu %}
 		{% endblock %}
 	</div>
-
+	
 	{% include "generator/layout/messages.html" %}
 
 	<main id="content" role="main">

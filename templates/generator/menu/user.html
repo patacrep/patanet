@@ -1,6 +1,6 @@
 {% load i18n %}
 
-
+{% spaceless %}
 {% if user.is_authenticated %}
 <ul class="user-menu">
     <li>
@@ -9,7 +9,12 @@
         {% endblocktrans %}
     </li>
 	<li>
-		<a href="{% url 'profile' %}">{% trans "Mon profil" %}</a>
+		{% url 'songbook_private_list' as url %}
+		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{% trans "Mes carnets" %}</a>
+	</li> 
+	<li>
+		{% url 'profile' as url %}
+		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{% trans "Mon profil" %}</a>
 	</li> 
     <li>
         <a href="{% url 'logout' %}">{% trans "Se déconnecter" %}</a> 
@@ -26,3 +31,4 @@
     </li>
 </ul>
 {% endif %}
+{% endspaceless %}
