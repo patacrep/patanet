@@ -1,4 +1,4 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}{% load staticfiles %}
 
 {% block title %} {% blocktrans with username=user.username %}
 Profil de {{ username }}
@@ -18,6 +18,7 @@ Profil de {{ username }}
 			<th>{% trans "Description" %}</th>
 			<th>{% trans "Nombre de chants" %}</th>
 			<th></th>
+			<th></th>
 		</tr>
 		{% for songbook in profile.songbooks.all %}
 		<tr>
@@ -25,6 +26,7 @@ Profil de {{ username }}
 			<td> {{ songbook.description }}</td>
 			<td> ??? </td>
 			<td><a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants" %}</a></td>
+			<td><a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}"><img src="{% static "img/delete.png" %}" width=20px></a></td>
 		</tr>
 		{% endfor %}
 		</table>

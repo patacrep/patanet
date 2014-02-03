@@ -1,0 +1,28 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %}{% blocktrans with songbook=songbook.title%}
+Supprimer le carnet {{songbook}}
+{% endblocktrans %}
+{% endblock %}
+
+{% block appmenu %}
+	{% include "generator/layout/songbookmenu.html" %}
+{% endblock %}
+
+{% block content %}
+	<strong>{% trans "Êtes-vous sûr de vouloir supprimer le carnet suivant ? Toute suppression est définitive !" %}</strong>
+	<h3>{{ songbook.title }}</h3>
+	<p>{{ songbook.description }}</p>
+	<h4>{% trans "Chants de ce carnet" %}</h4>
+	<ul>
+		{% for song in songbook.songs.all %}
+			<li>{{song.title}}</li>
+		{% empty %}
+			{% trans "Ce carnet est vide" %}
+		{% endfor %}
+	</ul>
+	<form method="post" action="">
+		{% csrf_token %}
+		<input type="submit" value="{% trans 'Supprimer' %}" /> - <a href="{% url "profile" %}">{% trans 'Revenir au profil' %}</a>
+	</form>
+{% endblock %}
