@@ -15,7 +15,9 @@
 			<input type="submit" value="{% trans "Retirer du carnet" %}"/>
 		</form>
 	{% else %}
-		<form method="post" action="{% url 'add_song_to_songbook' %}?next={{ request.get_full_path|urlencode }}">{% csrf_token %}
+		<form method="post" action="{% url 'add_song_to_songbook' %}">
+			{% csrf_token %}
+			<input type="hidden" name="next" value="{% url "show_song" slug=song.slug artist=song.artist.slug %}">
 			<input type="hidden" name="songs[]" value="{{ song.id }}">
 			<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
 		</form>

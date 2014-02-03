@@ -5,8 +5,8 @@
 {% block content %}
 {% include "generator/layout/name_pagination.html" %}
 	<form method="post" action="{% url 'add_song_to_songbook' %}">
-	<input type="hidden" name="next" value="{% url "song_list" %}?page={{page_obj.number}}">
-		{% csrf_token %}		
+		{% csrf_token %}
+		<input type="hidden" name="next" value="{% url "song_list" %}?page={{page_obj.number}}">
 		<ol class="songs selection">
 		{% for song in song_list %}
 			<li>
