@@ -49,6 +49,19 @@ def render_with_current_songbook(View):
     
     return View
 
+def login_required_or_is_public(View):
+    def wrapper(previous_function):
+        def check_public(self, *args, **kwargs):
+            if View.get_object(self).is_public:
+                return previous_function(self, *args, **kwargs)
+            else:
+                return method_decorator(login_required)(previous_function)(self, *args, **kwargs)
+        return check_public
+    
+    View.dispatch = wrapper(View.dispatch)
+    
+    return View
+
 ## User specifics views
 ##############################################
 @login_required
@@ -222,7 +235,7 @@ class UpdateSongbook(UpdateView):
         messages.success(self.request, _(u"Le carnet a été modifié."))
         return super(UpdateSongbook, self).form_valid(form)
         
-    
+@login_required_or_is_public
 class ShowSongbook(DetailView):
     model=Songbook
     template_name = 'generator/show_songbook.html'
@@ -232,9 +245,6 @@ class ShowSongbook(DetailView):
         return Songbook.objects.filter(id=self.kwargs['id'],
                                        slug=self.kwargs['slug'])
     
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ShowSongbook, self).dispatch(*args, **kwargs)
 
 
 @login_required

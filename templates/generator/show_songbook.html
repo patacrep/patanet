@@ -1,15 +1,25 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% load filters %}
 
 {% block title %} {{ songbook.title }} {% endblock %}
 
 {% block appmenu %}
-	{% include "generator/menu/songbook.html" %}
+	{% if user.profile|in:songbook.users.all %}
+		{% include "generator/menu/songbook.html" %}
+	{% endif %}
 {% endblock %}
 
 {% block content %}
-	<a href="{% url "songbook_private_list" %}" class="back">
-		{% trans "Mes carnets" %}
-	</a>
+	{% with can_edit=user.profile|in:songbook.users.all %}
+	{% if can_edit %}
+		<a href="{% url "songbook_private_list" %}" class="back">
+			{% trans "Mes carnets" %}
+		</a>
+	{% else %}
+		<a href="{% url "songbook_list" %}" class="back">
+			{% trans "Carnets publics" %}
+		</a>
+	{% endif %}
 	<div id='infos'>
 	<p>{{ songbook.description }}</p>
 	</div>
@@ -26,6 +36,9 @@
 			<li> {{ song.title }} </li>
 		{% endfor %}
 		</ul>
-		<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants au carnet" %}</a>
+		{% if can_edit %}
+			<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants au carnet" %}</a>
+		{% endif %}
 	</div>
+{% endwith %}
 {% endblock %}
