@@ -284,7 +284,7 @@ def add_song_to_songbook(request):
     current_song_list = songbook.songs.all()
     section_id=1 # TODO: get current section id
     section = SectionInSongbooks.objects.get_or_create(id=section_id)
-    rank=get_new_rank(section)
+    rank=get_new_rank(section_id)
     
     for song_id in song_list:
         try:    
