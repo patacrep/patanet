@@ -14,6 +14,7 @@ from generator.models import Song, Artist, Songbook, Profile, SongsInSongbooks,\
     SectionInSongbooks
 from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
 from generator.name_paginator import NamePaginator
+from django.views.generic.edit import DeleteView
 
 ##############################################
 ##############################################
@@ -30,7 +31,7 @@ def render_with_current_songbook(View):
             context = previous_function(self, **kwargs)
             context['show_current_songbook'] = True
             try:
-                songbook = Songbook.objects.get(pk=self.request.session['current_songbook'])
+                songbook = Songbook.objects.get(id=self.request.session['current_songbook'])
                 context['current_songbook'] = songbook
                 current_song_list={}
                 sections_list = SectionInSongbooks.objects.filter(section__songbook=songbook)
@@ -223,7 +224,7 @@ class ShowSongbook(DetailView):
     context_object_name = 'songbook'
     
     def get_queryset(self):
-        return Songbook.objects.filter(pk=self.kwargs['pk'],
+        return Songbook.objects.filter(id=self.kwargs['id'],
                                        slug=self.kwargs['slug'])
     
     @method_decorator(login_required)

@@ -21,10 +21,10 @@ Profil de {{ username }}
 		</tr>
 		{% for songbook in profile.songbooks.all %}
 		<tr>
-			<td> <a href="{% url "show_songbook" slug=songbook.slug pk=songbook.pk%}">{{ songbook.title }}</a></td>
+			<td> <a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a></td>
 			<td> {{ songbook.description }}</td>
 			<td> ??? </td>
-			<td><a href="{% url "set_current_songbook" %}?songbook={{songbook.pk}}">{% trans "Ajouter des chants" %}</a></td>
+			<td><a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants" %}</a></td>
 		</tr>
 		{% endfor %}
 		</table>

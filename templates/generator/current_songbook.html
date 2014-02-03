@@ -7,7 +7,7 @@
 				{{ current_songbook.title }}
 			</h2>
 			<small>
-				<a href="{% url "edit_songbook" slug=current_songbook.slug pk=current_songbook.pk %}">
+				<a href="{% url "edit_songbook" slug=current_songbook.slug id=current_songbook.id %}">
 					{% trans "Modifier les options" %}
 				</a>
 			</small>
@@ -49,7 +49,7 @@
 						<select name="songbook">
 							{% for songbook in user_songbooks %}
 								{% if songbook != current_songbook %}
-									<option value="{{ songbook.pk }}">
+									<option value="{{ songbook.id }}">
 										{{ songbook.title }}
 									</option>
 								{% endif %}
