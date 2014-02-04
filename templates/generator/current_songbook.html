@@ -15,7 +15,7 @@
 				<li>
 				{% for item in current_item_list %}
 				{% if item.item_type.model == "section" %}
-				{% if not item == first_section %}</ul>{% endif %}
+				{% if multi_section and not item == first_section %}</ul>{% endif %}
 					<label for="section_{{item.item.id}}"><h4>{{item.item.name}}</h4></label>
 					<input type="checkbox" name="section_{{item.item.id}}" class="section_checker" /> 
 						<ul class="section">			
@@ -34,7 +34,6 @@
 					</p>
 				{% endfor %}
 				{% if sb_has_section %}</ul>{% endif %}
-				{% if sb_multi_section %}Je suis là{% endif %}
 			</ul><br>
 		{% else %}
 			<h2>{% trans "Carnets de chants" %}</h2>
