@@ -2,9 +2,11 @@
 import os
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-from django.template.defaultfilters import slugify
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+#from django.template.defaultfilters import slugify
 from django.conf.global_settings import LANGUAGES
+from django.utils.translation import ugettext_lazy as _
 
 from jsonfield import JSONField
 
@@ -41,12 +43,6 @@ class Song(models.Model):
 
 ###############################################################
 
-
-# def get_songbook_path(songbook, filename):
-#     user_directory = slugify(songbook.user.username)
-#     filename = slugify(songbook.title) + ".sb"
-#     return os.path.join(user_directory, filename)
-
 CHRD='chrd'
 LYR='lyr'
 BOOKTYPES=((CHRD,_("Avec accords")),
@@ -67,10 +63,15 @@ class Songbook(models.Model):
     #other_options = SerializedDataField()
     # Other options are : web mail picture picturecopyright footer license (a .tex file) 
     # mainfontsize songnumberbgcolor notebgcolor indexbgcolor 
-    songs = models.ManyToManyField(Song,
+    items = models.ManyToManyField(ContentType,
                                    blank=True,
-                                   through='SongsInSongbooks',
-                                   related_name='songs')
+                                   through='ItemsInSongbook',
+                                   related_name='items')
+    
+#     songs = models.ManyToManyField(Song,
+#                                    blank=True,
+#                                    through='SongsInSongbooks',
+#                                    related_name='songs')
                                    
     users = models.ManyToManyField('Profile',
                                        blank=True,
@@ -85,30 +86,43 @@ class Songbook(models.Model):
         verbose_name_plural = _("carnets de chants")
 
 
-class SectionInSongbooks(models.Model):
+class Section(models.Model):
     name = models.CharField(max_length=200, 
-                            verbose_name=_("nom de section"),
-                            default="main section"
-                            )
+                            verbose_name=_("nom de section"),)
     
     def __unicode__(self):
         return self.name
-    
 
-class SongsInSongbooks(models.Model):
-    """Songs in songbooks model
-    Every song has a rank in the section, and a section ("main section" as default)
+
+class ItemsInSongbook(models.Model):
+    """Items in the songbooks model
+    Every kind of item can be add : section, songs, images, etc.
     """
-    song = models.ForeignKey(Song)
+    item_type = models.ForeignKey(ContentType)
+    item_id = models.PositiveIntegerField()
+    item = generic.GenericForeignKey('item_type', 'item_id')
     songbook = models.ForeignKey(Songbook)
-    section = models.ForeignKey(SectionInSongbooks,blank=False, related_name='section')
-    rank_in_section = models.IntegerField(_("position"))
+    rank = models.IntegerField(_("position"))
     
     def __unicode__(self):
-        return _("Chant {song}, dans le carnet {songbook}" \
-                 ).format(song=self.song, songbook=self.songbook)
-    class Meta:
-        unique_together = ('section','rank_in_section')
+        return _('{item_type} : "{item}", dans le carnet {songbook}' \
+                 ).format(item=self.item, item_type =self.item_type, songbook=self.songbook)
+
+
+# class SongsInSongbooks(models.Model):
+#     """Songs in songbooks model
+#     Every song has a rank in the section, and a section ("main section" as default)
+#     """
+#     song = models.ForeignKey(Song)
+#     songbook = models.ForeignKey(Songbook)
+#     section = models.ForeignKey(SectionInSongbooks,blank=False, related_name='section')
+#     rank_in_section = models.IntegerField(_("position"))
+#      
+#     def __unicode__(self):
+#         return _("Chant {song}, dans le carnet {songbook}" \
+#                  ).format(song=self.song, songbook=self.songbook)
+#     class Meta:
+#         unique_together = ('section','rank_in_section')
 
 ###############################################################
 

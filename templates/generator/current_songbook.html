@@ -13,21 +13,20 @@
 			</small>
 			<ol class="artists selection"> <!-- Il ne faudrait pas changer la classe ici ? -->
 				<li>
-				{% for section,song_list in current_song_list.items %}
-					<label for="section{{section.id}}"><h4>{{section.name}}</h4></label>
-					<input type="checkbox" name="section{{section.id}}" class="section_checker" />
+				{% for item in current_item_list %}
+				{% if item.item_type.model == "section" %}
+					<label for="section{{section.id}}"><h4>{{section.name}}</h4></label> #}
+					<input type="checkbox" name="section{{section.id}}" class="section_checker" /> 
 						<ul class="section">			
-							{% for song in song_list %}
-								<li>
-									<a href="{% url 'show_song' slug=song.slug artist=song.artist.slug %}">
-									<label class="artist" title="{{song.title}}">
-										{{ song.title }}
-									</label>
-									</a>
-								</li>
-							{% endfor %}
-						</ul>
+				{% elif item.item_type.model == "song" %}
+					<li>
+						<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}">
+							<label class="artist" title="{{item.item.title}}">
+								{{ item.item.title }}
+							</label>
+						</a>
 					</li>
+				{% endif %}
 				{% empty %}
 					<p>
 						{% trans "Ce carnet est vide" %}

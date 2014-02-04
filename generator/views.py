@@ -10,8 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 
-from generator.models import Song, Artist, Songbook, Profile, SongsInSongbooks,\
-    SectionInSongbooks
+from generator.models import Song, Artist, Songbook, Profile, ItemsInSongbook,\
+    Section
 from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
@@ -33,13 +33,8 @@ def render_with_current_songbook(View):
             try:
                 songbook = Songbook.objects.get(id=self.request.session['current_songbook'])
                 context['current_songbook'] = songbook
-                current_song_list={}
-                sections_list = SectionInSongbooks.objects.filter(section__songbook=songbook)
-                for section in sections_list:
-                    songs = songbook.songs.filter(songsinsongbooks__section=section
-                                                  ).order_by('songsinsongbooks__rank_in_section')
-                    current_song_list[section]=songs
-                context['current_song_list'] = current_song_list
+                current_item_list=ItemsInSongbook.objects.filter(songbook=songbook)
+                context['current_item_list'] = current_item_list
             except (KeyError, Songbook.DoesNotExist):
                 pass
             return context
@@ -260,28 +255,30 @@ def set_current_songbook(request):
         return redirect('songbook_list')
     
 
-def _add_song(song,songbook,section,rank,current_song_list):
-    if song not in current_song_list:
-        song_in_songbook = SongsInSongbooks(song=song,
+def _add_item(item,songbook,rank,current_item_list):
+    """Add an item to a songbook.
+    Return True if it has been added, false if not.
+    """
+    if item not in current_item_list:
+        item_in_songbook = ItemsInSongbook(item=item,
                                             songbook=songbook,
-                                            rank_in_section=rank,
-                                            section_id=section)
-        song_in_songbook.save()
+                                            rank=rank)
+        item_in_songbook.save()
         return True
     else:
         return False
 
-def get_new_rank(section):
+def get_new_rank(songbook_id):
         """Get the last song in the section, and return this rank plus 1."""
-        rank = SongsInSongbooks.objects.filter(section=section).count()
+        rank = ItemsInSongbook.objects.filter(songbook=songbook_id).count()
         if rank == None:
             return 1
         else:
             return rank + 1
 
 @login_required
-def add_song_to_songbook(request):
-    """Add a list of songs to the 'songslist' of the current songbook.
+def add_songs_to_songbook(request):
+    """Add a list of songs to the itmes of the current songbook.
     """ 
     next_url=request.POST['next']
         
@@ -293,15 +290,16 @@ def add_song_to_songbook(request):
         return redirect(next_url)
     
     song_list = request.POST.getlist('songs[]')
-    current_song_list = songbook.songs.all()
-    section_id=1 # TODO: get current section id
-    section = SectionInSongbooks.objects.get_or_create(id=section_id)
-    rank=get_new_rank(section_id)
+    current_item_list = songbook.items.all()
+    rank=get_new_rank(songbook_id)
     
     for song_id in song_list:
         try:    
             song=Song.objects.get(id=song_id)
-            added = _add_song(song, songbook, section_id, rank, current_song_list)
+            added = _add_item(item=song,
+                              songbook=songbook,
+                              rank=rank,
+                              current_item_list=current_item_list)
             if added:
                 rank+=1
         except Song.DoesNotExist: # May be useless
@@ -313,7 +311,10 @@ def add_song_to_songbook(request):
             artist=Artist.objects.get(id=artist_id)
             song_list=artist.songs.all()
             for song in song_list:
-                added = _add_song(song, songbook, section_id, rank, current_song_list)
+                added = _add_item(item=song,
+                              songbook=songbook,
+                              rank=rank,
+                              current_item_list=current_item_list)
                 if added:
                     rank+=1
         except Artist.DoesNotExist:
