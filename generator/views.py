@@ -33,8 +33,15 @@ def render_with_current_songbook(View):
             try:
                 songbook = Songbook.objects.get(id=self.request.session['current_songbook'])
                 context['current_songbook'] = songbook
-                current_item_list=ItemsInSongbook.objects.filter(songbook=songbook)
+                current_item_list=ItemsInSongbook.objects.filter(songbook=songbook).order_by('rank')
                 context['current_item_list'] = current_item_list
+                
+                if songbook.count_section() > 1:
+                    context['multi_section'] = True
+                    context['first_section'] = current_item_list.filter(item_type__model='section')[0]
+                if songbook.count_section() > 0:
+                    context['sb_has_section'] = True
+                    
             except (KeyError, Songbook.DoesNotExist):
                 pass
             return context
@@ -189,6 +196,7 @@ class SongbookPrivateList(ListView):
     def get_queryset(self):
         return Songbook.objects.filter(songbooksbyuser__user__user__id=self.request.user.id
                                        ).order_by('title')
+
 
 class NewSongbook(CreateView):
     model = Songbook

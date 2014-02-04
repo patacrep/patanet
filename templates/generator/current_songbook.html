@@ -11,12 +11,13 @@
 					{% trans "Modifier les options" %}
 				</a>
 			</small>
-			<ol class="artists selection"> <!-- Il ne faudrait pas changer la classe ici ? -->
+			<ul class="artists selection"> <!-- Il ne faudrait pas changer la classe ici ? -->
 				<li>
 				{% for item in current_item_list %}
 				{% if item.item_type.model == "section" %}
-					<label for="section{{section.id}}"><h4>{{section.name}}</h4></label> #}
-					<input type="checkbox" name="section{{section.id}}" class="section_checker" /> 
+				{% if not item == first_section %}</ul>{% endif %}
+					<label for="section_{{item.item.id}}"><h4>{{item.item.name}}</h4></label>
+					<input type="checkbox" name="section_{{item.item.id}}" class="section_checker" /> 
 						<ul class="section">			
 				{% elif item.item_type.model == "song" %}
 					<li>
@@ -32,7 +33,9 @@
 						{% trans "Ce carnet est vide" %}
 					</p>
 				{% endfor %}
-			</ol><br>
+				{% if sb_has_section %}</ul>{% endif %}
+				{% if sb_multi_section %}Je suis là{% endif %}
+			</ul><br>
 		{% else %}
 			<h2>{% trans "Carnets de chants" %}</h2>
 		{% endif %}

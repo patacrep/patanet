@@ -80,6 +80,11 @@ class Songbook(models.Model):
                                                item_type__model="song").count()
         return count
 
+    def count_section(self):
+        count = ItemsInSongbook.objects.filter(songbook=self,
+                                               item_type__model="section").count()
+        return count
+
     class Meta:
         verbose_name = _("carnet de chants")
         verbose_name_plural = _("carnets de chants")
