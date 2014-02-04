@@ -67,12 +67,6 @@ class Songbook(models.Model):
                                    blank=True,
                                    through='ItemsInSongbook',
                                    related_name='items')
-    
-#     songs = models.ManyToManyField(Song,
-#                                    blank=True,
-#                                    through='SongsInSongbooks',
-#                                    related_name='songs')
-                                   
     users = models.ManyToManyField('Profile',
                                        blank=True,
                                        through='SongbooksByUser',
@@ -112,22 +106,7 @@ class ItemsInSongbook(models.Model):
     def __unicode__(self):
         return _('{item_type} : "{item}", dans le carnet {songbook}' \
                  ).format(item=self.item, item_type =self.item_type, songbook=self.songbook)
-
-
-# class SongsInSongbooks(models.Model):
-#     """Songs in songbooks model
-#     Every song has a rank in the section, and a section ("main section" as default)
-#     """
-#     song = models.ForeignKey(Song)
-#     songbook = models.ForeignKey(Songbook)
-#     section = models.ForeignKey(SectionInSongbooks,blank=False, related_name='section')
-#     rank_in_section = models.IntegerField(_("position"))
-#      
-#     def __unicode__(self):
-#         return _("Chant {song}, dans le carnet {songbook}" \
-#                  ).format(song=self.song, songbook=self.songbook)
-#     class Meta:
-#         unique_together = ('section','rank_in_section')
+                 
 
 ###############################################################
 
