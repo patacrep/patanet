@@ -16,7 +16,7 @@
 					<a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a>
 				</td>
 				<td>
-					{{ songbook.songs.all.count }}
+					{{ songbook.count_songs }}
 				</td>
 				<td>
 					{% if songbook.is_public %}
