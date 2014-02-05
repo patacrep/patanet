@@ -6,8 +6,9 @@ from django.conf.urls.static import static
 
 from django.conf.urls import patterns, url
 from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
-     view_profile, PasswordChange, PasswordReset, Register, \
-     NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, UpdateSongbook, DeleteSongbook
+     view_profile, PasswordChange, Register, \
+     NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, UpdateSongbook, DeleteSongbook,\
+    reset_password, reset_password_confirm, password_reset_done,password_reset_complete
 
 urlpatterns = patterns('generator.views',
     url(r'^$', 'home', name="home"),
@@ -36,8 +37,10 @@ urlpatterns += patterns('',
     url(r'^user/login$','django.contrib.auth.views.login',{'template_name': 'generator/login.html'}, name='login'),
     url(r'^user/logout$', 'django.contrib.auth.views.logout',{'next_page': '/'}, name='logout'),
     url(r'^user/change-password$', PasswordChange.as_view(),name='password_change'),
-    url(r'^user/reset-password$', PasswordReset.as_view(),name='password_reset'),
-    url(r'^user/reset-password-do$', PasswordReset.as_view(),name='password_reset_confirm'),
+    url(r'^user/reset-password$', reset_password,name='password_reset'),
+    url(r'^user/reset-password-done$', password_reset_done,name='password_reset_done'),
+    url(r'^user/reset-password-do/(?P<uidb64>.+)/(?P<token>.+)/$', reset_password_confirm,name='password_reset_confirm'),
+    url(r'^user/reset-password-complete$', password_reset_complete, name='password_reset_complete'),
     url(r'^user/register$', Register.as_view(),name='register'),
     #url(r'^user/edit', MISSING_VIEW,name='profile_edit'),
 )

@@ -15,6 +15,7 @@ from generator.models import Song, Artist, Songbook, Profile, ItemsInSongbook,\
 from generator.forms import SongForm, RegisterForm, SongbookOptionsForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
+from django.contrib.auth.views import password_reset, password_reset_confirm
 
 ##############################################
 ##############################################
@@ -103,29 +104,31 @@ class PasswordChange(FormView):
     def dispatch(self, *args, **kwargs):
         return super(PasswordChange, self).dispatch(*args, **kwargs)
 
-class PasswordReset(FormView):
-    template_name = 'generator/password_reset.html'
-    email_template_name = 'generator/password_reset_email.html', # TODO:  Améliorer le template
-    subject_template_name = 'generator/password_reset_email_subject.txt' # TODO: Améliorer le sujet
-    form_class = PasswordResetForm
-    success_url = reverse_lazy('home')
+def reset_password(request):
+    """A wrapper function for password reset"""
+    return password_reset(request, template_name='generator/password_reset.html',
+        email_template_name='generator/password_reset_email.html',
+        subject_template_name='generator/password_reset_email_subject.txt',
+        post_reset_redirect=reverse('password_reset_done'))
 
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, _(u"Un email de confirmation vous a été envoyé."))
-        return super(FormView, self).form_valid(form)
+def password_reset_done(request):
+    """Only add a message and redirect to home"""
+    messages.success(request, _("Un email de confirmation vous a été envoyé."))
+    return redirect(reverse('home'))
 
+def reset_password_confirm(request, uidb64, token):
+    """A wrapper function for password reset confirmation"""
+    return  password_reset_confirm(request, 
+                                   uidb64=uidb64,
+                                   token=token,
+                                   template_name='generator/password_reset_confirm.html',
+                                   post_reset_redirect = reverse('password_reset_complete'),
+                                   extra_context={'uid':uidb64,'token':token})
 
-class PasswordResetConfirm(FormView): # TODO: Tester si ça fonctionne
-    template_name = 'generator/password_reset_confirm.html'
-    form_class = SetPasswordForm
-    success_url = reverse_lazy('profil')
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, _("Votre mot de passe a bien été modifié."))
-        return super(FormView, self).form_valid(form)
-
+def password_reset_complete(request):
+    """Only add a message and redirect to home"""
+    messages.success(request, _("Votre mot de passe a bien été modifié. Connectez-vous pour accéder à votre profil."))
+    return redirect(reverse('home'))
 
 ## Songs views
 ##############################################
