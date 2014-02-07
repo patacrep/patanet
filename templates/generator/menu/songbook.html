@@ -9,6 +9,10 @@
 		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
 			{% trans "Paramètres" %}
 		</a>
+	{% url 'item_list' id=id slug=slug as url%}
+		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
+			{% trans "Modifier le contenu" %}
+		</a>
 	{% url 'delete_songbook' id=id slug=slug as url %}
 		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
 			{% trans "Suppression" %}

@@ -1,0 +1,35 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %} {{ songbook.title }} {% endblock %}
+
+{% block appmenu %}
+		{% include "generator/menu/songbook.html" %}
+{% endblock %}
+
+{% block content %}
+	<form method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
+		{% csrf_token %}
+	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">	
+		{% for item in items_list %}
+		{% if item.item_type.model == "section" %}
+		<label for="item_{{item.id}}" class="section">{{item.item.name}}</label>
+		<input type="number" id="item_{{item.id}}" name="item_move_list" value="{{item.rank}}" />
+		<input type="checkbox" id="item_{{item.id}}" name="item_delete_list" value="{{item.id}}" />
+		{% elif item.item_type.model == "song" %}
+		<label for="item_{{item.id}}" class="song">
+			<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}">
+				{{ item.item.title }}
+			</a>
+		</label>
+		<input type="number" id="item_{{item.id}}" name="item_move_list" value="{{item.rank}}" />
+		<input type="checkbox" id="item_{{item.id}}" name="item_delete_list" value="{{item.id}}" /> 
+		{% endif %}
+		{% empty %}
+			<p>
+				{% trans "Ce carnet est vide" %}
+			</p>
+		{% endfor %}
+		<input type="submit" name="delete_items" value="Supprimer les éléments sélectionnés">
+		<input type="submit" name="move_items" value="Modifier l'ordre des chansons">
+	</form>
+{% endblock %}

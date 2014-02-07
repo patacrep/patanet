@@ -252,6 +252,23 @@ class ShowSongbook(DetailView):
                                        slug=self.kwargs['slug'])
     
 
+class ItemsListInSongbook(ListView):
+    model = ItemsInSongbook
+    context_object_name = "items_list" 
+    template_name = "generator/items_in_songbook.html"
+    songbook = None
+    
+    def get_queryset(self):
+        songbook_id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        self.songbook = get_object_or_404(Songbook, id=songbook_id, slug=slug) 
+        return ItemsInSongbook.objects.filter(songbook=self.songbook).order_by('rank')
+    
+    def get_context_data(self, **kwargs):
+        context = super(ItemsListInSongbook,self).get_context_data(**kwargs)
+        context['songbook']=self.songbook
+        return context
+
 
 @login_required
 def set_current_songbook(request):
@@ -289,7 +306,7 @@ def get_new_rank(songbook_id):
 
 @login_required
 def add_songs_to_songbook(request):
-    """Add a list of songs to the itmes of the current songbook.
+    """Add a list of songs to the current songbook.
     """ 
     next_url=request.POST['next']
         
@@ -332,6 +349,33 @@ def add_songs_to_songbook(request):
             pass
         
     return redirect(next_url)
+
+def move_or_delete_items(request, **kwargs):
+    if 'move_items' in request.POST:
+        pass # TODO : écrire la fonction correspondante
+    elif 'delete_items' in request.POST:
+        return remove_item_from_songbook(request,**kwargs)
+
+def fill_holes(songbook):
+    """fill the holes in the rank after deletion"""
+    pass # TODO : écrire la fonction correspondante
+
+@login_required
+def remove_item_from_songbook(request,id,slug):
+    """Remove an item or a list of items from the current songbook
+    """ 
+    next_url=request.POST['next']
+    songbook = Songbook.objects.get(id=id, slug=slug)
+    item_list = request.POST.getlist('item_delete_list')
+    
+    for item_id in item_list:
+        item = ItemsInSongbook.objects.get(songbook=songbook,id=item_id) 
+        item.delete()
+    
+    fill_holes(songbook)
+    
+    return redirect(next_url)
+
 
 
 class DeleteSongbook(DeleteView):

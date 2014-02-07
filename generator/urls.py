@@ -8,7 +8,8 @@ from django.conf.urls import patterns, url
 from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
      view_profile, PasswordChange, Register, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, UpdateSongbook, DeleteSongbook,\
-    reset_password, reset_password_confirm, password_reset_done,password_reset_complete
+    reset_password, reset_password_confirm, password_reset_done,password_reset_complete,\
+    ItemsListInSongbook, move_or_delete_items
 
 urlpatterns = patterns('generator.views',
     url(r'^$', 'home', name="home"),
@@ -24,7 +25,8 @@ urlpatterns = patterns('generator.views',
     url(r'^songbooks/$', SongbookPublicList.as_view(), name="songbook_list"),
     url(r'^songbooks/my/$', SongbookPrivateList.as_view(), name="songbook_private_list"),
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/$', ShowSongbook.as_view(), name="show_songbook"),
-    #url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/songs$', MISSING_VIEW, name=""),
+    url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/songs$', ItemsListInSongbook.as_view(), name="item_list"),
+    url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/change$', move_or_delete_items, name="change_item_list"),
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/edit$', UpdateSongbook.as_view(), name="edit_songbook"),
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/delete', DeleteSongbook.as_view(), name="delete_songbook"),
     url(r'^songbooks/new$', NewSongbook.as_view(), name="new_songbook"),
