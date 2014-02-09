@@ -1,4 +1,4 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}{% load filters %}
 
 {% block title %}{% blocktrans with artist=artist.name %}
 {{ artist }} 
@@ -15,7 +15,7 @@
 		{% for song in song_list %}
 			<li>
 				<input type="checkbox" name="songs[]" value="{{ song.id }}" 
-				id="song_{{ song.id }}" {% if song in current_song_list %}checked disabled{% endif %}>
+				id="song_{{ song.id }}" {% if song|in_subitem:current_item_list %}checked disabled{% endif %}>
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>

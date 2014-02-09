@@ -1,4 +1,4 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}{% load filters %}
 
 {% block title %} {{ song.title }} {% endblock %}
 
@@ -9,7 +9,7 @@
 
 {% block content %}
 	<h2 class="artist"><a class="back" href="{% url "song_list_by_artist" artist=song.artist.slug %}">{{ song.artist.name }}</a></h2>
-	{% if song in current_song_list %}
+	{% if song|in_subitem:current_item_list %}
 		<form method="post" action="TODO?next={{ request.get_full_path|urlencode }}">{% csrf_token %}
 			<input type="hidden" name="songs[]" value="{{ song.id }}">
 			<input type="submit" value="{% trans "Retirer du carnet" %}"/>
