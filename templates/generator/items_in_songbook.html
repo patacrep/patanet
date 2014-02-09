@@ -10,25 +10,36 @@
 	<form method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
 	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">	
+		<ol class="selection ordering">
 		{% for item in items_list %}
-		{% if item.item_type.model == "section" %}
-		<label for="item_{{item.id}}" class="section">{{item.item.name}}</label>
-		<input type="number" id="item_{{item.id}}" name="item_move_list" value="{{item.rank}}" />
-		<input type="checkbox" id="item_{{item.id}}" name="item_delete_list" value="{{item.id}}" />
-		{% elif item.item_type.model == "song" %}
-		<label for="item_{{item.id}}" class="song">
-			<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}">
-				{{ item.item.title }}
-			</a>
-		</label>
-		<input type="number" id="item_{{item.id}}" name="item_move_list" value="{{item.rank}}" />
-		<input type="checkbox" id="item_{{item.id}}" name="item_delete_list" value="{{item.id}}" /> 
-		{% endif %}
+			<li class="{{ item.item_type.model}}">
+				<input type="number" id="item_{{item.id}}" name="item_{{item.id}}" value="{{item.rank}}" />	
+				{% if item.item_type.model == "section" %}
+					<label for="item_{{item.id}}">
+						<h4>
+							{{item.item.name}}
+						</h4>
+					</label>
+				{% elif item.item_type.model == "song" %}
+					<label for="item_{{item.id}}">
+						{{ item.item.title }}
+					</label>
+					<a class="details artist" href="{% url "song_list_by_artist" artist=item.item.artist.slug %}" title="{{ item.item.artist.name }}">
+						{{ item.item.artist.name }}
+					</a>
+					<a class="details lyrics" href="{% url "show_song" slug=item.item.slug artist=item.item.artist.slug %}">
+						{% trans "Paroles" %}
+					</a>
+
+				{% endif %}
+			</li>
 		{% empty %}
 			<p>
 				{% trans "Ce carnet est vide" %}
 			</p>
 		{% endfor %}
+		</ol>
+		<br/>
 		<input type="submit" name="delete_items" value="Supprimer les éléments sélectionnés">
 		<input type="submit" name="move_items" value="Modifier l'ordre des chansons">
 	</form>
