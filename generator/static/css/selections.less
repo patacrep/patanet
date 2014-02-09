@@ -80,7 +80,7 @@ a.back{
     
     h2{
         margin-bottom:0;
-		width:13em;
+		width:15em;
 		white-space: nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
@@ -92,17 +92,35 @@ a.back{
 		}
     }
     select{
-    	max-width:13em;
+    	max-width:15em;
     }
     .selection{
         display:block;
+        margin:0;
+        clear:both;
     }
     
     a{
     	color:lighten(@link-col, 10%);
     }
-    label{
-    	color:white;
+    .song{
+		display:inline-block;
+		width:21em;
+		white-space: nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		vertical-align: middle;
+		margin-bottom: 0;
+		cursor:pointer;
+		padding:.4em .4em .3em .4em;
+		color:white;
+		&:hover{
+			text-decoration:none;
+		}
+    }
+    
+    .artist{
+    	color:darken(@link-col, 0%);
     }
     
 }
@@ -131,3 +149,25 @@ a.back{
 		}
 	}
 }
+
+.section_label{
+	cursor:pointer;
+	&:hover h4{
+		background-color:@selection-hover-bg;
+	}
+	h4{
+		margin:0;
+		padding:.7em 0;
+		&:before{
+			content:"\25b6  ";
+		}
+	}
+}
+.section_checker{
+	display:none;
+	&:checked + .section{
+		display:none;
+	}
+}
+
+

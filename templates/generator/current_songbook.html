@@ -1,43 +1,41 @@
 {% load i18n %}
 <div class="playlist">
 	{% if user.is_authenticated %}
-		{% with user_songbooks=user.profile.songbooks.all %}
 		{% if current_songbook %}
 			<h2 title="{{ current_songbook.title }}">
 				{{ current_songbook.title }}
 			</h2>
 			<small>
-				<a href="{% url "edit_songbook" slug=current_songbook.slug id=current_songbook.id %}">
-					{% trans "Modifier les options" %}
+				<a href="{% url "item_list" slug=current_songbook.slug id=current_songbook.id %}">
+					{% trans "Modifier l'ordre" %}
 				</a>
 			</small>
-			<ul class="artists selection"> <!-- Il ne faudrait pas changer la classe ici ? -->
-				<li>
-				{% for item in current_item_list %}
+			<ul class="section selection">
+			{% for item in current_item_list %}
 				{% if item.item_type.model == "section" %}
-				{% if multi_section and not item == first_section %}</ul>{% endif %}
-					<label for="section_{{item.item.id}}"><h4>{{item.item.name}}</h4></label>
-					<input type="checkbox" name="section_{{item.item.id}}" class="section_checker" /> 
-						<ul class="section">			
+					</ul>
+{% comment %} We might have an empty <ul></ul> at the beginning, but we don't really care...{% endcomment %}
+					<label for="section_{{item.item.id}}" class="section_label"><h4>{{item.item.name}}</h4></label>
+					<input type="checkbox" id="section_{{item.item.id}}" class="section_checker" /> 
+					<ul class="section selection">			
 				{% elif item.item_type.model == "song" %}
 					<li>
-						<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}">
-							<label class="artist" title="{{item.item.title}}">
-								{{ item.item.title }}
-							</label>
+						<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}" title="{{item.item.title}} - {{ item.item.artist.name }} " class="song" >
+								{{ item.item.title }} 
+								<em class="artist">- {{ item.item.artist.name }}</em>
 						</a>
 					</li>
 				{% endif %}
-				{% empty %}
-					<p>
-						{% trans "Ce carnet est vide" %}
-					</p>
-				{% endfor %}
-				{% if sb_has_section %}</ul>{% endif %}
+			{% empty %}
+				<li>
+					<em>{% trans "Ce carnet est vide" %}</em>
+				</li>
+			{% endfor %}
 			</ul><br>
 		{% else %}
 			<h2>{% trans "Carnets de chants" %}</h2>
 		{% endif %}
+		{% with user_songbooks=user.profile.songbooks %}
 			{% if user_songbooks.count > 1 or user_songbooks.count > 0 and not current_songbook %}
 				<p>
 					{% if current_songbook %}
@@ -48,7 +46,7 @@
 				</p>
 				<form method="get" action="{% url 'set_current_songbook' %}">
 						<select name="songbook">
-							{% for songbook in user_songbooks %}
+							{% for songbook in user_songbooks.all %}
 								{% if songbook != current_songbook %}
 									<option value="{{ songbook.id }}">
 										{{ songbook.title }}
