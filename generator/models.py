@@ -115,6 +115,9 @@ class ItemsInSongbook(models.Model):
     def __unicode__(self):
         return _('{item_type} : "{item}", dans le carnet {songbook}' \
                  ).format(item=self.item, item_type =self.item_type, songbook=self.songbook)
+     
+    class Meta:
+        ordering = ["rank"]
                  
 
 ###############################################################

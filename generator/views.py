@@ -34,7 +34,7 @@ def render_with_current_songbook(View):
             try:
                 songbook = Songbook.objects.get(id=self.request.session['current_songbook'])
                 context['current_songbook'] = songbook
-                current_item_list=ItemsInSongbook.objects.filter(songbook=songbook).order_by('rank')
+                current_item_list=ItemsInSongbook.objects.filter(songbook=songbook)
                 context['current_item_list'] = current_item_list
                 
                 if songbook.count_section() > 1:
@@ -262,7 +262,7 @@ class ItemsListInSongbook(ListView):
         songbook_id = self.kwargs.get('id', None)
         slug = self.kwargs.get('slug', None)
         self.songbook = get_object_or_404(Songbook, id=songbook_id, slug=slug) 
-        return ItemsInSongbook.objects.filter(songbook=self.songbook).order_by('rank')
+        return ItemsInSongbook.objects.filter(songbook=self.songbook)
     
     def get_context_data(self, **kwargs):
         context = super(ItemsListInSongbook,self).get_context_data(**kwargs)
