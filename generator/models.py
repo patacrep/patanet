@@ -85,6 +85,10 @@ class Songbook(models.Model):
                                                item_type__model="section").count()
         return count
 
+    def fill_holes(self):
+        """fill the holes in the rank after deletion"""
+        pass # TODO : écrire la fonction correspondante
+
     class Meta:
         verbose_name = _("carnet de chants")
         verbose_name_plural = _("carnets de chants")

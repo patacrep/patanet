@@ -350,33 +350,29 @@ def add_songs_to_songbook(request):
         
     return redirect(next_url)
 
-def move_or_delete_items(request, **kwargs):
-    if 'move_items' in request.POST:
-        pass # TODO : écrire la fonction correspondante
-    elif 'delete_items' in request.POST:
-        return remove_item_from_songbook(request,**kwargs)
-
-def fill_holes(songbook):
-    """fill the holes in the rank after deletion"""
-    pass # TODO : écrire la fonction correspondante
-
 @login_required
-def remove_item_from_songbook(request,id,slug):
+def move_or_delete_items(request,id,slug):
     """Remove an item or a list of items from the current songbook
     """ 
     next_url=request.POST['next']
     songbook = Songbook.objects.get(id=id, slug=slug)
-    item_list = request.POST.getlist('item_delete_list')
+    item_list = {}
     
-    for item_id in item_list:
-        item = ItemsInSongbook.objects.get(songbook=songbook,id=item_id) 
-        item.delete()
+    for key in request.POST.keys():
+        if key.startswith('item_'):
+            item_list[key] = request.POST[key]
+             
+    for item_key in item_list.keys():
+        item_id = int(item_key[5:])
+        rank = int(item_list[item_key])
+        if rank>0:
+            ItemsInSongbook.objects.filter(songbook=songbook,id=item_id).update(rank=rank)
+        else:
+            ItemsInSongbook.objects.filter(songbook=songbook,id=item_id).delete()
     
-    fill_holes(songbook)
+    songbook.fill_holes()
     
     return redirect(next_url)
-
-
 
 class DeleteSongbook(DeleteView):
     model = Songbook
