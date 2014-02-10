@@ -83,7 +83,7 @@ class Command(BaseCommand):
                             gitfile.commit_hash = gitcmd.log("-1",
                                                           "--pretty=format:%H",
                                                           "--", filepath)
-                            gitfile.file_path = filepath
+                            gitfile.file_path = filepath_rel
 
                             song_model.file = gitfile
 
