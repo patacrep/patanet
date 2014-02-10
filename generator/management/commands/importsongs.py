@@ -4,7 +4,7 @@ import sys
 sys.path.append(settings.SONG_PROCESSOR_DIR)
 from utils.plastex import parsetex
 import pprint
-import sh
+import git
 import os
 from generator import models
 from django.db import transaction
@@ -22,8 +22,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        git = sh.git.bake(_cwd=settings.SONGS_LIBRARY_DIR)
-        filerev = git("rev-parse", "HEAD")
+        repo = git.Repo(settings.SONGS_LIBRARY_DIR)
+        gitcmd = repo.git
 
         for root, dirs, filenames in os.walk(settings.SONGS_LIBRARY_DIR,
                                              topdown=True,
@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
             for filename in filenames:
                 if filename.lower().endswith(".sg"):
-                    filepath = os.path.join(root, filename)
+                    filepath = os.path.realpath(os.path.join(root, filename))
                     filepath_rel = os.path.relpath(filepath, settings.SONGS_LIBRARY_DIR)
                     try:
                         data = parsetex(filepath)
@@ -77,8 +77,13 @@ class Command(BaseCommand):
                                                       + song_model.title)
 
                             gitfile = models.GitFile()
-                            gitfile.file_path = filepath_rel
-                            gitfile.file_version = filerev
+
+                            gitfile.object_hash = gitcmd.hash_object(filepath)
+
+                            gitfile.commit_hash = gitcmd.log("-1",
+                                                          "--pretty=format:%H",
+                                                          "--", filepath)
+                            gitfile.file_path = filepath
 
                             song_model.file = gitfile
 

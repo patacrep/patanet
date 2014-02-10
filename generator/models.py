@@ -144,12 +144,14 @@ class GitFile(models.Model):
     """Hold the information about the file object in a git repository.
     Attributes:
         file_path        string    path of the file in the songs repository
-        file_version     string    version of the file as currently known in db
+        commit_hash      string    hash of the commit the file was imported from
+        object_hash      string    hash of the file object
     """
 
     # We use a CharField here, not FileField, we take care of the file.
     file_path = models.CharField(max_length=500)
-    file_version = models.CharField(max_length=20)
+    commit_hash = models.CharField(max_length=20)
+    object_hash = models.CharField(max_length=20)
 
     def __unicode__(self):
         return "{0}:{1}".format(self.file_version, self.file_path)

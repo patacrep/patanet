@@ -5,7 +5,7 @@ Web interface for songbook generation (see https://github.com/crep4ever/songbook
 
 ## Installation
 
-Be sure you have Python and pip installed. Then run `pip install Requirements.txt`.
+Be sure you have Python and pip installed. Then run `pip install -r Requirements.txt`.
 
 In order to get the compilation engine, do `git submodule init` and `git submodule update`.
 
