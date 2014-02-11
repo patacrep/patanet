@@ -31,7 +31,16 @@
 					<em>{% trans "Ce carnet est vide" %}</em>
 				</li>
 			{% endfor %}
-			</ul><br>
+			</ul>
+			<form method="post" action="{% url "add_section" %}">
+				{% csrf_token %}
+				<input type="hidden" name="next" value="{{request.get_full_path}}"> 
+				<input type="hidden" name="songbook" value="{{current_songbook.id}}">
+				<label for="section_name">{% trans "Ajouter une section à ce carnet :"%}</label>
+				<input name="section_name" id="section_name">
+				<input type="submit" value="{% trans "Ajouter" %}">
+			</form>
+			<br />
 		{% else %}
 			<h2>{% trans "Carnets de chants" %}</h2>
 		{% endif %}
