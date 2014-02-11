@@ -107,13 +107,27 @@ class ItemsInSongbook(models.Model):
     item = generic.GenericForeignKey('item_type', 'item_id')
     songbook = models.ForeignKey(Songbook)
     rank = models.IntegerField(_("position"))
-    
+
     def __unicode__(self):
         return _('{item_type} : "{item}", dans le carnet {songbook}' \
                  ).format(item=self.item, item_type =self.item_type, songbook=self.songbook)
-                 
+
+
+class SongInSongbook(Song):
+
+    song = models.ForeignKey(Song,
+                             null=True,  # in case of deletion
+                             related_name="songbooks")
+
+
+class ArtistInSongbook(Artist):
+
+    artist = models.ForeignKey(Artist,
+                               null=True,  # in case of deletion
+                               related_name="songbooks")
 
 ###############################################################
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
@@ -155,3 +169,8 @@ class GitFile(models.Model):
 
     def __unicode__(self):
         return "{0}:{1}".format(self.file_version, self.file_path)
+
+
+class FileInSongbook(GitFile):
+
+    pass
