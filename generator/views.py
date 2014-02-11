@@ -364,11 +364,12 @@ def move_or_delete_items(request,id,slug):
              
     for item_key in item_list.keys():
         item_id = int(item_key[5:])
-        rank = int(item_list[item_key])
-        if rank>=0:
+        try:
+            rank = int(item_list[item_key])
             ItemsInSongbook.objects.filter(songbook=songbook,id=item_id).update(rank=rank)
-        else:
-            ItemsInSongbook.objects.filter(songbook=songbook,id=item_id).delete()
+        except ValueError:
+            if str(item_list[item_key]).lower()=='x':
+                ItemsInSongbook.objects.filter(songbook=songbook,id=item_id).delete()
     
     songbook.fill_holes()
     
