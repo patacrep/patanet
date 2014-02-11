@@ -34,7 +34,7 @@ def render_with_current_songbook(View):
             try:
                 songbook = Songbook.objects.get(id=self.request.session['current_songbook'])
                 context['current_songbook'] = songbook
-                current_item_list=ItemsInSongbook.objects.filter(songbook=songbook).order_by('rank')
+                current_item_list=ItemsInSongbook.objects.filter(songbook=songbook)
                 context['current_item_list'] = current_item_list
                 
                 if songbook.count_section() > 1:
@@ -262,11 +262,11 @@ class ItemsListInSongbook(ListView):
         songbook_id = self.kwargs.get('id', None)
         slug = self.kwargs.get('slug', None)
         self.songbook = get_object_or_404(Songbook, id=songbook_id, slug=slug) 
-        return ItemsInSongbook.objects.filter(songbook=self.songbook).order_by('rank')
+        return ItemsInSongbook.objects.filter(songbook=self.songbook)
     
     def get_context_data(self, **kwargs):
         context = super(ItemsListInSongbook,self).get_context_data(**kwargs)
-        context['songbook']=self.songbook
+        context['songbook']= self.songbook
         return context
 
 
@@ -274,7 +274,7 @@ class ItemsListInSongbook(ListView):
 def set_current_songbook(request):
     """Set a songbook for edition with sessions
      """
-    if (request.GET['songbook']!=None): 
+    if (request.GET['songbook']!= None): 
         songbook_id = request.GET['songbook']
         request.session['current_songbook'] = int(songbook_id)
         return redirect('song_list')
@@ -350,33 +350,55 @@ def add_songs_to_songbook(request):
         
     return redirect(next_url)
 
-def move_or_delete_items(request, **kwargs):
-    if 'move_items' in request.POST:
-        pass # TODO : écrire la fonction correspondante
-    elif 'delete_items' in request.POST:
-        return remove_item_from_songbook(request,**kwargs)
-
-def fill_holes(songbook):
-    """fill the holes in the rank after deletion"""
-    pass # TODO : écrire la fonction correspondante
-
 @login_required
-def remove_item_from_songbook(request,id,slug):
+def move_or_delete_items(request,id,slug):
     """Remove an item or a list of items from the current songbook
     """ 
     next_url=request.POST['next']
     songbook = Songbook.objects.get(id=id, slug=slug)
-    item_list = request.POST.getlist('item_delete_list')
+    item_list = {}
     
-    for item_id in item_list:
-        item = ItemsInSongbook.objects.get(songbook=songbook,id=item_id) 
-        item.delete()
+    for key in request.POST.keys():
+        if key.startswith('item_'):
+            item_list[key] = request.POST[key]
+             
+    for item_key in item_list.keys():
+        item_id = int(item_key[5:])
+        try:
+            rank = int(item_list[item_key])
+            ItemsInSongbook.objects.filter(songbook=songbook,id=item_id).update(rank=rank)
+        except ValueError:
+            if str(item_list[item_key]).lower()=='x':
+                ItemsInSongbook.objects.filter(songbook=songbook,id=item_id).delete()
     
-    fill_holes(songbook)
+    songbook.fill_holes()
     
     return redirect(next_url)
 
 
+
+@login_required
+def add_section(request):
+    print 'ok'
+    next_url = request.POST['next']
+    songbook_id = request.POST['songbook']
+    
+    songbook = Songbook.objects.get(id=songbook_id)
+    
+    try:
+        section_name = str(request.POST['section_name'])
+    except ValueError:
+        messages.error(request, _("Ce nom de section n'est pas valide"))
+        return redirect(next_url)
+    
+    section = Section.objects.create(name=section_name)
+    section.save()
+    
+    rank = get_new_rank(songbook_id)
+    
+    ItemsInSongbook.objects.create(songbook=songbook,item=section,rank=rank)
+    
+    return redirect(next_url)
 
 class DeleteSongbook(DeleteView):
     model = Songbook

@@ -9,6 +9,7 @@ from django.conf.global_settings import LANGUAGES
 from django.utils.translation import ugettext_lazy as _
 
 from jsonfield import JSONField
+from numpy import rank
 
 
 class Artist(models.Model):
@@ -85,6 +86,17 @@ class Songbook(models.Model):
                                                item_type__model="section").count()
         return count
 
+    def fill_holes(self):
+        """fill the holes in the rank after deletion
+        If their is two equal ranks, items are randomly sorted !
+        """
+        rank = 1
+        item_list = ItemsInSongbook.objects.filter(songbook=self) 
+        for item in item_list:
+            item.rank = rank
+            item.save()
+            rank+=1
+
     class Meta:
         verbose_name = _("carnet de chants")
         verbose_name_plural = _("carnets de chants")
@@ -111,6 +123,9 @@ class ItemsInSongbook(models.Model):
     def __unicode__(self):
         return _('{item_type} : "{item}", dans le carnet {songbook}' \
                  ).format(item=self.item, item_type =self.item_type, songbook=self.songbook)
+
+    class Meta:
+        ordering = ["rank"]
 
 
 class SongInSongbook(Song):
