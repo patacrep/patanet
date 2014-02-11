@@ -42,4 +42,13 @@
 		<br/>
 		<input type="submit" value="{% trans "Modifier ce carnet" %}">
 	</form>
+	
+	<form method="post" action="{% url "add_section" %}">
+	{% csrf_token %}
+	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">
+	<input type="hidden" name="songbook" value="{{songbook.id}}">
+	<label for="section_name">{% trans "Ajouter une section à ce carnet :"%}</label>
+	<input name="section_name" id="section_name">
+	<input type="submit" value="{% trans "Ajouter" %}">
+	</form>
 {% endblock %}

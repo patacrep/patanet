@@ -266,7 +266,7 @@ class ItemsListInSongbook(ListView):
     
     def get_context_data(self, **kwargs):
         context = super(ItemsListInSongbook,self).get_context_data(**kwargs)
-        context['songbook']=self.songbook
+        context['songbook']= self.songbook
         return context
 
 
@@ -274,7 +274,7 @@ class ItemsListInSongbook(ListView):
 def set_current_songbook(request):
     """Set a songbook for edition with sessions
      """
-    if (request.GET['songbook']!=None): 
+    if (request.GET['songbook']!= None): 
         songbook_id = request.GET['songbook']
         request.session['current_songbook'] = int(songbook_id)
         return redirect('song_list')
@@ -371,6 +371,31 @@ def move_or_delete_items(request,id,slug):
             ItemsInSongbook.objects.filter(songbook=songbook,id=item_id).delete()
     
     songbook.fill_holes()
+    
+    return redirect(next_url)
+
+
+
+@login_required
+def add_section(request):
+    print 'ok'
+    next_url = request.POST['next']
+    songbook_id = request.POST['songbook']
+    
+    songbook = Songbook.objects.get(id=songbook_id)
+    
+    try:
+        section_name = str(request.POST['section_name'])
+    except ValueError:
+        messages.error(request, _("Ce nom de section n'est pas valide"))
+        return redirect(next_url)
+    
+    section = Section.objects.create(name=section_name)
+    section.save()
+    
+    rank = get_new_rank(songbook_id)
+    
+    ItemsInSongbook.objects.create(songbook=songbook,item=section,rank=rank)
     
     return redirect(next_url)
 
