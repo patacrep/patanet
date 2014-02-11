@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from django.contrib import admin
-from generator.models import Song , Artist, Songbook, SongbooksByUser, \
+from generator.models import Song , Artist, Songbook, \
                             Profile, ItemsInSongbook, Section
 from generator.forms import SongForm
 

@@ -46,8 +46,8 @@ class Song(models.Model):
 
 CHRD='chrd'
 LYR='lyr'
-BOOKTYPES=((CHRD,_("Avec accords")),
-           (LYR,_("Sans accords"))
+BOOKTYPES=((CHRD,_("avec accords")),
+           (LYR,_("sans accords"))
            )
 
 class Songbook(models.Model):
@@ -56,7 +56,10 @@ class Songbook(models.Model):
     description = models.TextField(blank=True, verbose_name=_("description"))
     is_public = models.BooleanField(default=False, verbose_name=_("carnet public"))
     bookoptions = JSONField()
-    booktype = models.CharField(max_length=4, choices=BOOKTYPES, default=CHRD)
+    booktype = models.CharField(max_length=4,
+                                choices=BOOKTYPES,
+                                default=CHRD,
+                                verbose_name=_("type de carnet"))
     template = models.CharField(max_length=100,
                                 verbose_name=_("gabarit"),
                                 default="patacrep.tmpl")
@@ -66,12 +69,8 @@ class Songbook(models.Model):
     # mainfontsize songnumberbgcolor notebgcolor indexbgcolor 
     items = models.ManyToManyField(ContentType,
                                    blank=True,
-                                   through='ItemsInSongbook',
-                                   related_name='items')
-    users = models.ManyToManyField('Profile',
-                                       blank=True,
-                                       through='SongbooksByUser',
-                                       related_name='users')
+                                   through='ItemsInSongbook',)
+    user = models.ForeignKey('Profile', related_name='songbooks')
     
     def __unicode__(self):
         return self.title
@@ -126,33 +125,17 @@ class ItemsInSongbook(models.Model):
      
     class Meta:
         ordering = ["rank"]
-                 
 
 ###############################################################
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    songbooks = models.ManyToManyField(Songbook,
-                                       blank=True,
-                                       through='SongbooksByUser',
-                                       related_name='songbooks')
 
     def __unicode__(self):
         return self.user.username
 
     class Meta:
         verbose_name = _('profil')
-
-
-class SongbooksByUser(models.Model):
-    is_owner = models.BooleanField(default=False)
-    user = models.ForeignKey('Profile')
-    songbook = models.ForeignKey('Songbook')
-
-    def __unicode__(self):
-        return _("Carnet de chant {songbook_name}, utilisé par {user}" \
-                 ).format(songbook_name=self.songbook, user=self.user)
-
 
 class GitFile(models.Model):
 

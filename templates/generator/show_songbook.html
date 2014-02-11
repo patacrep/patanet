@@ -4,14 +4,13 @@
 {% block title %} {{ songbook.title }} {% endblock %}
 
 {% block appmenu %}
-	{% if user.profile|in:songbook.users.all %}
+	{% if user.profile == songbook.user %}
 		{% include "generator/menu/songbook.html" %}
 	{% endif %}
 {% endblock %}
 
 {% block content %}
-	{% with can_edit=user.profile|in:songbook.users.all %}
-	{% if can_edit %}
+	{% if user.profile == songbook.user %}
 		<a href="{% url "songbook_private_list" %}" class="back">
 			{% trans "Mes carnets" %}
 		</a>
@@ -40,5 +39,4 @@
 			<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants au carnet" %}</a>
 		{% endif %}
 	</div>
-{% endwith %}
 {% endblock %}
