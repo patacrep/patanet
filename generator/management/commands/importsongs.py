@@ -12,6 +12,7 @@ from django.utils.text import slugify
 from django.utils.encoding import smart_text
 from django.conf.global_settings import LANGUAGES
 
+
 def _file_error(error):
     print(error)
 
@@ -42,8 +43,7 @@ class Command(BaseCommand):
                         artist_slug = slugify(artist_name)
 
                         with transaction.atomic():
-                            artist_model, created = models.Artist.objects.get_or_create(slug=artist_slug,
-                                                                                        defaults={'name':artist_name})
+                            artist_model, created = models.Artist.objects.get_or_create(slug=artist_slug, defaults={'name': artist_name})
                             if not created:
                                 if (artist_model.name != artist_name):
                                     self.stderr.write("*** Artist name differs though slugs are equal : "
@@ -57,16 +57,25 @@ class Command(BaseCommand):
                                                   "Picking any.")
                             if (len(data['languages']) > 0):
                                 language_name = data["languages"].pop()
-                                language_code = next((x for x in LANGUAGES if x[1].lower() == language_name.lower()), ('',''))[0]
+                                language_code = next((x for x in LANGUAGES if x[1].lower() == language_name.lower()), ('', ''))[0]
                                 if language_code == '':
                                     self.stderr.write("*** No code found for language : '" + language_name + "'")
 
                             song_title = smart_text(data['titles'][0], 'utf-8')
                             song_slug = slugify(song_title)
+                            
+                            gitfile = models.GitFile()
+                            gitfile.object_hash = gitcmd.hash_object(filepath)
+                            gitfile.commit_hash = gitcmd.log("-1",
+                                                          "--pretty=format:%H",
+                                                          "--", filepath)
+                            gitfile.file_path = filepath_rel
+                            
                             song_model, created = models.Song.objects.get_or_create(slug=song_slug,
-                                                                                    defaults={'title':song_title,
-                                                                                              'language':language_code,
-                                                                                              'artist':artist_model})
+                                                                                    defaults={'title': song_title,
+                                                                                              'language': language_code,
+                                                                                              'artist': artist_model,
+                                                                                              'file': gitfile})
                             if created:
                                 self.stdout.write("-> Created.")
                             else:
@@ -75,17 +84,6 @@ class Command(BaseCommand):
                                     self.stderr.write("*** Song names differs though slugs are equal : "
                                                       + song_title + " / " 
                                                       + song_model.title)
-
-                            gitfile = models.GitFile()
-
-                            gitfile.object_hash = gitcmd.hash_object(filepath)
-
-                            gitfile.commit_hash = gitcmd.log("-1",
-                                                          "--pretty=format:%H",
-                                                          "--", filepath)
-                            gitfile.file_path = filepath_rel
-
-                            song_model.file = gitfile
 
                             artist_model.save()
                             gitfile.save()

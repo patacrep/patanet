@@ -132,6 +132,8 @@ SONGS_LIBRARY_DIR = os.path.join(SONG_PROCESSOR_DIR, 'songs/')
 # Path to the location where songbooks are stored
 SONGBOOKS_DIR = os.path.join(PROJECT_ROOT, 'songbooks/')
 
+SOUTH_TESTS_MIGRATE = False
+
 try:
     from local_settings import *
 except ImportError:
