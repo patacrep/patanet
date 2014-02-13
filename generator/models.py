@@ -10,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from jsonfield import JSONField
 from numpy import rank
+from django.dispatch.dispatcher import receiver
+from django.db.models.signals import post_save
 
 
 class Artist(models.Model):
@@ -136,6 +138,11 @@ class Profile(models.Model):
 
     class Meta:
         verbose_name = _('profil')
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.get_or_create(user = instance)
 
 class GitFile(models.Model):
 

@@ -13,9 +13,13 @@ In order to get the compilation engine, do `git submodule init` and `git submodu
 
 Init the DB with:
 ```
-./manage.py syncdb
-./manage.py migrate
+./manage.py syncdb --migrate
 ```
+And answer 'no' to the super-user creation. Once the table has been installed, run 
+```
+./manage.py createsuperuser
+``
+
 If wished, you can load some test data:
 ```
 ./manage.py loaddata few_songs.json
