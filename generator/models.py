@@ -97,6 +97,14 @@ class Songbook(models.Model):
             item.save()
             rank+=1
 
+    def add_section(self, name):
+        section = Section.objects.create(name=name)
+        section.save()
+
+        rank = ItemsInSongbook.objects.filter(songbook=self).count() + 1
+
+        ItemsInSongbook.objects.create(songbook=self, item=section, rank=rank)
+
     class Meta:
         verbose_name = _("carnet de chants")
         verbose_name_plural = _("carnets de chants")
