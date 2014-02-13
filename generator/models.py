@@ -9,7 +9,7 @@ from django.conf.global_settings import LANGUAGES
 from django.utils.translation import ugettext_lazy as _
 
 from jsonfield import JSONField
-from numpy import rank
+#from numpy import rank
 
 
 class Artist(models.Model):
