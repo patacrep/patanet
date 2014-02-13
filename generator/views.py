@@ -197,7 +197,7 @@ class SongbookPrivateList(ListView):
     template_name = "generator/songbook_private_list.html"
     
     def get_queryset(self):
-        return Songbook.objects.filter(songbooksbyuser__user__user__id=self.request.user.id
+        return Songbook.objects.filter(user__user=self.request.user
                                        ).order_by('title')
 
 
@@ -374,7 +374,6 @@ def move_or_delete_items(request,id,slug):
     songbook.fill_holes()
     
     return redirect(next_url)
-
 
 
 @login_required
