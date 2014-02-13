@@ -7,6 +7,17 @@
 {% endblock %}
 
 {% block content %}
+<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" class="back">
+	{% trans "Ajouter des chants au carnet" %}
+</a>
+<p class="how-to">
+{% blocktrans %}
+Pour réordonner les chants, il suffit de changer les numéros de la colonne de gauche.<br/>
+Pour supprimer un chant, il faut remplacer son numéro par un 'X'.<br/>
+La réorganisation est aussi possible en déplacant les chants à la souris (glisser-déposer, si javascript est activé).
+
+{% endblocktrans %}
+</p>
 	<form method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
 	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">	
@@ -34,9 +45,9 @@
 				{% endif %}
 			</li>
 		{% empty %}
-			<p>
+			<li>
 				{% trans "Ce carnet est vide" %}
-			</p>
+			</li>
 		{% endfor %}
 		</ol>
 		<br/>
