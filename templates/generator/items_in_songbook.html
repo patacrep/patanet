@@ -7,6 +7,17 @@
 {% endblock %}
 
 {% block content %}
+<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" class="back">
+	{% trans "Ajouter des chants au carnet" %}
+</a>
+<p class="how-to">
+{% blocktrans %}
+Pour réordonner les chants, il suffit de changer les numéros de la colonne de gauche.<br/>
+Pour supprimer un chant, il faut remplacer son numéro par un 'X'.<br/>
+La réorganisation est aussi possible en déplacant les chants à la souris (glisser-déposer, si javascript est activé).
+
+{% endblocktrans %}
+</p>
 	<form method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
 	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">	
@@ -15,10 +26,8 @@
 			<li class="{{ item.item_type.model}}">
 				<input type="number" id="item_{{item.id}}" name="item_{{item.id}}" value="{{item.rank}}" />	
 				{% if item.item_type.model == "section" %}
-					<label for="item_{{item.id}}">
-						<h4>
-							{{item.item.name}}
-						</h4>
+					<label>
+						<input type="text" value="{{item.item.name}}" name="section_{{item.id}}" class="section_name"/>
 					</label>
 				{% elif item.item_type.model == "song" %}
 					<label for="item_{{item.id}}">
@@ -34,21 +43,19 @@
 				{% endif %}
 			</li>
 		{% empty %}
-			<p>
+			<li>
 				{% trans "Ce carnet est vide" %}
-			</p>
+			</li>
 		{% endfor %}
+			<li class="section">
+				<label for="new_section">
+					{% trans "Ajouter une nouvelle section :" %}
+				</label>
+				<input type="text" name="new_section" id="new_section" class="section_name" placeholder="..."/>
+			</li>
 		</ol>
 		<br/>
 		<input type="submit" value="{% trans "Modifier ce carnet" %}">
 	</form>
 	
-	<form method="post" action="{% url "add_section" %}">
-	{% csrf_token %}
-	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">
-	<input type="hidden" name="songbook" value="{{songbook.id}}">
-	<label for="section_name">{% trans "Ajouter une section à ce carnet :"%}</label>
-	<input name="section_name" id="section_name">
-	<input type="submit" value="{% trans "Ajouter" %}">
-	</form>
 {% endblock %}

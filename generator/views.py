@@ -373,31 +373,15 @@ def move_or_delete_items(request,id,slug):
     
     songbook.fill_holes()
     
+    if request.POST['new_section']:
+        try:
+            section_name = str(request.POST['new_section'])
+            songbook.add_section(section_name)
+        except ValueError:
+            messages.error(request, _("Ce nom de section n'est pas valide"))
+        
     return redirect(next_url)
 
-
-@login_required
-def add_section(request):
-    print 'ok'
-    next_url = request.POST['next']
-    songbook_id = request.POST['songbook']
-    
-    songbook = Songbook.objects.get(id=songbook_id)
-    
-    try:
-        section_name = str(request.POST['section_name'])
-    except ValueError:
-        messages.error(request, _("Ce nom de section n'est pas valide"))
-        return redirect(next_url)
-    
-    section = Section.objects.create(name=section_name)
-    section.save()
-    
-    rank = get_new_rank(songbook_id)
-    
-    ItemsInSongbook.objects.create(songbook=songbook,item=section,rank=rank)
-    
-    return redirect(next_url)
 
 class DeleteSongbook(DeleteView):
     model = Songbook

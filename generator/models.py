@@ -7,11 +7,11 @@ from django.contrib.contenttypes import generic
 #from django.template.defaultfilters import slugify
 from django.conf.global_settings import LANGUAGES
 from django.utils.translation import ugettext_lazy as _
-
-from jsonfield import JSONField
-from numpy import rank
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
+
+from jsonfield import JSONField
+
 
 
 class Artist(models.Model):
@@ -97,6 +97,14 @@ class Songbook(models.Model):
             item.rank = rank
             item.save()
             rank+=1
+
+    def add_section(self, name):
+        section = Section.objects.create(name=name)
+        section.save()
+
+        rank = ItemsInSongbook.objects.filter(songbook=self).count() + 1
+
+        ItemsInSongbook.objects.create(songbook=self, item=section, rank=rank)
 
     class Meta:
         verbose_name = _("carnet de chants")
