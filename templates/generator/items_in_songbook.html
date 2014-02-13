@@ -26,10 +26,8 @@ La réorganisation est aussi possible en déplacant les chants à la souris (gli
 			<li class="{{ item.item_type.model}}">
 				<input type="number" id="item_{{item.id}}" name="item_{{item.id}}" value="{{item.rank}}" />	
 				{% if item.item_type.model == "section" %}
-					<label for="item_{{item.id}}">
-						<h4>
-							{{item.item.name}}
-						</h4>
+					<label>
+						<input type="text" value="{{item.item.name}}" name="section_{{item.id}}" class="section_name"/>
 					</label>
 				{% elif item.item_type.model == "song" %}
 					<label for="item_{{item.id}}">

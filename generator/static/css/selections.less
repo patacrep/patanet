@@ -21,6 +21,12 @@ a.back{
 		}
 		&:hover{
 			background-color:@selection-hover-bg;
+			.details.lyrics{
+				opacity:1;
+			}
+		}
+		.details.lyrics{
+			opacity:0;
 		}
 		
 		&:hover input,
@@ -172,10 +178,26 @@ a.back{
 
 
 .ordering{
-	input{
+	input[type="number"]{
 		width:2em;
 		text-align:right;
+	}
+	input{
 		border:none;
 		background:none;
 	}
+	input.section_name{
+		font-weight:bold;
+		opacity:1;
+		padding:.5em 0;
+		font-size:1.3em;
+	}
+    input[value="x"]{
+        color:red;
+        & ~ label,
+        & + label > input {
+            text-decoration: line-through;
+            color:gray;
+        }
+    }
 }
