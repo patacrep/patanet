@@ -7,7 +7,7 @@
 			</h2>
 			<small>
 				<a href="{% url "item_list" slug=current_songbook.slug id=current_songbook.id %}">
-					{% trans "Modifier l'ordre" %}
+					{% trans "Modifier l'ordre et les sections" %}
 				</a>
 			</small>
 			<ul class="section selection">
@@ -32,6 +32,7 @@
 				</li>
 			{% endfor %}
 			</ul>
+{% comment %}
 			<form method="post" action="{% url "add_section" %}">
 				{% csrf_token %}
 				<input type="hidden" name="next" value="{{request.get_full_path}}"> 
@@ -40,6 +41,7 @@
 				<input name="section_name" id="section_name">
 				<input type="submit" value="{% trans "Ajouter" %}">
 			</form>
+{% endcomment %}
 			<br />
 		{% else %}
 			<h2>{% trans "Carnets de chants" %}</h2>

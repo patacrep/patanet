@@ -1,6 +1,6 @@
 # # -*- coding: utf-8 -*-
 from django import forms 
-from generator.models import Profile, Song, Songbook, SongbooksByUser
+from generator.models import Profile, Song, Songbook
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -53,16 +53,13 @@ class SongbookOptionsForm(forms.ModelForm):
         
     def save(self, force_insert=False, force_update=False, commit=True):
         new_songbook = super(SongbookOptionsForm, self).save(commit=False)
-        new_songbook.user = self.user # User is gotten in the view
+        user_profile = Profile.objects.get(user = self.user) # User is gotten in the view
+        new_songbook.user = user_profile  
         new_songbook.slug = slugify(new_songbook.title)
         new_songbook.bookoptions=self.cleaned_data['bookoptions']
         
         if commit:
             new_songbook.save()
-            try:
-                SongbooksByUser.objects.get(user=self.user.profile, songbook=new_songbook)
-            except SongbooksByUser.DoesNotExist:
-                SongbooksByUser.objects.create(user=self.user.profile, songbook=new_songbook, is_owner=True)
         return new_songbook
         
 class SongForm(forms.ModelForm):

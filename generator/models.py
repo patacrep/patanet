@@ -6,6 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.conf.global_settings import LANGUAGES
 from django.utils.translation import ugettext_lazy as _
+from django.dispatch.dispatcher import receiver
+from django.db.models.signals import post_save
 
 from jsonfield import JSONField
 from django.db import transaction
@@ -72,7 +74,10 @@ class Songbook(models.Model):
     description = models.TextField(blank=True, verbose_name=_("description"))
     is_public = models.BooleanField(default=False, verbose_name=_("carnet public"))
     bookoptions = JSONField()
-    booktype = models.CharField(max_length=4, choices=BOOKTYPES, default=CHRD)
+    booktype = models.CharField(max_length=4,
+                                choices=BOOKTYPES,
+                                default=CHRD,
+                                verbose_name=_("type de carnet"))
     template = models.CharField(max_length=100,
                                 verbose_name=_("gabarit"),
                                 default="patacrep.tmpl")
@@ -82,13 +87,9 @@ class Songbook(models.Model):
     # mainfontsize songnumberbgcolor notebgcolor indexbgcolor 
     items = models.ManyToManyField(ContentType,
                                    blank=True,
-                                   through='ItemsInSongbook',
-                                   related_name='items')
-    users = models.ManyToManyField('Profile',
-                                       blank=True,
-                                       through='SongbooksByUser',
-                                       related_name='users')
-
+                                   through='ItemsInSongbook',)
+    user = models.ForeignKey('Profile', related_name='songbooks')
+    
     def __unicode__(self):
         return self.title
 
@@ -228,6 +229,14 @@ class Songbook(models.Model):
             item.save()
             rank += 1
 
+    def add_section(self, name):
+        section = Section.objects.create(name=name)
+        section.save()
+
+        rank = ItemsInSongbook.objects.filter(songbook=self).count() + 1
+
+        ItemsInSongbook.objects.create(songbook=self, item=section, rank=rank)
+
     class Meta:
         verbose_name = _("carnet de chants")
         verbose_name_plural = _("carnets de chants")
@@ -281,10 +290,6 @@ class ArtistInSongbook(ArtistCommon):
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
-    songbooks = models.ManyToManyField(Songbook,
-                                       blank=True,
-                                       through='SongbooksByUser',
-                                       related_name='songbooks')
 
     def __unicode__(self):
         return self.user.username
@@ -292,16 +297,10 @@ class Profile(models.Model):
     class Meta:
         verbose_name = _('profil')
 
-
-class SongbooksByUser(models.Model):
-    is_owner = models.BooleanField(default=False)
-    user = models.ForeignKey('Profile')
-    songbook = models.ForeignKey('Songbook')
-
-    def __unicode__(self):
-        return _("Carnet de chant {songbook_name}, utilisé par {user}" \
-                 ).format(songbook_name=self.songbook, user=self.user)
-
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.get_or_create(user = instance)
 
 class VcsFileCommon(models.Model):
 
