@@ -122,3 +122,68 @@ class AddRemove(TransactionTestCase):
         self.assertEqual(ArtistInSongbook.objects.count(), 0)
         self.assertEqual(FileInSongbook.objects.count(), 0)
         self.assertEqual(SongInSongbook.objects.count(), 0)
+
+
+class Versions(TransactionTestCase):
+    
+    fixtures = ["test_data_1.json"]
+
+    def setUp(self):        
+        pass
+
+    def test_add_2_versions_of_a_song_in_different_songbooks(self):
+
+        # pre-requisites
+        song = Song.objects.all()[0]
+        songbook1 = Songbook.objects.get(id=1)
+        songbook2 = Songbook.objects.get(id=2)
+
+        self.assertIsNotNone(song)
+        self.assertIsNotNone(songbook1)
+        self.assertIsNotNone(songbook2)
+        
+        self.assertEqual(ItemsInSongbook.objects.count(), 0)
+        self.assertEqual(ArtistInSongbook.objects.count(), 0)
+        self.assertEqual(FileInSongbook.objects.count(), 0)
+        self.assertEqual(SongInSongbook.objects.count(), 0)
+
+        song_title_old = song.title
+        song_slug_old = song.slug
+        song_object_hash_old = song.file.object_hash
+        song_commit_hash_old = song.file.commit_hash
+        
+        songbook1.add_song(song)
+        
+        # build a new version of the song
+        song.title = "New title"
+        song.slug = "new-slug"
+        
+        song.file.object_hash = "1234"
+        song.file.commit_hash = "5678"
+
+        song.file.save()
+        song.save()
+        
+        songbook2.add_song(song)
+        
+        self.assertEqual(ItemsInSongbook.objects.count(), 2)
+        self.assertEqual(SongInSongbook.objects.count(), 2)
+        self.assertEqual(FileInSongbook.objects.count(), 2)
+        self.assertEqual(ArtistInSongbook.objects.count(), 1)
+        
+        sis1 = songbook1.get_songinsongbook_for_song(song.id)
+        
+        self.assertIsNotNone(sis1)
+        self.assertEqual(sis1.title, song_title_old)
+        self.assertEqual(sis1.slug, song_slug_old)
+        self.assertEqual(sis1.file.object_hash, song_object_hash_old)
+        self.assertEqual(sis1.file.commit_hash, song_commit_hash_old)
+        
+        sis2 = songbook2.get_songinsongbook_for_song(song.id)
+        
+        self.assertIsNotNone(sis2)
+        self.assertEqual(sis2.title, song.title)
+        self.assertEqual(sis2.slug, song.slug)
+        self.assertEqual(sis2.file.object_hash, song.file.object_hash)
+        self.assertEqual(sis2.file.commit_hash, song.file.commit_hash)
+        

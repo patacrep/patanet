@@ -93,6 +93,29 @@ class Songbook(models.Model):
     def __unicode__(self):
         return self.title
 
+    def get_songinsongbook_for_song(self, song):
+        """Pick and returns the SongInSongbook instance for the given song.
+        Parameters:
+            song :    whether a Song instance or a Song instance id
+        Returns:
+            SongInSongbook instance, or None if not found.
+        """
+        
+        if type(song) is Song:
+            song_id = song.id
+        elif type(song) is int:
+            song_id = song
+        else:
+            raise TypeError("Parameter 'song' should be of type int or Song")
+        
+        iis = ItemsInSongbook.objects.values_list('item_id', flat=True).filter(songbook=self,
+                                             item_type=ContentType.objects.get_for_model(SongInSongbook))
+        
+        # pick the SongInSongbook instance that has song_id as song
+        sis = SongInSongbook.objects.get(id__in=iis, song_id=song_id)
+        
+        return sis
+        
     def add(self, item, rank=-1):
         """Add an item to the songbook.
         
@@ -113,7 +136,7 @@ class Songbook(models.Model):
             
         else:
             raise NotImplemented("Cannot handle adding objects of type {0}".format(type(item)))
-            
+
     def add_song(self, song, rank=-1):
         """Add a song to this songbook. This creates a cache of the song
         and of the related information: artist and file.
@@ -188,12 +211,7 @@ class Songbook(models.Model):
         if type(song_id) is not int:
             raise TypeError("song_id should be an integer id")
         
-        # fetch ids of all songs in this songbook
-        iis = ItemsInSongbook.objects.values_list('item_id', flat=True).filter(songbook=self,
-                                             item_type=ContentType.objects.get_for_model(SongInSongbook))
-        
-        # pick the SongInSongbook instance that has song_id as song
-        sis = SongInSongbook.objects.get(id__in=iis, song_id=song_id)
+        sis = self.get_songinsongbook_for_song(song_id)
         
         if sis is not None:
             
@@ -216,10 +234,6 @@ class Songbook(models.Model):
 
             item.delete()
         
-        from django.db import connection
-        import pprint
-        #pprint.pprint(connection.queries)
-
     def count_songs(self):
         count = ItemsInSongbook.objects.filter(songbook=self,
                                                item_type__model="song").count()
