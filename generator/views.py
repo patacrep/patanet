@@ -331,7 +331,7 @@ def add_songs_to_songbook(request):
             artist = Artist.objects.get(id=artist_id)
             song_list = artist.songs.all()
             for song in song_list:
-                songbook.add_song(int(song_id))
+                songbook.add_song(song)
         except Artist.DoesNotExist:
             pass
         
