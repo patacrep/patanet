@@ -18,7 +18,7 @@ Init the DB with:
 And answer 'no' to the super-user creation. Once the table has been installed, run 
 ```
 ./manage.py createsuperuser
-``
+```
 
 If wished, you can load some test data:
 ```
