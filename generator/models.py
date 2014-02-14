@@ -162,7 +162,7 @@ class Songbook(models.Model):
         if ItemsInSongbook.objects.filter(item_id=song.id, 
                                           item_type=ContentType.objects.get_for_model(Song),
                                           songbook=self
-                                          ).count() > 0:
+                                          ).exists():
             return
         
         with transaction.atomic():
