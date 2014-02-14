@@ -58,6 +58,7 @@ class Song(SongCommon):
 
     class Meta:
         verbose_name = _("chant")
+        ordering = ["title"]
 
 ###############################################################
 
@@ -152,12 +153,12 @@ class Songbook(models.Model):
                       Use '-1' to add at the end (default)
         """
         
-        if song is None:
-            raise TypeError("song may not be None.")
-
+        if type(song) is int:
+            song = Song.objects.get(id=song)
+            
         if type(song) is not Song:
-            raise TypeError("Parameter song should be of type Song")
-
+            raise TypeError("Parameter 'song' should be of type int or Song")
+        
         if ItemsInSongbook.objects.filter(item_id=song.id, 
                                           item_type=ContentType.objects.get_for_model(Song),
                                           songbook=self
@@ -328,7 +329,7 @@ class Profile(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.get_or_create(user = instance)
+        Profile.objects.get_or_create(user=instance)
 
 
 class VcsFileCommon(models.Model):

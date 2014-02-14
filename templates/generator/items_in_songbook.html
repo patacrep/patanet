@@ -29,7 +29,7 @@ La réorganisation est aussi possible en déplacant les chants à la souris (gli
 					<label>
 						<input type="text" value="{{item.item.name}}" name="section_{{item.id}}" class="section_name"/>
 					</label>
-				{% elif item.item_type.model == "song" %}
+				{% elif item.item_type.model == "songinsongbook" %}
 					<label for="item_{{item.id}}">
 						{{ item.item.title }}
 					</label>

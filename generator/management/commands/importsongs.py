@@ -64,12 +64,13 @@ class Command(BaseCommand):
                             song_title = smart_text(data['titles'][0], 'utf-8')
                             song_slug = slugify(song_title)
                             
-                            gitfile = models.GitFile()
-                            gitfile.object_hash = gitcmd.hash_object(filepath)
-                            gitfile.commit_hash = gitcmd.log("-1",
-                                                          "--pretty=format:%H",
-                                                          "--", filepath)
-                            gitfile.file_path = filepath_rel
+                            object_hash = gitcmd.hash_object(filepath)
+                            commit_hash = gitcmd.log("-1",
+                                                     "--pretty=format:%H",
+                                                     "--", filepath)
+                            gitfile = models.GitFile.objects.create(object_hash=object_hash,
+                                                                    commit_hash=commit_hash,
+                                                                    file_path=filepath_rel)
                             
                             song_model, created = models.Song.objects.get_or_create(slug=song_slug,
                                                                                     defaults={'title': song_title,
