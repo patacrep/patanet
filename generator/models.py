@@ -144,28 +144,30 @@ class Songbook(models.Model):
         with transaction.atomic():
 
             artist = song.artist
-            artist_in_sb = ArtistInSongbook.objects.get_or_create(artist=artist,
-                                                                  defaults={'name': artist.name,
-                                                                            'slug': artist.slug}
-                                                                  )[0]
+            artist_in_sb, created = ArtistInSongbook.objects.get_or_create(artist=artist,
+                                                                           defaults={'name': artist.name,
+                                                                                     'slug': artist.slug}
+                                                                           )
+
+            if created:
+                artist_in_sb.save()
 
             songfile = song.file
-            file_in_sb = FileInSongbook.objects.create(object_hash=songfile.object_hash,
-                                                       commit_hash=songfile.commit_hash,
-                                                       file_path=songfile.file_path)
+            file_in_sb, created = FileInSongbook.objects.get_or_create(object_hash=songfile.object_hash,
+                                                                       commit_hash=songfile.commit_hash,
+                                                                       file_path=songfile.file_path)
 
-            song_in_sb = SongInSongbook.objects.get_or_create(song=song,
-                                                              defaults={'artist': artist_in_sb,
-                                                                        'title': song.title,
-                                                                        'slug': song.slug,
-                                                                        'capo': song.capo,
-                                                                        'language': song.language,
-                                                                        'file': file_in_sb}
-                                                              )[0]
-
-            artist_in_sb.save()
-            file_in_sb.save()
-            song_in_sb.save()
+            if (created):
+                song_in_sb = SongInSongbook.objects.create(song=song,
+                                                           file=file_in_sb,
+                                                           artist=artist_in_sb,
+                                                           title=song.title,
+                                                           slug=song.slug,
+                                                           capo=song.capo,
+                                                           language=song.language)
+                file_in_sb.save()
+            else:
+                song_in_sb = SongInSongbook.objects.get(file=file_in_sb)
 
             if rank == -1:
                 rank = ItemsInSongbook.objects.filter(songbook=self).aggregate(Max("rank"))["rank__max"]
@@ -183,31 +185,41 @@ class Songbook(models.Model):
 
     def remove_song(self, song_id):
 
+        if type(song_id) is not int:
+            raise TypeError("song_id should be an integer id")
+        
+        # fetch ids of all songs in this songbook
         iis = ItemsInSongbook.objects.values_list('item_id', flat=True).filter(songbook=self,
                                              item_type=ContentType.objects.get_for_model(SongInSongbook))
         
+        # pick the SongInSongbook instance that has song_id as song
         sis = SongInSongbook.objects.get(id__in=iis, song_id=song_id)
         
         if sis is not None:
-            if sis.artist.songs_in_songbooks.count() == 1:
-                # If this SongInSongbook is the last one for the ArtistInSongbook
-                # so delete the ArtistInSongbook
-                sis.artist.delete()
             
-            sis.file.delete()
-
             item = ItemsInSongbook.objects.get(item_type=ContentType.objects.get_for_model(SongInSongbook),
                                                item_id=sis.id,
                                                songbook=self)
             
+            # If this is the last songbook where the file is in,
+            # then delete the SongInSongbook instance
             if ItemsInSongbook.objects.filter(item_type=ContentType.objects.get_for_model(SongInSongbook),
                                               item_id=sis.id).count() == 1:
-                # If this is the last songbook where the file is in,
-                # then delete 
+                
+                # If this SongInSongbook is the last one for the ArtistInSongbook
+                # so delete the ArtistInSongbook too
+                if sis.artist.songs_in_songbooks.count() == 1:
+                    sis.artist.delete()
+                    
+                sis.file.delete()
                 sis.delete()
 
             item.delete()
         
+        from django.db import connection
+        import pprint
+        #pprint.pprint(connection.queries)
+
     def count_songs(self):
         count = ItemsInSongbook.objects.filter(songbook=self,
                                                item_type__model="song").count()
@@ -283,7 +295,8 @@ class ArtistInSongbook(ArtistCommon):
 
     artist = models.ForeignKey(Artist,
                                null=True,  # in case of deletion
-                               related_name="songbooks")
+                               on_delete=models.SET_NULL,
+                               related_name="artistinsongbook_set")
 
 ###############################################################
 
@@ -297,10 +310,12 @@ class Profile(models.Model):
     class Meta:
         verbose_name = _('profil')
 
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.get_or_create(user = instance)
+
 
 class VcsFileCommon(models.Model):
 

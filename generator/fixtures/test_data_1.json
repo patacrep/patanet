@@ -137,7 +137,8 @@
     "template": "", 
     "is_public": false, 
     "bookoptions": "{}", 
-    "slug": "test-songbook-1"
+    "slug": "test-songbook-1",
+    "user": 1
   }
 },
 {
@@ -150,7 +151,8 @@
     "template": "", 
     "is_public": false, 
     "bookoptions": "{}", 
-    "slug": "test-songbook-2"
+    "slug": "test-songbook-2",
+    "user": 1
   }
 },
 {
