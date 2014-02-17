@@ -1,2 +1,21 @@
+[MESSAGES CONTROL]
+# W0142 = *args and **kwargs support
+# W0212 = Accessing protected attribute of client class
+# W0613 = Unused argument
+# W0232 = Class has no __init__ method
+# R0901 = Too Many Ancestors
+# R0903 = Too few public methods
+# R0904 = Too Many Public Methods
+# W0201 = Attribute X defined outside of __init__
+# E1120 = No value passed for parameter 'cls' in function call
+
+disable=W0142,W0212,W0613,W0232,R0901,R0903,R0904,W0201,E1120
+
+[BASIC]
+good-names=n,i,j,k,_,urlpatterns,pk,id,register,logger
+
+[MASTER]
+ignore=migrations
+
 [TYPECHECK]
-generated-members=request,objects,_meta,id,[a-zA-Z]+_set,DoesNotExist,kwargs
+generated-members=request,objects,_meta,id,pk,[a-zA-Z]+_set,DoesNotExist,cleaned_data,user,username,kwargs
