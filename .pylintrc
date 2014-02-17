@@ -1,0 +1,2 @@
+[TYPECHECK]
+generated-members=request,objects,_meta,id,[a-zA-Z]+_set,DoesNotExist,kwargs

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.db.models import Max
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -10,7 +9,6 @@ from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 
 from jsonfield import JSONField
-from django.db import transaction
 
 
 class Artist(models.Model):
@@ -28,7 +26,6 @@ class Artist(models.Model):
 
 
 class Song(models.Model):
-    
     title = models.CharField(max_length=100, verbose_name=_('titre'))
     slug = models.SlugField(max_length=100, unique=True)
     # Pick the language as e.g. fr-FR or sr-latn from the list
@@ -58,10 +55,16 @@ BOOKTYPES = ((CHRD, _("Avec accords")),
 
 
 class Songbook(models.Model):
-    title = models.CharField(max_length=100, verbose_name=_("titre"))
+    title = models.CharField(max_length=100,
+                             verbose_name=_("titre")
+                             )
     slug = models.SlugField(max_length=100)
-    description = models.TextField(blank=True, verbose_name=_("description"))
-    is_public = models.BooleanField(default=False, verbose_name=_("carnet public"))
+    description = models.TextField(blank=True,
+                                   verbose_name=_("description")
+                                   )
+    is_public = models.BooleanField(default=False,
+                                    verbose_name=_("carnet public")
+                                    )
     bookoptions = JSONField()
     booktype = models.CharField(max_length=4,
                                 choices=BOOKTYPES,
@@ -72,24 +75,27 @@ class Songbook(models.Model):
                                 default="patacrep.tmpl")
     #songbook['lang']='lang'
     #other_options = SerializedDataField()
-    # Other options are : web mail picture picturecopyright footer license (a .tex file) 
-    # mainfontsize songnumberbgcolor notebgcolor indexbgcolor 
+    # Other options are : web mail picture picturecopyright footer
+    # license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
+    # indexbgcolor
     items = models.ManyToManyField(ContentType,
                                    blank=True,
                                    through='ItemsInSongbook',)
     user = models.ForeignKey('Profile', related_name='songbooks')
-    
+
     def __unicode__(self):
         return self.title
 
     def count_songs(self):
         count = ItemsInSongbook.objects.filter(songbook=self,
-                                               item_type=ContentType.objects.get_for_model(Song)).count()
+                                               item_type=ContentType.objects.get_for_model(Song)
+                                               ).count()
         return count
 
     def count_section(self):
         count = ItemsInSongbook.objects.filter(songbook=self,
-                                               item_type=ContentType.objects.get_for_model(Section)).count()
+                                               item_type=ContentType.objects.get_for_model(Section)
+                                               ).count()
         return count
 
     def fill_holes(self):
@@ -97,7 +103,7 @@ class Songbook(models.Model):
         If their is two equal ranks, items are randomly sorted !
         """
         rank = 1
-        item_list = ItemsInSongbook.objects.filter(songbook=self) 
+        item_list = ItemsInSongbook.objects.filter(songbook=self)
         for item in item_list:
             item.rank = rank
             item.save()
@@ -117,8 +123,9 @@ class Songbook(models.Model):
 
 
 class Section(models.Model):
-    name = models.CharField(max_length=200, 
-                            verbose_name=_("nom de section"),)
+    name = models.CharField(max_length=200,
+                            verbose_name=_("nom de section"),
+                            )
 
     def __unicode__(self):
         return self.name
@@ -135,12 +142,14 @@ class ItemsInSongbook(models.Model):
     rank = models.IntegerField(_("position"))
 
     def __unicode__(self):
-        return _('"{item_type}" : "{item}", dans le carnet "{songbook}"' \
-                 ).format(item=self.item, item_type=self.item_type, songbook=self.songbook)
+        return _('"{item_type}" : "{item}", dans le carnet "{songbook}"'
+                 ).format(item=self.item,
+                          item_type=self.item_type,
+                          songbook=self.songbook
+                          )
 
     class Meta:
         ordering = ["rank"]
-
 
 ###############################################################
 

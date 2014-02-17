@@ -1,13 +1,14 @@
 # -*- coding:utf-8 -*-
 from django.contrib import admin
-from generator.models import Song , Artist, Songbook, \
-                            Profile, ItemsInSongbook, Section
+from generator.models import Song, Artist, Songbook, \
+                            ItemsInSongbook, Section
 from generator.forms import SongForm
 
+
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('title','language','artist')
-    list_filter = ('artist',) 
-    ordering = ('artist','title')
+    list_display = ('title', 'language', 'artist')
+    list_filter = ('artist',)
+    ordering = ('artist', 'title')
     form = SongForm
 
 
@@ -17,8 +18,8 @@ class ArtistAdmin(admin.ModelAdmin):
 
 ####################################################
 
-admin.site.register(Song,SongAdmin)
-admin.site.register(Artist,ArtistAdmin)
+admin.site.register(Song, SongAdmin)
+admin.site.register(Artist, ArtistAdmin)
 admin.site.register(Songbook)
 #admin.site.register(SongbooksByUser)
 #admin.site.register(Profile)
