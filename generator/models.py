@@ -13,7 +13,7 @@ from jsonfield import JSONField
 from django.db import transaction
 
 
-class ArtistCommon(models.Model):
+class Artist(models.Model):
 
     name = models.CharField(max_length=100, verbose_name='Nom')
     # FIXME: cas de deux artistes de même slug
@@ -25,36 +25,24 @@ class ArtistCommon(models.Model):
     class Meta:
         verbose_name = _("artiste")
         ordering = ["name"]
-        abstract = True
 
 
-class Artist(ArtistCommon):
-
-    pass
-
-
-class SongCommon(models.Model):
+class Song(models.Model):
+    
     title = models.CharField(max_length=100, verbose_name=_('titre'))
     slug = models.SlugField(max_length=100, unique=True)
     # Pick the language as e.g. fr-FR or sr-latn from the list
     # provided by django
     language = models.CharField(max_length=7, choices=LANGUAGES, null=True)
     capo = models.IntegerField(null=True, blank=True)
-
-    def __unicode__(self):
-        return self.title
-
-    class Meta:
-        abstract = True
-        ordering = ["title"]
-
-
-class Song(SongCommon):
-
     artist = models.ForeignKey(Artist,
                                verbose_name=_('artiste'),
                                related_name="songs")
-    file = models.OneToOneField('GitFile', null=True)
+    file_path = models.CharField(max_length=500)
+    object_hash = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.title
 
     class Meta:
         verbose_name = _("chant")
@@ -94,155 +82,14 @@ class Songbook(models.Model):
     def __unicode__(self):
         return self.title
 
-    def get_songinsongbook_for_song(self, song):
-        """Pick and returns the SongInSongbook instance for the given song.
-        Parameters:
-            song :    whether a Song instance or a Song instance id
-        Returns:
-            SongInSongbook instance, or None if not found.
-        """
-        
-        if type(song) is Song:
-            song_id = song.id
-        elif type(song) is int:
-            song_id = song
-        else:
-            raise TypeError("Parameter 'song' should be of type int or Song")
-        
-        iis = ItemsInSongbook.objects.values_list('item_id', flat=True).filter(songbook=self,
-                                             item_type=ContentType.objects.get_for_model(SongInSongbook))
-        
-        # pick the SongInSongbook instance that has song_id as song
-        sis = SongInSongbook.objects.get(id__in=iis, song_id=song_id)
-        
-        return sis
-        
-    def add(self, item, rank=-1):
-        """Add an item to the songbook.
-        
-        Parameters:
-        
-            item :    the item to add
-            rank :    position where to add the item. If an item is already
-                      at this position, the latter will be shifted after 
-                      the new one.
-                      Use '-1' to add at the end (default)
-        """
-        
-        if item is None:
-            raise TypeError("item may not be None.")
-        
-        if type(item) is Song:
-            return self.add_song(item)
-            
-        else:
-            raise NotImplemented("Cannot handle adding objects of type {0}".format(type(item)))
-
-    def add_song(self, song, rank=-1):
-        """Add a song to this songbook. This creates a cache of the song
-        and of the related information: artist and file.
-        
-        If the song is already in the book, nothing is done.
-        
-        Parameters:
-        
-            song :    the song to add
-            rank :    position where to add the song. If an item is already
-                      at this position, the latter will be shifted after 
-                      the new one.
-                      Use '-1' to add at the end (default)
-        """
-        
-        if type(song) is int:
-            song = Song.objects.get(id=song)
-            
-        if type(song) is not Song:
-            raise TypeError("Parameter 'song' should be of type int or Song")
-        
-        if ItemsInSongbook.objects.filter(item_id=song.id, 
-                                          item_type=ContentType.objects.get_for_model(Song),
-                                          songbook=self
-                                          ).exists():
-            return
-        
-        with transaction.atomic():
-
-            artist = song.artist
-            artist_in_sb, created = ArtistInSongbook.objects.get_or_create(artist=artist,
-                                                                           defaults={'name': artist.name,
-                                                                                     'slug': artist.slug}
-                                                                           )
-
-            if created:
-                artist_in_sb.save()
-
-            songfile = song.file
-            file_in_sb, created = FileInSongbook.objects.get_or_create(object_hash=songfile.object_hash,
-                                                                       commit_hash=songfile.commit_hash,
-                                                                       file_path=songfile.file_path)
-
-            if (created):
-                song_in_sb = SongInSongbook.objects.create(song=song,
-                                                           file=file_in_sb,
-                                                           artist=artist_in_sb,
-                                                           title=song.title,
-                                                           slug=song.slug,
-                                                           capo=song.capo,
-                                                           language=song.language)
-                file_in_sb.save()
-            else:
-                song_in_sb = SongInSongbook.objects.get(file=file_in_sb)
-
-            if rank == -1:
-                rank = ItemsInSongbook.objects.filter(songbook=self).aggregate(Max("rank"))["rank__max"]
-                if rank is None:  # possible if no item yet
-                    rank = 0
-            else:
-                # FIXME: find a better algorithm to let the rank be just 
-                # before an existing item.
-                rank -= 0.0001
-            
-            iis = ItemsInSongbook(item=song_in_sb, songbook=self, rank=rank)
-            iis.save()
-            
-        self.fill_holes()
-
-    def remove_song(self, song_id):
-
-        if type(song_id) is not int:
-            raise TypeError("song_id should be an integer id")
-        
-        sis = self.get_songinsongbook_for_song(song_id)
-        
-        if sis is not None:
-            
-            item = ItemsInSongbook.objects.get(item_type=ContentType.objects.get_for_model(SongInSongbook),
-                                               item_id=sis.id,
-                                               songbook=self)
-            
-            # If this is the last songbook where the file is in,
-            # then delete the SongInSongbook instance
-            if ItemsInSongbook.objects.filter(item_type=ContentType.objects.get_for_model(SongInSongbook),
-                                              item_id=sis.id).count() == 1:
-                
-                # If this SongInSongbook is the last one for the ArtistInSongbook
-                # so delete the ArtistInSongbook too
-                if sis.artist.songs_in_songbooks.count() == 1:
-                    sis.artist.delete()
-                    
-                sis.file.delete()
-                sis.delete()
-
-            item.delete()
-        
     def count_songs(self):
         count = ItemsInSongbook.objects.filter(songbook=self,
-                                               item_type__model="song").count()
+                                               item_type=ContentType.objects.get_for_model(Song)).count()
         return count
 
     def count_section(self):
         count = ItemsInSongbook.objects.filter(songbook=self,
-                                               item_type__model="section").count()
+                                               item_type=ContentType.objects.get_for_model(Section)).count()
         return count
 
     def fill_holes(self):
@@ -295,24 +142,6 @@ class ItemsInSongbook(models.Model):
         ordering = ["rank"]
 
 
-class SongInSongbook(SongCommon):
-
-    song = models.ForeignKey(Song,
-                             null=True,  # in case of deletion
-                             related_name="song_in_songbooks")
-    artist = models.ForeignKey("ArtistInSongbook",
-                               verbose_name=_("artiste"),
-                               related_name="songs_in_songbooks")
-    file = models.OneToOneField("FileInSongbook")
-
-        
-class ArtistInSongbook(ArtistCommon):
-
-    artist = models.ForeignKey(Artist,
-                               null=True,  # in case of deletion
-                               on_delete=models.SET_NULL,
-                               related_name="artistinsongbook_set")
-
 ###############################################################
 
 
@@ -330,34 +159,3 @@ class Profile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.get_or_create(user=instance)
-
-
-class VcsFileCommon(models.Model):
-
-    """Hold the information about the file object in a git repository.
-    Attributes:
-        file_path        string    path of the file in the songs repository
-        commit_hash      string    hash of the commit the file was imported from
-        object_hash      string    hash of the file object
-    """
-
-    # We use a CharField here, not FileField, we take care of the file.
-    file_path = models.CharField(max_length=500)
-    commit_hash = models.CharField(max_length=20)
-    object_hash = models.CharField(max_length=20)
-
-    def __unicode__(self):
-        return "{0}:{1}".format(self.object_hash, self.file_path)
-
-    class Meta:
-        abstract = True
-
-
-class GitFile(VcsFileCommon):
-
-    pass
-
-
-class FileInSongbook(VcsFileCommon):
-
-    pass

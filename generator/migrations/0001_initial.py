@@ -24,7 +24,8 @@ class Migration(SchemaMigration):
             ('language', self.gf('django.db.models.fields.CharField')(max_length=7, null=True)),
             ('capo', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('artist', self.gf('django.db.models.fields.related.ForeignKey')(related_name='songs', to=orm['generator.Artist'])),
-            ('file', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['generator.GitFile'], unique=True)),
+            ('file_path', self.gf('django.db.models.fields.CharField')(max_length=500)),
+            ('object_hash', self.gf('django.db.models.fields.CharField')(max_length=50)),
         ))
         db.send_create_signal(u'generator', ['Song'])
 
@@ -59,52 +60,12 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'generator', ['ItemsInSongbook'])
 
-        # Adding model 'SongInSongbook'
-        db.create_table(u'generator_songinsongbook', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=100)),
-            ('language', self.gf('django.db.models.fields.CharField')(max_length=7, null=True)),
-            ('capo', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('song', self.gf('django.db.models.fields.related.ForeignKey')(related_name='song_in_songbooks', null=True, to=orm['generator.Song'])),
-            ('artist', self.gf('django.db.models.fields.related.ForeignKey')(related_name='songs_in_songbooks', to=orm['generator.ArtistInSongbook'])),
-            ('file', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['generator.FileInSongbook'], unique=True)),
-        ))
-        db.send_create_signal(u'generator', ['SongInSongbook'])
-
-        # Adding model 'ArtistInSongbook'
-        db.create_table(u'generator_artistinsongbook', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=100)),
-            ('artist', self.gf('django.db.models.fields.related.ForeignKey')(related_name='artistinsongbook_set', null=True, on_delete=models.SET_NULL, to=orm['generator.Artist'])),
-        ))
-        db.send_create_signal(u'generator', ['ArtistInSongbook'])
-
         # Adding model 'Profile'
         db.create_table(u'generator_profile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
         ))
         db.send_create_signal(u'generator', ['Profile'])
-
-        # Adding model 'GitFile'
-        db.create_table(u'generator_gitfile', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('file_path', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('commit_hash', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('object_hash', self.gf('django.db.models.fields.CharField')(max_length=20)),
-        ))
-        db.send_create_signal(u'generator', ['GitFile'])
-
-        # Adding model 'FileInSongbook'
-        db.create_table(u'generator_fileinsongbook', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('file_path', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('commit_hash', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('object_hash', self.gf('django.db.models.fields.CharField')(max_length=20)),
-        ))
-        db.send_create_signal(u'generator', ['FileInSongbook'])
 
 
     def backwards(self, orm):
@@ -123,20 +84,8 @@ class Migration(SchemaMigration):
         # Deleting model 'ItemsInSongbook'
         db.delete_table(u'generator_itemsinsongbook')
 
-        # Deleting model 'SongInSongbook'
-        db.delete_table(u'generator_songinsongbook')
-
-        # Deleting model 'ArtistInSongbook'
-        db.delete_table(u'generator_artistinsongbook')
-
         # Deleting model 'Profile'
         db.delete_table(u'generator_profile')
-
-        # Deleting model 'GitFile'
-        db.delete_table(u'generator_gitfile')
-
-        # Deleting model 'FileInSongbook'
-        db.delete_table(u'generator_fileinsongbook')
 
 
     models = {
@@ -182,27 +131,6 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'})
         },
-        u'generator.artistinsongbook': {
-            'Meta': {'ordering': "['name']", 'object_name': 'ArtistInSongbook'},
-            'artist': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'artistinsongbook_set'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['generator.Artist']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'})
-        },
-        u'generator.fileinsongbook': {
-            'Meta': {'object_name': 'FileInSongbook'},
-            'commit_hash': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'file_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'object_hash': ('django.db.models.fields.CharField', [], {'max_length': '20'})
-        },
-        u'generator.gitfile': {
-            'Meta': {'object_name': 'GitFile'},
-            'commit_hash': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'file_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'object_hash': ('django.db.models.fields.CharField', [], {'max_length': '20'})
-        },
         u'generator.itemsinsongbook': {
             'Meta': {'ordering': "['rank']", 'object_name': 'ItemsInSongbook'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -225,9 +153,10 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['title']", 'object_name': 'Song'},
             'artist': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'songs'", 'to': u"orm['generator.Artist']"}),
             'capo': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'file': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['generator.GitFile']", 'unique': 'True'}),
+            'file_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'language': ('django.db.models.fields.CharField', [], {'max_length': '7', 'null': 'True'}),
+            'object_hash': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
@@ -243,17 +172,6 @@ class Migration(SchemaMigration):
             'template': ('django.db.models.fields.CharField', [], {'default': "'patacrep.tmpl'", 'max_length': '100'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'songbooks'", 'to': u"orm['generator.Profile']"})
-        },
-        u'generator.songinsongbook': {
-            'Meta': {'ordering': "['title']", 'object_name': 'SongInSongbook'},
-            'artist': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'songs_in_songbooks'", 'to': u"orm['generator.ArtistInSongbook']"}),
-            'capo': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'file': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['generator.FileInSongbook']", 'unique': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '7', 'null': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'}),
-            'song': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'song_in_songbooks'", 'null': 'True', 'to': u"orm['generator.Song']"}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         }
     }
 

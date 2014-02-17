@@ -18,7 +18,7 @@
 					<label for="section_{{item.item.id}}" class="section_label"><h4>{{item.item.name}}</h4></label>
 					<input type="checkbox" id="section_{{item.item.id}}" class="section_checker" /> 
 					<ul class="section selection">			
-				{% elif item.item_type.model == "songinsongbook" %}
+				{% elif item.item_type.model == "song" %}
 					<li>
 						<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}" title="{{item.item.title}} - {{ item.item.artist.name }} " class="song" >
 								{{ item.item.title }} 

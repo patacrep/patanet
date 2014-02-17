@@ -318,20 +318,33 @@ def add_songs_to_songbook(request):
         return redirect(next_url)
     
     song_list = request.POST.getlist('songs[]')
+    current_item_list = songbook.items.all()
+    rank=get_new_rank(songbook_id)
     
     for song_id in song_list:
         try:    
-            songbook.add_song(int(song_id))
+            song=Song.objects.get(id=song_id)
+            added = _add_item(item=song,
+                              songbook=songbook,
+                              rank=rank,
+                              current_item_list=current_item_list)
+            if added:
+                rank+=1
         except Song.DoesNotExist: # May be useless
             pass
         
     artist_list = request.POST.getlist('artists[]')
     for artist_id in artist_list:
         try:
-            artist = Artist.objects.get(id=artist_id)
-            song_list = artist.songs.all()
+            artist=Artist.objects.get(id=artist_id)
+            song_list=artist.songs.all()
             for song in song_list:
-                songbook.add_song(song)
+                added = _add_item(item=song,
+                              songbook=songbook,
+                              rank=rank,
+                              current_item_list=current_item_list)
+                if added:
+                    rank+=1
         except Artist.DoesNotExist:
             pass
         
