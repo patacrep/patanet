@@ -47,7 +47,7 @@ class Command(BaseCommand):
                         if not created:
                             if (artist_model.name != artist_name):
                                 self.stderr.write("*** Artist name differs though slugs are equal : "
-                                                  + artist_name + " / " 
+                                                  + artist_name + " / "
                                                   + artist_model.name)
 
                         if (len(data['languages']) > 1):
@@ -63,10 +63,10 @@ class Command(BaseCommand):
 
                         song_title = smart_text(data['titles'][0], 'utf-8')
                         song_slug = slugify(song_title)
-                        
+
                         object_hash = gitcmd.hash_object(filepath)
-                        
-                        song_model, created = models.Song.objects.get_or_create(title=song_title, 
+
+                        song_model, created = models.Song.objects.get_or_create(title=song_title,
                                                                                 artist=artist_model,
                                                                                 defaults={'title': song_title,
                                                                                           'language': language_code,
@@ -76,12 +76,12 @@ class Command(BaseCommand):
                             if models.Song.objects.filter(slug=song_slug).exists():
                                 song_slug += '-' + str(song_model.id)
                             song_model.slug = song_slug
-                            
+
                         else:
                             self.stdout.write("-> Already exists.")
                             if (song_model.title != song_title):
                                 self.stderr.write("*** Song names differs though slugs are equal : "
-                                                  + song_title + " / " 
+                                                  + song_title + " / "
                                                   + song_model.title)
 
                         artist_model.save()

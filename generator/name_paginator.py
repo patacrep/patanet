@@ -13,7 +13,7 @@ class NamePaginator(object):
         self.object_list = queryset
         self.count = len(self.object_list)
 
-        # chunk up the objects so we don't need to iterate 
+        # chunk up the objects so we don't need to iterate
         # over the whole list for each letter
         chunks = {}
         numbers = "0123456789"
@@ -63,7 +63,7 @@ class NamePaginator(object):
             # first, check to see if sub_list will fit or it needs
             # to go onto a new page. If assigning this list will
             # cause the page to overflow... and an underflow is closer
-            # to per_page than an overflow... and the page isn't empty 
+            # to per_page than an overflow... and the page isn't empty
             # (which means len(sub_list) > per_page)...
             if (new_page_count > paginate_by and \
                     abs(paginate_by - current_page.count) < abs(paginate_by - new_page_count) and \

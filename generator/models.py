@@ -14,7 +14,6 @@ from jsonfield import JSONField
 class Artist(models.Model):
 
     name = models.CharField(max_length=100, verbose_name='Nom')
-    # FIXME: cas de deux artistes de même slug
     slug = models.SlugField(max_length=100, unique=True)
 
     def __unicode__(self):
