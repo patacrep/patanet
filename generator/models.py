@@ -72,8 +72,8 @@ class Songbook(models.Model):
     template = models.CharField(max_length=100,
                                 verbose_name=_("gabarit"),
                                 default="patacrep.tmpl")
-    #songbook['lang']='lang'
-    #other_options = SerializedDataField()
+    # songbook['lang']='lang'
+    # other_options = SerializedDataField()
     # Other options are : web mail picture picturecopyright footer
     # license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
     # indexbgcolor
@@ -86,15 +86,17 @@ class Songbook(models.Model):
         return self.title
 
     def count_songs(self):
-        count = ItemsInSongbook.objects.filter(songbook=self,
-                                               item_type=ContentType.objects.get_for_model(Song)
-                                               ).count()
+        count = ItemsInSongbook.objects.filter(
+                   songbook=self,
+                   item_type=ContentType.objects.get_for_model(Song)
+                   ).count()
         return count
 
     def count_section(self):
-        count = ItemsInSongbook.objects.filter(songbook=self,
-                                               item_type=ContentType.objects.get_for_model(Section)
-                                               ).count()
+        count = ItemsInSongbook.objects.filter(
+                   songbook=self,
+                   item_type=ContentType.objects.get_for_model(Section)
+                   ).count()
         return count
 
     def fill_holes(self):
@@ -116,6 +118,28 @@ class Songbook(models.Model):
 
         ItemsInSongbook.objects.create(songbook=self, item=section, rank=rank)
 
+    def get_as_json(self):
+
+        d = {"subtitle": "",
+             "title": self.title,
+             "version": "0.1",
+             "author": self.user.user.first_name + " "
+                        + self.user.user.last_name,
+             "songs": [],
+             }
+        item_ids = ItemsInSongbook.objects.filter(
+                      songbook=self,
+                      item_type=ContentType.objects.get_for_model(Song)
+                      ).order_by("rank").values_list("item_id", flat=True)
+
+        songs = Song.objects.filter(id__in=item_ids) \
+                            .values_list("file_path", flat=True)
+
+        for song in songs:
+            d["songs"].append(str(song))
+
+        return d
+
     class Meta:
         verbose_name = _("carnet de chants")
         verbose_name_plural = _("carnets de chants")
@@ -128,6 +152,22 @@ class Section(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+class SongbookLayout(object):
+    """
+    This class holds layout information for generating a songbook.
+    """
+    def get_as_json(self):
+
+        return {"template": "patacrep.tmpl",
+                "lang": "french",
+                "bookoptions": ["diagram",
+                                "lilypond",
+                                "pictures"
+                                ],
+                "booktype": "chorded",
+                }
 
 
 class ItemsInSongbook(models.Model):
