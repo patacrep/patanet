@@ -84,9 +84,6 @@ class Register(CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        user = form.save()
-        profile = Profile(user=user)
-        profile.save()
         messages.success(self.request, _(u"Vous êtes à présent inscrit."
                     u"Connectez-vous pour accéder à votre profil."))
         return super(Register, self).form_valid(form)
