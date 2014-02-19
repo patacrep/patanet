@@ -1,0 +1,9 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %}{% trans "Acces interdit" %}{% endblock %}
+
+{% block content %}
+	<p>
+	{% trans "Vous n'avez pas l'autorisation de voir cette page." %}
+	</p>
+{% endblock %}
