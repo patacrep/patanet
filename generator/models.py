@@ -120,7 +120,7 @@ class Songbook(models.Model):
 
     def get_as_json(self):
 
-        d = {"subtitle": "",
+        d = {"subtitle": self.description,
              "title": self.title,
              "version": "0.1",
              "author": self.user.user.first_name + " "
@@ -132,11 +132,11 @@ class Songbook(models.Model):
                       item_type=ContentType.objects.get_for_model(Song)
                       ).order_by("rank").values_list("item_id", flat=True)
 
-        songs = Song.objects.filter(id__in=item_ids) \
+        song_paths = Song.objects.filter(id__in=item_ids) \
                             .values_list("file_path", flat=True)
 
-        for song in songs:
-            d["songs"].append(str(song))
+        for song_path in song_paths:
+            d["songs"].append(str(song_path))
 
         return d
 
