@@ -4,13 +4,14 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, \
-                                FormView
+from django.views.generic import ListView, DetailView, CreateView, \
+                                UpdateView, FormView, View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 
-from generator.models import Song, Artist, Songbook, Profile, ItemsInSongbook
+from generator.models import Song, Artist, Songbook, Profile, \
+                            ItemsInSongbook, SongbookLayout
 from generator.forms import RegisterForm, SongbookOptionsForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
@@ -24,7 +25,7 @@ def home(request):
     headertitle = _('Accueil')
     return render(request, 'generator/home.html', locals())
 
-## Decorators
+# # Decorators
 ##############################################
 
 
@@ -68,7 +69,7 @@ def login_required_or_is_public(View):
 
     return View
 
-## User specifics views
+# # User specifics views
 ##############################################
 
 
@@ -145,7 +146,7 @@ def password_reset_complete(request):
                                 "Connectez-vous pour accéder à votre profil."))
     return redirect(reverse('home'))
 
-## Songs views
+# # Songs views
 ##############################################
 
 
@@ -205,7 +206,7 @@ def random_song(request):
                                     'slug': song.slug}
                             ))
 
-## Songbooks views
+# # Songbooks views
 ##############################################
 
 
@@ -249,7 +250,7 @@ class UpdateSongbook(UpdateView):
     model = Songbook
     template_name = 'generator/update_songbook.html'
     form_class = SongbookOptionsForm
-    #context_object_name = 'songbook'
+    # context_object_name = 'songbook'
 
     def get_success_url(self):
         self.kwargs["slug"] = self.object.slug
@@ -436,3 +437,14 @@ class DeleteSongbook(DeleteView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(DeleteSongbook, self).dispatch(*args, **kwargs)
+
+
+@login_required
+def render_songbook(request, songbook_id):
+    """Trigger the generation of a songbook
+    """
+    import tasks
+    tasks.queue_render_task(songbook_id)
+    from django.template.response import SimpleTemplateResponse
+    return SimpleTemplateResponse('generator/songbook_render.html',
+                                  context={'songbook': songbook_id,})

@@ -3,3 +3,4 @@ South==0.8.4
 Unidecode==0.04.14
 jsonfield==0.9.20
 GitPython==0.3.2.RC1
+django-background-task==0.1.6

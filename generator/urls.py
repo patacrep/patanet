@@ -67,6 +67,10 @@ urlpatterns = patterns('generator.views',
     url(r'^songbooks/add-song$',
                 'add_songs_to_songbook',
                 name='add_song_to_songbook'),
+    url(r'^songbooks/(?P<songbook_id>\d+)/render',
+                'render_songbook',
+                name="render_songbook"),
+
 )
 
 urlpatterns += patterns('',
