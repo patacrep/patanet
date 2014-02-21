@@ -8,31 +8,48 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class RegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    """ Require email address when a user signs up """
+    email = forms.EmailField(label='Email address',
+                             max_length=255,
+                             required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.fields['email'].label = _("Adresse mail")
+        self.fields['username'].help_text = _("30 caractères maximum.")
+        self.fields['password2'].help_text = None
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
-    def save(self, force_insert=False, force_update=False, commit=True):
-        user = super(RegisterForm, self).save(commit=False)
-        user.email = self.cleaned_data['email']
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        try:
+            User.objects.get(email=email)
+            raise forms.ValidationError(_("Cette adresse mail existe déjà. "
+                                "Si vous avez oublié votre mot de passe, "
+                                "vous pouvez le réinitialiser."))
+        except User.DoesNotExist:
+            return email
 
+    def save(self, commit=True):
+        user = super(RegisterForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
         if commit:
             user.save()
         return user
-    # TODO : add Captcha
 
 
 class SongbookOptionsForm(forms.ModelForm):
     BOOK_OPTIONS = [('diagram', _("Diagrammes d'accords")),
-                    ('importantdiagramonly', _("Diagrammes important seulement")),
-                    ('repeatchords', _("Accords sur tous les couplets")),
-                    ('tabs', _("Tablatures")),
-                    ('lilypond', _('Partitions Lilypond')),
-                    ('pictures', _("Couvertures d'albums")),
-                    ('onesongperpage', _("Une chanson par page")),
-                    ]
+            ('importantdiagramonly', _("Diagrammes important seulement")),
+            ('repeatchords', _("Accords sur tous les couplets")),
+            ('tabs', _("Tablatures")),
+            ('lilypond', _('Partitions Lilypond')),
+            ('pictures', _("Couvertures d'albums")),
+            ('onesongperpage', _("Une chanson par page")),
+            ]
     CHORDED = 'chorded'
     LYRICS = 'lyrics'
     BOOK_TYPES = (

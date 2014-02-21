@@ -64,6 +64,8 @@ ROOT_URLCONF = 'Songbook_web.urls'
 WSGI_APPLICATION = 'Songbook_web.wsgi.application'
 
 
+AUTHENTICATION_BACKENDS = ('generator.backends.EmailAuthBackend',)
+
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 DATABASES = {

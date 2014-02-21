@@ -56,18 +56,34 @@ def render_with_current_songbook(View):
     return View
 
 
-def login_required_or_is_public(View):
-    def wrapper(previous_function):
-        def check_public(self, *args, **kwargs):
-            if View.get_object(self).is_public:
-                return previous_function(self, *args, **kwargs)
+def owner_or_is_public(ClassView):
+    def wrapper(function):
+        def check_acces(self, *args, **kwargs):
+            songbook = ClassView.get_object(self)
+            if songbook.is_public:
+                return function(self, *args, **kwargs)
+            elif songbook.user == self.request.user:
+                return function(self, *args, **kwargs)
             else:
-                return method_decorator(login_required)(previous_function)(self, *args, **kwargs)
-        return check_public
+                return redirect(reverse('denied'))
+        return check_acces
 
-    View.dispatch = wrapper(View.dispatch)
+    ClassView.dispatch = wrapper(ClassView.dispatch)
+    return ClassView
 
-    return View
+
+def owner_required(ClassView):
+    def wrapper(function):
+        def check_acces(self, *args, **kwargs):
+            songbook = ClassView.get_object(self)
+            if songbook.user == self.request.user:
+                return function(self, *args, **kwargs)
+            else:
+                return redirect(reverse('denied'))
+        return check_acces
+
+    ClassView.dispatch = wrapper(ClassView.dispatch)
+    return ClassView
 
 # # User specifics views
 ##############################################
@@ -85,9 +101,6 @@ class Register(CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        user = form.save()
-        profile = Profile(user=user)
-        profile.save()
         messages.success(self.request, _(u"Vous êtes à présent inscrit."
                     u"Connectez-vous pour accéder à votre profil."))
         return super(Register, self).form_valid(form)
@@ -246,6 +259,7 @@ class NewSongbook(CreateView):
         return super(NewSongbook, self).form_valid(form)
 
 
+@owner_required
 class UpdateSongbook(UpdateView):
     model = Songbook
     template_name = 'generator/update_songbook.html'
@@ -271,7 +285,7 @@ class UpdateSongbook(UpdateView):
         return super(UpdateSongbook, self).form_valid(form)
 
 
-@login_required_or_is_public
+@owner_or_is_public
 class ShowSongbook(DetailView):
     model = Songbook
     template_name = 'generator/show_songbook.html'
@@ -281,7 +295,11 @@ class ShowSongbook(DetailView):
         return Songbook.objects.filter(id=self.kwargs['id'],
                                        slug=self.kwargs['slug'])
 
+    def dispatch(self, *args, **kwargs):
+        return DetailView.dispatch(self, *args, **kwargs)
 
+
+@owner_required
 class ItemsListInSongbook(ListView):
     model = ItemsInSongbook
     context_object_name = "items_list"

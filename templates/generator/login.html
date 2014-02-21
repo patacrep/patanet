@@ -7,8 +7,20 @@
 		<p class="errorlist">{% trans "Vous devez vous connecter pour accéder à cette page." %}</p>
 	{% endif %}
 	<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-		{% csrf_token %}
-		{{ form.as_p }}
+	{% csrf_token %}
+	{{ form.non_field_errors }}
+	{% for field in form %}
+		{% spaceless %}
+		<p><label>
+		{% if field.name == "username" %}
+          {% trans "Nom d'utilisateur ou adresse mail : " %}
+        {% else %}
+          {{ field.label_tag }}
+        {% endif %}
+		</label>
+		{% endspaceless %}
+		{{ field }} </p>
+	{% endfor %}
 		<input type="submit" value="{% trans "Se connecter" %}"/>
 		<input type="hidden" name="next" value="{{ next }}" />
 	</form>

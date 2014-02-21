@@ -11,6 +11,7 @@ from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
      UpdateSongbook, DeleteSongbook,\
      reset_password, reset_password_confirm, password_reset_done, \
      password_reset_complete, ItemsListInSongbook, move_or_delete_items
+from django.views.generic.base import TemplateView
 
 urlpatterns = patterns('generator.views',
     url(r'^$', 'home', name="home"),
@@ -85,6 +86,9 @@ urlpatterns += patterns('',
                 'django.contrib.auth.views.logout',
                 {'next_page': '/'},
                 name='logout'),
+    url(r'^denied$',
+                TemplateView.as_view(template_name="generator/denied.html"),
+                name="denied"),
     url(r'^user/change-password$',
                 PasswordChange.as_view(),
                 name='password_change'),
