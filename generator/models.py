@@ -203,6 +203,22 @@ class Profile(models.Model):
         verbose_name = _('profil')
 
 
+class Task(models.Model):
+
+    class State(object):
+        QUEUED = "QUEUED"
+        IN_PROCESS = "IN_PROCESS"
+        FINISHED = "FINISHED"
+
+    STATES = ((State.QUEUED, "Queued"),
+              (State.IN_PROCESS, "In process"),
+              (State.FINISHED, "Finished"),
+              )
+    songbook = models.OneToOneField(Songbook)
+    state = models.CharField(max_length=20, choices=STATES)
+    result = JSONField()
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

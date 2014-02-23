@@ -32,10 +32,10 @@ ALLOWED_HOSTS = []
 
 APPEND_SLASH = False
 
-#Administrateurs
-ADMINS = (('Luthaf','luthaf@yahoo.fr'))
+# Administrateurs
+ADMINS = (('Luthaf', 'luthaf@yahoo.fr'))
 
-DEFAULT_FROM_EMAIL = '' # webmaster@nom.du.site
+DEFAULT_FROM_EMAIL = ''  # webmaster@nom.du.site
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -96,13 +96,14 @@ gettext = lambda x: x
 
 LANGUAGES = (
 ('fr', gettext('French')),
-('en', gettext('English')), )
+('en', gettext('English')),)
 
 
-STATIC_ROOT = os.path.join(PROJECT_ROOT,'static')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/data/'
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT,"generator/static/"),
+    os.path.join(PROJECT_ROOT, "generator/static/"),
+    os.path.join(PROJECT_ROOT, "PDFs"),
 )
 
 # List of finder classes that know how to find static files in
@@ -135,6 +136,8 @@ SONG_PROCESSOR_DIR = os.path.join(PROJECT_ROOT, 'songbook-core/')
 SONGS_LIBRARY_DIR = os.path.join(SONG_PROCESSOR_DIR, 'songs/')
 # Path to the location where songbooks are stored
 SONGBOOKS_DIR = os.path.join(PROJECT_ROOT, 'songbooks/')
+# Path to the location where generated PDFs are stored
+SONGBOOKS_PDFS = os.path.join(PROJECT_ROOT, 'PDFs')
 
 SOUTH_TESTS_MIGRATE = False
 

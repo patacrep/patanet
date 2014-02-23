@@ -2,7 +2,8 @@
 
 {% block title %}  
   {% blocktrans %} 
-    Le carnet {{ songbook }} est en cours de traitement, actuellement en l'état <em>{{ state }}</em>
+    Le carnet {{ songbook }} a été généré. Voici le résultat:
+    <a href="/data/{{ result }}">{{ result }}</a>
   {% endblocktrans %} 
 {% endblock %}
 
