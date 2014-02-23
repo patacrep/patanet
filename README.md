@@ -37,7 +37,9 @@ Or, probably better, you can import songs from a songbook repository like that:
 
 ## How to run
 
-Then you can run a development server with the command `python manage.py runserver`. No web server (e.g. Apache, ...) required.
+You need to start two processes :
+1. the background task processor : `./manage.py process_tasks`
+2. the web server : you can run a development server with the command `python manage.py runserver`. No web server (e.g. Apache, ...) required.
 
 ## This is a development version !
 
