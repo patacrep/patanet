@@ -264,7 +264,6 @@ class UpdateSongbook(UpdateView):
     model = Songbook
     template_name = 'generator/update_songbook.html'
     form_class = SongbookCreationForm
-    # context_object_name = 'songbook'
 
     def get_success_url(self):
         self.kwargs["slug"] = self.object.slug
@@ -273,11 +272,6 @@ class UpdateSongbook(UpdateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UpdateSongbook, self).dispatch(*args, **kwargs)
-
-    def get_initial(self):
-        initial = super(UpdateSongbook, self).get_initial()
-        initial['bookoptions'] = self.object.bookoptions
-        return initial
 
     def form_valid(self, form):
         form.user = self.request.user
@@ -299,7 +293,7 @@ class ShowSongbook(DetailView):
         return DetailView.dispatch(self, *args, **kwargs)
 
 
-@owner_required
+# @owner_required
 class ItemsListInSongbook(ListView):
     model = ItemsInSongbook
     context_object_name = "items_list"
