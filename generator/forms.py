@@ -41,7 +41,24 @@ class RegisterForm(UserCreationForm):
         return user
 
 
-class SongbookOptionsForm(forms.ModelForm):
+class SongbookCreationForm(forms.ModelForm):
+    class Meta:
+        model = Songbook
+        fields = ('title', 'description', 'is_public')
+
+    def save(self, force_insert=False, force_update=False, commit=True):
+        new_songbook = super(SongbookCreationForm, self).save(commit=False)
+        # User is gotten in the view
+        user_profile = Profile.objects.get(user=self.user)
+        new_songbook.user = user_profile
+        new_songbook.slug = slugify(new_songbook.title)
+
+        if commit:
+            new_songbook.save()
+        return new_songbook
+
+
+class SongbookLayoutForm(forms.ModelForm):
     BOOK_OPTIONS = [('diagram', _("Diagrammes d'accords")),
             ('importantdiagramonly', _("Diagrammes important seulement")),
             ('repeatchords', _("Accords sur tous les couplets")),
@@ -68,20 +85,9 @@ class SongbookOptionsForm(forms.ModelForm):
                             )
 
     class Meta:
-        model = Songbook
-        fields = ('title', 'description', 'is_public', 'booktype')  # template
-
-    def save(self, force_insert=False, force_update=False, commit=True):
-        new_songbook = super(SongbookOptionsForm, self).save(commit=False)
-        # User is gotten in the view
-        user_profile = Profile.objects.get(user=self.user)
-        new_songbook.user = user_profile
-        new_songbook.slug = slugify(new_songbook.title)
-        new_songbook.bookoptions = self.cleaned_data['bookoptions']
-
-        if commit:
-            new_songbook.save()
-        return new_songbook
+        pass
+        #model = Layout
+        #fields = ('title', 'description', 'is_public', 'booktype')  # template
 
 
 class SongForm(forms.ModelForm):

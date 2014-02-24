@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 
 from generator.models import Song, Artist, Songbook, Profile, \
                             ItemsInSongbook, SongbookLayout, Task as GeneratorTask
-from generator.forms import RegisterForm, SongbookOptionsForm
+from generator.forms import RegisterForm, SongbookCreationForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.views import password_reset, password_reset_confirm
@@ -246,7 +246,7 @@ class SongbookPrivateList(ListView):
 class NewSongbook(CreateView):
     model = Songbook
     template_name = 'generator/new_songbook.html'
-    form_class = SongbookOptionsForm
+    form_class = SongbookCreationForm
     success_url = reverse_lazy('songbook_private_list')
 
     @method_decorator(login_required)
@@ -263,7 +263,7 @@ class NewSongbook(CreateView):
 class UpdateSongbook(UpdateView):
     model = Songbook
     template_name = 'generator/update_songbook.html'
-    form_class = SongbookOptionsForm
+    form_class = SongbookCreationForm
     # context_object_name = 'songbook'
 
     def get_success_url(self):
@@ -461,31 +461,31 @@ class DeleteSongbook(DeleteView):
 def render_songbook(request, songbook_id):
     """Trigger the generation of a songbook
     """
-    
+
     force = request.REQUEST.get("force", False)
     gt = None
     state = None
     if GeneratorTask.objects.filter(songbook__id=songbook_id).exists():
         gt = GeneratorTask.objects.get(songbook__id=songbook_id)
         state = gt.state
-    
+
     from django.template.response import SimpleTemplateResponse
-    
+
     if (state == GeneratorTask.State.FINISHED and force) or gt is None:
-        
+
         gt, _created = GeneratorTask.objects.get_or_create(songbook=Songbook.objects.get(id=songbook_id))
         gt.result = {}
         gt.state = GeneratorTask.State.QUEUED
         gt.save()
-        
+
         import tasks
         tasks.queue_render_task(songbook_id)
-        
+
         return SimpleTemplateResponse('generator/songbook_render.html',
                                       context={'songbook': songbook_id,
                                                'state' : gt.state})
     else:
-        
+
         if state == GeneratorTask.State.FINISHED:
             return SimpleTemplateResponse('generator/songbook_rendered.html',
                                           context={'songbook': songbook_id,

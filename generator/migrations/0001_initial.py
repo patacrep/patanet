@@ -36,9 +36,6 @@ class Migration(SchemaMigration):
             ('slug', self.gf('django.db.models.fields.SlugField')(max_length=100)),
             ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('is_public', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('bookoptions', self.gf('jsonfield.fields.JSONField')()),
-            ('booktype', self.gf('django.db.models.fields.CharField')(default='chrd', max_length=4)),
-            ('template', self.gf('django.db.models.fields.CharField')(default='patacrep.tmpl', max_length=100)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='songbooks', to=orm['generator.Profile'])),
         ))
         db.send_create_signal(u'generator', ['Songbook'])
@@ -67,6 +64,15 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'generator', ['Profile'])
 
+        # Adding model 'Task'
+        db.create_table(u'generator_task', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('songbook', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['generator.Songbook'], unique=True)),
+            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('result', self.gf('jsonfield.fields.JSONField')()),
+        ))
+        db.send_create_signal(u'generator', ['Task'])
+
 
     def backwards(self, orm):
         # Deleting model 'Artist'
@@ -86,6 +92,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Profile'
         db.delete_table(u'generator_profile')
+
+        # Deleting model 'Task'
+        db.delete_table(u'generator_task')
 
 
     models = {
@@ -162,16 +171,20 @@ class Migration(SchemaMigration):
         },
         u'generator.songbook': {
             'Meta': {'object_name': 'Songbook'},
-            'bookoptions': ('jsonfield.fields.JSONField', [], {}),
-            'booktype': ('django.db.models.fields.CharField', [], {'default': "'chrd'", 'max_length': '4'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'items': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['contenttypes.ContentType']", 'symmetrical': 'False', 'through': u"orm['generator.ItemsInSongbook']", 'blank': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '100'}),
-            'template': ('django.db.models.fields.CharField', [], {'default': "'patacrep.tmpl'", 'max_length': '100'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'songbooks'", 'to': u"orm['generator.Profile']"})
+        },
+        u'generator.task': {
+            'Meta': {'object_name': 'Task'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'result': ('jsonfield.fields.JSONField', [], {}),
+            'songbook': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['generator.Songbook']", 'unique': 'True'}),
+            'state': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         }
     }
 

@@ -64,19 +64,6 @@ class Songbook(models.Model):
     is_public = models.BooleanField(default=False,
                                     verbose_name=_("carnet public")
                                     )
-    bookoptions = JSONField()
-    booktype = models.CharField(max_length=4,
-                                choices=BOOKTYPES,
-                                default=CHRD,
-                                verbose_name=_("type de carnet"))
-    template = models.CharField(max_length=100,
-                                verbose_name=_("gabarit"),
-                                default="patacrep.tmpl")
-    # songbook['lang']='lang'
-    # other_options = SerializedDataField()
-    # Other options are : web mail picture picturecopyright footer
-    # license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
-    # indexbgcolor
     items = models.ManyToManyField(ContentType,
                                    blank=True,
                                    through='ItemsInSongbook',)
@@ -158,6 +145,19 @@ class SongbookLayout(object):
     """
     This class holds layout information for generating a songbook.
     """
+#     bookoptions = JSONField()
+#     booktype = models.CharField(max_length=4,
+#                                 choices=BOOKTYPES,
+#                                 default=CHRD,
+#                                 verbose_name=_("type de carnet"))
+#     template = models.CharField(max_length=100,
+#                                 verbose_name=_("gabarit"),
+#                                 default="patacrep.tmpl")
+#     songbook['lang']='lang'
+#     other_options = SerializedDataField()
+#     Other options are : web mail picture picturecopyright footer
+#     license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
+#     indexbgcolor
     def get_as_json(self):
 
         return {"template": "patacrep.tmpl",
