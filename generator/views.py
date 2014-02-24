@@ -62,7 +62,7 @@ def owner_or_is_public(ClassView):
             songbook = ClassView.get_object(self)
             if songbook.is_public:
                 return function(self, *args, **kwargs)
-            elif songbook.user == self.request.user:
+            elif songbook.user.id == self.request.user.id:
                 return function(self, *args, **kwargs)
             else:
                 return redirect(reverse('denied'))
@@ -76,7 +76,7 @@ def owner_required(ClassView):
     def wrapper(function):
         def check_acces(self, *args, **kwargs):
             songbook = ClassView.get_object(self)
-            if songbook.user == self.request.user:
+            if songbook.user.id == self.request.user.id:
                 return function(self, *args, **kwargs)
             else:
                 return redirect(reverse('denied'))
