@@ -18,4 +18,4 @@ good-names=n,i,j,k,_,urlpatterns,pk,id,register,logger
 ignore=migrations
 
 [TYPECHECK]
-generated-members=request,objects,_meta,id,pk,[a-zA-Z]+_set,DoesNotExist,cleaned_data,user,username,kwargs
+generated-members=request,objects,_meta,id,pk,[a-zA-Z]+_set,DoesNotExist,cleaned_data,user,username,kwargs,fields
