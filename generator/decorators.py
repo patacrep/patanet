@@ -10,31 +10,32 @@ from functools import wraps
 from generator.models import Songbook, ItemsInSongbook
 
 
-def render_with_current_songbook(View):
-    def wrapper(previous_function):
-        def add_songbook_to_context(self, **kwargs):
-            context = previous_function(self, **kwargs)
-            context['show_current_songbook'] = True
-            try:
-                songbook = Songbook.objects.get(id=self.request.session['current_songbook'])
-                context['current_songbook'] = songbook
-                current_item_list = ItemsInSongbook.objects.filter(songbook=songbook)
-                context['current_item_list'] = current_item_list
+class CurrentSongbookMixin(object):
+    '''
+    Mixin addding the current songbook from the sessions in the context data.
+    '''
 
-                if songbook.count_section() > 1:
-                    context['multi_section'] = True
-                    context['first_section'] = current_item_list.filter(item_type__model='section')[0]
-                if songbook.count_section() > 0:
-                    context['sb_has_section'] = True
+    def get_context_data(self, **kwargs):
+        context = super(CurrentSongbookMixin, self).get_context_data(**kwargs)
+        context['show_current_songbook'] = True
+        try:
+            songbook = Songbook.objects.get(
+                            id=self.request.session['current_songbook'])
+            context['current_songbook'] = songbook
+            current_item_list = ItemsInSongbook.objects.filter(
+                                                    songbook=songbook)
+            context['current_item_list'] = current_item_list
 
-            except (KeyError, Songbook.DoesNotExist):
-                pass
-            return context
-        return add_songbook_to_context
+            if songbook.count_section() > 1:
+                context['multi_section'] = True
+                context['first_section'] = current_item_list.filter(
+                                            item_type__model='section')[0]
+            if songbook.count_section() > 0:
+                context['sb_has_section'] = True
 
-    View.get_context_data = wrapper(View.get_context_data)
-
-    return View
+        except (KeyError, Songbook.DoesNotExist):
+            pass
+        return context
 
 
 def _get_songbook(lookups, **kwargs):

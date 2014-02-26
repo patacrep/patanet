@@ -17,7 +17,7 @@ from generator.forms import RegisterForm, SongbookCreationForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.views import password_reset, password_reset_confirm
-from generator.decorators import render_with_current_songbook,\
+from generator.decorators import CurrentSongbookMixin,\
     OwnerRequiredMixin, LoginRequiredMixin, owner_required,\
     OwnerOrPublicRequiredMixin
 
@@ -104,8 +104,7 @@ def password_reset_complete(request):
 ##############################################
 
 
-@render_with_current_songbook
-class SongList(ListView):
+class SongList(CurrentSongbookMixin, ListView):
     model = Song
     context_object_name = "song_list"
     template_name = "generator/song_list.html"
@@ -114,8 +113,7 @@ class SongList(ListView):
     queryset = Song.objects.all().order_by('slug')
 
 
-@render_with_current_songbook
-class SongListByArtist(ListView):
+class SongListByArtist(CurrentSongbookMixin, ListView):
     model = Song
     context_object_name = "song_list"
     template_name = "generator/song_list_by_artist.html"
@@ -131,20 +129,18 @@ class SongListByArtist(ListView):
         return context
 
 
-@render_with_current_songbook
-class SongView(DetailView):
+class SongView(CurrentSongbookMixin, DetailView):
     context_object_name = "song"
     model = Song
     template_name = "generator/show_song.html"
 
     def get_queryset(self):
-        return Song.objects.filter(artist__slug=self.kwargs['artist'],
-                                   slug=self.kwargs['slug']
-                                   )
+        return Song.objects.filter(
+                        artist__slug=self.kwargs['artist'],
+                        slug=self.kwargs['slug'])
 
 
-@render_with_current_songbook
-class ArtistList(ListView):
+class ArtistList(CurrentSongbookMixin, ListView):
     model = Artist
     context_object_name = "artist_list"
     template_name = "generator/artist_list.html"
