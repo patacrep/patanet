@@ -14,17 +14,19 @@
 {% blocktrans %}
 Pour réordonner les chants, il suffit de changer les numéros de la colonne de gauche.<br/>
 Pour supprimer un chant, il faut remplacer son numéro par un 'X'.<br/>
+<!--
 La réorganisation est aussi possible en déplacant les chants à la souris (glisser-déposer, si javascript est activé).
+-->
 
 {% endblocktrans %}
 </p>
 	<form method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
-	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">	
+	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">
 		<ol class="selection ordering">
 		{% for item in items_list %}
 			<li class="{{ item.item_type.model}}">
-				<input type="number" id="item_{{item.id}}" name="item_{{item.id}}" value="{{item.rank}}" />	
+				<input type="number" id="item_{{item.id}}" name="item_{{item.id}}" value="{{item.rank}}" />
 				{% if item.item_type.model == "section" %}
 					<label>
 						<input type="text" value="{{item.item.name}}" name="section_{{item.id}}" class="section_name"/>
@@ -57,5 +59,5 @@ La réorganisation est aussi possible en déplacant les chants à la souris (gli
 		<br/>
 		<input type="submit" value="{% trans "Modifier ce carnet" %}">
 	</form>
-	
+
 {% endblock %}
