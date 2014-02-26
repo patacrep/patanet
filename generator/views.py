@@ -370,16 +370,16 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
         return get_object_or_404(Songbook, id=id, slug=slug)
 
 
-@owner_required(('id', 'songook_id'))
-def render_songbook(request, songbook_id):
+@owner_required(('id', 'id'))
+def render_songbook(request, id, slug):
     """Trigger the generation of a songbook
     """
 
     force = request.REQUEST.get("force", False)
     gen_task = None
     state = None
-    if GeneratorTask.objects.filter(songbook__id=songbook_id).exists():
-        gen_task = GeneratorTask.objects.get(songbook__id=songbook_id)
+    if GeneratorTask.objects.filter(songbook__id=id).exists():
+        gen_task = GeneratorTask.objects.get(songbook__id=id)
         state = gen_task.state
 
     from django.template.response import SimpleTemplateResponse
@@ -387,25 +387,25 @@ def render_songbook(request, songbook_id):
     if (state == GeneratorTask.State.FINISHED and force) or gen_task is None:
 
         gen_task, _created = GeneratorTask.objects.get_or_create(
-                                songbook=Songbook.objects.get(id=songbook_id))
+                                songbook=Songbook.objects.get(id=id))
         gen_task.result = {}
         gen_task.state = GeneratorTask.State.QUEUED
         gen_task.save()
 
         import generator.tasks as tasks
-        tasks.queue_render_task(songbook_id)
+        tasks.queue_render_task(id)
 
         return SimpleTemplateResponse('generator/songbook_render.html',
-                                      context={'songbook': songbook_id,
+                                      context={'songbook': id,
                                                'state': gen_task.state})
     else:
 
         if state == GeneratorTask.State.FINISHED:
             return SimpleTemplateResponse(
                             'generator/songbook_rendered.html',
-                            context={'songbook': songbook_id,
+                            context={'songbook': id,
                             'result': gen_task.result["file"]})
         else:
             return SimpleTemplateResponse('generator/songbook_render.html',
-                                          context={'songbook': songbook_id,
+                                          context={'songbook': id,
                                                    'state': gen_task.state})
