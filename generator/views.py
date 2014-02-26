@@ -5,17 +5,22 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, \
-                                UpdateView, FormView, View
+                                UpdateView, FormView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 
 from generator.models import Song, Artist, Songbook, Profile, \
-                            ItemsInSongbook, SongbookLayout, Task as GeneratorTask
+                            ItemsInSongbook, SongbookLayout, \
+                            Task as GeneratorTask
 from generator.forms import RegisterForm, SongbookCreationForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.views import password_reset, password_reset_confirm
+from generator.decorators import render_with_current_songbook,\
+    OwnerRequiredMixin, LoginRequiredMixin, owner_required,\
+    OwnerOrPublicRequiredMixin
+
 
 ##############################################
 ##############################################
@@ -24,66 +29,6 @@ from django.contrib.auth.views import password_reset, password_reset_confirm
 def home(request):
     headertitle = _('Accueil')
     return render(request, 'generator/home.html', locals())
-
-# # Decorators
-##############################################
-
-
-def render_with_current_songbook(View):
-    def wrapper(previous_function):
-        def add_songbook_to_context(self, **kwargs):
-            context = previous_function(self, **kwargs)
-            context['show_current_songbook'] = True
-            try:
-                songbook = Songbook.objects.get(id=self.request.session['current_songbook'])
-                context['current_songbook'] = songbook
-                current_item_list = ItemsInSongbook.objects.filter(songbook=songbook)
-                context['current_item_list'] = current_item_list
-
-                if songbook.count_section() > 1:
-                    context['multi_section'] = True
-                    context['first_section'] = current_item_list.filter(item_type__model='section')[0]
-                if songbook.count_section() > 0:
-                    context['sb_has_section'] = True
-
-            except (KeyError, Songbook.DoesNotExist):
-                pass
-            return context
-        return add_songbook_to_context
-
-    View.get_context_data = wrapper(View.get_context_data)
-
-    return View
-
-
-def owner_or_is_public(ClassView):
-    def wrapper(function):
-        def check_acces(self, *args, **kwargs):
-            songbook = ClassView.get_object(self)
-            if songbook.is_public:
-                return function(self, *args, **kwargs)
-            elif songbook.user.id == self.request.user.id:
-                return function(self, *args, **kwargs)
-            else:
-                return redirect(reverse('denied'))
-        return check_acces
-
-    ClassView.dispatch = wrapper(ClassView.dispatch)
-    return ClassView
-
-
-def owner_required(ClassView):
-    def wrapper(function):
-        def check_acces(self, *args, **kwargs):
-            songbook = ClassView.get_object(self)
-            if songbook.user.id == self.request.user.id:
-                return function(self, *args, **kwargs)
-            else:
-                return redirect(reverse('denied'))
-        return check_acces
-
-    ClassView.dispatch = wrapper(ClassView.dispatch)
-    return ClassView
 
 # # User specifics views
 ##############################################
@@ -106,7 +51,7 @@ class Register(CreateView):
         return super(Register, self).form_valid(form)
 
 
-class PasswordChange(FormView):
+class PasswordChange(LoginRequiredMixin, FormView):
     template_name = 'generator/password_change.html'
     form_class = PasswordChangeForm
     success_url = reverse_lazy('profile')
@@ -122,10 +67,6 @@ class PasswordChange(FormView):
                          _(u"Votre mot de passe a bien été modifié.")
                          )
         return super(PasswordChange, self).form_valid(form)
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PasswordChange, self).dispatch(*args, **kwargs)
 
 
 def reset_password(request):
@@ -243,15 +184,11 @@ class SongbookPrivateList(ListView):
                                        ).order_by('title')
 
 
-class NewSongbook(CreateView):
+class NewSongbook(LoginRequiredMixin, CreateView):
     model = Songbook
     template_name = 'generator/new_songbook.html'
     form_class = SongbookCreationForm
     success_url = reverse_lazy('songbook_private_list')
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(NewSongbook, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         form.user = self.request.user
@@ -259,28 +196,7 @@ class NewSongbook(CreateView):
         return super(NewSongbook, self).form_valid(form)
 
 
-@owner_required
-class UpdateSongbook(UpdateView):
-    model = Songbook
-    template_name = 'generator/update_songbook.html'
-    form_class = SongbookCreationForm
-
-    def get_success_url(self):
-        self.kwargs["slug"] = self.object.slug
-        return reverse('show_songbook', kwargs=self.kwargs)
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UpdateSongbook, self).dispatch(*args, **kwargs)
-
-    def form_valid(self, form):
-        form.user = self.request.user
-        messages.success(self.request, _(u"Le carnet a été modifié."))
-        return super(UpdateSongbook, self).form_valid(form)
-
-
-@owner_or_is_public
-class ShowSongbook(DetailView):
+class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
     model = Songbook
     template_name = 'generator/show_songbook.html'
     context_object_name = 'songbook'
@@ -289,12 +205,23 @@ class ShowSongbook(DetailView):
         return Songbook.objects.filter(id=self.kwargs['id'],
                                        slug=self.kwargs['slug'])
 
-    def dispatch(self, *args, **kwargs):
-        return DetailView.dispatch(self, *args, **kwargs)
+
+class UpdateSongbook(OwnerRequiredMixin, UpdateView):
+    model = Songbook
+    template_name = 'generator/update_songbook.html'
+    form_class = SongbookCreationForm
+
+    def get_success_url(self):
+        self.kwargs["slug"] = self.object.slug
+        return reverse('show_songbook', kwargs=self.kwargs)
+
+    def form_valid(self, form):
+        form.user = self.request.user
+        messages.success(self.request, _(u"Le carnet a été modifié."))
+        return super(UpdateSongbook, self).form_valid(form)
 
 
-# @owner_required
-class ItemsListInSongbook(ListView):
+class ItemsListInSongbook(OwnerRequiredMixin, ListView):
     model = ItemsInSongbook
     context_object_name = "items_list"
     template_name = "generator/items_in_songbook.html"
@@ -339,7 +266,7 @@ def _add_item(item, songbook, rank, current_item_list):
         return False
 
 
-def get_new_rank(songbook_id):
+def _get_new_rank(songbook_id):
     """Get the last song in the section, and return this rank plus 1."""
     rank = ItemsInSongbook.objects.filter(songbook=songbook_id).count()
     if rank == None:
@@ -365,7 +292,7 @@ def add_songs_to_songbook(request):
 
     song_list = request.POST.getlist('songs[]')
     current_item_list = songbook.items.all()
-    rank = get_new_rank(songbook_id)
+    rank = _get_new_rank(songbook_id)
 
     for song_id in song_list:
         try:
@@ -397,7 +324,7 @@ def add_songs_to_songbook(request):
     return redirect(next_url)
 
 
-@login_required
+@owner_required(('id', 'id'))
 def move_or_delete_items(request, id, slug):
     """Remove an item or a list of items from the current songbook
     """
@@ -435,7 +362,7 @@ def move_or_delete_items(request, id, slug):
     return redirect(next_url)
 
 
-class DeleteSongbook(DeleteView):
+class DeleteSongbook(OwnerRequiredMixin, DeleteView):
     model = Songbook
     context_object_name = "songbook"
     template_name = 'generator/delete_songbook.html'
@@ -446,12 +373,8 @@ class DeleteSongbook(DeleteView):
         slug = self.kwargs.get('slug', None)
         return get_object_or_404(Songbook, id=id, slug=slug)
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(DeleteSongbook, self).dispatch(*args, **kwargs)
 
-
-@login_required
+@owner_required(('id', 'songook_id'))
 def render_songbook(request, songbook_id):
     """Trigger the generation of a songbook
     """

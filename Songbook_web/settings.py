@@ -44,9 +44,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'generator',
+)
+INSTALLED_APPS += (
     'south',
     'background_task',
+)
+INSTALLED_APPS += (
+    'generator',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -64,7 +68,9 @@ ROOT_URLCONF = 'Songbook_web.urls'
 WSGI_APPLICATION = 'Songbook_web.wsgi.application'
 
 
-AUTHENTICATION_BACKENDS = ('generator.backends.EmailAuthBackend',)
+AUTHENTICATION_BACKENDS = (
+    'generator.backends.EmailAuthBackend',
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
