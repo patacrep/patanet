@@ -376,34 +376,36 @@ def render_songbook(request, songbook_id):
     """
 
     force = request.REQUEST.get("force", False)
-    gt = None
+    gen_task = None
     state = None
     if GeneratorTask.objects.filter(songbook__id=songbook_id).exists():
-        gt = GeneratorTask.objects.get(songbook__id=songbook_id)
-        state = gt.state
+        gen_task = GeneratorTask.objects.get(songbook__id=songbook_id)
+        state = gen_task.state
 
     from django.template.response import SimpleTemplateResponse
 
-    if (state == GeneratorTask.State.FINISHED and force) or gt is None:
+    if (state == GeneratorTask.State.FINISHED and force) or gen_task is None:
 
-        gt, _created = GeneratorTask.objects.get_or_create(songbook=Songbook.objects.get(id=songbook_id))
-        gt.result = {}
-        gt.state = GeneratorTask.State.QUEUED
-        gt.save()
+        gen_task, _created = GeneratorTask.objects.get_or_create(
+                                songbook=Songbook.objects.get(id=songbook_id))
+        gen_task.result = {}
+        gen_task.state = GeneratorTask.State.QUEUED
+        gen_task.save()
 
-        import tasks
+        import generator.tasks as tasks
         tasks.queue_render_task(songbook_id)
 
         return SimpleTemplateResponse('generator/songbook_render.html',
                                       context={'songbook': songbook_id,
-                                               'state' : gt.state})
+                                               'state': gen_task.state})
     else:
 
         if state == GeneratorTask.State.FINISHED:
-            return SimpleTemplateResponse('generator/songbook_rendered.html',
-                                          context={'songbook': songbook_id,
-                                                   'result' : gt.result["file"] })
+            return SimpleTemplateResponse(
+                            'generator/songbook_rendered.html',
+                            context={'songbook': songbook_id,
+                            'result': gen_task.result["file"]})
         else:
             return SimpleTemplateResponse('generator/songbook_render.html',
                                           context={'songbook': songbook_id,
-                                                   'state' : gt.state})
+                                                   'state': gen_task.state})
