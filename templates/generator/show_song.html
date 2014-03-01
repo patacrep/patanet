@@ -22,6 +22,7 @@
 			<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
 		</form>
 	{% endif %}
+	{% comment %}
 	{% get_language_info for song.language as lang %}
 	<p class="infos">en {{lang.name_local}}<br />
 	{% if song.capo != None %}
@@ -30,7 +31,8 @@
 		Pas de capo pour ce chant
 	{% endif %}
 	</p>
-	<div class="song_content">{{ song.content|linebreaks }}</div>
+	{% endcomment %}
+	<div class="song_content">{{ content|linebreaks }}</div>
 
 {% endblock %}
 

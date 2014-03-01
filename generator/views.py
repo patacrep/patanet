@@ -20,6 +20,7 @@ from django.contrib.auth.views import password_reset, password_reset_confirm
 from generator.decorators import CurrentSongbookMixin,\
     OwnerRequiredMixin, LoginRequiredMixin, owner_required,\
     OwnerOrPublicRequiredMixin
+from Songbook_web.settings import SONGS_LIBRARY_DIR
 
 
 ##############################################
@@ -129,6 +130,13 @@ class SongListByArtist(CurrentSongbookMixin, ListView):
         return context
 
 
+def _read_song(song):
+    path = SONGS_LIBRARY_DIR + song.file_path
+    with open(path, 'r') as song_file:
+        content = song_file.read()
+    return content
+
+
 class SongView(CurrentSongbookMixin, DetailView):
     context_object_name = "song"
     model = Song
@@ -138,6 +146,11 @@ class SongView(CurrentSongbookMixin, DetailView):
         return Song.objects.filter(
                         artist__slug=self.kwargs['artist'],
                         slug=self.kwargs['slug'])
+
+    def get_context_data(self, **kwargs):
+        context = super(SongView, self).get_context_data(**kwargs)
+        context['content'] = _read_song(context['song'])
+        return context
 
 
 class ArtistList(CurrentSongbookMixin, ListView):
