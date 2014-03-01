@@ -16,12 +16,13 @@
 					</ul>
 {% comment %} We might have an empty <ul></ul> at the beginning, but we don't really care...{% endcomment %}
 					<label for="section_{{item.item.id}}" class="section_label"><h4>{{item.item.name}}</h4></label>
-					<input type="checkbox" id="section_{{item.item.id}}" class="section_checker" /> 
-					<ul class="section selection">			
+					<input type="checkbox" id="section_{{item.item.id}}" class="section_checker" />
+					<ul class="section selection">
 				{% elif item.item_type.model == "song" %}
 					<li>
-						<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}" title="{{item.item.title}} - {{ item.item.artist.name }} " class="song" >
-								{{ item.item.title }} 
+						<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}"
+						title="{{item.item.title}} - {{ item.item.artist.name }} " class="song" >
+								{{ item.item.title }}
 								<em class="artist">- {{ item.item.artist.name }}</em>
 						</a>
 					</li>
@@ -32,16 +33,6 @@
 				</li>
 			{% endfor %}
 			</ul>
-{% comment %}
-			<form method="post" action="{% url "add_section" %}">
-				{% csrf_token %}
-				<input type="hidden" name="next" value="{{request.get_full_path}}"> 
-				<input type="hidden" name="songbook" value="{{current_songbook.id}}">
-				<label for="section_name">{% trans "Ajouter une section à ce carnet :"%}</label>
-				<input name="section_name" id="section_name">
-				<input type="submit" value="{% trans "Ajouter" %}">
-			</form>
-{% endcomment %}
 			<br />
 		{% else %}
 			<h2>{% trans "Carnets de chants" %}</h2>

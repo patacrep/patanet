@@ -14,8 +14,8 @@ a.back{
 	li{
 		list-style:none;
 		padding:0 0.5em;
-		
-		
+
+
 		&:nth-child(odd){
 			background-color:@selection-strip-bg;
 		}
@@ -28,7 +28,7 @@ a.back{
 		.details.lyrics{
 			opacity:0;
 		}
-		
+
 		&:hover input,
 		input:checked{
 			opacity:1;
@@ -37,8 +37,8 @@ a.back{
 			opacity:0.3;
 			vertical-align:middle;
 		}
-		
-		label.selected, 
+
+		label.selected,
 		input:checked + label{
 			color:darken(@link-visited,10%);
 		}
@@ -63,7 +63,7 @@ a.back{
 			}
 		}
 	}
-	
+
 }
 
 .playlist{
@@ -73,7 +73,7 @@ a.back{
         top:0;
         right:0;
     }
-    
+
     background-color:darken(@link-visited,10%);
     color:white;
     padding: 0 .5em;
@@ -81,9 +81,10 @@ a.back{
     max-height:@playlist-height;
     overflow-y:auto;
     overflow-x:hidden;
-    
+    max-width:35%;
+
     box-shadow: -5px 5px 10px #888888;
-    
+
     h2{
         margin-bottom:0;
 		width:15em;
@@ -105,7 +106,7 @@ a.back{
         margin:0;
         clear:both;
     }
-    
+
     a{
     	color:lighten(@link-col, 10%);
     }
@@ -124,11 +125,11 @@ a.back{
 			text-decoration:none;
 		}
     }
-    
+
     .artist{
     	color:darken(@link-col, 0%);
     }
-    
+
 }
 
 .pagination{
@@ -143,7 +144,7 @@ a.back{
 	li{
 		list-style:none;
 		display:inline-block;
-		
+
 		a{
 			padding:0 .3em;
 		}
@@ -200,4 +201,16 @@ a.back{
             color:gray;
         }
     }
+}
+
+#sb_content {
+    li {
+        list-style:none;
+		padding:0 0.5em;
+    }
+	h4 {
+		margin:0;
+		text-indent:1em;
+		font-size:1.5em;
+	}
 }

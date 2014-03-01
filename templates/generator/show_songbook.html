@@ -18,24 +18,43 @@
 			{% trans "Carnets publics" %}
 		</a>
 	{% endif %}
-	<div id='infos'>
-	<p>{{ songbook.description }}</p>
-	</div>
-	<div id='options'>
-	<h3>{% trans "Options du carnet" %}</h3>
-	<p>{% for option in songbook.bookoptions %}
-	{{ option }}
-	{% endfor %}</p>
-	</div>
-	<div id='songs'>
-	<h3>{% trans "Chants du carnet" %}</h3>
-		<ul>
-		{% for song in songbook.songs.all %}
-			<li> {{ song.title }} </li>
-		{% endfor %}
-		</ul>
+	<div id='sb_content'>
+		<ul class="selection">
+			{% for item in item_list %}
+				{% if item.item_type.model == "section" %}
+				</ul>
+					<h4 class="section">{{item.item.name}}</h4>
+				<ul class="selection">
+				{% elif item.item_type.model == "song" %}
+				{% with song=item.item %}
+				<li>
+					<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
+						{{ song.title }}
+					</label>
+					<a class="details artist" href="{% url "song_list_by_artist" artist=song.artist.slug %}" title="{{ song.artist.name }}">{{ song.artist.name }}</a>
+					<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">{% trans "Paroles" %}</a>
+				</li>
+				{% endwith %}
+				{% endif %}
+			{% empty %}
+				<li>
+					<em>{% trans "Ce carnet est vide" %}</em>
+				</li>
+			{% endfor %}
+			</ul>
 		{% if can_edit %}
-			<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants au carnet" %}</a>
+			<div>
+			<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">
+			{% trans "Ajouter des chants au carnet" %}</a>
+			</div>
 		{% endif %}
 	</div>
+	<aside class="playlist">
+	<h3>{{songbook.title}}</h3>
+	<p>{{ songbook.description }}</p>
+	{% blocktrans with n_songs=songbook.count_songs %}
+	{{ n_songs }} chants dans ce carnet
+	{% endblocktrans %}
+	{% if songbook.is_public %} - {% trans "Carnet public" %}{% endif %}
+	</aside>
 {% endblock %}

@@ -201,6 +201,16 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
         return Songbook.objects.filter(id=self.kwargs['id'],
                                        slug=self.kwargs['slug'])
 
+    def get_context_data(self, **kwargs):
+        context = super(ShowSongbook, self).get_context_data(**kwargs)
+        item_list = ItemsInSongbook.objects.filter(songbook=self.object)
+        context['item_list'] = item_list
+        if self.request.user == self.object.user.user:
+            context['can_edit'] = True
+        else:
+            context['can_edit'] = False
+        return context
+
 
 class UpdateSongbook(OwnerRequiredMixin, UpdateView):
     model = Songbook
