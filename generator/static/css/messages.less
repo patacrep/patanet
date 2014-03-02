@@ -1,0 +1,32 @@
+.messsages-color (@color: white) {
+    border-color:darken(@color,50%);
+    background-color:@color;
+}
+
+.messages{
+    display:block;
+    z-index:2;
+    margin:0px auto;
+    padding:0;
+    max-width:30em;
+    li {
+        list-style:none;
+        border:solid 2px;
+        border-radius:5px;
+        padding:5px;
+        margin:5px 0px;
+        text-align:center;
+    }
+    .success {
+        .messsages-color(@messages-success);
+    }
+    .info {
+        .messsages-color(@messages-info);
+    }
+    .error {
+        .messsages-color(@messages-error);
+    }
+    .warning {
+        .messsages-color(@messages-warning);
+    }
+}
