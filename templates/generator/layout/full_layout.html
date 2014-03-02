@@ -19,19 +19,20 @@
 	<header>
 		{% include "generator/layout/header.html" %}
 	</header>
-	
-	<div class="app-menu">
-		{% include "generator/menu/user.html" %}
-		{% block appmenu %}
-		{% endblock %}
-	</div>
-	
+
+	<div class="top">
+		<div class="app-menu">
+			{% include "generator/menu/user.html" %}
+			{% block appmenu %}
+			{% endblock %}
+		</div>
 	{% include "generator/layout/messages.html" %}
+	</div>
 
 	<main id="content" role="main">
 	<h1> {% block title %}No title{% endblock %}</h1>
 		{% block content %}No content{% endblock %}
-		
+
 		{% if show_current_songbook %}
 			{% include "generator/current_songbook.html" %}
 		{% endif %}
@@ -40,5 +41,5 @@
 	<footer>
 	{% include "generator/layout/footer.html" %}
 	</footer>
-		
+
 {% endblock %}

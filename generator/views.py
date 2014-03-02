@@ -7,7 +7,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, \
                                 UpdateView, FormView
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 
 from generator.models import Song, Artist, Songbook, Profile, \
@@ -20,6 +19,7 @@ from django.contrib.auth.views import password_reset, password_reset_confirm
 from generator.decorators import CurrentSongbookMixin,\
     OwnerRequiredMixin, LoginRequiredMixin, owner_required,\
     OwnerOrPublicRequiredMixin
+
 from Songbook_web.settings import SONGS_LIBRARY_DIR
 
 
