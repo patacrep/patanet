@@ -34,6 +34,7 @@ There is one repository [here](http://github.com/patacrep/songbook-data/).
 ## How to run
 
 You need to start two processes :
+
 1. the background task processor : `./manage.py process_tasks`
 2. the web server : you can run a development server with the command `python manage.py runserver`. No web server (e.g. Apache, ...) required.
 
