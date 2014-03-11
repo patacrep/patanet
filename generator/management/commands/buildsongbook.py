@@ -1,7 +1,5 @@
 from django.conf import settings
-import sys
-sys.path.append(settings.SONG_PROCESSOR_DIR)
-from songbook.build import buildsongbook
+from songbook_core.build import buildsongbook
 from django.core.management.base import LabelCommand
 from generator.models import Songbook, SongbookLayout
 import tempfile

@@ -1,8 +1,6 @@
 from background_task import background
 from django.conf import settings
-import sys
-sys.path.append(settings.SONG_PROCESSOR_DIR)
-from songbook.build import buildsongbook
+from songbook_core.build import buildsongbook
 from generator.models import Songbook, SongbookLayout, \
                             Task as GeneratorTask
 import datetime

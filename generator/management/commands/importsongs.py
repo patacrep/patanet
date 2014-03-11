@@ -1,8 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
-import sys
-sys.path.append(settings.SONG_PROCESSOR_DIR)
-from songbook.plastex import parsetex
+from songbook_core.plastex import parsetex
 import pprint
 import git
 import os
