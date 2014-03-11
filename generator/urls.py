@@ -10,11 +10,12 @@ from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
      UpdateSongbook, DeleteSongbook,\
      reset_password, reset_password_confirm, password_reset_done, \
-     password_reset_complete, ItemsListInSongbook, move_or_delete_items
+     password_reset_complete, ItemsListInSongbook, move_or_delete_items,\
+    FlatPage
 from django.views.generic.base import TemplateView
 
 urlpatterns = patterns('generator.views',
-    url(r'^$', 'home', name="home"),
+    url(r'^$', FlatPage.as_view(url='home') , name="home"),
     url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/$',
                 SongView.as_view(),
                 name='show_song'),

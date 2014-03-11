@@ -1,0 +1,21 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %} {% trans "À propos de ce site" %} {% endblock %}
+
+{% block content %}
+	<p>
+	{% blocktrans %}
+	Ce site est une interface web pour l'utilitaire libre <em>songbook</em>, que vous pouvez télécharger sur le site web <a href="http://www.patacrep.com">Patacrep!</a>. Le but de cet utilitaire est la production automatisée de carnets de chants de grande qualité, avec un rendu typographique confié à LaTeX.
+	{% endblocktrans %}
+	</p>
+	<p>
+	{% blocktrans %}
+	L'ensemble du projet est sous licence GPLv2 pour le code, et CreativeCommons BY-SA pour la base de chansons. Si vous voulez participer à l'amélioration du projet ou de la base de chansons, rendez-vous sur <a href="http://github.com/patacrep/">Github</a>, ou sur le <a href="http://www.patacrep.com/forum/">forum</a> du projet.
+	{% endblocktrans %}
+	</p>
+	<p>
+	{% blocktrans %}
+	Ce recueil de chansons n'a absolument aucune vocation commerciale et joue sur l'autorisation tacite des auteurs et des ayants droits, pensant que la publication de ces tablatures représente plutôt une publicité positive à leur égard. Cependant, si un auteur ou une société accréditée désire s'opposer à la publication de ses tablatures, merci de nous contacter et celles-ci seront immédiatement retirées du site.
+	{% endblocktrans %}
+	</p>
+{% endblock %}

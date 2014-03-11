@@ -1,0 +1,36 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %} {% trans "Foire aux questions" %} {% endblock %}
+
+{% block content %}
+	<p>
+	{% url 'flatpage' url='contact' as contact %}
+	{% blocktrans with contact=contact  %}
+	Vous trouverez ici des réponses aux questions les plus fréquement posées. Si vous avez encore une question après avoir lu cette page, vous pouvez nous <a href="{{contact}}">contacter</a>.
+	{% endblocktrans %}
+	</p>
+
+	<h3>{% trans "J'aimerais ajouter <em>cette</em> chansons à mon carnet, je fait comment ?" %}</h3>
+	<p>
+	{% blocktrans %}
+	Pour le moment, il n'est pas possible d'ajouter ou de modifier des chansons depuis ce site web. Mais cela viendra sans doutes un jour ! <br />
+	En attendant, vous pouvez toujours récupérer la <a href="http://github.com/patacrep/songbook-data/">base de donnée</a>, y effectuer vos modifications/ajouts/corrections, et nous renvoyer les fichiers modifiés, via une pull request sur Github ou par mail.
+	{% endblocktrans %}
+	</p>
+
+	<h3>{% trans "Je voudrais modifier la mise en page, comment faire ?" %}</h3>
+	<p>
+	{% blocktrans %}
+	Si les différents templates proposés par ce site ne vous conviennent pas, vous pouvez écrire le votre ! Récupérez les sources du <a href="http://github.com/patacrep/songbook-core/">moteur</a> et des <a href="http://github.com/patacrep/songbook-data/">données</a> sur Github, écrivez votre propre template et envoyez-le nous pour le partager avec le monde !
+	{% endblocktrans %}
+	</p>
+
+	<h3>{% trans "Combien cela me coutera d'utilise ce site ?" %}</h3>
+	<p>
+	{% blocktrans %}
+	Rien du tout ! Ce projet est libre et gratuit, et le restera ! Pourquoi faisons-nous ça vous demanderez-vous alors. Pour le goût du partage, parce qu'un projet pareil est utile à de nombreuses personnes, et que cela nous fait plaisir.
+
+	Malgré tout, ce site nous coute de l'argent, principalement pour payer le serveur sur lequel il est hébergé. Si vous le trouvez utile, vous pouvez faire un don !
+	{% endblocktrans %}
+	</p>
+{% endblock %}

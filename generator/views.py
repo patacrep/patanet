@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import messages
+from django import template
+from django.http.response import Http404
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, \
-                                UpdateView, FormView
+                                UpdateView, FormView, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
 
@@ -22,9 +24,28 @@ from generator.decorators import CurrentSongbookMixin,\
 
 from Songbook_web.settings import SONGS_LIBRARY_DIR
 
+##############################################
+##############################################
 
-##############################################
-##############################################
+
+class FlatPage(TemplateView):
+    '''Class handling all the static pages of the app,
+    like 'about' or 'FAQ'.
+    It try to get and render a template located in 'generator/pages/<url>.html'
+    '''
+    url = None
+
+    def get_template_names(self):
+        try:
+            url = self.kwargs['url']
+        except KeyError:
+            url = str(self.url)
+        template_name = 'generator/pages/' + url + '.html'
+        try:
+            template.loader.get_template(template_name)
+            return template_name
+        except template.TemplateDoesNotExist:
+            raise Http404
 
 
 def home(request):
