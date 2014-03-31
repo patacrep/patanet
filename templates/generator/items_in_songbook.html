@@ -20,7 +20,7 @@ La réorganisation est aussi possible en déplacant les chants à la souris (gli
 
 {% endblocktrans %}
 </p>
-	<form method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
+	<form class="selection" method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
 	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">
 		<ol class="selection ordering">

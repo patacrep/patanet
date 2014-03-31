@@ -7,7 +7,7 @@
 
 {% block content %}
 	<a class="artist back" href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a>
-	<form method="post" action="{% url 'add_song_to_songbook' %}">
+	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
 		

@@ -41,3 +41,33 @@ a{
         color:@link-visited;
     }
 }
+
+form {
+    width: 80%;
+    margin: 2em auto;
+    p{
+        label{
+            display: inline-block;
+            width: 18em;
+            text-align: right;
+            @media(max-width:@screen-md){
+                text-align: center;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+         input {
+           @media(max-width:@screen-md){
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    }
+    input[type=submit]{
+        display: block;
+        margin: 1em auto;
+    }
+}
+
