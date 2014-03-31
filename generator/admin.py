@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 from django.contrib import admin
-from generator.models import Song, Artist, Songbook, \
-                            ItemsInSongbook, Section
+from generator.models import Song, Artist, Songbook
 
 
 class SongAdmin(admin.ModelAdmin):
@@ -19,7 +18,3 @@ class ArtistAdmin(admin.ModelAdmin):
 admin.site.register(Song, SongAdmin)
 admin.site.register(Artist, ArtistAdmin)
 admin.site.register(Songbook)
-#admin.site.register(SongbooksByUser)
-#admin.site.register(Profile)
-admin.site.register(ItemsInSongbook)
-admin.site.register(Section)

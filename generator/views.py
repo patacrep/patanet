@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
 
 from generator.models import Song, Artist, Songbook, Profile, \
-                            ItemsInSongbook, SongbookLayout, \
+                            ItemsInSongbook, \
                             Task as GeneratorTask
 from generator.forms import RegisterForm, SongbookCreationForm
 from generator.name_paginator import NamePaginator
