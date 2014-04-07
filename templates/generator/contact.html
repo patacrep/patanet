@@ -1,0 +1,18 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %} {% trans "Nous contacter" %} {% endblock %}
+
+{% block content %}
+	<p>
+	{% blocktrans %}
+	Avant de nous contactez, regardez donc sur la <a href="{{FAQ}}">FAQ</a> si votre question n'a pas déja été posée. <br />
+	Sinon, n'hésitez pas à nous contacter en utilisant le formulaire ci-dessous.
+	{% endblocktrans %}
+	</p>
+	
+	<form class="contact" action="{% url "contact" %}" method="post">
+	    {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="{% trans "Envoyer" %}"/>
+    </form>
+{% endblock %}

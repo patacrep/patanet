@@ -1,0 +1,17 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %} {% trans "Contribuer à la base de chanson" %} {% endblock %}
+
+{% block content %}
+
+	<p>
+	{% blocktrans %}
+	Tout le monde peut améliorer la base de chanson utilisée par ce site. Il est prévu que vous puissiez ajouter des chansons depuis votre navigateur Internet, mais cela n'est pas encore mis en place.
+	{% endblocktrans %}
+    </p>
+    <p>
+    {% blocktrans %}
+	Pour le moment, vous pouvez toujours récupérer la <a href="http://github.com/patacrep/songbook-data/">base de donnée</a>, y effectuer vos modifications/ajouts/corrections en suivant la <a href="http://www.patacrep.com/data/documents/doc_fr.pdf">documentation</a>, et nous renvoyer les fichiers modifiés, via une pull request sur Github ou par mail.
+	{% endblocktrans %}
+	</p>
+{% endblock %}
