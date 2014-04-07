@@ -23,10 +23,6 @@ SECRET_KEY = 'l%a%^4avc2f&yr*gs&)_0@ls#2__l8fx&qyn#t2jjyo^#x2%bo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TEMPLATE_CONTEXT': True,
-}
-
 
 ALLOWED_HOSTS = []
 
@@ -78,10 +74,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
-        'USER':'',
-        'PASSWORD':'',
-        'HOST':'',
-        'PORT':'',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
         'ATOMIC_REQUESTS': True,
     }
 }
