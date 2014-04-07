@@ -31,6 +31,8 @@ You can import songs from a songbook repository like that:
 
 There is one repository [here](http://github.com/patacrep/songbook-data/).
 
+You may also want to set up the site name/domain from the administration zone.
+
 ## How to run
 
 You need to start two processes :
