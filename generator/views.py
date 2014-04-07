@@ -10,11 +10,14 @@ from django.views.generic import ListView, DetailView, CreateView, \
                                 UpdateView, FormView, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
+from django.core.mail.message import BadHeaderError
+
+##############################################
 
 from generator.models import Song, Artist, Songbook, Profile, \
                             ItemsInSongbook, \
                             Task as GeneratorTask
-from generator.forms import RegisterForm, SongbookCreationForm
+from generator.forms import RegisterForm, SongbookCreationForm, ContactForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.views import password_reset, password_reset_confirm
@@ -51,6 +54,27 @@ class FlatPage(TemplateView):
 def home(request):
     headertitle = _('Accueil')
     return render(request, 'generator/home.html', locals())
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            username = None
+            if request.user.is_authenticated():
+                username = request.user.username
+            try:
+                form.send_mail(username)
+                messages.success(request,
+                                 _("Votre message a bien été envoyé."))
+            except BadHeaderError:
+                messages.error(request,
+                               _("Erreur d'en-tête. Vérifiez le sujet."))
+                return render(request, 'generator/contact.html', locals())
+            return redirect('home')
+    else:
+        form = ContactForm()
+    return render(request, 'generator/contact.html', locals())
 
 # # User specifics views
 ##############################################

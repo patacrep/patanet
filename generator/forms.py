@@ -5,6 +5,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.core.mail import mail_admins, send_mail
+from django.utils.html import escape
+from django.conf import settings
+from django.contrib.sites.models import Site
 
 
 class RegisterForm(UserCreationForm):
@@ -39,6 +43,81 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+ADMIN_MESSAGE = _(
+'''{user_info} vous a envoyé un message depuis le site {sitename}.
+
+================================================================
+{message}
+================================================================
+
+Merci de répondre directement à son adresse mail : {sender_mail}'''
+)
+
+USER_MESSAGE = _(
+'''Vous avez envoyé un message depuis le site {sitename}. Voici
+la copie reçue par les administrateurs.
+
+================================================================
+{message}
+================================================================
+
+Merci d'utiliser ce site, cordialement,
+Les Administrateurs.
+
+PS : Ce message est envoyé automatiquement. Merci de ne pas y répondre,
+Les administrateurs prendont contact avec vous.'''
+)
+
+
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=100,
+                              label=_("Sujet"))
+    sender = forms.EmailField(label=_("Votre adresse mail"))
+    message = forms.CharField(widget=forms.Textarea,
+                              label=_("Votre message"))
+    send_copy = forms.BooleanField(
+                label=_("Recevoir une copie du mail"),
+                required=False)
+
+    def send_mail(self, username):
+        '''Send the contact email. Data should have been cleaned before.
+        '''
+        message = self._make_admin_message(username)
+        subject = self.cleaned_data['subject']
+        mail_admins(subject, message, fail_silently=False)
+
+        if self.cleaned_data['send_copy']:
+            message = self._make_user_message()
+            send_mail(subject,
+                      message,
+                      settings.DEFAULT_FROM_EMAIL,
+                      [self.cleaned_data['sender']])
+
+    def _make_admin_message(self, username):
+        '''Adds some information in the message send to the admins
+        '''
+        if username is not None:
+            user_info = username + " (" + self.cleaned_data['sender'] + ") "
+        else:
+            user_info = self.cleaned_data['sender']
+
+        message = ADMIN_MESSAGE.format(user_info=user_info,
+                 sitename=Site.objects.get_current().name,
+                 message=escape(self.cleaned_data['message']),
+                 sender_mail=self.cleaned_data['sender'])
+
+        return message
+
+    def _make_user_message(self):
+        '''Adds some information in the message send to the user
+        '''
+        message = USER_MESSAGE.format(sitename=Site.objects.get_current().name,
+                 message=escape(self.cleaned_data['message']),
+                 )
+
+        return message
 
 
 class SongbookCreationForm(forms.ModelForm):
@@ -86,5 +165,6 @@ class SongbookLayoutForm(forms.ModelForm):
 
     class Meta:
         pass
-        #model = Layout
-        #fields = ('title', 'description', 'is_public', 'booktype')  # template
+        # model = Layout
+        # fields = ('title', 'description', 'is_public', 'booktype')
+        # template

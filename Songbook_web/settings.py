@@ -32,6 +32,7 @@ APPEND_SLASH = False
 ADMINS = (('Luthaf', 'luthaf@yahoo.fr'))
 
 DEFAULT_FROM_EMAIL = ''  # webmaster@nom.du.site
+EMAIL_SUBJECT_PREFIX = '[Songbook Web]'
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -40,6 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 )
 INSTALLED_APPS += (
     'south',
@@ -60,6 +62,8 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'Songbook_web.urls'
+SITE_ID = 1
+
 
 WSGI_APPLICATION = 'Songbook_web.wsgi.application'
 

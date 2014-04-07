@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 from django.conf.urls import patterns, url
 from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
-     view_profile, PasswordChange, Register, \
+     view_profile, PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
      UpdateSongbook, DeleteSongbook,\
      reset_password, reset_password_confirm, password_reset_done, \
@@ -76,6 +76,9 @@ urlpatterns = patterns('generator.views',
 )
 
 urlpatterns += patterns('',
+    url(r'^contact/$',
+                contact,
+                name='contact'),
     url(r'^user/$',
                 view_profile,
                 name='profile'),
