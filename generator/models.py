@@ -112,7 +112,10 @@ class Songbook(models.Model):
              "version": "0.1",
              "author": self.user.user.first_name + " "
                         + self.user.user.last_name,
-             "songs": [],
+             "content": [],
+             "authwords" : {
+               "sep" : ["and", "et"]
+             }
              }
         item_ids = ItemsInSongbook.objects.filter(
                       songbook=self,
@@ -123,7 +126,7 @@ class Songbook(models.Model):
                             .values_list("file_path", flat=True)
 
         for song_path in song_paths:
-            d["songs"].append(str(song_path))
+            d["content"].append(str(song_path))
 
         return d
 
@@ -152,7 +155,7 @@ class SongbookLayout(object):
 #                                 verbose_name=_("type de carnet"))
 #     template = models.CharField(max_length=100,
 #                                 verbose_name=_("gabarit"),
-#                                 default="patacrep.tmpl")
+#                                 default="patacrep.tex")
 #     songbook['lang']='lang'
 #     other_options = SerializedDataField()
 #     Other options are : web mail picture picturecopyright footer
@@ -160,7 +163,7 @@ class SongbookLayout(object):
 #     indexbgcolor
     def get_as_json(self):
 
-        return {"template": "patacrep.tmpl",
+        return {"template": "patacrep.tex",
                 "lang": "french",
                 "bookoptions": ["diagram",
                                 "lilypond",
