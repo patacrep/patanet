@@ -137,7 +137,7 @@ LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = '/user/'
 
 # Path to the songs directory (*.sg files) from the songbook repo
-SONGS_LIBRARY_DIR = ''
+SONGS_LIBRARY_DIR = os.path.join(PROJECT_ROOT, '../songbook-data')
 # Path to the location where generated PDFs are stored
 SONGBOOKS_PDFS = os.path.join(PROJECT_ROOT, 'PDFs')
 
