@@ -34,6 +34,7 @@ from generator.decorators import CurrentSongbookMixin,\
 
 from Songbook_web.settings import SONGS_LIBRARY_DIR
 
+import os
 ##############################################
 ##############################################
 
@@ -183,7 +184,7 @@ class SongListByArtist(CurrentSongbookMixin, ListView):
 
 
 def _read_song(song):
-    path = SONGS_LIBRARY_DIR + song.file_path
+    path = os.path.join(SONGS_LIBRARY_DIR, song.file_path)
     with open(path, 'r') as song_file:
         content = song_file.read()
     return content
