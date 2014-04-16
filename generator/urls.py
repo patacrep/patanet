@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+# Copyright (c) 2014 The songbook Team
+#
+# This program is distributed under the terms of the GNU General
+# Public License as published by the Free Software Foundation;
+# either version 2 of the License, or any later version.
+# For more information, see the file LICENCE.txt
 
 # A supprimer en prod.
 from django.conf import settings
@@ -8,9 +14,9 @@ from django.conf.urls import patterns, url
 from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
      view_profile, PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
-     UpdateSongbook, DeleteSongbook,\
+     UpdateSongbook, DeleteSongbook, \
      reset_password, reset_password_confirm, password_reset_done, \
-     password_reset_complete, ItemsListInSongbook, move_or_delete_items,\
+     password_reset_complete, ItemsListInSongbook, move_or_delete_items, \
     FlatPage
 from django.views.generic.base import TemplateView
 
@@ -19,10 +25,10 @@ urlpatterns = patterns('generator.views',
     url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/$',
                 SongView.as_view(),
                 name='show_song'),
-    #url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/edit$',
+    # url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/edit$',
                 # MISSING_VIEW,
                 # name='edit_song'),
-    #url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/history$',
+    # url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/history$',
                 # MISSING_VIEW,
                 # name='song_history'),
     url(r'^songs/(?P<artist>[\w-]+)/$',
@@ -34,7 +40,7 @@ urlpatterns = patterns('generator.views',
     url(r'^songs/random$',
                 'random_song',
                 name="random_song"),
-    #url(r'^songs/search', MISSING_VIEW, name="song_search"),
+    # url(r'^songs/search', MISSING_VIEW, name="song_search"),
     url(r'^artists/$',
                 ArtistList.as_view(),
                 name="artist_list"),
@@ -111,7 +117,7 @@ urlpatterns += patterns('',
     url(r'^user/register$',
                 Register.as_view(),
                 name='register'),
-    #url(r'^user/edit',
+    # url(r'^user/edit',
             # MISSING_VIEW,
             # name='profile_edit'),
 )
