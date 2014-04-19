@@ -34,15 +34,11 @@ class NamePaginator(object):
             else:
                 obj_str = unicode(obj)
 
-            # some of my models had "first_name" "last_name" sorting,
-            # and some first_names were empty so if it fails you can
-            # try sorting by the second ordering key
-            # which worked for me but do your own thing
             try:
                 letter = unicode.upper(obj_str[0])
             except:
-                obj_str = unicode(getattr(obj, obj._meta.ordering[1]))
-                letter = unicode.upper(obj_str[1])
+                # If obj_str is empty, just ignore it.
+                continue
             letter = unidecode(letter)
 
             if letter in numbers:
