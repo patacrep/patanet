@@ -21,24 +21,10 @@ import os
 PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'l%a%^4avc2f&yr*gs&)_0@ls#2__l8fx&qyn#t2jjyo^#x2%bo'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
+SECRET_KEY = 'minimal'
 
 APPEND_SLASH = False
 
-# Administrateurs
-ADMINS = (('Luthaf', 'luthaf@yahoo.fr'))
-
-DEFAULT_FROM_EMAIL = ''  # webmaster@nom.du.site
 EMAIL_SUBJECT_PREFIX = '[Songbook Web]'
 
 INSTALLED_APPS = (
@@ -115,9 +101,11 @@ LANGUAGES = (
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/data/'
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, "generator/static/"),
-    os.path.join(PROJECT_ROOT, "PDFs"),
+    os.path.join(PROJECT_ROOT, "generator/static"),
 )
+
+MEDIA_URL = '/medias/'
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, "medias")
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -142,11 +130,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = '/user/'
-
-# Path to the songs directory (*.sg files) from the songbook repo
-SONGS_LIBRARY_DIR = os.path.join(PROJECT_ROOT, '../songbook-data')
-# Path to the location where generated PDFs are stored
-SONGBOOKS_PDFS = os.path.join(PROJECT_ROOT, 'PDFs')
 
 SOUTH_TESTS_MIGRATE = False
 
