@@ -24,3 +24,16 @@ urlpatterns += i18n_patterns('',
 urlpatterns += i18n_patterns('',
     url(r'^pages/(?P<url>[\w-]+)', FlatPage.as_view(), name="flatpage"),
     )
+
+
+# A supprimer en prod.
+from django.conf import settings
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^medias/(?P<path>.*)$', 'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT}
+            ),
+        url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+            {'document_root': settings.STATIC_ROOT}
+            )
+)

@@ -1,9 +1,9 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}  
-  {% blocktrans %} 
-    Le carnet {{ songbook }} a été généré. Voici le résultat:
-    <a href="/PDFs/{{ result }}">{{ result }}</a>
+{% block title %}
+  {% blocktrans %}
+    Le carnet {{ songbook }} a été généré. Voici le résultat
+    <a href="/medias/PDF/{{result}}">{{ result }}</a>
   {% endblocktrans %} 
 {% endblock %}
 

@@ -6,10 +6,6 @@
 # either version 2 of the License, or any later version.
 # For more information, see the file LICENCE.txt
 
-# A supprimer en prod.
-from django.conf import settings
-from django.conf.urls.static import static
-
 from django.conf.urls import patterns, url
 from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
      view_profile, PasswordChange, Register, contact, \
@@ -116,11 +112,9 @@ urlpatterns += patterns('',
                 name='password_reset_complete'),
     url(r'^user/register$',
                 TemplateView.as_view(template_name="generator/denied.html"),
-                #Register.as_view(),
+                # Register.as_view(),
                 name='register'),
     # url(r'^user/edit',
             # MISSING_VIEW,
             # name='profile_edit'),
 )
-
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
