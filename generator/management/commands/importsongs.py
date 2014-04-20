@@ -23,6 +23,9 @@ def _file_error(error):
     print(error)
 
 
+SONGS_DIR = os.path.join(settings.SONGS_LIBRARY_DIR, "songs")
+
+
 @transaction.atomic
 class Command(BaseCommand):
     args = ""
@@ -33,7 +36,7 @@ class Command(BaseCommand):
         repo = git.Repo(settings.SONGS_LIBRARY_DIR)
         gitcmd = repo.git
 
-        for root, _dirs, filenames in os.walk(settings.SONGS_LIBRARY_DIR,
+        for root, _dirs, filenames in os.walk(SONGS_DIR,
                                              topdown=True,
                                              onerror=_file_error,
                                              followlinks=False):
@@ -41,8 +44,9 @@ class Command(BaseCommand):
             for filename in filenames:
                 if filename.lower().endswith(".sg"):
                     filepath = os.path.realpath(os.path.join(root, filename))
-                    filepath_rel = os.path.relpath(filepath,
-                                                   settings.SONGS_LIBRARY_DIR)
+                    filepath_rel = os.path.relpath(
+                                        filepath,
+                                        SONGS_DIR)
                     try:
                         data = parsetex(filepath)
                         self.stdout.write("Processing " +

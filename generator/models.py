@@ -174,7 +174,7 @@ class SongbookLayout(object):
         return {"template": "patacrep.tex",
                 "lang": "french",
                 "bookoptions": ["diagram",
-                                "lilypond",
+                               # "lilypond",
                                 "pictures"
                                 ],
                 "booktype": "chorded",
@@ -220,10 +220,12 @@ class Task(models.Model):
         QUEUED = "QUEUED"
         IN_PROCESS = "IN_PROCESS"
         FINISHED = "FINISHED"
+        ERROR = "ERROR"
 
     STATES = ((State.QUEUED, "Queued"),
               (State.IN_PROCESS, "In process"),
               (State.FINISHED, "Finished"),
+              (State.ERROR, "Error"),
               )
     songbook = models.OneToOneField(Songbook)
     state = models.CharField(max_length=20, choices=STATES)

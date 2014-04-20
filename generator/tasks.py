@@ -8,10 +8,15 @@
 
 from background_task import background
 from django.conf import settings
-from songbook_core.build import buildsongbook
+from songbook_core.build import SongbookBuilder
+from songbook_core.errors import SongbookError
 from generator.models import Songbook, SongbookLayout, \
                             Task as GeneratorTask
 import datetime
+import os
+
+SONGBOOKS_PDFS = os.path.join(settings.MEDIA_ROOT,
+                              "PDF")
 
 
 @background(schedule=datetime.datetime.now())
@@ -32,15 +37,28 @@ def queue_render_task(songbook_id):
     tmpfile = "songbook-{0}".format(songbook_id)
 
     import os
-    if not os.path.exists(settings.SONGBOOKS_PDFS):
-        os.mkdir(settings.SONGBOOKS_PDFS)
-    os.chdir(settings.SONGBOOKS_PDFS)
+    if not os.path.exists(SONGBOOKS_PDFS):
+        os.mkdir(SONGBOOKS_PDFS)
+    os.chdir(SONGBOOKS_PDFS)
 
-    buildsongbook(content, tmpfile)
+    builder = SongbookBuilder(content, tmpfile)
+
+    try:
+        builder.build_steps(["tex", "pdf", "sbx", "pdf"])
+    except SongbookError:
+        gt.state = GeneratorTask.State.ERROR
+        gt.save()
+
+    # TODO: meilleur gestion des erreurs.
+    try:
+        builder.build_steps(["clean"])
+    except:
+        pass
 
     gt.state = GeneratorTask.State.FINISHED
     gt.result = {"file": "{0}.pdf".format(tmpfile)}
     gt.save()
 
+    # TODO: write this in a log file
     print("Finished task {0} (state : {1}) with result {2}"\
           .format(gt.id, gt.state, gt.result))
