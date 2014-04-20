@@ -15,8 +15,7 @@ from generator.models import Songbook, SongbookLayout, \
 import datetime
 import os
 
-SONGBOOKS_PDFS = os.path.join(settings.MEDIA_ROOT,
-                              "PDF")
+SONGBOOKS_PDFS = os.path.join(settings.MEDIA_ROOT, "PDF")
 
 
 @background(schedule=datetime.datetime.now())
@@ -36,7 +35,6 @@ def queue_render_task(songbook_id):
 
     tmpfile = "songbook-{0}".format(songbook_id)
 
-    import os
     if not os.path.exists(SONGBOOKS_PDFS):
         os.mkdir(SONGBOOKS_PDFS)
     os.chdir(SONGBOOKS_PDFS)
