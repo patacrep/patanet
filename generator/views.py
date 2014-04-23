@@ -79,6 +79,10 @@ def contact(request):
                 messages.error(request,
                                _(u"Erreur d'en-tête. Vérifiez le sujet."))
                 return render(request, 'generator/contact.html', locals())
+            except:
+                messages.error(request,
+                               _(u"Une erreur s'est produite. Veuillez réessayer."))
+                return render(request, 'generator/contact.html', locals())
             return redirect('home')
     else:
         form = ContactForm()
