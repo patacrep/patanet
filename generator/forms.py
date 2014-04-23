@@ -81,12 +81,12 @@ Les administrateurs prendont contact avec vous.'''
 
 class ContactForm(forms.Form):
     subject = forms.CharField(max_length=100,
-                              label=_("Sujet"))
-    sender = forms.EmailField(label=_("Votre adresse mail"))
+                              label=_(u"Sujet"))
+    sender = forms.EmailField(label=_(u"Votre adresse mail"))
     message = forms.CharField(widget=forms.Textarea,
-                              label=_("Votre message"))
+                              label=_(u"Votre message"))
     send_copy = forms.BooleanField(
-                label=_("Recevoir une copie du mail"),
+                label=_(u"Recevoir une copie du mail"),
                 required=False)
 
     def send_mail(self, username):
@@ -146,13 +146,13 @@ class SongbookCreationForm(forms.ModelForm):
 
 
 class SongbookLayoutForm(forms.ModelForm):
-    BOOK_OPTIONS = [('diagram', _("Diagrammes d'accords")),
-            ('importantdiagramonly', _("Diagrammes important seulement")),
-            ('repeatchords', _("Accords sur tous les couplets")),
-            ('tabs', _("Tablatures")),
-            ('lilypond', _('Partitions Lilypond')),
-            ('pictures', _("Couvertures d'albums")),
-            ('onesongperpage', _("Une chanson par page")),
+    BOOK_OPTIONS = [('diagram', _(u"Diagrammes d'accords")),
+            ('importantdiagramonly', _(u"Diagrammes important seulement")),
+            ('repeatchords', _(u"Accords sur tous les couplets")),
+            ('tabs', _(u"Tablatures")),
+            ('lilypond', _(u'Partitions Lilypond')),
+            ('pictures', _(u"Couvertures d'albums")),
+            ('onesongperpage', _(u"Une chanson par page")),
             ]
     CHORDED = 'chorded'
     LYRICS = 'lyrics'
@@ -162,11 +162,11 @@ class SongbookLayoutForm(forms.ModelForm):
         )
 
     template = forms.CharField(initial='patacrep.tmpl',
-                             label=_("Mise en forme avec le gabarit")
+                             label=_(u"Mise en forme avec le gabarit")
                              )
     bookoptions = forms.MultipleChoiceField(
                             choices=BOOK_OPTIONS,
-                            label=_('Options du receuil'),
+                            label=_(u'Options du receuil'),
                             widget=forms.CheckboxSelectMultiple(),
                             required=False
                             )

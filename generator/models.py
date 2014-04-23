@@ -28,19 +28,19 @@ class Artist(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = _("artiste")
+        verbose_name = _(u"artiste")
         ordering = ["name"]
 
 
 class Song(models.Model):
-    title = models.CharField(max_length=100, verbose_name=_('titre'))
+    title = models.CharField(max_length=100, verbose_name=_(u'titre'))
     slug = models.SlugField(max_length=100, unique=True)
     # Pick the language as e.g. fr-FR or sr-latn from the list
     # provided by django
     language = models.CharField(max_length=7, choices=LANGUAGES, null=True)
     capo = models.IntegerField(null=True, blank=True)
     artist = models.ForeignKey(Artist,
-                               verbose_name=_('artiste'),
+                               verbose_name=_(u'artiste'),
                                related_name="songs")
     file_path = models.CharField(max_length=500)
     object_hash = models.CharField(max_length=50)
@@ -49,28 +49,28 @@ class Song(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = _("chant")
+        verbose_name = _(u"chant")
         ordering = ["title"]
 
 ###############################################################
 
 CHRD = 'chrd'
 LYR = 'lyr'
-BOOKTYPES = ((CHRD, _("Avec accords")),
-           (LYR, _("Sans accords"))
+BOOKTYPES = ((CHRD, _(u"Avec accords")),
+           (LYR, _(u"Sans accords"))
            )
 
 
 class Songbook(models.Model):
     title = models.CharField(max_length=100,
-                             verbose_name=_("titre")
+                             verbose_name=_(u"titre")
                              )
     slug = models.SlugField(max_length=100)
     description = models.TextField(blank=True,
-                                   verbose_name=_("description")
+                                   verbose_name=_(u"description")
                                    )
     is_public = models.BooleanField(default=False,
-                                    verbose_name=_("carnet public")
+                                    verbose_name=_(u"carnet public")
                                     )
     items = models.ManyToManyField(ContentType,
                                    blank=True,
@@ -139,13 +139,13 @@ class Songbook(models.Model):
         return d
 
     class Meta:
-        verbose_name = _("carnet de chants")
-        verbose_name_plural = _("carnets de chants")
+        verbose_name = _(u"carnet de chants")
+        verbose_name_plural = _(u"carnets de chants")
 
 
 class Section(models.Model):
     name = models.CharField(max_length=200,
-                            verbose_name=_("nom de section"),
+                            verbose_name=_(u"nom de section"),
                             )
 
     def __unicode__(self):
@@ -189,7 +189,7 @@ class ItemsInSongbook(models.Model):
     item_id = models.PositiveIntegerField()
     item = generic.GenericForeignKey('item_type', 'item_id')
     songbook = models.ForeignKey(Songbook)
-    rank = models.IntegerField(_("position"))
+    rank = models.IntegerField(_(u"position"))
 
     def __unicode__(self):
         return _('"{item_type}" : "{item}", dans le carnet "{songbook}"'
@@ -211,7 +211,7 @@ class Profile(models.Model):
         return self.user.username
 
     class Meta:
-        verbose_name = _('profil')
+        verbose_name = _(u'profil')
 
 
 class Task(models.Model):

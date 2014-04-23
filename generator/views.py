@@ -60,7 +60,7 @@ class FlatPage(TemplateView):
 
 
 def home(request):
-    headertitle = _('Accueil')
+    headertitle = _(u'Accueil')
     return render(request, 'generator/home.html', locals())
 
 
@@ -74,10 +74,10 @@ def contact(request):
             try:
                 form.send_mail(username)
                 messages.success(request,
-                                 _("Votre message a bien été envoyé."))
+                                 _(u"Votre message a bien été envoyé."))
             except BadHeaderError:
                 messages.error(request,
-                               _("Erreur d'en-tête. Vérifiez le sujet."))
+                               _(u"Erreur d'en-tête. Vérifiez le sujet."))
                 return render(request, 'generator/contact.html', locals())
             return redirect('home')
     else:
@@ -134,7 +134,7 @@ def reset_password(request):
 
 def password_reset_done(request):
     """Only add a message and redirect to home"""
-    messages.success(request, _("Un email de confirmation vous a été envoyé."))
+    messages.success(request, _(u"Un email de confirmation vous a été envoyé."))
     return redirect(reverse('home'))
 
 
@@ -150,7 +150,7 @@ def reset_password_confirm(request, uidb64, token):
 
 def password_reset_complete(request):
     """Only add a message and redirect to home"""
-    messages.success(request, _("Votre mot de passe a bien été modifié. "
+    messages.success(request, _(u"Votre mot de passe a bien été modifié. "
                                 "Connectez-vous pour accéder à votre profil."))
     return redirect(reverse('home'))
 
@@ -320,7 +320,7 @@ def set_current_songbook(request):
         request.session['current_songbook'] = int(songbook_id)
         return redirect('song_list')
     else:
-        messages.error(request, _("Ce carnet n'existe pas."))
+        messages.error(request, _(u"Ce carnet n'existe pas."))
         return redirect('songbook_list')
 
 
@@ -358,7 +358,7 @@ def add_songs_to_songbook(request):
         songbook = Songbook.objects.get(id=songbook_id)
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
-                       _("Choisissez un carnet pour ajouter ces chants")
+                       _(u"Choisissez un carnet pour ajouter ces chants")
                        )
         return redirect(next_url)
 
@@ -429,7 +429,7 @@ def move_or_delete_items(request, id, slug):
             section_name = str(request.POST['new_section'])
             songbook.add_section(section_name)
         except ValueError:
-            messages.error(request, _("Ce nom de section n'est pas valide"))
+            messages.error(request, _(u"Ce nom de section n'est pas valide"))
 
     return redirect(next_url)
 
