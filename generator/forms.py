@@ -54,7 +54,7 @@ class RegisterForm(UserCreationForm):
 
 
 ADMIN_MESSAGE = _(
-'''{user_info} vous a envoyé un message depuis le site {sitename}.
+u'''{user_info} vous a envoyé un message depuis le site {sitename}.
 
 ================================================================
 {message}
@@ -64,7 +64,7 @@ Merci de répondre directement à son adresse mail : {sender_mail}'''
 )
 
 USER_MESSAGE = _(
-'''Vous avez envoyé un message depuis le site {sitename}. Voici
+u'''Vous avez envoyé un message depuis le site {sitename}. Voici
 la copie reçue par les administrateurs.
 
 ================================================================
