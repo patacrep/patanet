@@ -1,4 +1,4 @@
-# # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (c) 2014 The songbook Team
 #
 # This program is distributed under the terms of the GNU General
