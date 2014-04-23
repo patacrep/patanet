@@ -10,35 +10,22 @@
 		<a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet" %}</a>
 	</p>
 	<table class="private songbooks">
+	    <tr>
+	        <th>{% trans "Titre" %}</th>
+	        <th>{% trans "Chants" %}</th>
+	        <th></th>
+	        <th></th>
+	        <th>{% trans "Actions" %}</th>
+	        <th></th>
+	    </tr>
 		{% for songbook in songbooks %}
 			<tr>
-				<td>
-					<a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a>
-				</td>
-				<td>
-					{{ songbook.count_songs }}
-				</td>
-				<td>
-					{% if songbook.is_public %}
-						<em>{% trans "Public" %}</em>
-					{% endif %}
-				</td>
-				<td>
-					<a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">
-						{% trans "Paramètres" %}
-					</a>
-				</td>
-				<td>
-					<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">
-						{% trans "Ajouter des chants" %}
-					</a>
-				</td>
-				<td>
-					<a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}">
-						{% trans "Supprimer" %}
-					</a>
-				</td>
-					
+				<td><a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a></td>
+				<td>{{ songbook.count_songs }}</td>
+				<td>{% if songbook.is_public %}<em>{% trans "Public" %}</em>{% endif %}</td>
+				<td><a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">{% trans "Paramètres" %}</a></td>
+				<td><a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants" %}</a></td>
+				<td><a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}">{% trans "Supprimer" %}</a></td>
 			</tr>
 		{% endfor %}
 	</table>
