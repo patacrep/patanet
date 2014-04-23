@@ -33,7 +33,10 @@ class EmailAuthBackend(object):
                 except User.DoesNotExist:
                     return None
         else:  # Assume it is an username
-            user = User.objects.get(username=username)
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                    return None
             if user.check_password(password):
                 return user
 
