@@ -6,13 +6,11 @@
 	{% comment %}
 	The less compilation on loading is only for DEV.
 	On production, the main.less file should be compiled to main.css
+	<link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
+	<script src="{% static "js/less-1.6.1.min.js" %}" type="text/javascript"></script>
 	{% endcomment %}
-	{% if True %}
-		<link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
-		<script src="{% static "js/less-1.6.1.min.js" %}" type="text/javascript"></script>
-	{% else %}
-		<link type="text/css" rel="stylesheet" href="{% static "css/main.css" %}" />
-	{% endif %}
+    <link type="text/css" rel="stylesheet" href="{% static "css/normalize.css" %}" />
+    <link type="text/css" rel="stylesheet" href="{% static "css/main.css" %}" />
 {% endblock %}
 
 {% block body %}
