@@ -155,7 +155,7 @@ def reset_password_confirm(request, uidb64, token):
 def password_reset_complete(request):
     """Only add a message and redirect to home"""
     messages.success(request, _(u"Votre mot de passe a bien été modifié. "
-                                "Connectez-vous pour accéder à votre profil."))
+                                u"Connectez-vous pour accéder à votre profil."))
     return redirect(reverse('home'))
 
 # # Songs views
