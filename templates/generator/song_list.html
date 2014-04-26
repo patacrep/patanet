@@ -8,6 +8,7 @@
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "song_list" %}?page={{page_obj.number}}">
 		<ol class="songs selection">
+		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
 		{% for song in song_list %}
 			<li>
 				<input type="checkbox" name="songs[]" value="{{ song.id }}" 

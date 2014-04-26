@@ -60,6 +60,11 @@
 				</form>
 			{% endif %}
 			<p>
+                <a href="{% url 'render_songbook' id=current_songbook.id slug=current_songbook.slug %}">
+                    {% trans "Générer le PDF de ce carnet de chant" %}
+                </a>
+            </p>
+			<p>
 				<a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet de chant" %}</a>
 			</p>
 		{% endwith %}
