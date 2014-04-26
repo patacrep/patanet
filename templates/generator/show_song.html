@@ -32,7 +32,7 @@
 	{% endif %}
 	</p>
 	{% endcomment %}
-	<div class="song_content">{{ content|linebreaks }}</div>
+	<div class="song_content">{{ content|safe|linebreaks }}</div>
 
 {% endblock %}
 

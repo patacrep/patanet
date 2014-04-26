@@ -31,6 +31,7 @@ from django.contrib.auth.views import password_reset, password_reset_confirm
 from generator.decorators import CurrentSongbookMixin,\
     OwnerRequiredMixin, LoginRequiredMixin, owner_required,\
     OwnerOrPublicRequiredMixin
+from generator.songs import parse_song
 
 from Songbook_web.settings import SONGS_LIBRARY_DIR
 
@@ -191,7 +192,7 @@ def _read_song(song):
     path = os.path.join(SONGS_LIBRARY_DIR, 'songs', song.file_path)
     with open(path, 'r') as song_file:
         content = song_file.read()
-    return content
+    return parse_song(content)
 
 
 class SongView(CurrentSongbookMixin, DetailView):
