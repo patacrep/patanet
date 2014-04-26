@@ -28,8 +28,8 @@ from generator.forms import RegisterForm, SongbookCreationForm, ContactForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.views import password_reset, password_reset_confirm
-from generator.decorators import CurrentSongbookMixin,\
-    OwnerRequiredMixin, LoginRequiredMixin, owner_required,\
+from generator.decorators import CurrentSongbookMixin, \
+    OwnerRequiredMixin, LoginRequiredMixin, owner_required, \
     OwnerOrPublicRequiredMixin
 from generator.songs import parse_song
 
@@ -463,9 +463,9 @@ def render_songbook(request, id, slug):
         gen_task = GeneratorTask.objects.get(songbook__id=id)
         state = gen_task.state
 
-    from django.template.response import SimpleTemplateResponse
-
-    if (state == GeneratorTask.State.FINISHED and force) or gen_task is None:
+    if ((state == GeneratorTask.State.FINISHED or \
+         state == GeneratorTask.State.ERROR)  and force) \
+        or gen_task is None:
 
         gen_task, _created = GeneratorTask.objects.get_or_create(
                                 songbook=Songbook.objects.get(id=id))
@@ -476,17 +476,4 @@ def render_songbook(request, id, slug):
         import generator.tasks as tasks
         tasks.queue_render_task(id)
 
-        return SimpleTemplateResponse('generator/songbook_render.html',
-                                      context={'songbook': id,
-                                               'state': gen_task.state})
-    else:
-
-        if state == GeneratorTask.State.FINISHED:
-            return SimpleTemplateResponse(
-                            'generator/songbook_rendered.html',
-                            context={'songbook': id,
-                            'result': gen_task.result["file"]})
-        else:
-            return SimpleTemplateResponse('generator/songbook_render.html',
-                                          context={'songbook': id,
-                                                   'state': gen_task.state})
+        return redirect(reverse('songbook_private_list'))

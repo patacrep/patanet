@@ -9,24 +9,75 @@
 	<p>
 		<a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet" %}</a>
 	</p>
-	<table class="private songbooks">
-	    <tr>
-	        <th>{% trans "Titre" %}</th>
-	        <th>{% trans "Chants" %}</th>
-	        <th></th>
-	        <th></th>
-	        <th>{% trans "Actions" %}</th>
-	        <th></th>
-	    </tr>
-		{% for songbook in songbooks %}
-			<tr>
-				<td><a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a></td>
-				<td>{{ songbook.count_songs }}</td>
-				<td>{% if songbook.is_public %}<em>{% trans "Public" %}</em>{% endif %}</td>
-				<td><a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">{% trans "Paramètres" %}</a></td>
-				<td><a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">{% trans "Ajouter des chants" %}</a></td>
-				<td><a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}">{% trans "Supprimer" %}</a></td>
-			</tr>
-		{% endfor %}
-	</table>
+	<div class="private songbooks">
+        {% for songbook in songbooks %}
+        <h2><a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">{{songbook.title}}</a></h2>
+        <ul>
+            <li>
+                <ul class="sb-infos">
+                    <li>{{ songbook.count_songs }}{% trans " chants" %}</li>
+                    {% if songbook.is_public %}
+                        <li><em>{% trans "Carnet public" %}</em></li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">
+                            {% trans "Paramètres" %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">
+                            {% trans "Ajouter des chants" %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}">
+                            {% trans "Supprimer" %}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <!-- Ici viendra s'insérer une boucle sur l'ensemble des versions de ce carnet -->
+                    <li><ul class="sb-generation">
+                    {% if songbook.task.state = 'FINISHED' %}
+                        <li>{% trans "Carnet généré et disponible." %}</li>
+                        <li>
+                            <a href="/medias/PDF/{{songbook.task.result.file}}">
+                                {% trans "Télécharger" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=True">
+                                {% trans "Regénérer" %}
+                            </a>
+                        </li>
+                    {% elif songbook.task.state = 'QUEUED' or songbook.task.state = 'IN_PROCESS' %}
+                        <li>{% trans "Carnet en cours de génération. Cela peut prendre plusieurs minutes." %}</li>
+                        <li>
+                            <a href="">
+                                {% trans "Rafraichir" %}
+                            </a>
+                             {% trans "pour voir les changements" %}
+                        </li>
+                    {% elif songbook.task.state = 'ERROR' %}
+                        <li>{% trans "Une erreur s'est produite. Vous pouvez relancer la génération." %}</li>
+                        <li>
+                            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=True">
+                                {% trans "Relancer la génération" %}
+                        </a>
+                        </li>
+                    {% else %} {% comment %} Si aucune task n'existe, on propose la génération du carnet. {% endcomment %}
+                        <li>
+                            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}">
+                                {% trans "Générer le PDF correspondant à ce carnet." %}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul></li>
+                </ul>
+            </li>
+        </ul>
+        {% endfor %}
+    </div>
 {% endblock %}
