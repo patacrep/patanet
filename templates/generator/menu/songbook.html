@@ -3,7 +3,7 @@
 {% with id=songbook.id slug=songbook.slug %}
 	{% url 'show_songbook' id=id slug=slug as url %}
 		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
-			&nbsp;{{ songbook.title }}&nbsp;
+			&nbsp;{{ songbook.title|truncatechars:15 }}&nbsp;
 		</a>
 	{% url 'item_list' id=id slug=slug as url%}
 		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
@@ -17,5 +17,9 @@
 		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
 			{% trans "Suppression" %}
 		</a>
+	{% url 'render_songbook' id=id slug=slug as url %}
+        <a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
+            {% trans "Générer le PDF" %}
+        </a>
 {% endwith %}
 </ul>

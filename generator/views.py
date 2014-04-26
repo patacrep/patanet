@@ -476,4 +476,4 @@ def render_songbook(request, id, slug):
         import generator.tasks as tasks
         tasks.queue_render_task(id)
 
-        return redirect(reverse('songbook_private_list'))
+    return redirect(reverse('songbook_private_list') + '#' + id)
