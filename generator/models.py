@@ -118,11 +118,10 @@ class Songbook(models.Model):
         d = {"subtitle": self.description,
              "title": self.title,
              "version": "0.1",
-             "author": self.user.user.first_name + " "
-                        + self.user.user.last_name,
+             "author": self.user.user.username,
              "content": [],
-             "authwords" : {
-               "sep" : ["and", "et"]
+             "authwords": {
+               "sep": ["and", "et"]
              }
              }
         item_ids = ItemsInSongbook.objects.filter(
