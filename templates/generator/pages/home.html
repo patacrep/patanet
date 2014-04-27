@@ -2,9 +2,29 @@
 {% load i18n %}
 
 {% block title %}
-Welcome
+Bienvenue
 {% endblock %}
 
 {% block content %}
-on the website
+<style>
+    .beta li {
+        margin:10px;
+    }
+</style>
+<p>Oui, bienvenue sur la première version beta du site Songbook-web !</p>
+
+<p>Ici, vous pourrez faire votre choix parmi plus de 800 chants pour composer vore propre carnet de chant. Un programme, basé sur LaTeX et le package Songs se chargera ensuite de générer un PDF de grande qualité typographique. PLus besoin de passer des heures à placer les accords et les images !</p>
+
+<h2>Ce site est en version beta</h2>
+<p>Cela signifie qu'il est fonctionnel et utilisable, mais qu'un certain nombre de bug subsistent. Si vous voulez faire partie des beta-testeurs, et avoir accès à toutes les fonctionnalités, envoyez un mail à beta.songbookweb(at)gmail.com et nous vous créeront un compte. L'inscription directe est pour l'instant désactivée. </p>
+
+<h2>Conseils aux beta-testeurs</h2>
+<p>Pour que cette période de test soit bénéfique au projet, nous aimerions que vous gardiez en tête un certain nombre de choses.</p>
+<ul class="beta">
+    <li>Nous ne fournissons aucunes garanties de conservation des données. L'ensemble de la base de donnée peut être réinitialisée à tout moment (même si nous essayerons de vous prévenir avant), et toutes les données peuvent être supprimées.</li>
+    <li>Le rôle des beta-testeur est de trouver les bugs. Alors allez-y, ne vous gênez pas ! Testez tout et essayez de tout casser ! Mais surtout, signalez-nous tout problème à l'adresse ci-dessus, qu'il s'agisse d'une faille de sécurité ou d'un design qui flanche, histoire que l'on puisse les corriger. Toutefois, certains problème sont déjà connus et seront corrigés. Parmi eux, l'affichage des chants est fortement améliorable ^^</li>
+    <li>En particulier, nous avons besoins de retours sur l'interface utilisateur. Tous les liens sont-ils faciles à trouver, le site est-il pratique à utiliser, ... ?</li>
+    <li>Nous sommes aussi ouvert aux suggestions de fonctionnalités, mais pour votre information, les fonctionnalités suivantes sont prévues mais pas encore implémentées : la recherche parmi les chants, les modifications de mise en page des carnet et autres options de personnalisation, l'ajout et l'édition de chants depuis l'interface web. De même, les sections ne sont pas encore prises en compte lors de la génération des carnets.</li>
+</ul>
+<p>Merci encore de votre aide, et amusez-vous avec ce site.</p>
 {% endblock %}
