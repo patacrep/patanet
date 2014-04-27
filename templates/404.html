@@ -1,17 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
- 
-<head>
- <title>Page not found (404)</title>
-</head>
- 
-<body>
- <h1>Page not found (404)</h1>
- 
- <p>Sorry, but the requested page is unavailable.</p>
- 
-</body>
- 
-</html>
+{% extends "generator/layout/full_layout.html" %}
+{% load i18n %}
 
+{% block title %}
+{% trans "Pas trouvé" %}
+{% endblock %}
+
+{% block content %}
+<p>
+    {% url 'home' as home %}
+    {% url 'random_song' as random %}
+{% blocktrans %} 
+Oups, cette page est introuvable (erreur 404). Que diriez-vous d'un lien vers <a href="{{home}}">la page d'acceuil</a> ? Ou vers une <a href="{{random}}">chanson au hasard</a> ?
+{% endblocktrans %}
+</p>
+{% endblock %}
