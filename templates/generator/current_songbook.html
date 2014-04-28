@@ -59,11 +59,13 @@
 					<input type="submit" value="{% trans "Choisir" %}"/>
 				</form>
 			{% endif %}
+			{% if current_songbook %}
 			<p>
-                <a href="{% url 'render_songbook' id=current_songbook.id slug=current_songbook.slug %}">
-                    {% trans "Générer le PDF de ce carnet de chant" %}
-                </a>
-            </p>
+	                <a href="{% url 'render_songbook' id=current_songbook.id slug=current_songbook.slug %}">
+        	            {% trans "Générer le PDF de ce carnet de chant" %}
+                	</a>
+            		</p>
+            		{% endif%}
 			<p>
 				<a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet de chant" %}</a>
 			</p>
