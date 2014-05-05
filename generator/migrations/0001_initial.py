@@ -47,6 +47,17 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'generator', ['Section'])
 
+        # Adding model 'Layout'
+        db.create_table(u'generator_layout', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('bookoptions', self.gf('jsonfield.fields.JSONField')()),
+            ('booktype', self.gf('django.db.models.fields.CharField')(default='chorded', max_length=4)),
+            ('template', self.gf('django.db.models.fields.CharField')(default='patacrep.tex', max_length=100)),
+            ('lang', self.gf('django.db.models.fields.CharField')(default='french', max_length=10)),
+            ('other_options', self.gf('jsonfield.fields.JSONField')(default=[])),
+        ))
+        db.send_create_signal(u'generator', ['Layout'])
+
         # Adding model 'ItemsInSongbook'
         db.create_table(u'generator_itemsinsongbook', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -57,21 +68,24 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'generator', ['ItemsInSongbook'])
 
+        # Adding model 'Task'
+        db.create_table(u'generator_task', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('songbook', self.gf('django.db.models.fields.related.ForeignKey')(related_name='tasks', to=orm['generator.Songbook'])),
+            ('layout', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['generator.Layout'])),
+            ('hash', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('last_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('result', self.gf('jsonfield.fields.JSONField')()),
+        ))
+        db.send_create_signal(u'generator', ['Task'])
+
         # Adding model 'Profile'
         db.create_table(u'generator_profile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
         ))
         db.send_create_signal(u'generator', ['Profile'])
-
-        # Adding model 'Task'
-        db.create_table(u'generator_task', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('songbook', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['generator.Songbook'], unique=True)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('result', self.gf('jsonfield.fields.JSONField')()),
-        ))
-        db.send_create_signal(u'generator', ['Task'])
 
 
     def backwards(self, orm):
@@ -87,14 +101,17 @@ class Migration(SchemaMigration):
         # Deleting model 'Section'
         db.delete_table(u'generator_section')
 
+        # Deleting model 'Layout'
+        db.delete_table(u'generator_layout')
+
         # Deleting model 'ItemsInSongbook'
         db.delete_table(u'generator_itemsinsongbook')
 
-        # Deleting model 'Profile'
-        db.delete_table(u'generator_profile')
-
         # Deleting model 'Task'
         db.delete_table(u'generator_task')
+
+        # Deleting model 'Profile'
+        db.delete_table(u'generator_profile')
 
 
     models = {
@@ -148,6 +165,15 @@ class Migration(SchemaMigration):
             'rank': ('django.db.models.fields.IntegerField', [], {}),
             'songbook': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['generator.Songbook']"})
         },
+        u'generator.layout': {
+            'Meta': {'object_name': 'Layout'},
+            'bookoptions': ('jsonfield.fields.JSONField', [], {}),
+            'booktype': ('django.db.models.fields.CharField', [], {'default': "'chorded'", 'max_length': '4'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'lang': ('django.db.models.fields.CharField', [], {'default': "'french'", 'max_length': '10'}),
+            'other_options': ('jsonfield.fields.JSONField', [], {'default': '[]'}),
+            'template': ('django.db.models.fields.CharField', [], {'default': "'patacrep.tex'", 'max_length': '100'})
+        },
         u'generator.profile': {
             'Meta': {'object_name': 'Profile'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -181,9 +207,12 @@ class Migration(SchemaMigration):
         },
         u'generator.task': {
             'Meta': {'object_name': 'Task'},
+            'hash': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'last_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'layout': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['generator.Layout']"}),
             'result': ('jsonfield.fields.JSONField', [], {}),
-            'songbook': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['generator.Songbook']", 'unique': 'True'}),
+            'songbook': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tasks'", 'to': u"orm['generator.Songbook']"}),
             'state': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         }
     }
