@@ -17,6 +17,7 @@ from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 
 from jsonfield import JSONField
+import hashlib
 
 
 class Artist(models.Model):
@@ -54,12 +55,6 @@ class Song(models.Model):
 
 ###############################################################
 
-CHRD = 'chrd'
-LYR = 'lyr'
-BOOKTYPES = ((CHRD, _(u"Avec accords")),
-           (LYR, _(u"Sans accords"))
-           )
-
 
 class Songbook(models.Model):
     title = models.CharField(max_length=100,
@@ -79,6 +74,9 @@ class Songbook(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def hash(self):
+        return hashlib.sha1(str(self.get_as_json())).hexdigest()
 
     def count_songs(self):
         count = ItemsInSongbook.objects.filter(
@@ -151,33 +149,40 @@ class Section(models.Model):
         return self.name
 
 
-class SongbookLayout(object):
+class SongbookLayout(models.Model):
     """
     This class holds layout information for generating a songbook.
     """
-#     bookoptions = JSONField()
-#     booktype = models.CharField(max_length=4,
-#                                 choices=BOOKTYPES,
-#                                 default=CHRD,
-#                                 verbose_name=_("type de carnet"))
-#     template = models.CharField(max_length=100,
-#                                 verbose_name=_("gabarit"),
-#                                 default="patacrep.tex")
-#     songbook['lang']='lang'
-#     other_options = SerializedDataField()
+    BOOKTYPES = (("chorded", _(u"Avec accords")),
+              ("lyrics", _(u"Sans accords")),
+              )
+
+    bookoptions = JSONField()
+    booktype = models.CharField(max_length=4,
+                                 choices=BOOKTYPES,
+                                 default="chorded",
+                                 verbose_name=_("type de carnet"))
+    template = models.CharField(max_length=100,
+                                 verbose_name=_("gabarit"),
+                                 default="patacrep.tex")
+    lang = models.CharField(max_length=10,
+                                verbose_name=_("langue principale"),
+                                default="french")
+    other_options = JSONField(default=[])
+
 #     Other options are : web mail picture picturecopyright footer
 #     license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
 #     indexbgcolor
-    def get_as_json(self):
 
-        return {"template": "patacrep.tex",
-                "lang": "french",
-                "bookoptions": ["diagram",
-                               # "lilypond",
-                                "pictures"
-                                ],
-                "booktype": "chorded",
-                }
+    def get_as_json(self):
+        """Return a JSON representation of the layout"""
+        layout = {"template": self.template,
+                  "lang": self.lang,
+                  "bookoptions": self.bookoptions,
+                  "booktype": self.booktype,
+                  }
+        layout.update(self.other_options)
+        return layout
 
 
 class ItemsInSongbook(models.Model):
@@ -200,20 +205,9 @@ class ItemsInSongbook(models.Model):
     class Meta:
         ordering = ["rank"]
 
-###############################################################
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User)
-
-    def __unicode__(self):
-        return self.user.username
-
-    class Meta:
-        verbose_name = _(u'profil')
-
 
 class Task(models.Model):
+    """Model holding informations for asynchroneous PDF generation"""
 
     class State(object):
         QUEUED = "QUEUED"
@@ -226,9 +220,27 @@ class Task(models.Model):
               (State.FINISHED, "Finished"),
               (State.ERROR, "Error"),
               )
-    songbook = models.OneToOneField(Songbook)
-    state = models.CharField(max_length=20, choices=STATES)
-    result = JSONField()
+    songbook = models.ForeignKey(Songbook)
+    layout = models.ForeignKey(SongbookLayout)
+    hash = models.CharField(max_length=40,
+                            verbose_name=_(u"contenu"))
+    last_updated = models.DateTimeField(auto_now=True)
+    state = models.CharField(max_length=20,
+                             choices=STATES,
+                             verbose_name=_(u"état"))
+    result = JSONField(verbose_name=_(u"résultat"))
+
+###############################################################
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User)
+
+    def __unicode__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = _(u'profil')
 
 
 @receiver(post_save, sender=User)
