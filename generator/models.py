@@ -149,7 +149,7 @@ class Section(models.Model):
         return self.name
 
 
-class SongbookLayout(models.Model):
+class Layout(models.Model):
     """
     This class holds layout information for generating a songbook.
     """
@@ -183,6 +183,9 @@ class SongbookLayout(models.Model):
                   }
         layout.update(self.other_options)
         return layout
+
+    class Meta:
+        verbose_name = _(u"Layout")
 
 
 class ItemsInSongbook(models.Model):
@@ -220,8 +223,8 @@ class Task(models.Model):
               (State.FINISHED, "Finished"),
               (State.ERROR, "Error"),
               )
-    songbook = models.ForeignKey(Songbook)
-    layout = models.ForeignKey(SongbookLayout)
+    songbook = models.ForeignKey(Songbook, related_name="tasks")
+    layout = models.ForeignKey(Layout)
     hash = models.CharField(max_length=40,
                             verbose_name=_(u"contenu"))
     last_updated = models.DateTimeField(auto_now=True)
@@ -229,6 +232,11 @@ class Task(models.Model):
                              choices=STATES,
                              verbose_name=_(u"état"))
     result = JSONField(verbose_name=_(u"résultat"))
+
+    def __unicode__(self):
+        return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
+                                    songbook=self.songbook.title,
+                                    layout=self.layout.id))
 
 ###############################################################
 
