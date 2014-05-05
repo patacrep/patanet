@@ -52,7 +52,7 @@
                                 {% trans "Regénérer" %}
                             </a>
                         </li>
-                    {% elif task.state = 'QUEUED' or songbook.task.state = 'IN_PROCESS' %}
+                    {% elif task.state = 'QUEUED' or task.state = 'IN_PROCESS' %}
                         <li>{% trans "Carnet en cours de génération. Cela peut prendre plusieurs minutes." %}</li>
                         <li>
                             <a href="">
