@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, \
                                 UpdateView, FormView, TemplateView
+
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
 from django.core.mail.message import BadHeaderError
@@ -23,7 +24,7 @@ from django.core.mail.message import BadHeaderError
 
 from generator.models import Song, Artist, Songbook, Profile, \
                             ItemsInSongbook, \
-                            Task as GeneratorTask
+                            Task as GeneratorTask, Layout
 from generator.forms import RegisterForm, SongbookCreationForm, ContactForm
 from generator.name_paginator import NamePaginator
 from django.views.generic.edit import DeleteView
@@ -455,25 +456,37 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
 def render_songbook(request, id, slug):
     """Trigger the generation of a songbook
     """
-
     force = request.REQUEST.get("force", False)
-    gen_task = None
-    state = None
-    if GeneratorTask.objects.filter(songbook__id=id).exists():
-        gen_task = GeneratorTask.objects.get(songbook__id=id)
+    songbook = Songbook.objects.get(id=id)
+
+    # Dummy layout
+    from generator.build import _get_layout
+    layout = _get_layout()
+
+    try:
+        gen_task = GeneratorTask.objects.get(songbook__id=id,
+                                             layout__id=layout.id)
         state = gen_task.state
+    except GeneratorTask.DoesNotExist:
+        gen_task = None
+        state = None
 
-    if ((state == GeneratorTask.State.FINISHED or \
-         state == GeneratorTask.State.ERROR)  and force) \
-        or gen_task is None:
+    # Build cases
+    build = gen_task is None or \
+            ((state == GeneratorTask.State.FINISHED or \
+              state == GeneratorTask.State.ERROR)  and force) or\
+            gen_task.hash != songbook.hash()
 
+    if build:
         gen_task, _created = GeneratorTask.objects.get_or_create(
-                                songbook=Songbook.objects.get(id=id))
+                                    songbook=songbook,
+                                    layout=layout)
         gen_task.result = {}
+        gen_task.hash = songbook.hash()
         gen_task.state = GeneratorTask.State.QUEUED
         gen_task.save()
 
         import generator.tasks as tasks
-        tasks.queue_render_task(id)
+        tasks.queue_render_task(id, layout.id)
 
     return redirect(reverse('songbook_private_list') + '#' + id)

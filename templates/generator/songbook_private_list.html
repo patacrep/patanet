@@ -38,12 +38,12 @@
             </li>
             <li>
                 <ul>
-                    <!-- Ici viendra s'insérer une boucle sur l'ensemble des versions de ce carnet -->
+                    {% for task in songbook.tasks.all %}
                     <li><ul class="sb-generation">
-                    {% if songbook.task.state = 'FINISHED' %}
+                    {% if task.state = 'FINISHED' %}
                         <li>{% trans "Carnet généré et disponible." %}</li>
                         <li>
-                            <a href="/medias/PDF/{{songbook.task.result.file}}">
+                            <a href="/medias/PDF/{{task.result.file}}">
                                 {% trans "Télécharger" %}
                             </a>
                         </li>
@@ -52,7 +52,7 @@
                                 {% trans "Regénérer" %}
                             </a>
                         </li>
-                    {% elif songbook.task.state = 'QUEUED' or songbook.task.state = 'IN_PROCESS' %}
+                    {% elif task.state = 'QUEUED' or songbook.task.state = 'IN_PROCESS' %}
                         <li>{% trans "Carnet en cours de génération. Cela peut prendre plusieurs minutes." %}</li>
                         <li>
                             <a href="">
@@ -60,20 +60,21 @@
                             </a>
                              {% trans "pour voir les changements" %}
                         </li>
-                    {% elif songbook.task.state = 'ERROR' %}
+                    {% elif task.state = 'ERROR' %}
                         <li>{% trans "Une erreur s'est produite. Vous pouvez relancer la génération." %}</li>
                         <li>
                             <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=True">
                                 {% trans "Relancer la génération" %}
                         </a>
                         </li>
-                    {% else %} {% comment %} Si aucune task n'existe, on propose la génération du carnet. {% endcomment %}
+                    {% endif %}
+                    {% empty %}
                         <li>
                             <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}">
                                 {% trans "Générer le PDF correspondant à ce carnet." %}
                             </a>
                         </li>
-                    {% endif %}
+                    {% endfor %}
                 </ul></li>
                 </ul>
             </li>
