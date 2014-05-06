@@ -158,7 +158,7 @@ class Layout(models.Model):
               )
 
     bookoptions = JSONField()
-    booktype = models.CharField(max_length=4,
+    booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
                                  verbose_name=_("type de carnet"))
