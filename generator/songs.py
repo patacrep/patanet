@@ -27,9 +27,9 @@ _BLOCKS_PATTERNS += [(r"\endverse", '</p>'),
 
 
 def parse_chords(content):
-    content = re.sub('\\\\\[(.*?)\](.*)([ \n])',
+    content = re.sub('\\\\\\[(.*?)\]({[^\\\\\s\n]*}|[^\\\\\s\n]*)',
             '<span class="chord"><span class="chord-name">\g<1></span>'
-            '<span class="chord-text">\g<2></span></span>\g<3>',
+            '<span class="chord-text">\g<2></span></span>',
             content)
     content = content.replace('&', "♭")
     content = content.replace('#', "♯&nbsp")
