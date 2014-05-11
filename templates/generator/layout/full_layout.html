@@ -20,12 +20,14 @@
 	</header>
 
 	<div class="top">
+	    <div class="app-menu">
+            {% include "generator/menu/user.html" %}
+        </div>
+	    {% include "generator/layout/messages.html" %}
 		<div class="app-menu">
-			{% include "generator/menu/user.html" %}
 			{% block appmenu %}
 			{% endblock %}
 		</div>
-	{% include "generator/layout/messages.html" %}
 	</div>
 
 	<main id="content" role="main">
