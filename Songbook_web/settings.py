@@ -63,6 +63,11 @@ WSGI_APPLICATION = 'Songbook_web.wsgi.application'
 
 AUTHENTICATION_BACKENDS = (
     'generator.backends.EmailAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'auth.authentication.EmailBackend',
 )
 
 # Database
