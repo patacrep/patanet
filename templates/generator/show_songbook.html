@@ -56,5 +56,23 @@
 	{{ n_songs }} chants dans ce carnet
 	{% endblocktrans %}
 	{% if songbook.is_public %} - {% trans "Carnet public" %}{% endif %}
+	{% for task in songbook.tasks.all %}
+	   <ul>
+	   {% if task.state = 'FINISHED' %}
+                        <li>
+                            <a href="/medias/PDF/{{task.result.file}}">
+                                {% trans "Télécharger le carnet avec la mise en page" %} {{task.layout.name}}
+                            </a>
+                        </li>
+       {% endif %}
+	   </ul>
+	{% empty %}
+	   <p>{% trans "Ce carnet n'a pas encore été généré." %}</p>
+        {% if user.profile = songbook.user %}
+            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}">
+                {% trans "Générer le PDF" %}
+            </a>
+        {% endif %}
+    {% endfor %}
 	</aside>
 {% endblock %}
