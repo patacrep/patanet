@@ -66,10 +66,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-AUTHENTICATION_BACKENDS = (
-    'auth.authentication.EmailBackend',
-)
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 DATABASES = {
