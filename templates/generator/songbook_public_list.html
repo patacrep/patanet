@@ -12,9 +12,13 @@
 		{% for songbook in songbooks %}
 			<li>
 			<a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a>
-			{% if user.profile in songbook.users.all %}
-				<small>[<a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">{% trans "Paramètres" %}</a>]</small>
+			{% if user.profile = songbook.user %}
+				<small>[<a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">
+				    {% trans "Paramètres" %}
+				    </a>]
+				</small>
 			{% endif %}
+			-  {{ songbook.count_songs }}{% trans " chants" %}
 			<p class="description">{{ songbook.description|truncatewords:40 }}</p>
 			</li>
 		{% endfor %}
