@@ -144,6 +144,29 @@ class SongbookCreationForm(forms.ModelForm):
             new_songbook.save()
         return new_songbook
 
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        self._clean_latex(title)
+        return title
+
+    def clean_description(self):
+        description = self.cleaned_data['description']
+        self._clean_latex(description)
+        return description
+
+    def _clean_latex(self, string):
+        '''
+        Raise errors if one of the LaTeX special characters
+        is in the string
+        '''
+        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
+        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
+        for char in TEX_CHAR:
+            if char in string:
+                raise forms.ValidationError(
+                    _(u"Les caractères suivant sont interdits, "
+                    u"merci de les supprimer : {chars}.").format(chars=CHARS))
+
 
 class SongbookLayoutForm(forms.ModelForm):
     BOOK_OPTIONS = [('diagram', _(u"Diagrammes d'accords")),
