@@ -153,6 +153,8 @@ class Layout(models.Model):
     """
     This class holds layout information for generating a songbook.
     """
+    name = models.CharField(max_length=100,
+                            verbose_name=_(u"Nom"))
     BOOKTYPES = (("chorded", _(u"Avec accords")),
               ("lyrics", _(u"Sans accords")),
               )
@@ -161,12 +163,12 @@ class Layout(models.Model):
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
-                                 verbose_name=_("type de carnet"))
+                                 verbose_name=_(u"type de carnet"))
     template = models.CharField(max_length=100,
-                                 verbose_name=_("gabarit"),
+                                 verbose_name=_(u"gabarit"),
                                  default="patacrep.tex")
     lang = models.CharField(max_length=10,
-                                verbose_name=_("langue principale"),
+                                verbose_name=_(u"langue principale"),
                                 default="french")
     other_options = JSONField(default=[])
 
