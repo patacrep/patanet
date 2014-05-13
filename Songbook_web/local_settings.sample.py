@@ -61,4 +61,4 @@ Databases
 Search paths
 '''
 # Path to the songs directory (*.sg files) from the songbook repo
-SONGS_LIBRARY_DIR = os.path.join(settings.PROJECT_ROOT, '../songbook-data')
+# SONGS_LIBRARY_DIR = os.path.join(settings.PROJECT_ROOT, '../songbook-data/')
