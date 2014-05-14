@@ -369,7 +369,8 @@ def add_songs_to_songbook(request):
         return redirect(next_url)
 
     song_list = request.POST.getlist('songs[]')
-    current_item_list = songbook.items.all()
+    current_item_list = [item.item for item in
+                            ItemsInSongbook.objects.filter(songbook=songbook)]
     rank = _get_new_rank(songbook_id)
 
     for song_id in song_list:
