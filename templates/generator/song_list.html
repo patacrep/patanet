@@ -11,8 +11,8 @@
 		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
 		{% for song in song_list %}
 			<li>
-				<input type="checkbox" name="songs[]" value="{{ song.id }}" 
-				id="song_{{ song.id }}" {% if song|in_subitem:current_item_list %}checked disabled{% endif %}>
+				<input type="checkbox" name="songs[]" value="{{ song.id }}"
+				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>

@@ -1,4 +1,4 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
 
 {% block title %} {% trans "Tous les artistes" %} {% endblock %}
 
@@ -7,10 +7,12 @@
 	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "artist_list" %}?page={{page_obj.number}}">
+        <input type="submit" value="{% trans "Ajouter au carnet" %}"/>
 		<ol class="artists selection">
 		{% for artist in artist_list %}
 			<li>
-				<input type="checkbox" name="artists[]" value="{{ artist.id }}" id="artist_{{ artist.id }}">
+				<input type="checkbox" name="artists[]" value="{{ artist.id }}" id="artist_{{ artist.id }}"
+                       {% if artist.songs.all|list_in_items:current_item_list %}checked disabled{% endif %}>
 				<label class="artist" for="artist_{{ artist.id }}" title="{{ artist.name }}">
 					{{ artist.name }}
 				</label>

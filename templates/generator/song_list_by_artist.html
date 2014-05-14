@@ -1,7 +1,7 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
 
 {% block title %}{% blocktrans with artist=artist.name %}
-{{ artist }} 
+{{ artist }}
 {% endblocktrans %}
 {% endblock %}
 
@@ -10,13 +10,13 @@
 	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
-		
+
 		<ol class="songs selection">
 		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
 		{% for song in song_list %}
 			<li>
-				<input type="checkbox" name="songs[]" value="{{ song.id }}" 
-				id="song_{{ song.id }}" {% if song|in_subitem:current_item_list %}checked disabled{% endif %}>
+				<input type="checkbox" name="songs[]" value="{{ song.id }}"
+				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>
@@ -26,6 +26,6 @@
 		</ol><br/>
 		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
 	</form>
-	
+
 {% include "generator/layout/pagination.html" %}
 {% endblock %}

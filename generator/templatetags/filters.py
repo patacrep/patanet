@@ -17,9 +17,13 @@ register = template.Library()
 def in_queryset(value, arg):
     return value in arg
 
-@register.filter(name='in_subitem')
-def in_subitem(value, arg):
-    for item in arg:
-        if item.item == value :
-            return True
-    return False
+@register.filter(name='list_in_items')
+def list_in_items(value, arg):
+    items = [item.item for item in arg]
+    values = [val for val in value]
+    return set(values).issubset(set(items))
+
+@register.filter(name='in_items')
+def in_items(value, arg):
+    items = [item.item for item in arg]
+    return value in items
