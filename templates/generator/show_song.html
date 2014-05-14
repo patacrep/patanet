@@ -10,8 +10,10 @@
 {% block content %}
 	<h2 class="artist"><a class="back" href="{% url "song_list_by_artist" artist=song.artist.slug %}">{{ song.artist.name }}</a></h2>
 	{% if song|in_subitem:current_item_list %}
-		<form method="post" action="TODO?next={{ request.get_full_path|urlencode }}">{% csrf_token %}
-			<input type="hidden" name="songs[]" value="{{ song.id }}">
+		<form method="post" action="{% url "remove_song" %}">
+            {% csrf_token %}
+			<input type="hidden" name="next" value="{% url "show_song" artist=song.artist.slug slug=song.slug %}">
+			<input type="hidden" name="song_id" value="{{ song.id }}">
 			<input type="submit" value="{% trans "Retirer du carnet" %}"/>
 		</form>
 	{% else %}

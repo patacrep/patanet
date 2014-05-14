@@ -19,6 +19,7 @@ from django.views.generic import ListView, DetailView, CreateView, \
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
 from django.core.mail.message import BadHeaderError
+from django.contrib.contenttypes.models import ContentType
 
 ##############################################
 
@@ -352,7 +353,6 @@ def _get_new_rank(songbook_id):
     else:
         return rank + 1
 
-
 @login_required
 def add_songs_to_songbook(request):
     """Add a list of songs to the current songbook.
@@ -401,6 +401,28 @@ def add_songs_to_songbook(request):
 
     return redirect(next_url)
 
+@login_required
+def remove_song(request):
+    """Remove a song from the current songbook"""
+    next_url = request.POST['next']
+
+    try:
+        songbook_id = request.session['current_songbook']
+        songbook = Songbook.objects.get(id=songbook_id)
+    except (KeyError, Songbook.DoesNotExist):
+        messages.error(request,
+                       _(u"Choisissez un carnet pour supprimer ce chants")
+                       )
+        return redirect(next_url)
+    song_id = request.POST["song_id"]
+    type = ContentType.objects.get(app_label="generator", model="song")
+    item = ItemsInSongbook.objects.get(songbook=songbook,
+                                       item_type=type,
+                                       item_id=song_id)
+    item.delete()
+    songbook.fill_holes()
+    messages.success(request, _(u"Ce chant a été supprimé"))
+    return redirect(next_url)
 
 @owner_required(('id', 'id'))
 def move_or_delete_items(request, id, slug):
