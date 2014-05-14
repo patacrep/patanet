@@ -54,8 +54,11 @@ main{
     }
     .chord-text{
         display:block;
+        &:empty:after{
+            content:"\00a0";
+        }
     }
-    
+
     .chorus{
         font-weight:600;
         border-left:solid 2px @hint-color;

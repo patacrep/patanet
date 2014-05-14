@@ -178,7 +178,7 @@ class SongListByArtist(CurrentSongbookMixin, ListView):
     model = Song
     context_object_name = "song_list"
     template_name = "generator/song_list_by_artist.html"
-    paginate_by = 10
+    paginate_by = 30
 
     def get_queryset(self):
         self.artist = get_object_or_404(Artist, slug=self.kwargs['artist'])
