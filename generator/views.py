@@ -251,7 +251,7 @@ class SongbookPublicList(ListView):
                                        ).order_by('title')
 
 
-class SongbookPrivateList(ListView):
+class SongbookPrivateList(LoginRequiredMixin, ListView):
     model = Songbook
     context_object_name = "songbooks"
     template_name = "generator/songbook_private_list.html"
