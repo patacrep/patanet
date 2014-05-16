@@ -110,7 +110,7 @@ LANGUAGES = (
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/data/'
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, "generator/static"),
+    os.path.join(PROJECT_ROOT, "generator", "static"),
 )
 
 MEDIA_URL = '/medias/'
