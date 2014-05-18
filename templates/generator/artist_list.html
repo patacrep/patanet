@@ -16,9 +16,24 @@
 				<label class="artist" for="artist_{{ artist.id }}" title="{{ artist.name }}">
 					{{ artist.name }}
 				</label>
-				<a class="details songs" href="{% url "song_list_by_artist" artist=artist.slug %}">
+				<label class="details songs" for="all_songs_{{ artist.id }}">
 					{% trans "Tous les chants" %} ({{ artist.songs.count }})
-				</a>
+				</label>
+                <input type="checkbox" id="all_songs_{{ artist.id }}" class="toggle_checkbox">
+                <ul>
+            		{% for song in artist.songs.all %}
+            			<li>
+				            <input type="checkbox" name="songs[]" value="{{ song.id }}"
+            				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
+			            	<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
+        					{{ song.title }}
+            				</label>
+            				<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">
+                                {% trans "Paroles" %}
+                            </a>
+            			</li>
+		            {% endfor %}
+		        </ul>
 			</li>
 		{% endfor %}
 		</ol><br/>

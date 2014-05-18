@@ -36,8 +36,14 @@ a.back{
 		input{
 			opacity:0.3;
 			vertical-align:middle;
-		}
+        }
+        .toggle_checkox{
+            display: none;
 
+            &:not(:checked) + ul {
+                display: none;
+            }
+		}
 		label.selected,
 		input:checked + label{
 			color:darken(@link-visited,10%);
@@ -218,22 +224,21 @@ a.back{
     .sb-infos{
       border-bottom: 1px solid #808080;
     }
-    
+
     h2 {
       font-weight:normal;
     }
-    
+
     ul {
       padding: 0px;
       margin: 5px auto;
       max-width: 50em;
       text-align: center;
     }
-    
+
     li{
       list-style:none;
       padding:0 0.5em;
       display:inline-block;
     }
 }
-
