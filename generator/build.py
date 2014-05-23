@@ -76,8 +76,6 @@ def generate_songbook(songbook, asked_layout=_get_layout()):
         os.mkdir(SONGBOOKS_PDFS)
         os.chdir(SONGBOOKS_PDFS)
 
-    print(content)
-
     builder = SongbookBuilder(content, tmpfile)
 
     for step in ["tex", "pdf", "sbx", "pdf", "clean"]:
