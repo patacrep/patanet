@@ -43,7 +43,7 @@
                     {% if task.state = 'FINISHED' %}
                         <li>{% trans "Carnet généré et disponible." %}</li>
                         <li>
-                            <a href="/medias/PDF/{{task.result.file}}">
+                            <a href="/medias/PDF/{{task.result.file}}" target="_blank">
                                 {% trans "Télécharger" %}
                             </a>
                         </li>
