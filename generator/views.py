@@ -489,6 +489,7 @@ def setup_rendering(request, id, slug):
     """Setup the parameters for songbook rendering
     """
     songbook = Songbook.objects.get(id=id)
+    existing_tasks = GeneratorTask.objects.filter(songbook=songbook)
     return render(request, 'generator/setup_rendering.html', locals())
 
 
@@ -507,9 +508,9 @@ def render_songbook(request, id, slug):
     subtitle = request.POST["subtitle"]
     author = request.POST["author"]
     booktype = request.POST["booktype"]
-    bookoptions = ["lilypond"]
-    if "diagrams" in request.POST:
-        bookoptions.append("diagrams")
+    bookoptions = []
+    if "diagram" in request.POST:
+        bookoptions.append("diagram")
     if "pictures" in request.POST:
         bookoptions.append("pictures")
 

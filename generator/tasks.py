@@ -34,6 +34,10 @@ def queue_render_task(task_id):
     except GeneratorError:
         gt.state = GeneratorTask.State.ERROR
         gt.save()
+        print("Failed task {0} (state : {1})"\
+          .format(gt.id, gt.state))
+
+        return
 
     gt.state = GeneratorTask.State.FINISHED
     gt.result = {"file": "{0}".format(fileh)}

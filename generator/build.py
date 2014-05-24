@@ -63,10 +63,6 @@ def generate_songbook(task):
         os.mkdir(SONGBOOKS_PDFS)
         os.chdir(SONGBOOKS_PDFS)
 
-    import pprint
-    with open('/tmp/sb.log', 'w') as f:
-        f.write(pprint.pformat(content))
-    
     builder = SongbookBuilder(content, tmpfile)
 
     for step in ["tex", "pdf", "sbx", "pdf"]:

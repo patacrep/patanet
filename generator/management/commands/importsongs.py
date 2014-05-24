@@ -98,6 +98,12 @@ class Command(BaseCommand):
 
                         object_hash = gitcmd.hash_object(filepath)
 
+                        import random
+                        # For some reason - probably after having interrupted
+                        # the generation - insertion fails because slug is
+                        # empty, and there is already an empty one.
+                        # We assign here a random value, that gets overwritten
+                        # afterwards.
                         song_model, created = Song.objects.get_or_create(
                                                 title=song_title,
                                                 artist=artist_model,
@@ -105,7 +111,8 @@ class Command(BaseCommand):
                                                 'title': song_title,
                                                 'language': language_code,
                                                 'object_hash': object_hash,
-                                                'file_path': filepath_rel})
+                                                'file_path': filepath_rel,
+                                                'slug': ('%06x' % random.randrange(16**6)) })
                         if created:
                             if Song.objects.filter(slug=song_slug).exists():
                                 song_slug += '-' + str(song_model.id)
@@ -113,12 +120,6 @@ class Command(BaseCommand):
 
                         else:
                             self.stdout.write("-> Already exists.")
-                            if (song_model.title != song_title):
-                                self.stderr.write(
-                                    "*** Song names differs though "
-                                    "slugs are equal : "
-                                    + song_title + " / "
-                                    + song_model.title)
 
                         artist_model.save()
                         song_model.save()
