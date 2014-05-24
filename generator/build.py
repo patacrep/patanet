@@ -65,7 +65,7 @@ def generate_songbook(task):
 
     builder = SongbookBuilder(content, tmpfile)
 
-    for step in ["tex", "pdf", "sbx", "pdf"]:
+    for step in ["tex", "pdf", "sbx", "pdf", "clean"]:
         try:
             builder.build_steps([step])
         except SongbookError:
