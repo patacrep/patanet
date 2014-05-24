@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from generator.models import Songbook, Layout
+from generator.models import Songbook, Layout, Task
 from django.conf import settings
 
 from songbook_core.build import SongbookBuilder
@@ -44,38 +44,29 @@ class GeneratorError(Exception):
         return "[PDF Generator error] {0}". format(self.message)
 
 
-def generate_songbook(songbook, asked_layout=_get_layout()):
-    if isinstance(songbook, Songbook):
-        book = songbook
-    else:
-        try:
-            book = Songbook.objects.get(id=int(songbook))
-        except:
-            raise GeneratorError("Songbook {0} not found.".format(songbook))
-
-    content = book.get_as_json()
-
-    if isinstance(asked_layout, Layout):
-        layout = asked_layout
-    else:
-        try:
-            layout = Layout.objects.get(id=int(asked_layout))
-        except:
-            raise GeneratorError("Layout {0} not found.".format(layout))
+def generate_songbook(task):
+    
+    book = task.songbook
+    content = task.get_as_json()
+    layout = task.layout
 
     content.update(layout.get_as_json())
 
     content["datadir"] = settings.SONGS_LIBRARY_DIR
 
-    tmpfile = "songbook-{0}".format(book.id)
+    tmpfile = "songbook-{0}-{1}".format(book.id, layout.id)
 
     if not os.path.exists(SONGBOOKS_PDFS):
         os.mkdir(SONGBOOKS_PDFS)
     os.chdir(SONGBOOKS_PDFS)
 
+    import pprint
+    with open('/tmp/sb.log', 'w') as f:
+        f.write(pprint.pformat(content))
+    
     builder = SongbookBuilder(content, tmpfile)
 
-    for step in ["tex", "pdf", "sbx", "pdf", "clean"]:
+    for step in ["tex", "pdf", "sbx", "pdf"]:
         try:
             builder.build_steps([step])
         except SongbookError:

@@ -361,6 +361,7 @@ def _get_new_rank(songbook_id):
     else:
         return rank + 1
 
+
 @login_required
 def add_songs_to_songbook(request):
     """Add a list of songs to the current songbook.
@@ -484,15 +485,35 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
 
 
 @owner_required(('id', 'id'))
+def setup_rendering(request, id, slug):
+    """Setup the parameters for songbook rendering
+    """
+    songbook = Songbook.objects.get(id=id)
+    return render(request, 'generator/setup_rendering.html', locals())
+
+
+@owner_required(('id', 'id'))
 def render_songbook(request, id, slug):
     """Trigger the generation of a songbook
     """
     force = request.REQUEST.get("force", False)
     songbook = Songbook.objects.get(id=id)
 
-    # Dummy layout
-    from generator.build import _get_layout
-    layout = _get_layout()
+    if request.POST["title"]:
+        title = request.POST["title"]
+    else:
+        title = songbook.title
+
+    subtitle = request.POST["subtitle"]
+    author = request.POST["author"]
+    booktype = request.POST["booktype"]
+    bookoptions = ["lilypond"]
+    if "diagrams" in request.POST:
+        bookoptions.append("diagrams")
+    if "pictures" in request.POST:
+        bookoptions.append("pictures")
+
+    layout = Layout.objects.create(bookoptions=bookoptions, booktype=booktype)
 
     try:
         gen_task = GeneratorTask.objects.get(songbook__id=id,
@@ -512,12 +533,15 @@ def render_songbook(request, id, slug):
         gen_task, _created = GeneratorTask.objects.get_or_create(
                                     songbook=songbook,
                                     layout=layout)
+        gen_task.title = title
+        gen_task.subtitle = subtitle
+        gen_task.author = author
         gen_task.result = {}
         gen_task.hash = songbook.hash()
         gen_task.state = GeneratorTask.State.QUEUED
         gen_task.save()
 
         import generator.tasks as tasks
-        tasks.queue_render_task(id, layout.id)
+        tasks.queue_render_task(gen_task.id)
 
     return redirect(reverse('songbook_private_list') + '#' + id)

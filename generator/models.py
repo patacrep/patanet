@@ -168,6 +168,7 @@ class Layout(models.Model):
               )
 
     bookoptions = JSONField()
+    #  diagram, pictures
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
@@ -220,7 +221,7 @@ class ItemsInSongbook(models.Model):
 
 
 class Task(models.Model):
-    """Model holding informations for asynchroneous PDF generation"""
+    """Model holding information for asynchronous PDF generation"""
 
     class State(object):
         QUEUED = "QUEUED"
@@ -237,11 +238,45 @@ class Task(models.Model):
     layout = models.ForeignKey(Layout)
     hash = models.CharField(max_length=40,
                             verbose_name=_(u"contenu"))
+    title = models.CharField(max_length=100,
+                             verbose_name=_(u"titre")
+                             )
+    subtitle = models.CharField(max_length=255,
+                             verbose_name=_(u"sous-titre")
+                             )
+    author = models.CharField(max_length=255,
+                             verbose_name=_(u"sous-titre")
+                             )
+
     last_updated = models.DateTimeField(auto_now=True)
     state = models.CharField(max_length=20,
                              choices=STATES,
                              verbose_name=_(u"état"))
     result = JSONField(verbose_name=_(u"résultat"))
+
+    def get_as_json(self):
+
+        d = {"subtitle": self.subtitle,
+             "title": self.title,
+             "version": "0.1",
+             "author": self.author,
+             "content": [],
+             "authwords": {
+               "sep": ["and", "et"]
+             }
+             }
+        item_ids = ItemsInSongbook.objects.filter(
+                      songbook=self.songbook,
+                      item_type=ContentType.objects.get_for_model(Song)
+                      ).order_by("rank").values_list("item_id", flat=True)
+
+        song_paths = Song.objects.filter(id__in=item_ids) \
+                            .values_list("file_path", flat=True)
+
+        for song_path in song_paths:
+            d["content"].append(str(song_path))
+
+        return d
 
     def __unicode__(self):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(

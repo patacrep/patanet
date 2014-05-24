@@ -1,0 +1,41 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
+
+{% block title %} {% trans "Paramètres de création du PDF" %} {% endblock %}
+
+{% block content %}
+    <form class="" method="post" action="{% url 'render_songbook' songbook.id songbook.slug %}">
+        {% csrf_token %}
+        <ul class="selection">
+        <li class="selection">
+        <label for="title">{% trans "Titre" %}</label>
+        <input type="text" name="title" id="title" value="{{songbook.title}}" class="selection">
+        </li>
+        <li>
+        <label for="subtitle">{% trans "Sous-titre" %}</label>
+        <input type="text" name="subtitle" id="subtitle" value="{{ songbook.description }}">
+        </li>
+        <li>
+        <label for="author">{% trans "Auteur" %}</label>
+        <input type="text" name="author" id="author" value="{{ request.user.first_name }} {{ request.user.last_name }}">
+        </li>
+        <li>
+        <label for="booktype">{% trans "Type de livre" %}</label>
+        <select name="booktype" id="booktype">
+            <option value="chorded" selected>{% trans "Avec accords" %}</option>
+            <option value="lyric">{% trans "Sans accords" %}</option>
+        </select>
+        </li>
+        <li>
+        <label for="diagram">{% trans "Avec diagrammes pour chaque chant" %}</label>
+        <input type="checkbox" name="diagram" id="diagram" value="diagram" checked>
+        </li>
+        <li>
+        <label for="pictures">{% trans "Avec images pour chaque chant" %}</label>
+        <input type="checkbox" name="pictures" id="pictures" value="pictures">
+        </li>
+        <li>
+        <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
+        </li>
+        </ul>
+    </form>
+{% endblock %}
