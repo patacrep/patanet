@@ -21,6 +21,7 @@ from songbook_core.build import SongbookBuilder
 from songbook_core.errors import SongbookError
 
 import os
+import hashlib
 
 
 SONGBOOKS_PDFS = os.path.join(settings.MEDIA_ROOT, "PDF")
@@ -54,11 +55,13 @@ def generate_songbook(task):
 
     content["datadir"] = settings.SONGS_LIBRARY_DIR
 
-    tmpfile = "songbook-{0}-{1}".format(book.id, layout.id)
+    tmpfile = str(book.id) + '-' + str(layout.id) + '-' + hashlib.sha1(str(content)).hexdigest()[0:20]
 
-    if not os.path.exists(SONGBOOKS_PDFS):
+    try:
+        os.chdir(SONGBOOKS_PDFS)
+    except OSError:
         os.mkdir(SONGBOOKS_PDFS)
-    os.chdir(SONGBOOKS_PDFS)
+        os.chdir(SONGBOOKS_PDFS)
 
     import pprint
     with open('/tmp/sb.log', 'w') as f:
