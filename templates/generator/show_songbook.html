@@ -69,7 +69,7 @@
 	{% empty %}
 	   <p>{% trans "Ce carnet n'a pas encore été généré." %}</p>
         {% if user.profile = songbook.user %}
-            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}">
+            <a href="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
                 {% trans "Générer le PDF" %}
             </a>
         {% endif %}
