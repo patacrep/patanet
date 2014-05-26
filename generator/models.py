@@ -79,6 +79,9 @@ class Songbook(models.Model):
                                    blank=True,
                                    through='ItemsInSongbook',)
     user = models.ForeignKey('Profile', related_name='songbooks')
+    author = models.CharField(max_length=255,
+                              verbose_name=_(u"auteur"),
+                              default="")
 
     def __unicode__(self):
         return self.title
@@ -251,16 +254,6 @@ class Task(models.Model):
     layout = models.ForeignKey(Layout)
     hash = models.CharField(max_length=40,
                             verbose_name=_(u"contenu"))
-    title = models.CharField(max_length=100,
-                             verbose_name=_(u"titre")
-                             )
-    subtitle = models.CharField(max_length=255,
-                             verbose_name=_(u"sous-titre")
-                             )
-    author = models.CharField(max_length=255,
-                             verbose_name=_(u"sous-titre")
-                             )
-
     last_updated = models.DateTimeField(auto_now=True)
     state = models.CharField(max_length=20,
                              choices=STATES,
@@ -269,12 +262,12 @@ class Task(models.Model):
 
     def get_as_json(self):
 
-        d = {"subtitle": self.subtitle,
-             "title": self.title,
+        d = {"subtitle": self.songbook.description,
+             "title": self.songbook.title,
              "orientation": self.layout.orientation,
              "papersize": self.layout.papersize,
              "version": "0.1",
-             "author": self.author,
+             "author": self.songbook.author,
              "content": [],
              "authwords": {
                "sep": ["and", "et"]

@@ -500,13 +500,6 @@ def render_songbook(request, id, slug):
     force = request.REQUEST.get("force", False)
     songbook = Songbook.objects.get(id=id)
 
-    if request.POST["title"]:
-        title = request.POST["title"]
-    else:
-        title = songbook.title
-
-    subtitle = request.POST["subtitle"]
-    author = request.POST["author"]
     booktype = request.POST["booktype"]
     bookoptions = []
     if "diagram" in request.POST:
@@ -539,9 +532,6 @@ def render_songbook(request, id, slug):
         gen_task, _created = GeneratorTask.objects.get_or_create(
                                     songbook=songbook,
                                     layout=layout)
-        gen_task.title = title
-        gen_task.subtitle = subtitle
-        gen_task.author = author
         gen_task.result = {}
         gen_task.hash = songbook.hash()
         gen_task.state = GeneratorTask.State.QUEUED
