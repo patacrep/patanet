@@ -5,14 +5,13 @@
 {% block content %}
   <h2>Liste des PDFs déjà générés : </h2>
     <table>
-      <tr><th>{% trans "Titre" %}</th><th>{% trans "Sous-titre" %}</th>
+      <tr><th>{% trans "Titre" %}</th>
           <th>{% trans "Auteur" %}</th><th>{% trans "Type" %}</th><th>{# trans "Options" #}</th>
           <th>{# trans "Fichier" #}</th> 
           </tr>
       {% for task in existing_tasks %}
-      <tr><td>{{task.title}}</td>
-          <td>{{task.subtitle}}</td>
-          <td>{{task.author}}</td>
+      <tr><td><strong>{{task.songbook.title}}</strong><br>{{task.songbook.description|truncatewords:20}}</td>
+          <td>{{task.songbook.author}}</td>
           <td>{{task.layout.booktype}}</td>
           <td>
               {% if "diagram" in task.layout.bookoptions %}<img src="{% static "img/chord_diagram_32.png" %}" alt="{% trans "Diagrammes d'accords" %}" title="{% trans "Diagrammes d'accords" %}">{% endif %}
