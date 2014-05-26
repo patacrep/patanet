@@ -167,15 +167,28 @@ class Layout(models.Model):
               ("lyrics", _(u"Sans accords")),
               )
 
+    ORIENTATIONS = (("portrait", _(u"Portrait")),
+                    ("landscape", _(u"Paysage")),
+                    )
+
+    PAPERSIZES = (("a4", _(u"A4")),
+                  ("a4", _(u"A4")),
+                 )
     bookoptions = JSONField()
     #  diagram, pictures
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
+    orientation = models.CharField(max_length=16,
+                                   choices=ORIENTATIONS,
+                                   default="portrait")
+    papersize = models.CharField(max_length=16,
+                                 choices=PAPERSIZES,
+                                 default="a4")
     template = models.CharField(max_length=100,
                                  verbose_name=_(u"gabarit"),
-                                 default="patacrep.tex")
+                                 default="data.tex")
     lang = models.CharField(max_length=10,
                                 verbose_name=_(u"langue principale"),
                                 default="french")
@@ -258,6 +271,8 @@ class Task(models.Model):
 
         d = {"subtitle": self.subtitle,
              "title": self.title,
+             "orientation": self.layout.orientation,
+             "papersize": self.layout.papersize,
              "version": "0.1",
              "author": self.author,
              "content": [],

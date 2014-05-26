@@ -513,8 +513,13 @@ def render_songbook(request, id, slug):
         bookoptions.append("diagram")
     if "pictures" in request.POST:
         bookoptions.append("pictures")
+    orientation = request.POST["orientation"]
+    papersize = request.POST["papersize"]
 
-    layout = Layout.objects.create(bookoptions=bookoptions, booktype=booktype)
+    layout = Layout.objects.create(bookoptions=bookoptions,
+                                   booktype=booktype,
+                                   orientation=orientation,
+                                   papersize=papersize)
 
     try:
         gen_task = GeneratorTask.objects.get(songbook__id=id,
