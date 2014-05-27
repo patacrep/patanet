@@ -126,8 +126,7 @@ class Songbook(models.Model):
 
         d = {"subtitle": self.description,
              "title": self.title,
-             "version": "0.1",
-             "author": self.user.user.username,
+             "author": self.author,
              "content": [],
              "authwords": {
                "sep": ["and", "et"]
@@ -197,17 +196,32 @@ class Layout(models.Model):
                                 default="french")
     other_options = JSONField(default=[])
 
+    def __eq__(self, other):
+
+        if not isinstance(other, Layout):
+            return False
+
+        for attr in ("diagram", "pictures"):
+            if (attr in self.bookoptions) != (attr in other.bookoptions):
+                return False
+
+        for attr in ("booktype", "orientation", "papersize",
+                     "template", "lang"):
+            if (getattr(self, attr) != getattr(other, attr)):
+                return False
+
+        return True
+
 #     Other options are : web mail picture picturecopyright footer
 #     license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
 #     indexbgcolor
 
     def get_as_json(self):
         """Return a JSON representation of the layout"""
-        layout = {"template": self.template,
-                  "lang": self.lang,
-                  "bookoptions": self.bookoptions,
-                  "booktype": self.booktype,
-                  }
+        layout = {}
+        for attr in ("booktype", "orientation", "papersize",
+                     "template", "lang", "bookoptions"):
+            layout[attr] = getattr(self, attr)
         layout.update(self.other_options)
         return layout
 
@@ -262,27 +276,10 @@ class Task(models.Model):
 
     def get_as_json(self):
 
-        d = {"subtitle": self.songbook.description,
-             "title": self.songbook.title,
-             "orientation": self.layout.orientation,
-             "papersize": self.layout.papersize,
-             "version": "0.1",
-             "author": self.songbook.author,
-             "content": [],
-             "authwords": {
-               "sep": ["and", "et"]
+        d = {"version": "0.1",
              }
-             }
-        item_ids = ItemsInSongbook.objects.filter(
-                      songbook=self.songbook,
-                      item_type=ContentType.objects.get_for_model(Song)
-                      ).order_by("rank").values_list("item_id", flat=True)
-
-        song_paths = Song.objects.filter(id__in=item_ids) \
-                            .values_list("file_path", flat=True)
-
-        for song_path in song_paths:
-            d["content"].append(str(song_path))
+        d.update(self.songbook.get_as_json())
+        d.update(self.layout.get_as_json())
 
         return d
 

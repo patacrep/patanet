@@ -46,16 +46,13 @@ class GeneratorError(Exception):
 
 
 def generate_songbook(task):
-    
-    book = task.songbook
-    content = task.get_as_json()
-    layout = task.layout
 
-    content.update(layout.get_as_json())
+    content = task.get_as_json()
 
     content["datadir"] = settings.SONGS_LIBRARY_DIR
 
-    tmpfile = str(book.id) + '-' + str(layout.id) + '-' + hashlib.sha1(str(content)).hexdigest()[0:20]
+    tmpfile = str(task.book.id) + '-' + str(task.layout.id) + '-' + \
+              hashlib.sha1(str(content)).hexdigest()[0:20]
 
     try:
         os.chdir(SONGBOOKS_PDFS)
