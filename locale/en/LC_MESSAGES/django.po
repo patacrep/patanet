@@ -1,0 +1,949 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-05-27 19:25+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Songbook_web/settings.py:106
+msgid "French"
+msgstr ""
+
+#: Songbook_web/settings.py:107
+msgid "English"
+msgstr ""
+
+#: generator/forms.py:38
+msgid "Adresse mail"
+msgstr ""
+
+#: generator/forms.py:39
+msgid "30 caractères maximum."
+msgstr ""
+
+#: generator/forms.py:50
+msgid ""
+"Cette adresse mail existe déjà. Si vous avez oublié votre mot de passe, vous "
+"pouvez le réinitialiser."
+msgstr ""
+
+#: generator/forms.py:65
+#, python-brace-format
+msgid ""
+"{user_info} vous a envoyé un message depuis le site {sitename}.\n"
+"\n"
+"================================================================\n"
+"{message}\n"
+"================================================================\n"
+"\n"
+"Merci de répondre directement à son adresse mail : {sender_mail}"
+msgstr ""
+
+#: generator/forms.py:75
+#, python-brace-format
+msgid ""
+"Vous avez envoyé un message depuis le site {sitename}. Voici\n"
+"la copie reçue par les administrateurs.\n"
+"\n"
+"================================================================\n"
+"{message}\n"
+"================================================================\n"
+"\n"
+"Merci d'utiliser ce site, cordialement,\n"
+"Les Administrateurs.\n"
+"\n"
+"PS : Ce message est envoyé automatiquement. Merci de ne pas y répondre,\n"
+"Les administrateurs prendont contact avec vous."
+msgstr ""
+
+#: generator/forms.py:92
+msgid "Sujet"
+msgstr ""
+
+#: generator/forms.py:93
+msgid "Votre adresse mail"
+msgstr ""
+
+#: generator/forms.py:95
+msgid "Votre message"
+msgstr ""
+
+#: generator/forms.py:97
+msgid "Recevoir une copie du mail"
+msgstr ""
+
+#: generator/forms.py:175
+#, python-brace-format
+msgid ""
+"Les caractères suivant sont interdits, merci de les supprimer : {chars}."
+msgstr ""
+
+#: generator/forms.py:180
+msgid "Diagrammes d'accords"
+msgstr ""
+
+#: generator/forms.py:181
+msgid "Diagrammes important seulement"
+msgstr ""
+
+#: generator/forms.py:182
+msgid "Accords sur tous les couplets"
+msgstr ""
+
+#: generator/forms.py:183
+msgid "Tablatures"
+msgstr ""
+
+#: generator/forms.py:184
+msgid "Partitions Lilypond"
+msgstr ""
+
+#: generator/forms.py:185
+msgid "Couvertures d'albums"
+msgstr ""
+
+#: generator/forms.py:186
+msgid "Une chanson par page"
+msgstr ""
+
+#: generator/forms.py:191 generator/models.py:166
+msgid "Avec accords"
+msgstr ""
+
+#: generator/forms.py:192 generator/models.py:167
+msgid "Sans accords"
+msgstr ""
+
+#: generator/forms.py:196
+msgid "Mise en forme avec le gabarit"
+msgstr ""
+
+#: generator/forms.py:200
+msgid "Options du receuil"
+msgstr ""
+
+#: generator/models.py:40 generator/models.py:52
+msgid "artiste"
+msgstr ""
+
+#: generator/models.py:45 generator/models.py:69
+msgid "titre"
+msgstr ""
+
+#: generator/models.py:61
+msgid "chant"
+msgstr ""
+
+#: generator/models.py:73
+msgid "description"
+msgstr ""
+
+#: generator/models.py:76
+msgid "carnet public"
+msgstr ""
+
+#: generator/models.py:147
+msgid "carnet de chants"
+msgstr ""
+
+#: generator/models.py:148
+msgid "carnets de chants"
+msgstr ""
+
+#: generator/models.py:153
+msgid "nom de section"
+msgstr ""
+
+#: generator/models.py:165
+msgid "Nom"
+msgstr ""
+
+#: generator/models.py:174
+msgid "type de carnet"
+msgstr ""
+
+#: generator/models.py:176
+msgid "gabarit"
+msgstr ""
+
+#: generator/models.py:179
+msgid "langue principale"
+msgstr ""
+
+#: generator/models.py:198
+msgid "Layout"
+msgstr ""
+
+#: generator/models.py:209
+msgid "position"
+msgstr ""
+
+#: generator/models.py:212
+#, python-brace-format
+msgid "\"{item_type}\" : \"{item}\", dans le carnet \"{songbook}\""
+msgstr ""
+
+#: generator/models.py:239
+msgid "contenu"
+msgstr ""
+
+#: generator/models.py:243
+msgid "état"
+msgstr ""
+
+#: generator/models.py:244
+msgid "résultat"
+msgstr ""
+
+#: generator/models.py:247
+#, python-brace-format
+msgid "Carnet '{songbook}', mise en page n°{layout}"
+msgstr ""
+
+#: generator/models.py:261
+msgid "profil"
+msgstr ""
+
+#: generator/views.py:74
+msgid "Accueil"
+msgstr ""
+
+#: generator/views.py:88
+msgid "Votre message a bien été envoyé."
+msgstr ""
+
+#: generator/views.py:91
+msgid "Erreur d'en-tête. Vérifiez le sujet."
+msgstr ""
+
+#: generator/views.py:95
+msgid "Une erreur s'est produite. Veuillez réessayer."
+msgstr ""
+
+#: generator/views.py:118
+msgid "Vous êtes à présent inscrit.Connectez-vous pour accéder à votre profil."
+msgstr ""
+
+#: generator/views.py:136
+msgid "Votre mot de passe a bien été modifié."
+msgstr ""
+
+#: generator/views.py:152
+msgid "Un email de confirmation vous a été envoyé."
+msgstr ""
+
+#: generator/views.py:168
+msgid ""
+"Votre mot de passe a bien été modifié. Connectez-vous pour accéder à votre "
+"profil."
+msgstr ""
+
+#: generator/views.py:272
+msgid "Le nouveau carnet a été créé."
+msgstr ""
+
+#: generator/views.py:307
+msgid "Le carnet a été modifié."
+msgstr ""
+
+#: generator/views.py:338
+msgid "Ce carnet n'existe pas."
+msgstr ""
+
+#: generator/views.py:375
+msgid "Choisissez un carnet pour ajouter ces chants"
+msgstr ""
+
+#: generator/views.py:423
+msgid "Choisissez un carnet pour supprimer ce chants"
+msgstr ""
+
+#: generator/views.py:433
+msgid "Ce chant a été supprimé"
+msgstr ""
+
+#: generator/views.py:469
+msgid "Ce nom de section n'est pas valide"
+msgstr ""
+
+#: templates/404.html:5
+msgid "Pas trouvé"
+msgstr ""
+
+#: templates/404.html:12
+#, python-format
+msgid ""
+" \n"
+"Oups, cette page est introuvable (erreur 404). Que diriez-vous d'un lien "
+"vers <a href=\"%(home)s\">la page d'accueil</a> ? Ou vers une <a href="
+"\"%(random)s\">chanson au hasard</a> ?\n"
+msgstr ""
+
+#: templates/generator/add_song.html:3
+msgid "Ajouter un chant"
+msgstr ""
+
+#: templates/generator/artist_list.html:3
+#: templates/generator/song_list_by_artist.html:9
+msgid "Tous les artistes"
+msgstr ""
+
+#: templates/generator/artist_list.html:10
+#: templates/generator/artist_list.html:40
+#: templates/generator/show_song.html:24 templates/generator/song_list.html:11
+#: templates/generator/song_list.html:24
+#: templates/generator/song_list_by_artist.html:15
+#: templates/generator/song_list_by_artist.html:27
+msgid "Ajouter au carnet"
+msgstr ""
+
+#: templates/generator/artist_list.html:20
+msgid "Tous les chants"
+msgstr ""
+
+#: templates/generator/artist_list.html:32
+#: templates/generator/items_in_songbook.html:42
+#: templates/generator/show_songbook.html:35
+#: templates/generator/song_list.html:20
+#: templates/generator/song_list_by_artist.html:23
+msgid "Paroles"
+msgstr ""
+
+#: templates/generator/contact.html:3
+#: templates/generator/layout/header.html:29
+msgid "Nous contacter"
+msgstr ""
+
+#: templates/generator/contact.html:7
+#, python-format
+msgid ""
+"\n"
+"\tAvant de nous contactez, regardez donc sur la <a href=\"%(FAQ)s\">FAQ</a> "
+"si votre question n'a pas déja été posée. <br />\n"
+"\tSinon, n'hésitez pas à nous contacter en utilisant le formulaire ci-"
+"dessous.\n"
+"\t"
+msgstr ""
+
+#: templates/generator/contact.html:16
+msgid "Envoyer"
+msgstr ""
+
+#: templates/generator/current_songbook.html:10
+msgid "Modifier l'ordre et les sections"
+msgstr ""
+
+#: templates/generator/current_songbook.html:33
+#: templates/generator/items_in_songbook.html:49
+#: templates/generator/show_songbook.html:41
+msgid "Ce carnet est vide"
+msgstr ""
+
+#: templates/generator/current_songbook.html:39
+msgid "Carnets de chants"
+msgstr ""
+
+#: templates/generator/current_songbook.html:45
+msgid "Changer de carnet de chants :"
+msgstr ""
+
+#: templates/generator/current_songbook.html:47
+msgid "Choisissez un carnet de chants à modifier :"
+msgstr ""
+
+#: templates/generator/current_songbook.html:60
+msgid "Choisir"
+msgstr ""
+
+#: templates/generator/current_songbook.html:66
+msgid "Générer le PDF de ce carnet de chant"
+msgstr ""
+
+#: templates/generator/current_songbook.html:71
+msgid "Créer un nouveau carnet de chant"
+msgstr ""
+
+#: templates/generator/current_songbook.html:76
+msgid "Créer un carnet de chants"
+msgstr ""
+
+#: templates/generator/current_songbook.html:77
+#, python-format
+msgid ""
+"\n"
+"\t\t\tPour créer un carnet, <a href=\"%(login)s\">connectez-vous</a> ou <a "
+"href=\"%(register)s\">inscrivez-vous</a>.\n"
+"\t\t"
+msgstr ""
+
+#: templates/generator/delete_songbook.html:4
+#, python-format
+msgid ""
+"\n"
+"\tSuppression du carnet <em>%(songbook)s</em>\n"
+"\t"
+msgstr ""
+
+#: templates/generator/delete_songbook.html:15
+msgid "Cette action est irréversible !"
+msgstr ""
+
+#: templates/generator/delete_songbook.html:19
+msgid "Confirmer la suppression"
+msgstr ""
+
+#: templates/generator/delete_songbook.html:19
+msgid "Revenir aux carnets"
+msgstr ""
+
+#: templates/generator/denied.html:3
+msgid "Acces interdit"
+msgstr ""
+
+#: templates/generator/denied.html:7
+msgid "Vous n'avez pas l'autorisation de voir cette page."
+msgstr ""
+
+#: templates/generator/items_in_songbook.html:11
+#: templates/generator/show_songbook.html:48
+msgid "Ajouter des chants au carnet"
+msgstr ""
+
+#: templates/generator/items_in_songbook.html:14
+msgid ""
+"\n"
+"Pour réordonner les chants, il suffit de changer les numéros de la colonne "
+"de gauche.<br/>\n"
+"Pour supprimer un chant, il faut remplacer son numéro par un 'X'.<br/>\n"
+"<!--\n"
+"La réorganisation est aussi possible en déplacant les chants à la souris "
+"(glisser-déposer, si javascript est activé).\n"
+"-->\n"
+"\n"
+msgstr ""
+
+#: templates/generator/items_in_songbook.html:54
+msgid "Ajouter une nouvelle section :"
+msgstr ""
+
+#: templates/generator/items_in_songbook.html:60
+msgid "Modifier ce carnet"
+msgstr ""
+
+#: templates/generator/login.html:3 templates/generator/login.html.py:24
+msgid "Se connecter"
+msgstr ""
+
+#: templates/generator/login.html:7
+msgid "Vous devez vous connecter pour accéder à cette page."
+msgstr ""
+
+#: templates/generator/login.html:16
+msgid "Nom d'utilisateur ou adresse mail : "
+msgstr ""
+
+#: templates/generator/login.html:27
+msgid "Mot de passe oublié ?"
+msgstr ""
+
+#: templates/generator/new_songbook.html:3
+msgid "Nouveau carnet"
+msgstr ""
+
+#: templates/generator/new_songbook.html:9
+#: templates/generator/songbook_private_list.html:10
+msgid "Créer un nouveau carnet"
+msgstr ""
+
+#: templates/generator/password_change.html:3
+#: templates/generator/password_reset_confirm.html:11
+#: templates/generator/show_profile.html:9
+msgid "Changer de mot de passe"
+msgstr ""
+
+#: templates/generator/password_change.html:9
+msgid "Changer le mot de passe"
+msgstr ""
+
+#: templates/generator/password_reset.html:3
+#: templates/generator/password_reset_confirm.html:3
+msgid "Réinitialiser son mot de passe"
+msgstr ""
+
+#: templates/generator/password_reset.html:6
+msgid "Entrez votre adresse email pour réinitialiser votre mot de passe :"
+msgstr ""
+
+#: templates/generator/password_reset.html:10
+msgid "Envoyer la demande"
+msgstr ""
+
+#: templates/generator/password_reset_confirm.html:7
+msgid "Entrez votre nouveau mot de passe :"
+msgstr ""
+
+#: templates/generator/password_reset_confirm.html:14
+msgid "Désolé, ce lien n'est pas valide. Effectuez une nouvelle demande."
+msgstr ""
+
+#: templates/generator/password_reset_email.html:2
+#, python-format
+msgid ""
+"\n"
+"Bonjour %(username)s.\n"
+"\n"
+"Une demande de réinitialisation de mot de passe a été effectué sur le site "
+"%(domain)s.\n"
+"\n"
+"Si vous n'êtes pas à l'origine de cette demande, ne faites rien, la sécurité "
+"de votre compte est garantie.\n"
+"\n"
+"Si vous êtes à l'origine de cette demande, veuillez suivre le lien ci-"
+"dessous pour créer un nouveau mot de passe.\n"
+msgstr ""
+
+#: templates/generator/password_reset_email.html:13
+#, python-format
+msgid ""
+"\n"
+"Cordialement,\n"
+"Les administrateur du site %(domain)s.\n"
+msgstr ""
+
+#: templates/generator/password_reset_email_subject.txt:2
+#, python-format
+msgid ""
+"\n"
+"[%(domain)s] Réinitialisation de mot de passe\n"
+msgstr ""
+
+#: templates/generator/register.html:3 templates/generator/menu/user.html:27
+msgid "Créer un compte"
+msgstr ""
+
+#: templates/generator/register.html:9
+msgid "S'inscrire"
+msgstr ""
+
+#: templates/generator/show_profile.html:3
+#, python-format
+msgid ""
+"\n"
+"Profil de %(username)s\n"
+msgstr ""
+
+#: templates/generator/show_profile.html:10
+msgid "Mes carnets de chants"
+msgstr ""
+
+#: templates/generator/show_song.html:5
+#, python-format
+msgid ""
+"\n"
+"%(title)s par %(artist)s\n"
+msgstr ""
+
+#: templates/generator/show_song.html:17
+msgid "Retirer du carnet"
+msgstr ""
+
+#: templates/generator/show_songbook.html:14
+#: templates/generator/songbook_private_list.html:3
+#: templates/generator/songbook_public_list.html:8
+#: templates/generator/menu/user.html:13
+msgid "Mes carnets"
+msgstr ""
+
+#: templates/generator/show_songbook.html:18
+#: templates/generator/songbook_private_list.html:7
+#: templates/generator/songbook_public_list.html:3
+#: templates/generator/layout/header.html:19
+msgid "Carnets publics"
+msgstr ""
+
+#: templates/generator/show_songbook.html:55
+#, python-format
+msgid ""
+"\n"
+"\t%(n_songs)s chants dans ce carnet\n"
+"\t"
+msgstr ""
+
+#: templates/generator/show_songbook.html:58
+#: templates/generator/songbook_private_list.html:20
+msgid "Carnet public"
+msgstr ""
+
+#: templates/generator/show_songbook.html:64
+msgid "Télécharger le carnet avec la mise en page"
+msgstr ""
+
+#: templates/generator/show_songbook.html:70
+msgid "Ce carnet n'a pas encore été généré."
+msgstr ""
+
+#: templates/generator/show_songbook.html:73
+#: templates/generator/menu/songbook.html:22
+msgid "Générer le PDF"
+msgstr ""
+
+#: templates/generator/song_list.html:3
+msgid "Toutes les chansons"
+msgstr ""
+
+#: templates/generator/song_list_by_artist.html:3
+#, python-format
+msgid ""
+"\n"
+"%(artist)s\n"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:18
+#: templates/generator/songbook_public_list.html:21
+msgid " chants"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:24
+#: templates/generator/songbook_public_list.html:17
+#: templates/generator/menu/songbook.html:14
+msgid "Paramètres"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:29
+msgid "Ajouter des chants"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:34
+msgid "Supprimer"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:44
+msgid "Carnet généré et disponible."
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:47
+msgid "Télécharger"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:52
+msgid "Regénérer"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:56
+msgid "Carnet en cours de génération. Cela peut prendre plusieurs minutes."
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:59
+msgid "Rafraichir"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:61
+msgid "pour voir les changements"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:64
+msgid "Une erreur s'est produite. Vous pouvez relancer la génération."
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:67
+msgid "Relancer la génération"
+msgstr ""
+
+#: templates/generator/songbook_private_list.html:74
+msgid "Générer le PDF correspondant à ce carnet."
+msgstr ""
+
+#: templates/generator/update_songbook.html:4
+#, python-format
+msgid ""
+"\n"
+"\t Paramètres du carnet \"%(songbook)s\"\n"
+"\t"
+msgstr ""
+
+#: templates/generator/update_songbook.html:17
+msgid "Changer les options"
+msgstr ""
+
+#: templates/generator/layout/doctype.html:7
+#: templates/generator/layout/header.html:5
+msgid "Songbook-web"
+msgstr ""
+
+#: templates/generator/layout/footer.html:4
+msgid "Générateur de carnets de chants en ligne"
+msgstr ""
+
+#: templates/generator/layout/footer.html:7
+msgid ""
+"Ce recueil de chansons n'a absolument aucune vocation commerciale et joue "
+"sur l'autorisation tacite des auteurs et des ayants droits, pensant que la "
+"publication de ces tablatures représente plutôt une publicité positive à "
+"leur égard. Cependant, si un auteur ou une société accréditée désire "
+"s'opposer à la publication de ses tablatures, merci de nous contacter et "
+"celles-ci seront immédiatement retirées du site. Dans tous les cas, toutes "
+"les chansons restent la propriété de leurs auteurs respectifs et/ou ayant-"
+"droits."
+msgstr ""
+
+#: templates/generator/layout/header.html:16
+msgid "Page d'accueil"
+msgstr ""
+
+#: templates/generator/layout/header.html:17
+msgid "Liste des artistes"
+msgstr ""
+
+#: templates/generator/layout/header.html:18
+msgid "Liste des chansons"
+msgstr ""
+
+#: templates/generator/layout/header.html:20
+msgid "Chanson au hasard"
+msgstr ""
+
+#: templates/generator/layout/header.html:26
+msgid "Contribuer"
+msgstr ""
+
+#: templates/generator/layout/header.html:27
+msgid "FAQ"
+msgstr ""
+
+#: templates/generator/layout/header.html:28
+msgid "A propos de ce site"
+msgstr ""
+
+#: templates/generator/layout/pagination.html:5
+msgid "Précédente"
+msgstr ""
+
+#: templates/generator/layout/pagination.html:7
+msgid "Page"
+msgstr ""
+
+#: templates/generator/layout/pagination.html:9
+msgid "Suivante"
+msgstr ""
+
+#: templates/generator/menu/songbook.html:10
+msgid "Ordre des chansons"
+msgstr ""
+
+#: templates/generator/menu/songbook.html:18
+msgid "Suppression"
+msgstr ""
+
+#: templates/generator/menu/user.html:7
+#, python-format
+msgid ""
+"\n"
+"\t\t\tBienvenue, %(username)s !\n"
+"        "
+msgstr ""
+
+#: templates/generator/menu/user.html:17
+msgid "Mon profil"
+msgstr ""
+
+#: templates/generator/menu/user.html:20
+msgid "Se déconnecter"
+msgstr ""
+
+#: templates/generator/menu/user.html:30
+msgid "Connexion"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:3
+msgid "Foire aux questions"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:8
+#, python-format
+msgid ""
+"\n"
+"\tVous trouverez ici des réponses aux questions les plus fréquemment posées. "
+"Si vous avez encore une question après avoir lu cette page, vous pouvez nous "
+"<a href=\"%(contact)s\">contacter</a>.\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:13
+msgid "J'aimerais ajouter <em>cette</em> chanson à mon carnet. Comment faire ?"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:16
+#, python-format
+msgid ""
+"\n"
+"\tAllez voir sur la page <a href=\"%(contrib)s\">comment contribuer</a> pour "
+"une réponse plus précise à cette question.\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:21
+msgid "Je voudrais modifier la mise en page de mon carnet, comment faire ?"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:23
+msgid ""
+"\n"
+"\tSi les différents templates, et leurs différentes options ne vous "
+"conviennent pas, vous pouvez écrire votre propre template de mise en page. "
+"Récupérez les sources du <a href=\"http://github.com/patacrep/songbook-core/"
+"\">moteur</a> et des <a href=\"http://github.com/patacrep/songbook-data/"
+"\">données</a> sur Github, écrivez votre propre template et envoyez-le nous "
+"pour le partager avec le tout le monde !\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:28
+msgid "Combien coûte l'utilisation de ce site ?"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:30
+msgid ""
+"\n"
+"\tÀ vous, rien du tout ! Ce projet est libre et gratuit, et le restera ! "
+"Cela veut dire que même si ce site ferme, l'ensemble du code utilisé restera "
+"disponible sur <a href=\"http://github.com/patacrep/songbook-core/\">Github</"
+"a>\n"
+"    "
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:35
+msgid ""
+"\n"
+"\t Pourquoi mettre un tel service à disposition alors ? Entre autres pour le "
+"goût du partage, l'envie d'être utile et de mettre ses capacités au service "
+"des autres, et parce que cela nous fait plaisir.\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:40
+msgid ""
+"\n"
+"\tMais même si ce site est gratuit d'utilisation, le mettre à votre "
+"disposition nous coûte de l'argent, principalement pour payer le serveur sur "
+"lequel il est hébergé. Si vous le trouvez utile, vous pouvez faire un don "
+"pour nous aider à supporter ce coût !\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:45
+msgid ""
+"C'est un super projet, j'aimerais beaucoup participer, mais je ne sais pas "
+"quoi faire."
+msgstr ""
+
+#: templates/generator/pages/FAQ.html:47
+#, python-format
+msgid ""
+"\n"
+"    Toutes les bonnes volontés sont acceptées pour améliorer ce projet. "
+"Plusieurs compétences peuvent être utiles :\n"
+"    <ul>\n"
+"        <li>Des développeurs Python/Django, pour améliorer ce site</li>\n"
+"        <li>Des développeurs web (HTML, CSS, JS) pour améliorer la "
+"présentation et l'interface de ce site</li>\n"
+"        <li>Des développeurs C++/Qt, pour améliorer le <a href=\"http://"
+"github.com/patacrep/songbook-gui/\">client local</a></li>\n"
+"        <li>Des développeurs Python et/ou LaTeX pour améliorer le <a href="
+"\"http://github.com/patacrep/songbook-core/\">moteur de rendu</a></li>\n"
+"    </ul>\n"
+"    <em>Et si je ne suis pas développeur, je ne peux pas aider ?</em><br />\n"
+"    Si bien sûr ! Il nous faut aussi :\n"
+"    <ul>\n"
+"    \t<li>Des traducteurs, pour que nous puissions dominer le monde. La "
+"priorité est la traduction en anglais, mais toutes les contributions sont "
+"les bienvenues !</li>\n"
+"        <li>Des gens qui ajoutent des chansons (voir <a href=\"%(contrib)s"
+"\">comment contribuer</a>), en écrivant des fichiers .sg</li>\n"
+"        <li>Des gens qui aiment Lilypond, et qui rajoutent des partitions ou "
+"des tablatures aux chansons</li>\n"
+"        <li>Des gens qui aiment le dessin, et qui proposent de nouvelles "
+"illustrations</li>\n"
+"        <li>Et des gens qui peuvent nous aider mais nous ne le savons pas "
+"encore !</li>\n"
+"    </ul>\n"
+"    Dans tous les cas, n'hésitez pas à nous <a href=\"%(contact)s"
+"\">contacter</a> !\n"
+"    "
+msgstr ""
+
+#: templates/generator/pages/about.html:3
+msgid "À propos de ce site"
+msgstr ""
+
+#: templates/generator/pages/about.html:7
+msgid ""
+"\n"
+"\tCe site est une interface web pour l'utilitaire libre <em>songbook</em>, "
+"que vous pouvez télécharger sur le site web <a href=\"http://www.patacrep.com"
+"\">Patacrep!</a>. Le but de cet utilitaire est la production automatisée de "
+"carnets de chants de grande qualité, avec un rendu typographique confié à "
+"LaTeX.\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/about.html:12
+msgid ""
+"\n"
+"\tL'ensemble du projet est sous licence GPLv2 pour le code, et "
+"CreativeCommons BY-SA pour les tablatures de la base de chansons. Si vous "
+"voulez participer à l'amélioration du projet ou de la base de chansons, "
+"rendez-vous sur <a href=\"http://github.com/patacrep/\">Github</a>, ou sur "
+"le <a href=\"http://www.patacrep.com/forum/\">forum</a> du projet.\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/about.html:17
+msgid ""
+"\n"
+"\tCe recueil de chansons n'a absolument aucune vocation commerciale et joue "
+"sur l'autorisation tacite des auteurs et des ayants droits, pensant que la "
+"publication de ces tablatures représente plutôt une publicité positive à "
+"leur égard. Cependant, si un auteur ou une société accréditée désire "
+"s'opposer à la publication de ses tablatures, merci de nous contacter et "
+"celles-ci seront immédiatement retirées du site. Toutes les paroles, "
+"diffusés sur ce site sont la propriété exclusive de leur(s) auteur(s) c'est-"
+"à-dire des auteurs indépendants ou des maisons d'édition détenant les "
+"droits. Certaines chansons peuvent appartenir au domaine public.\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/contribute.html:3
+msgid "Contribuer à la base de chansons"
+msgstr ""
+
+#: templates/generator/pages/contribute.html:8
+msgid ""
+"\n"
+"\tTout le monde peut améliorer la base de chansons utilisée par ce site. Il "
+"est prévu que vous puissiez ajouter des chansons depuis votre navigateur "
+"Internet, mais cela n'est pas encore mis en place.\n"
+"\t"
+msgstr ""
+
+#: templates/generator/pages/contribute.html:13
+msgid ""
+"\n"
+"\tPour le moment, vous pouvez toujours récupérer la <a href=\"http://github."
+"com/patacrep/songbook-data/\">base de donnée</a>, y effectuer vos "
+"modifications/ajouts/corrections en suivant la <a href=\"http://www.patacrep."
+"com/data/documents/doc_fr.pdf\">documentation</a>, et nous renvoyer les "
+"fichiers modifiés, via une pull request sur Github ou par mail.\n"
+"\t"
+msgstr ""
