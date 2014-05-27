@@ -16,6 +16,12 @@
           <td>
               {% if "diagram" in task.layout.bookoptions %}<img src="{% static "img/chord_diagram_32.png" %}" alt="{% trans "Diagrammes d'accords" %}" title="{% trans "Diagrammes d'accords" %}">{% endif %}
               {% if "pictures" in task.layout.bookoptions %}<img src="{% static "img/song_image_32.jpg" %}" alt="{% trans "Couvertures d'album" %}" title="{% trans "Couvertures d'album" %}">{% endif %}
+              {% if task.layout.orientation = "landscape" %}
+                <img src="{% static "img/landscape_32.png" %}" alt="{% trans "Format paysage" %}" title="{% trans "Format paysage" %}">
+              {% else %}
+                <img src="{% static "img/portrait_32.png" %}" alt="{% trans "Format portrait" %}" title="{% trans "Format portrait" %}">
+              {% endif %}
+              {{task.layout.papersize|upper}}
           </td>
           <td>{% if task.state = 'FINISHED' and "file" in task.result %}
                     <a href="/medias/PDF/{{task.result.file}}" target="_blank"><img src="{% static "img/download_32.png"%}" alt="{% trans "Télécharger" %}" title="{% trans "Télécharger"%}"></a>
