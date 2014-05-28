@@ -1,46 +1,17 @@
-songbook-web
+Songbook-web
 ============
 
-Web interface for songbook generation (see https://github.com/crep4ever/songbook or http://www.patacrep.com/fr/index.php)
+Web interface for songbook generation, using [songbook-core](https://github.com/patacrep/songbook-core), as part of the [patacrep](http://www.patacrep.com/fr/index.php) project.
 
-## Installation
+## Installation and configuration
 
-Be sure you have Python and pip installed. Then run `pip install -r Requirements.txt`.
+Please check the wiki about [devellopment](https://github.com/patacrep/songbook-web/wiki/Development-installation) installation and about [deploying the app](https://github.com/patacrep/songbook-web/wiki/Deploying-the-app) in production.
 
-Download and install the [compilation engine](http://github.com/patacrep/songbook-core/) with `python setup.py install`.
 
-## Configuration
+## Join the team
 
-Init the DB with:
-```
-./manage.py syncdb --migrate
-```
-And answer 'no' to the super-user creation. Once the table has been installed, run
-```
-./manage.py createsuperuser
-```
+If you want to help, we need various competencies: 
 
-You can import songs from a songbook repository like that:
-
-1. if not yet done, make a copy of `Songbook_web/local_settings.sample.py`to `Songbook_web/local_settings.py`
-2. set some variables in `local_settings.py` :
- * Path to the songs in the songbook repo:
- `SONGS_LIBRARY_DIR = os.path.join(SONG_PROCESSOR_DIR, 'songs/')`
-
-3. run `./manage.py importsongs`
-
-There is one repository [here](http://github.com/patacrep/songbook-data/).
-
-You may also want to set up the site name/domain from the administration zone.
-
-## How to run
-
-You need to start two processes :
-
-1. the background task processor : `./manage.py process_tasks`
-2. the web server : you can run a development server with the command `python manage.py runserver`. No web server (e.g. Apache, ...) required.
-
-## This is a development version !
-
-And it is not usable yet ! Lot of things just don't work. Check the wiki to know what's missing.
-
+* Front-end dev, with HTML/CSS/JS abilities
+* Back-end dev, with Python/Django abilities
+* LaTeX and Python dev to improve the [compilation engine](https://github.com/patacrep/songbook-core).
