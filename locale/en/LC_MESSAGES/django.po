@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: enlgish-1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-27 19:25+0100\n"
-"PO-Revision-Date: 2014-05-28 10:15-0400\n"
+"PO-Revision-Date: 2014-05-28 11:13-0400\n"
 "Last-Translator: Jason Landry <jasolandry@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -179,7 +179,7 @@ msgstr "songbook"
 
 #: generator/models.py:148
 msgid "carnets de chants"
-msgstr "songbook"
+msgstr "songbooks"
 
 #: generator/models.py:153
 msgid "nom de section"
@@ -229,7 +229,7 @@ msgstr "result"
 #: generator/models.py:247
 #, python-brace-format
 msgid "Carnet '{songbook}', mise en page n°{layout}"
-msgstr "Songbook '{songbook}', put in page n°{layout}"
+msgstr "Songbook '{songbook}', template n°{layout}"
 
 #: generator/models.py:261
 msgid "profil"
@@ -281,7 +281,7 @@ msgstr "The songbook does not exist."
 
 #: generator/views.py:375
 msgid "Choisissez un carnet pour ajouter ces chants"
-msgstr "Choose a song book to add songs."
+msgstr "Choose a songbook to add songs."
 
 #: generator/views.py:423
 msgid "Choisissez un carnet pour supprimer ce chants"
@@ -460,7 +460,7 @@ msgstr ""
 "To reorder songs just change the number in the left column.<br/>\n"
 "To remove a song, replace its number with an  'X'.<br/>\n"
 "<!--\n"
-"You can also drag and drop songs to reorder (if java is enabled)\n"
+"You can also drag and drop songs to reorder (if javascript is enabled)\n"
 "-->\n"
 "\n"
 
@@ -519,7 +519,7 @@ msgstr "Enter your email address to reset your password:"
 
 #: templates/generator/password_reset.html:10
 msgid "Envoyer la demande"
-msgstr "Request sent"
+msgstr "Send request"
 
 #: templates/generator/password_reset_confirm.html:7
 msgid "Entrez votre nouveau mot de passe :"
@@ -527,7 +527,7 @@ msgstr "Enter your new password:"
 
 #: templates/generator/password_reset_confirm.html:14
 msgid "Désolé, ce lien n'est pas valide. Effectuez une nouvelle demande."
-msgstr "Sorry, this link is not valid. Please try again."
+msgstr "Sorry, this link is not valid. Please create a new request."
 
 #: templates/generator/password_reset_email.html:2
 #, python-format
@@ -559,7 +559,7 @@ msgid ""
 msgstr ""
 "\n"
 "Sincerely,\n"
-"Site Administrator, %(domain)s.\n"
+"%(domain)s's administrator\n"
 
 #: templates/generator/password_reset_email_subject.txt:2
 #, python-format
@@ -577,7 +577,7 @@ msgstr "Create an account"
 
 #: templates/generator/register.html:9
 msgid "S'inscrire"
-msgstr "Resigister"
+msgstr "Register"
 
 #: templates/generator/show_profile.html:3
 #, python-format
@@ -702,11 +702,11 @@ msgstr "Refresh"
 
 #: templates/generator/songbook_private_list.html:61
 msgid "pour voir les changements"
-msgstr "To see the changes"
+msgstr "to see the changes"
 
 #: templates/generator/songbook_private_list.html:64
 msgid "Une erreur s'est produite. Vous pouvez relancer la génération."
-msgstr "An error has occured. Please re-start songbook generation."
+msgstr "An error has occured. You can restart the songbook generation."
 
 #: templates/generator/songbook_private_list.html:67
 msgid "Relancer la génération"
