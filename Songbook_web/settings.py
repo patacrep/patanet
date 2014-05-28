@@ -106,6 +106,7 @@ LANGUAGES = (
 ('fr', gettext('French')),
 ('en', gettext('English')),)
 
+LOCALE_PATHS = ( os.path.join(PROJECT_ROOT, "locale"),)
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/data/'
