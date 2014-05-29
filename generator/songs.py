@@ -15,10 +15,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Functions for song conversion from .sg format to HTML format.
+Functions for song file (.sg) management.
 """
+from django.utils.text import slugify
+from django.utils.encoding import smart_text
+from django.conf.global_settings import LANGUAGES
+
+from songbook_core.plastex import parsetex
+
+from generator.models import Song, Artist
 
 import re
+import os
+import sys
+import pprint
 
 _BLOCKS_PATTERNS = [(r"\beginverse", '<p class="verse" >'),
                     (r"\begin{verse}", '<p class="verse" >'),
@@ -69,3 +79,73 @@ def parse_song(content):
     content = parse_chords(content)
     content = parse_unsuported(content)
     return content
+
+# TODO: Write all the output to a log file
+def import_song(repo, filepath):
+    '''Import a song in the database'''
+    data = parsetex(filepath)
+    sys.stdout.write("Processing " +
+                      pprint.pformat(data['titles'][0]))
+
+    artist_name = smart_text(data['args']['by'], 'utf-8')
+    artist_slug = slugify(artist_name)
+
+    artist_model, created = Artist.objects.get_or_create(
+                            slug=artist_slug,
+                            defaults={'name': artist_name}
+                            )
+    if not created:
+        if (artist_model.name != artist_name):
+            sys.stderr.write(
+                "*** Artist name differs though "
+                "slugs are equal : "
+                + artist_name + " / "
+                + artist_model.name)
+
+    if (len(data['languages']) > 1):
+        sys.stderr.write("*** Multiple languages " +
+                          "in song file; we though" +
+                          " only support one. " +
+                          "Picking any.")
+    if (len(data['languages']) > 0):
+        language_name = data["languages"].pop()
+        language_code = next(
+                    (x for x in LANGUAGES
+                     if x[1].lower() == language_name.lower()
+                     ),
+                    ('', '')
+                     )[0]
+        if language_code == '':
+            sys.stderr.write("*** No code found for "
+                    "language : '" + language_name + "'")
+
+    song_title = smart_text(data['titles'][0], 'utf-8')
+    song_slug = slugify(song_title)
+
+    object_hash = repo.git.hash_object(filepath)
+    SONG_DIR = os.path.join(repo.working_dir, "songs")
+    filepath_rel = os.path.relpath(filepath, SONG_DIR)
+    song_model, created = Song.objects.get_or_create(
+                            title=song_title,
+                            artist=artist_model,
+                            defaults={
+                            'title': song_title,
+                            'language': language_code,
+                            'file_path': filepath_rel})
+    if created:
+        if Song.objects.filter(slug=song_slug).exists():
+            song_slug += '-' + str(song_model.id)
+        song_model.slug = song_slug
+
+    else:
+        sys.stdout.write("-> Already exists.")
+        if (song_model.title != song_title):
+            sys.stderr.write(
+                "*** Song names differs though "
+                "slugs are equal : "
+                + song_title + " / "
+                + song_model.title)
+
+    artist_model.save()
+    song_model.object_hash = object_hash
+    song_model.save()
