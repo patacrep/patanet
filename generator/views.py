@@ -303,9 +303,7 @@ class UpdateSongbook(OwnerRequiredMixin, UpdateView):
                                        slug=self.kwargs['slug'])
 
     def get_success_url(self):
-        kwargs["slug"] = self.object.slug
-        kwargs["id"] = self.object.id
-        return reverse('show_songbook', kwargs=kwargs)
+        return reverse('show_songbook', kwargs=self.kwargs)
 
     def form_valid(self, form):
         form.user = self.request.user
