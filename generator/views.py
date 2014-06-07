@@ -297,9 +297,12 @@ class UpdateSongbook(OwnerRequiredMixin, UpdateView):
     model = Songbook
     template_name = 'generator/update_songbook.html'
     form_class = SongbookCreationForm
+    
+    def get_queryset(self):
+        return Songbook.objects.filter(id=self.kwargs['id'],
+                                       slug=self.kwargs['slug'])
 
     def get_success_url(self):
-        self.kwargs["slug"] = self.object.slug
         return reverse('show_songbook', kwargs=self.kwargs)
 
     def form_valid(self, form):
