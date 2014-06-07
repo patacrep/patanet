@@ -233,11 +233,15 @@ class Task(models.Model):
               (State.FINISHED, "Finished"),
               (State.ERROR, "Error"),
               )
-    songbook = models.ForeignKey(Songbook, related_name="tasks")
-    layout = models.ForeignKey(Layout)
+    songbook = models.ForeignKey(Songbook,
+                                 related_name="tasks",
+                                 verbose_name=_(u"carnet"))
+    layout = models.ForeignKey(Layout,
+                               verbose_name=_(u"Mise en page"))
     hash = models.CharField(max_length=40,
                             verbose_name=_(u"contenu"))
-    last_updated = models.DateTimeField(auto_now=True)
+    last_updated = models.DateTimeField(auto_now=True,
+                                       verbose_name=_(u"dernière mise à jour"))
     state = models.CharField(max_length=20,
                              choices=STATES,
                              verbose_name=_(u"état"))

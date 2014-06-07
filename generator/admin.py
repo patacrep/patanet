@@ -16,7 +16,9 @@
 
 
 from django.contrib import admin
-from generator.models import Song, Artist, Songbook, Task
+from django.utils.translation import ugettext_lazy as _
+
+from generator.models import Song, Artist, Songbook, Task, Layout
 
 
 class SongAdmin(admin.ModelAdmin):
@@ -24,14 +26,60 @@ class SongAdmin(admin.ModelAdmin):
     list_filter = ('artist',)
     ordering = ('artist', 'title')
 
+admin.site.register(Song, SongAdmin)
+
 
 class ArtistAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',), }
-    # FIXME: cas d'un slug préexistant
 
-####################################################
+    def song_number(self, artist):
+        return artist.songs.all().count()
 
-admin.site.register(Song, SongAdmin)
+    song_number.short_description = _(u'nombre de chants')
+
+    list_display = ('name', 'song_number',)
+    ordering = ('name',)
+
 admin.site.register(Artist, ArtistAdmin)
-admin.site.register(Songbook)
-admin.site.register(Task)
+
+
+class SongbookAdmin(admin.ModelAdmin):
+    def truncated_description(self, songbook):
+        '''Truncate the songbook description'''
+        text = songbook.description[0:80]
+        if len(songbook.description) > 80:
+            return text + '...'
+        else:
+            return text
+
+    truncated_description.short_description = _(u'description')
+
+    def song_number(self, songbook):
+        return songbook.count_songs()
+
+    song_number.short_description = _(u'nombre de chants')
+
+    list_display = ('title',
+                    'user',
+                    'truncated_description',
+                    'song_number',
+                    'is_public')
+    list_filter = ('user',)
+    ordering = ('user', 'title')
+
+admin.site.register(Songbook, SongbookAdmin)
+
+
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('songbook', 'user', 'layout', 'last_updated', 'state')
+    ordering = ('state',)
+
+    def user(self, task):
+        return task.songbook.user
+
+admin.site.register(Task, TaskAdmin)
+
+
+class LayoutAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Layout, LayoutAdmin)
