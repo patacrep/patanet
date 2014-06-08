@@ -7,11 +7,14 @@
 	{% if debug %}
 	   <link rel="stylesheet/less" type="text/css" href="{% static "css/normalize.less" %}" />
 	   <link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
-	   <script src="{% static "js/less-1.6.1.min.js" %}" type="text/javascript"></script>
+	   <script src="{% static "js/less-1.6.1.min.js" %}"></script>
 	{% else %}
         <link type="text/css" rel="stylesheet" href="{% static "css/normalize.css" %}" />
         <link type="text/css" rel="stylesheet" href="{% static "css/main.css" %}" />
     {% endif %}
+	   <script src="{% static "js/jquery-1.11.1.min.js" %}"></script>
+       <script src="{% static "js/jquery-ui-1.10.4.min.js" %}"></script>
+       <script src="{% static "js/sb_web.js" %}"></script>
 {% endblock %}
 
 {% block body %}
