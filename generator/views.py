@@ -364,6 +364,7 @@ def _get_new_rank(songbook_id):
     else:
         return rank + 1
 
+
 @login_required
 def add_songs_to_songbook(request):
     """Add a list of songs to the current songbook.
@@ -487,15 +488,34 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
 
 
 @owner_required(('id', 'id'))
+def setup_rendering(request, id, slug):
+    """Setup the parameters for songbook rendering
+    """
+    songbook = Songbook.objects.get(id=id)
+    existing_tasks = GeneratorTask.objects.filter(songbook=songbook)
+    return render(request, 'generator/setup_rendering.html', locals())
+
+
+@owner_required(('id', 'id'))
 def render_songbook(request, id, slug):
     """Trigger the generation of a songbook
     """
     force = request.REQUEST.get("force", False)
     songbook = Songbook.objects.get(id=id)
 
-    # Dummy layout
-    from generator.build import _get_layout
-    layout = _get_layout()
+    booktype = request.POST["booktype"]
+    bookoptions = []
+    if "diagram" in request.POST:
+        bookoptions.append("diagram")
+    if "pictures" in request.POST:
+        bookoptions.append("pictures")
+    orientation = request.POST["orientation"]
+    papersize = request.POST["papersize"]
+
+    layout = Layout.objects.create(bookoptions=bookoptions,
+                                   booktype=booktype,
+                                   orientation=orientation,
+                                   papersize=papersize)
 
     try:
         gen_task = GeneratorTask.objects.get(songbook__id=id,
@@ -521,6 +541,6 @@ def render_songbook(request, id, slug):
         gen_task.save()
 
         import generator.tasks as tasks
-        tasks.queue_render_task(id, layout.id)
+        tasks.queue_render_task(gen_task.id)
 
     return redirect(reverse('songbook_private_list') + '#' + id)

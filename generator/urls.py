@@ -85,6 +85,9 @@ urlpatterns = patterns('generator.views',
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/render',
                 'render_songbook',
                 name="render_songbook"),
+    url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/setup-rendering',
+                'setup_rendering',
+                name="setup_rendering"),
 
 )
 
