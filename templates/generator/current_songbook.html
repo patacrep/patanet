@@ -61,7 +61,7 @@
 			{% endif %}
 			{% if current_songbook %}
 			<p>
-	                <a href="{% url 'render_songbook' id=current_songbook.id slug=current_songbook.slug %}">
+	                <a href="{% url 'setup_rendering' id=current_songbook.id slug=current_songbook.slug %}">
         	            {% trans "Générer le PDF de ce carnet de chant" %}
                 	</a>
             		</p>

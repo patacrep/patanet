@@ -79,6 +79,9 @@ class Songbook(models.Model):
                                    blank=True,
                                    through='ItemsInSongbook',)
     user = models.ForeignKey('Profile', related_name='songbooks')
+    author = models.CharField(max_length=255,
+                              verbose_name=_(u"auteur"),
+                              default="")
 
     def __unicode__(self):
         return self.title
@@ -123,8 +126,7 @@ class Songbook(models.Model):
 
         d = {"subtitle": self.description,
              "title": self.title,
-             "version": "0.1",
-             "author": self.user.user.username,
+             "author": self.author,
              "content": [],
              "authwords": {
                "sep": ["and", "et"]
@@ -167,18 +169,48 @@ class Layout(models.Model):
               ("lyrics", _(u"Sans accords")),
               )
 
+    ORIENTATIONS = (("portrait", _(u"Portrait")),
+                    ("landscape", _(u"Paysage")),
+                    )
+
+    PAPERSIZES = (("a4", _(u"A4")),
+                  ("a4", _(u"A4")),
+                 )
     bookoptions = JSONField()
+    #  diagram, pictures
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
+    orientation = models.CharField(max_length=16,
+                                   choices=ORIENTATIONS,
+                                   default="portrait")
+    papersize = models.CharField(max_length=16,
+                                 choices=PAPERSIZES,
+                                 default="a4")
     template = models.CharField(max_length=100,
                                  verbose_name=_(u"gabarit"),
-                                 default="patacrep.tex")
+                                 default="data.tex")
     lang = models.CharField(max_length=10,
                                 verbose_name=_(u"langue principale"),
                                 default="french")
     other_options = JSONField(default=[])
+
+    def __eq__(self, other):
+
+        if not isinstance(other, Layout):
+            return False
+
+        for attr in ("diagram", "pictures"):
+            if (attr in self.bookoptions) != (attr in other.bookoptions):
+                return False
+
+        for attr in ("booktype", "orientation", "papersize",
+                     "template", "lang"):
+            if (getattr(self, attr) != getattr(other, attr)):
+                return False
+
+        return True
 
 #     Other options are : web mail picture picturecopyright footer
 #     license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
@@ -186,11 +218,10 @@ class Layout(models.Model):
 
     def get_as_json(self):
         """Return a JSON representation of the layout"""
-        layout = {"template": self.template,
-                  "lang": self.lang,
-                  "bookoptions": self.bookoptions,
-                  "booktype": self.booktype,
-                  }
+        layout = {}
+        for attr in ("booktype", "orientation", "papersize",
+                     "template", "lang", "bookoptions"):
+            layout[attr] = getattr(self, attr)
         layout.update(self.other_options)
         return layout
 
@@ -220,7 +251,7 @@ class ItemsInSongbook(models.Model):
 
 
 class Task(models.Model):
-    """Model holding informations for asynchroneous PDF generation"""
+    """Model holding information for asynchronous PDF generation"""
 
     class State(object):
         QUEUED = "QUEUED"
@@ -246,6 +277,14 @@ class Task(models.Model):
                              choices=STATES,
                              verbose_name=_(u"état"))
     result = JSONField(verbose_name=_(u"résultat"))
+
+    def get_as_json(self):
+
+        d = {}
+        d.update(self.songbook.get_as_json())
+        d.update(self.layout.get_as_json())
+
+        return d
 
     def __unicode__(self):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(

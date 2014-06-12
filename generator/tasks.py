@@ -16,31 +16,31 @@
 
 
 from background_task import background
-from generator.models import Songbook, Layout, \
-                            Task as GeneratorTask
+from generator.models import Task as GeneratorTask
 from generator.build import generate_songbook, GeneratorError
 
 import datetime
 
 
 @background(schedule=datetime.datetime.now())
-def queue_render_task(songbook_id, layout_id):
-    gt = GeneratorTask.objects.get(songbook__id=songbook_id,
-                                   layout__id=layout_id)
+def queue_render_task(task_id):
+
+    gt = GeneratorTask.objects.get(id=task_id)
     gt.state = GeneratorTask.State.IN_PROCESS
     gt.save()
 
-    songbook = Songbook.objects.get(id=songbook_id)
-
     try:
-        # Here we will add the layout id
-        file = generate_songbook(songbook)
+        fileh = generate_songbook(gt)
     except GeneratorError:
         gt.state = GeneratorTask.State.ERROR
         gt.save()
+        print("Failed task {0} (state : {1})"\
+          .format(gt.id, gt.state))
+
+        return
 
     gt.state = GeneratorTask.State.FINISHED
-    gt.result = {"file": "{0}".format(file)}
+    gt.result = {"file": "{0}".format(fileh)}
     gt.save()
 
     # TODO: write this in a log file

@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from generator.models import Songbook, Layout
+from generator.models import Songbook, Layout, Task
 from django.conf import settings
 
 from songbook_core.build import SongbookBuilder
@@ -45,30 +45,14 @@ class GeneratorError(Exception):
         return "[PDF Generator error] {0}". format(self.message)
 
 
-def generate_songbook(songbook, asked_layout=_get_layout()):
-    if isinstance(songbook, Songbook):
-        book = songbook
-    else:
-        try:
-            book = Songbook.objects.get(id=int(songbook))
-        except:
-            raise GeneratorError("Songbook {0} not found.".format(songbook))
+def generate_songbook(task):
 
-    content = book.get_as_json()
-
-    if isinstance(asked_layout, Layout):
-        layout = asked_layout
-    else:
-        try:
-            layout = Layout.objects.get(id=int(asked_layout))
-        except:
-            raise GeneratorError("Layout {0} not found.".format(layout))
-
-    content.update(layout.get_as_json())
+    content = task.get_as_json()
 
     content["datadir"] = settings.SONGS_LIBRARY_DIR
 
-    tmpfile = str(book.id) + '-' + hashlib.sha1(str(content)).hexdigest()[0:20]
+    tmpfile = str(task.book.id) + '-' + str(task.layout.id) + '-' + \
+              hashlib.sha1(str(content)).hexdigest()[0:20]
 
     try:
         os.chdir(SONGBOOKS_PDFS)

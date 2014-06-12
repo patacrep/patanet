@@ -1,0 +1,75 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %} {% load staticfiles %}
+
+{% block title %} {% trans "Paramètres de création du PDF" %} {% endblock %}
+
+{% block content %}
+  <h2>Liste des PDFs déjà générés : </h2>
+    <table>
+      <tr><th>{% trans "Titre" %}</th>
+          <th>{% trans "Auteur" %}</th><th>{% trans "Type" %}</th><th>{# trans "Options" #}</th>
+          <th>{# trans "Fichier" #}</th> 
+          </tr>
+      {% for task in existing_tasks %}
+      <tr><td><strong>{{task.songbook.title}}</strong><br>{{task.songbook.description|truncatewords:20}}</td>
+          <td>{{task.songbook.author}}</td>
+          <td>{{task.layout.booktype}}</td>
+          <td>
+              {% if "diagram" in task.layout.bookoptions %}<img src="{% static "img/chord_diagram_32.png" %}" alt="{% trans "Diagrammes d'accords" %}" title="{% trans "Diagrammes d'accords" %}">{% endif %}
+              {% if "pictures" in task.layout.bookoptions %}<img src="{% static "img/song_image_32.jpg" %}" alt="{% trans "Couvertures d'album" %}" title="{% trans "Couvertures d'album" %}">{% endif %}
+              {% if task.layout.orientation = "landscape" %}
+                <img src="{% static "img/landscape_32.png" %}" alt="{% trans "Format paysage" %}" title="{% trans "Format paysage" %}">
+              {% else %}
+                <img src="{% static "img/portrait_32.png" %}" alt="{% trans "Format portrait" %}" title="{% trans "Format portrait" %}">
+              {% endif %}
+              {{task.layout.papersize|upper}}
+          </td>
+          <td>{% if task.state = 'FINISHED' and "file" in task.result %}
+                    <a href="/medias/PDF/{{task.result.file}}" target="_blank"><img src="{% static "img/download_32.png"%}" alt="{% trans "Télécharger" %}" title="{% trans "Télécharger"%}"></a>
+              {% elif task.state = 'IN_PROCESS' or task.state = 'QUEUED' %}
+                    <img src="{% static "img/processing_32.gif" %}" alt="{% trans "En cours de traitement" %}" title="{% trans "En cours de traitement" %}">
+              {% else %}
+                    <img src="{% static "img/error_32.png" %}" alt="{% trans "Erreur" %}" title="{% trans "Erreur" %}">
+              {% endif %}
+          </td>
+      </tr>
+      {% endfor %}
+    </table>
+  <h2>Génerer un carnet en PDF avec de nouvelles options : </h2>
+  <form class="" method="post" action="{% url 'render_songbook' songbook.id songbook.slug %}">
+    {% csrf_token %}
+    <ul class="selection">
+      <li>
+          <label for="papersize">{% trans "Taille de page" %}</label>
+          <select name="papersize" id="papersize" value="a4">
+              <option value="a4">{% trans "A4" %}</option>
+              <option value="a5">{% trans "A5" %}</option>
+          </select>
+      </li>
+      <li>
+          <label for="orientation">{% trans "Orientation" %}</label>
+          <select name="orientation" id="orientation" value="portrait">
+              <option value="portrait">{% trans "Portrait" %}</option>
+              <option value="landscape">{% trans "Paysage" %}</option>
+          </select>
+      </li>
+      <li>
+      <label for="booktype">{% trans "Type de livre" %}</label>
+      <select name="booktype" id="booktype">
+        <option value="chorded" selected>{% trans "Avec accords" %}</option>
+        <option value="lyric">{% trans "Sans accords" %}</option>
+      </select>
+      </li>
+      <li>
+      <label for="diagram">{% trans "Avec diagrammes pour chaque chant" %}</label>
+      <input type="checkbox" name="diagram" id="diagram" value="diagram" checked>
+      </li>
+      <li>
+      <label for="pictures">{% trans "Avec images pour chaque chant" %}</label>
+      <input type="checkbox" name="pictures" id="pictures" value="pictures">
+      </li>
+      <li>
+      <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
+      </li>
+    </ul>
+  </form>
+{% endblock %}

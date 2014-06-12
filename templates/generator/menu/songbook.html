@@ -17,7 +17,7 @@
 		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
 			{% trans "Suppression" %}
 		</a>
-	{% url 'render_songbook' id=id slug=slug as url %}
+	{% url 'setup_rendering' id=id slug=slug as url %}
         <a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>
             {% trans "Générer le PDF" %}
         </a>
