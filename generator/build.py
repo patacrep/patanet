@@ -51,7 +51,7 @@ def generate_songbook(task):
 
     content["datadir"] = settings.SONGS_LIBRARY_DIR
 
-    tmpfile = str(task.book.id) + '-' + str(task.layout.id) + '-' + \
+    tmpfile = str(task.songbook.id) + '-' + str(task.layout.id) + '-' + \
               hashlib.sha1(str(content)).hexdigest()[0:20]
 
     try:
