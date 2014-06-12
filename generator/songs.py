@@ -125,7 +125,7 @@ def import_song(repo, filepath):
     object_hash = repo.git.hash_object(filepath)
     SONG_DIR = os.path.join(repo.working_dir, "songs")
     filepath_rel = os.path.relpath(filepath, SONG_DIR)
-    
+
     import random
 
     # For some reason - probably after having interrupted
@@ -148,7 +148,6 @@ def import_song(repo, filepath):
 
     else:
         sys.stdout.write("-> Already exists.")
-        if (song_model.title != song_title):
 
     artist_model.save()
     song_model.object_hash = object_hash
