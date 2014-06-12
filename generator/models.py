@@ -280,8 +280,7 @@ class Task(models.Model):
 
     def get_as_json(self):
 
-        d = {"version": "0.1",
-             }
+        d = {}
         d.update(self.songbook.get_as_json())
         d.update(self.layout.get_as_json())
 
