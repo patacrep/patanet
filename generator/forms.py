@@ -139,7 +139,7 @@ class ContactForm(forms.Form):
 class SongbookCreationForm(forms.ModelForm):
     class Meta:
         model = Songbook
-        fields = ('title', 'description', 'is_public')
+        fields = ('title', 'description', 'author', 'is_public')
 
     def save(self, force_insert=False, force_update=False, commit=True):
         new_songbook = super(SongbookCreationForm, self).save(commit=False)
@@ -161,6 +161,11 @@ class SongbookCreationForm(forms.ModelForm):
         description = self.cleaned_data['description']
         self._clean_latex(description)
         return description
+
+    def clean_author(self):
+        author = self.cleaned_data["author"]
+        self._clean_latex(author)
+        return author
 
     def _clean_latex(self, string):
         '''
