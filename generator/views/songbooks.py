@@ -30,7 +30,7 @@ from django.contrib.contenttypes.models import ContentType
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
                                 OwnerRequiredMixin, owner_required
 from generator.models import Songbook, ItemsInSongbook, Song, \
-                             Task as GeneratorTask, Layout
+                             Task as GeneratorTask, Layout, Artist
 from generator.forms import SongbookCreationForm
 
 
