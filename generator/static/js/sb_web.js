@@ -29,40 +29,41 @@ $(function() {
     }
 
     var select_artist_songs = function(){
-    $("input.artist ").change(function(){
-        var checked = $(this).is(":checked");
-        $(this).siblings("ul").children("li").each(function() {
-            $(this).children("input").prop("checked", checked);
-        })
-    });
+        $("input.artist ").change(function(){
+            var checked = $(this).is(":checked");
+            $(this).siblings("ul").children("li").each(function() {
+                $(this).children("input").prop("checked", checked);
+            })
+        });
 
-      var all_checked = function(artist, songs){
-          // This function is a workaround a bug: with only the second condition
-          // (art_checked == false), two checkbox had to be unchecked before
-          // the artist checkbox was unchecked.
-          var art_checked = artist.is(":checked");
-          if (art_checked) {
-              if (songs.length == songs.filter(":checked").length + 1) {
-                  return true
-              }
-              else {
-                  return false
-              }
-          }
-          else {
-              if (songs.length == songs.filter(":checked").length) {
-                  return true
-              }
-              else {
-                  return false
-              }
-          }
-      }
-      $("input.select_song ").change(function(){
-          var songs = $(this).parent("li").siblings("li").children("input.select_song");
-          var artist = $(this).parents("ul").siblings(".artist");
-          artist.prop("checked", all_checked(artist, songs));
-      });
+        var all_checked = function(artist, songs){
+            // This function is a workaround a bug: with only the second condition
+            // (art_checked == false), two checkbox had to be unchecked before
+            // the artist checkbox was unchecked.
+            var art_checked = artist.is(":checked");
+            if (art_checked) {
+                if (songs.length == songs.filter(":checked").length + 1) {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+            else {
+                if (songs.length == songs.filter(":checked").length) {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+        }
+
+        $("input.select_song ").change(function(){
+            var songs = $(this).parent("li").siblings("li").children("input.select_song");
+            var artist = $(this).parents("ul").siblings(".artist");
+            artist.prop("checked", all_checked(artist, songs));
+        });
     }
 
     // Execute code
