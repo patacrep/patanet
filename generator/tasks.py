@@ -20,7 +20,9 @@ from generator.models import Task as GeneratorTask
 from generator.build import generate_songbook, GeneratorError
 
 import datetime
+import logging
 
+LOGGER = logging.getLogger(__name__)
 
 @background(schedule=datetime.datetime.now())
 def queue_render_task(task_id):
@@ -34,8 +36,8 @@ def queue_render_task(task_id):
     except GeneratorError:
         gt.state = GeneratorTask.State.ERROR
         gt.save()
-        print("Failed task {0} (state : {1})"\
-          .format(gt.id, gt.state))
+        LOGGER.error("Failed task {0} (state : {1})"\
+                      .format(gt.id, gt.state))
 
         return
 
@@ -43,6 +45,5 @@ def queue_render_task(task_id):
     gt.result = {"file": "{0}".format(fileh)}
     gt.save()
 
-    # TODO: write this in a log file
-    print("Finished task {0} (state : {1}) with result {2}"\
-          .format(gt.id, gt.state, gt.result))
+    LOGGER.info("Finished task {0} (state : {1}) with result {2}"\
+                 .format(gt.id, gt.state, gt.result))
