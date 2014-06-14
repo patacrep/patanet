@@ -144,14 +144,6 @@ LOGIN_REDIRECT_URL = '/user/'
 
 SOUTH_TESTS_MIGRATE = False
 
-from datetime import timedelta
-
-# PDF cleaning settings
-SONGBOOK_DELETE_POLICY = {"mode": "time",  # or "user" or "total_number"
-                          "expiration_time": timedelta(weeks=1),
-                          # "number": -1
-                          }
-
 try:
     from local_settings import *
 except ImportError:

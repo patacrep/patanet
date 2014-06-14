@@ -70,3 +70,13 @@ Search paths
 '''
 # Path to the songs directory (*.sg files) from the songbook repo
 # SONGS_LIBRARY_DIR = os.path.join(settings.PROJECT_ROOT, '../songbook-data/')
+
+
+'''
+PDF cleaning settings
+'''
+# from datetime import timedelta
+# SONGBOOK_DELETE_POLICY = {"mode": "time",  or "user" or "total_number"
+#                          "expiration_time": timedelta(weeks=1),
+#                          "number": -1
+#                          }
