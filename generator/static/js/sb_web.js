@@ -36,6 +36,8 @@ $(function() {
             })
         });
 
+        $("input.artist").removeAttr("name");
+
         var all_checked = function(artist, songs){
             // This function is a workaround a bug: with only the second condition
             // (art_checked == false), two checkbox had to be unchecked before
