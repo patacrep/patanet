@@ -1,8 +1,10 @@
 {% load i18n %}
+{% load staticfiles %}
 
 
 <div class="logo">
-    {% trans "Songbook-web" %}
+    <img src="{% static "img/logo.png" %}" alt="logo">
+    <p>Pata-www</p>
 </div>
 <nav>
     <h2>
@@ -17,7 +19,7 @@
 		<li><a href="{% url 'artist_list' %}">{% trans "Liste des artistes" %}</a></li>
 		<li><a href="{% url 'song_list' %}">{% trans "Liste des chansons" %}</a></li>
 		<li><a href="{% url 'songbook_list' %}">{% trans "Carnets publics" %}</a></li>
-		<li><a href="{% url 'random_song' %}">{% trans "Chanson au hasard" %}</a></li> 
+		<li><a href="{% url 'random_song' %}">{% trans "Chanson au hasard" %}</a></li>
     </ul>
     <h3>
         Pages
