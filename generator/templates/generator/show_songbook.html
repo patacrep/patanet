@@ -1,15 +1,16 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %}
+{% load i18n %}
 
 {% block title %} {{ songbook.title }} {% endblock %}
 
 {% block appmenu %}
-	{% if user.profile == songbook.user %}
+	{% if can_edit %}
 		{% include "generator/menu/songbook.html" %}
 	{% endif %}
 {% endblock %}
 
 {% block content %}
-	{% if user.profile == songbook.user %}
+	{% if can_edit %}
 		<a href="{% url "songbook_private_list" %}" class="back">
 			{% trans "Mes carnets" %}
 		</a>
@@ -18,37 +19,13 @@
 			{% trans "Carnets publics" %}
 		</a>
 	{% endif %}
-	<div id='sb_content'>
-		<ul class="selection">
-			{% for item in item_list %}
-				{% if item.item_type.model == "section" %}
-				</ul>
-					<h4 class="section">{{item.item.name}}</h4>
-				<ul class="selection">
-				{% elif item.item_type.model == "song" %}
-				{% with song=item.item %}
-				<li>
-					<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
-						{{ song.title }}
-					</label>
-					<a class="details artist" href="{% url "song_list_by_artist" artist=song.artist.slug %}" title="{{ song.artist.name }}">{{ song.artist.name }}</a>
-					<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">{% trans "Paroles" %}</a>
-				</li>
-				{% endwith %}
-				{% endif %}
-			{% empty %}
-				<li>
-					<em>{% trans "Ce carnet est vide" %}</em>
-				</li>
-			{% endfor %}
-			</ul>
-		{% if can_edit %}
-			<div>
-			<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">
-			{% trans "Ajouter des chants au carnet" %}</a>
-			</div>
-		{% endif %}
-	</div>
+
+    {% if can_edit %}
+        {% include "generator/order_items_in_songbook.html" %}
+    {% else %}
+        {% include "generator/show_items_in_songbook.html" %}
+    {% endif %}
+
 	<aside class="playlist">
 	<h3>{{songbook.title}}</h3>
 	<p>{{ songbook.description }}</p>

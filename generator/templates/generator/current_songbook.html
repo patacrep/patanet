@@ -6,7 +6,7 @@
 				{{ current_songbook.title }}
 			</h2>
 			<small>
-				<a href="{% url "item_list" slug=current_songbook.slug id=current_songbook.id %}">
+				<a href="{% url "show_songbook" slug=current_songbook.slug id=current_songbook.id %}">
 					{% trans "Modifier l'ordre et les sections" %}
 				</a>
 			</small>

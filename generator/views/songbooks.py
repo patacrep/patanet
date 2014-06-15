@@ -77,8 +77,8 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ShowSongbook, self).get_context_data(**kwargs)
-        item_list = ItemsInSongbook.objects.filter(songbook=self.object)
-        context['item_list'] = item_list
+        items_list = ItemsInSongbook.objects.filter(songbook=self.object)
+        context['items_list'] = items_list
         if self.request.user == self.object.user.user:
             context['can_edit'] = True
         else:
@@ -102,24 +102,6 @@ class UpdateSongbook(OwnerRequiredMixin, UpdateView):
         form.user = self.request.user
         messages.success(self.request, _(u"Le carnet a été modifié."))
         return super(UpdateSongbook, self).form_valid(form)
-
-
-class ItemsListInSongbook(OwnerRequiredMixin, ListView):
-    model = ItemsInSongbook
-    context_object_name = "items_list"
-    template_name = "generator/items_in_songbook.html"
-    songbook = None
-
-    def get_queryset(self):
-        songbook_id = self.kwargs.get('id', None)
-        slug = self.kwargs.get('slug', None)
-        self.songbook = get_object_or_404(Songbook, id=songbook_id, slug=slug)
-        return ItemsInSongbook.objects.filter(songbook=self.songbook)
-
-    def get_context_data(self, **kwargs):
-        context = super(ItemsListInSongbook, self).get_context_data(**kwargs)
-        context['songbook'] = self.songbook
-        return context
 
 
 @login_required

@@ -1,14 +1,6 @@
-{% extends "generator/layout/full_layout.html" %}
 {% load i18n %}
 {% load staticfiles %}
 
-{% block title %} {{ songbook.title }} {% endblock %}
-
-{% block appmenu %}
-		{% include "generator/menu/songbook.html" %}
-{% endblock %}
-
-{% block content %}
 <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" class="back">
 	{% trans "Ajouter des chants au carnet" %}
 </a>
@@ -24,7 +16,7 @@ Pour supprimer un chant, il faut remplacer son numéro par un 'X'.
 	<form class="selection" method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
     <input type="submit" value="{% trans "Enregistrer les changements" %}">
-	<input type="hidden" name="next" value="{% url "item_list" id=songbook.id slug=songbook.slug %}">
+	<input type="hidden" name="next" value="{% url "show_songbook" id=songbook.id slug=songbook.slug %}">
 		<ol class="selection ordering">
 		{% for item in items_list %}
 			<li class="{{ item.item_type.model}}">
@@ -48,9 +40,9 @@ Pour supprimer un chant, il faut remplacer son numéro par un 'X'.
 				{% endif %}
 			</li>
 		{% empty %}
-			<li>
+			<p>
 				{% trans "Ce carnet est vide" %}
-			</li>
+			</p>
 		{% endfor %}
         </ol>
         <p class="section">
@@ -61,5 +53,3 @@ Pour supprimer un chant, il faut remplacer son numéro par un 'X'.
 		</p>
 		<input type="submit" value="{% trans "Enregistrer les changements" %}">
 	</form>
-
-{% endblock %}
