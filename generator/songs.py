@@ -21,7 +21,7 @@ from django.utils.text import slugify
 from django.utils.encoding import smart_text
 from django.conf.global_settings import LANGUAGES
 
-from songbook_core.plastex import parsetex
+from songbook_core.plastex import parsetex, SongParser
 
 from generator.models import Song, Artist
 
@@ -30,55 +30,33 @@ import os
 import sys
 import pprint
 
-_BLOCKS_PATTERNS = [(r"\beginverse", '<p class="verse" >'),
-                    (r"\begin{verse}", '<p class="verse" >'),
-                    (r"\beginverse*", '<p class="verse_star" >'),
-                    (r"\begin{verse*}", '<p class="verse_star" >'),
-                    (r"\beginchorus", '<p class="chorus" >'),
-                    (r"\begin{chorus}", '<p class="chorus" >'),
-                    ]
+def parse_song(filename):
+    tex = SongParser.parse(filename)
+    in_song = False
+    res = ""
 
-_BLOCKS_PATTERNS += [(r"\endverse", '</p>'),
-                    (r"\end{verse}", '</p>'),
-                    (r"\end{verse*}", '</p>'),
-                    (r"\end{chorus}", '</p>'),
-                    ]
-
-
-def parse_chords(content):
-    content = re.sub('\\\\\\[(.*?)\]({[^\\\\\s\n]*}|[^\\\\\s\n]*)',
-            '<span class="chord"><span class="chord-name">\g<1></span>'
-            '<span class="chord-text">\g<2></span></span>',
-            content)
-    content = content.replace('&', "♭")
-    content = content.replace('#', "♯&nbsp")
-    return content
-
-
-def parse_blocks(content):
-    for TeX, HTML in _BLOCKS_PATTERNS:
-        content = content.replace(TeX, HTML)
-    return content
-
-
-def parse_unsuported(content):
-    # remove the beggining of the song
-    content = re.sub('^(.*?)<p', '<p', content, flags=re.DOTALL)
-
-    # remove all other commands
-    content = re.sub(r'\\(\w*)[(.*)]{(.*)}', '', content)
-    content = re.sub(r'\\(\w*){(.*)}', '', content)
-    content = re.sub(r'\\(\w*)', '', content)
-
-    content = re.sub(r'{|}', '', content)
-    return content
-
-
-def parse_song(content):
-    content = parse_blocks(content)
-    content = parse_chords(content)
-    content = parse_unsuported(content)
-    return content
+    for node in tex.allChildNodes:
+        if node.nodeName in ["chorus", "verse", "verse*", "bridge"]:
+            if not in_song:
+                in_song = True
+            part_name = node.nodeName
+            part_name.replace("*", "_star")
+            res += '<p class="{node}">\n'.format(node=node.nodeName)
+        elif node.nodeName == "par" and in_song:
+            res += '\n</p>\n'
+        elif node.nodeName == "chord" and in_song:
+            res += '<span class="chord"><span class="chord-name">'
+            for subnode in node.allChildNodes:
+                res += subnode
+            res += '</span><span class="chord-text">'
+            # TODO: get chord text
+            res += '</span></span>'
+            # TODO: advance in the loop
+        elif node.nodeName == "#text" and in_song:
+            res += node
+    res = res.replace('&', "♭")
+    res = res.replace('#', "♯&nbsp")
+    return res
 
 # TODO: Write all the output to a log file
 def import_song(repo, filepath):

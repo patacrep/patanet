@@ -60,9 +60,7 @@ class SongListByArtist(CurrentSongbookMixin, ListView):
 
 def _read_song(song):
     path = os.path.join(SONGS_LIBRARY_DIR, 'songs', song.file_path)
-    with open(path, 'r') as song_file:
-        content = song_file.read()
-    return parse_song(content)
+    return parse_song(path)
 
 
 class SongView(CurrentSongbookMixin, DetailView):
