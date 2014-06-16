@@ -46,8 +46,7 @@ def parse_song(filename):
             res += '\n</p>\n'
         elif node.nodeName == "chord" and in_song:
             res += '<span class="chord"><span class="chord-name">'
-            for subnode in node.allChildNodes:
-                res += subnode
+            res += node.chord
             res += '</span><span class="chord-text">'
             # TODO: get chord text
             res += '</span></span>'
