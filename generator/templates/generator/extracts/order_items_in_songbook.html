@@ -1,13 +1,16 @@
 {% load i18n %}
 {% load staticfiles %}
 
-<a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" class="back">
-	{% trans "Ajouter des chants au carnet" %}
-</a>
+<h3>{% trans "Organiser le carnet" %}</h3>
 <p class="no-js">
 {% blocktrans %}
 Pour réordonner les chants, il suffit de changer les numéros de la colonne de gauche.
 Pour supprimer un chant, il faut remplacer son numéro par un 'X'.
+{% endblocktrans %}
+</p>
+<p class="js">
+{% blocktrans %}
+Vous pouvez organiser les éléments de ce carnet avec la souris.
 {% endblocktrans %}
 </p>
 <!-- Preload images for JavaScript -->
@@ -17,6 +20,12 @@ Pour supprimer un chant, il faut remplacer son numéro par un 'X'.
 		{% csrf_token %}
     <input type="submit" value="{% trans "Enregistrer les changements" %}">
 	<input type="hidden" name="next" value="{% url "show_songbook" id=songbook.id slug=songbook.slug %}">
+    <p class="section">
+        <label for="new_section">
+		    {% trans "Ajouter une nouvelle section :" %}
+		</label>
+		<input type="text" name="new_section" id="new_section" class="section_name" placeholder="..."/>
+    </p>
 		<ol class="selection ordering">
 		{% for item in items_list %}
 			<li class="{{ item.item_type.model}}">
@@ -45,11 +54,5 @@ Pour supprimer un chant, il faut remplacer son numéro par un 'X'.
 			</p>
 		{% endfor %}
         </ol>
-        <p class="section">
-		    <label for="new_section">
-			    {% trans "Ajouter une nouvelle section :" %}
-			</label>
-			<input type="text" name="new_section" id="new_section" class="section_name" placeholder="..."/>
-		</p>
 		<input type="submit" value="{% trans "Enregistrer les changements" %}">
 	</form>

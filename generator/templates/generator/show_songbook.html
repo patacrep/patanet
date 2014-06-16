@@ -12,44 +12,51 @@
 {% block content %}
 	{% if can_edit %}
 		<a href="{% url "songbook_private_list" %}" class="back">
-			{% trans "Mes carnets" %}
+			{% trans "Tous mes carnets" %}
 		</a>
+        <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" class="back">
+	        {% trans "Ajouter des chants à ce carnet" %}
+        </a>
 	{% else %}
 		<a href="{% url "songbook_list" %}" class="back">
 			{% trans "Carnets publics" %}
 		</a>
 	{% endif %}
 
-    {% if can_edit %}
-        {% include "generator/order_items_in_songbook.html" %}
-    {% else %}
-        {% include "generator/show_items_in_songbook.html" %}
-    {% endif %}
+    <div class="songbook_infos">
+        <p class=songbook_description>{{ songbook.description }}</p>
+        <p>
+	        {% blocktrans with n_songs=songbook.count_songs %}
+            	{{ n_songs }} chants dans ce carnet
+        	{% endblocktrans %}
+            -
+	        {% if songbook.is_public %}{% trans "Carnet public" %}
+            {% else %}{% trans "Carnet privé" %}{% endif %}
+        </p>
 
-	<aside class="playlist">
-	<h3>{{songbook.title}}</h3>
-	<p>{{ songbook.description }}</p>
-	{% blocktrans with n_songs=songbook.count_songs %}
-	{{ n_songs }} chants dans ce carnet
-	{% endblocktrans %}
-	{% if songbook.is_public %} - {% trans "Carnet public" %}{% endif %}
-	{% for task in songbook.tasks.all %}
-	   <ul>
-	   {% if task.state = 'FINISHED' %}
-                        <li>
-                            <a href="/medias/PDF/{{task.result.file}}">
-                                {% trans "Télécharger le carnet avec la mise en page" %} {{task.layout.name}}
-                            </a>
-                        </li>
-       {% endif %}
-	   </ul>
-	{% empty %}
-	   <p>{% trans "Ce carnet n'a pas encore été généré." %}</p>
-        {% if user.profile = songbook.user %}
-            <a href="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
-                {% trans "Générer le PDF" %}
-            </a>
-        {% endif %}
-    {% endfor %}
-	</aside>
+        <ul class="layout_list">
+            <li> Télécharger ce carnet avec la mise en page </li>
+            <!-- TODO: include the same layout list than in the private songbook list -->
+            {% for task in songbook.tasks.all %}
+	        {% if task.state = 'FINISHED' %}
+                <li>
+                    <a href="/medias/PDF/{{task.result.file}}">
+                        {{ task.layout.name }}
+                    </a>
+                </li>
+            {% endif %}
+            {% endfor %}
+            {% if can_edit %}
+                <li><a href="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
+                    {% trans "Voir toutes les mises en page" %}
+                 </a></li>
+            {% endif %}
+	    </ul>
+    </div>
+
+    {% if can_edit %}
+        {% include "generator/extracts/order_items_in_songbook.html" %}
+    {% else %}
+        {% include "generator/extracts/show_items_in_songbook.html" %}
+    {% endif %}
 {% endblock %}
