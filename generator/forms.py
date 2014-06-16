@@ -230,4 +230,4 @@ class LayoutForm(forms.ModelForm):
 
         if commit:
             new_layout.save()
-        return new_songbook
+        return new_layout

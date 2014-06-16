@@ -1,16 +1,29 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %} {% load staticfiles %}
 
-{% block title %} {% trans "Paramètres de création du PDF" %} {% endblock %}
+{% block title %}
+    {% blocktrans with songbook=songbook.title %}
+        Mise en page du carnet {{ songbook }}
+    {% endblocktrans %}
+{% endblock %}
+
+{% block appmenu %}
+    {% include "generator/menu/songbook.html" %}
+{% endblock %}
 
 {% block content %}
-  <h2>Liste des PDFs déjà générés : </h2>
+    <div class="songbook_infos">
+        <p class=songbook_description>{{ songbook.description }}</p>
+    </div>
+    <h2>{% trans "Mises en page existantes :" %}</h2>
     <table>
-      <tr><th>{% trans "Titre" %}</th>
-          <th>{% trans "Auteur" %}</th><th>{% trans "Type" %}</th><th>{# trans "Options" #}</th>
-          <th>{# trans "Fichier" #}</th>
+      <tr><th>{% trans "Nom" %}</th>
+          <th>{% trans "Auteur" %}</th>
+          <th>{% trans "Type" %}</th>
+          <th>{% trans "Options" %}</th>
+          <th>{% trans "Fichier" %}</th>
           </tr>
       {% for task in existing_tasks %}
-      <tr><td><strong>{{task.songbook.title}}</strong><br>{{task.songbook.description|truncatewords:20}}</td>
+      <tr><td>{{task.layout.name}}</td>
           <td>{{task.songbook.author}}</td>
           <td>{{task.layout.booktype}}</td>
           <td>
@@ -21,7 +34,7 @@
               {% else %}
                 <img src="{% static "img/portrait_32.png" %}" alt="{% trans "Format portrait" %}" title="{% trans "Format portrait" %}">
               {% endif %}
-              {{task.layout.papersize|upper}}
+              {{task.layout.other_options.papersize|upper}}
           </td>
           <td>{% if task.state = 'FINISHED' and "file" in task.result %}
                     <a href="/medias/PDF/{{task.result.file}}" target="_blank"><img src="{% static "img/download_32.png"%}" alt="{% trans "Télécharger" %}" title="{% trans "Télécharger"%}"></a>
@@ -34,7 +47,7 @@
       </tr>
       {% endfor %}
     </table>
-  <h2>Génerer un carnet en PDF avec de nouvelles options : </h2>
+  <h2>Créer un PDF avec une nouvelle mise en page </h2>
   <form class="" method="post" action="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
     {% csrf_token %}
     {{ form.as_p }}
