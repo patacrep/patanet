@@ -31,7 +31,7 @@ from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin,
                                 OwnerRequiredMixin, owner_required
 from generator.models import Songbook, ItemsInSongbook, Song, \
                              Task as GeneratorTask, Layout, Artist
-from generator.forms import SongbookCreationForm
+from generator.forms import SongbookCreationForm, LayoutForm
 
 
 class SongbookPublicList(ListView):
@@ -266,6 +266,7 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
 def setup_rendering(request, id, slug):
     """Setup the parameters for songbook rendering
     """
+    form = LayoutForm()
     songbook = Songbook.objects.get(id=id)
     existing_tasks = GeneratorTask.objects.filter(songbook=songbook)
     return render(request, 'generator/setup_rendering.html', locals())
