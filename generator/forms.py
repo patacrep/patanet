@@ -183,15 +183,17 @@ class SongbookCreationForm(forms.ModelForm):
 
 
 class LayoutForm(forms.ModelForm):
+
+    class Meta:
+        model = Layout
+        fields = ('name', 'booktype')
+
     ORIENTATIONS = (("portrait", _(u"Portrait")),
                     ("landscape", _(u"Paysage")),
                     )
-
     PAPERSIZES = (("a4", _(u"A4")),
                   ("a5", _(u"A5")),
                  )
-
-
     OPTIONS = [
             ('diagram', _(u"Diagrammes d'accords")),
             #('importantdiagramonly', _(u"Diagrammes important seulement")),
@@ -204,21 +206,28 @@ class LayoutForm(forms.ModelForm):
 
     papersize = forms.ChoiceField(
                             choices=PAPERSIZES,
-                            label=_("Taille du papier"),
-                            )
+                            label=_("Taille du papier"))
 
     orientation = forms.ChoiceField(
                             choices=ORIENTATIONS,
-                            label=_("Orientation du papier"),
-                            )
+                            label=_("Orientation du papier"))
 
     bookoptions = forms.MultipleChoiceField(
                             choices=OPTIONS,
                             label=_(u'Autres options'),
                             widget=forms.CheckboxSelectMultiple(),
-                            required=False
-                            )
+                            required=False)
 
-    class Meta:
-        model = Layout
-        fields = ('name', 'booktype')
+    def save(self, force_insert=False, force_update=False, commit=True):
+        new_layout = super(LayoutForm, self).save(commit=False)
+        bookoptions = self.cleaned_data.get('bookoptions', None)
+
+        new_layout.bookoptions = bookoptions
+        new_layout.other_options = {
+                        "papersize": self.cleaned_data["papersize"],
+                        "orientation": self.cleaned_data["orientation"],
+                        }
+
+        if commit:
+            new_layout.save()
+        return new_songbook

@@ -176,8 +176,8 @@ class Layout(models.Model):
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
 
-    # All the options other than booktype and template goes in bookoptions
     bookoptions = JSONField()
+    other_options = JSONField()
 
     template = models.CharField(max_length=100,
                                  verbose_name=_(u"gabarit"),
@@ -195,7 +195,9 @@ class Layout(models.Model):
         """Return a JSON representation of the layout"""
         layout = {}
         layout["booktype"] = self.booktype
-        layout.update(self.bookoptions)
+        layout["bookoptions"] = self.bookoptions
+        layout["template"] = self.template
+        layout.update(self.other_options)
         return layout
 
     class Meta:

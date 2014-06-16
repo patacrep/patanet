@@ -262,14 +262,27 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
         return get_object_or_404(Songbook, id=id, slug=slug)
 
 
-@owner_required(('id', 'id'))
-def setup_rendering(request, id, slug):
+class LayoutList(OwnerRequiredMixin, CreateView):
     """Setup the parameters for songbook rendering
     """
-    form = LayoutForm()
-    songbook = Songbook.objects.get(id=id)
-    existing_tasks = GeneratorTask.objects.filter(songbook=songbook)
-    return render(request, 'generator/setup_rendering.html', locals())
+    model = Layout
+    template_name = 'generator/setup_rendering.html'
+    form_class = LayoutForm
+    success_url = reverse_lazy('setup_rendering')
+
+    def form_valid(self, form):
+        messages.success(self.request, _(u"La mise en page a été crée."))
+        return super(LayoutList, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(LayoutList, self).get_context_data(**kwargs)
+        id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        songbook = Songbook.objects.get(id=id, slug=slug)
+        context['songbook'] = songbook
+        context['existing_tasks'] = GeneratorTask.objects.filter(
+                                                    songbook=songbook)
+        return context
 
 
 @owner_required(('id', 'id'))

@@ -35,7 +35,7 @@
       {% endfor %}
     </table>
   <h2>Génerer un carnet en PDF avec de nouvelles options : </h2>
-  <form class="" method="post" action="{% url 'render_songbook' songbook.id songbook.slug %}">
+  <form class="" method="post" action="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
