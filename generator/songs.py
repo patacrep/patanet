@@ -30,32 +30,78 @@ import os
 import sys
 import pprint
 
-def parse_song(filename):
-    tex = SongParser.parse(filename)
-    in_song = False
-    res = ""
+class Renderer:
+    def __init__(self, document):
+        self.document = document
+        self._render = {
+                '#text': self.renderText,
+                'verse': self.renderVerse,
+                'verse*': self.renderVerse,
+                'chorus': self.renderVerse,
+                'bridge': self.renderVerse,
+                'par': self.renderPar,
+                'chord': self.renderChord,
+                }
 
-    for node in tex.allChildNodes:
-        if node.nodeName in ["chorus", "verse", "verse*", "bridge"]:
-            if not in_song:
-                in_song = True
-            part_name = node.nodeName
-            part_name.replace("*", "_star")
-            res += '<p class="{node}">\n'.format(node=node.nodeName)
-        elif node.nodeName == "par" and in_song:
-            res += '\n</p>\n'
-        elif node.nodeName == "chord" and in_song:
-            res += '<span class="chord"><span class="chord-name">'
-            res += node.chord
-            res += '</span><span class="chord-text">'
-            # TODO: get chord text
-            res += '</span></span>'
-            # TODO: advance in the loop
-        elif node.nodeName == "#text" and in_song:
-            res += node
-    res = res.replace('&', "♭")
-    res = res.replace('#', "♯&nbsp")
-    return res
+    def renderNodes(self, nodes):
+        return "".join([
+            self._render.get(node.nodeName, self.renderDefault)(node)
+            for node in nodes
+            ])
+
+    def renderDefault(self, node):
+        if getattr(node, 'tagName', None) == 'active::\n':
+            return "<br>"
+        else:
+            print("TODO Default for", unicode(node))
+            return ""
+
+    def renderText(self, node):
+        return unicode(node)
+
+    def renderVerse(self, node):
+        res = ""
+        res += "<p class={}>\n".format(node.nodeName.replace('*', '_star'))
+        res += self.renderNodes(node.childNodes)
+        res += "</p>"
+        return res
+
+    def renderPar(self, node):
+        # TODO
+        return ""
+
+    def renderChord(self, node):
+        # Je ne comprend pas pourquoi la version suivante, bien plus élégante,
+        # m'introduit des saut de ligne partout...
+        # return u"""<span class="chord">
+        #         <span class="chord-name">
+        #         {}
+        #         </span><span class="chord-text">
+        #         {}
+        #         </span>
+        #         </span>""".format(
+        #                 node.chord.replace('&', u"♭").replace('#', u"♯"),
+        #                 "", # TODO
+        #                 )
+        return (
+                u'<span class="chord">'
+                u'<span class="chord-name">'
+                u'{}'
+                u'</span><span class="chord-text">'
+                u'{}'
+                u'</span>'
+                u'</span>'
+                ).format(
+                        node.chord.replace('&', u"♭").replace('#', u"♯"),
+                        "", # TODO
+                        )
+
+
+def parse_song(filename):
+    filename = '/home/louis/projets/songbook/core/songbook_core/data/examples/songs/vent_frais.sg'
+    tex = SongParser.parse(filename)
+    return Renderer(tex).renderNodes(tex.childNodes)
+
 
 # TODO: Write all the output to a log file
 def import_song(repo, filepath):
