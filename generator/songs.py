@@ -71,30 +71,16 @@ class Renderer:
         return ""
 
     def renderChord(self, node):
-        # Je ne comprend pas pourquoi la version suivante, bien plus élégante,
-        # m'introduit des saut de ligne partout...
-        # return u"""<span class="chord">
-        #         <span class="chord-name">
-        #         {}
-        #         </span><span class="chord-text">
-        #         {}
-        #         </span>
-        #         </span>""".format(
-        #                 node.chord.replace('&', u"♭").replace('#', u"♯"),
-        #                 "", # TODO
-        #                 )
-        return (
-                u'<span class="chord">'
-                u'<span class="chord-name">'
-                u'{}'
-                u'</span><span class="chord-text">'
-                u'{}'
-                u'</span>'
-                u'</span>'
-                ).format(
-                        node.chord.replace('&', u"♭").replace('#', u"♯"),
-                        "", # TODO
-                        )
+         return u"""<span class="chord">
+                 <span class="chord-name">
+                 {}
+                 </span><span class="chord-text">
+                 {}
+                 </span>
+                 </span>""".format(
+                         node.chord.replace('&', u"♭").replace('#', u"♯"),
+                         "", # TODO
+                         )
 
 
 def parse_song(filename):
