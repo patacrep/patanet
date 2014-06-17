@@ -98,7 +98,6 @@ class Renderer:
 
 
 def parse_song(filename):
-    filename = '/home/louis/projets/songbook/core/songbook_core/data/examples/songs/vent_frais.sg'
     tex = SongParser.parse(filename)
     return Renderer(tex).renderNodes(tex.childNodes)
 
