@@ -33,7 +33,7 @@ SECRET_KEY = 'minimal'
 
 APPEND_SLASH = False
 
-EMAIL_SUBJECT_PREFIX = '[Songbook Web]'
+EMAIL_SUBJECT_PREFIX = '[Patanet]'
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -62,11 +62,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
 )
 
-ROOT_URLCONF = 'Songbook_web.urls'
+ROOT_URLCONF = 'patanet.urls'
 SITE_ID = 1
 
 
-WSGI_APPLICATION = 'Songbook_web.wsgi.application'
+WSGI_APPLICATION = 'patanet.wsgi.application'
 
 
 AUTHENTICATION_BACKENDS = (
