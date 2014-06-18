@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-WSGI config for Songbook_web project.
+WSGI config for Patanet project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -25,7 +25,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 
 import os, sys
 sys.path.append('/home/songbook-web/www/songbook-web')
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Songbook_web.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patanet.settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

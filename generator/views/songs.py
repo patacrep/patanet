@@ -31,7 +31,7 @@ from generator.name_paginator import NamePaginator
 from generator.songs import parse_song
 
 
-from Songbook_web.settings import SONGS_LIBRARY_DIR
+from patanet.settings import SONGS_LIBRARY_DIR
 
 class SongList(CurrentSongbookMixin, ListView):
     model = Song
