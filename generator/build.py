@@ -17,8 +17,8 @@
 from generator.models import Songbook, Layout, Task
 from django.conf import settings
 
-from songbook_core.build import SongbookBuilder
-from songbook_core.errors import SongbookError
+from patacrep.build import SongbookBuilder
+from patacrep.errors import SongbookError
 
 import os
 import hashlib

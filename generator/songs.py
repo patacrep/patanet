@@ -21,7 +21,7 @@ from django.utils.text import slugify
 from django.utils.encoding import smart_text
 from django.conf.global_settings import LANGUAGES
 
-from songbook_core.plastex import parsetex
+from patacrep.plastex import parsetex
 
 from generator.models import Song, Artist
 
