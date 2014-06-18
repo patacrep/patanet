@@ -1,6 +1,6 @@
 *.pyc
 db.sqlite3
-Songbook_web/local_settings.py
+patanet/local_settings.py
 .DS_Store
 medias/PDF
 initial_data.json
