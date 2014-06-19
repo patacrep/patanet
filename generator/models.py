@@ -96,6 +96,16 @@ class Songbook(models.Model):
                    ).count()
         return count
 
+    def count_artists(self):
+        songs = ItemsInSongbook.objects.filter(
+                   songbook=self,
+                   item_type=ContentType.objects.get_for_model(Song)
+                   )
+        artists = set()
+        for song in songs:
+            artists.add(song.item.artist.id)
+        return len(artists)
+
     def count_section(self):
         count = ItemsInSongbook.objects.filter(
                    songbook=self,

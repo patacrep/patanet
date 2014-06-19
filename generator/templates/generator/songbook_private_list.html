@@ -11,74 +11,83 @@
 	</p>
 	<div class="private songbooks">
         {% for songbook in songbooks %}
-        <h2 id="{{songbook.id}}"><a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">{{songbook.title}}</a></h2>
-        <ul>
-            <li>
-                <ul class="sb-infos">
-                    <li>{{ songbook.count_songs }}{% trans " chants" %}</li>
+        <table>
+            <tr>
+                <td>
+                    <h2 id="{{songbook.id}}">
+                        <a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">
+                            {{songbook.title}}
+                        </a>
+                    </h2>
+                </td>
+                <td>
+                    <a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">
+                        {% trans "Afficher le carnet" %}
+                    </a>
+                </td>
+                <td>
+                    {% trans "Télécharger" %}
+                </td>
+                <td>
+                    <em>
                     {% if songbook.is_public %}
-                        <li><em>{% trans "Carnet public" %}</em></li>
+                        {% trans "Public" %}
+                    {% else %}
+                        {% trans "Public" %}
                     {% endif %}
-                    <li>
-                        <a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">
-                            {% trans "Paramètres" %}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">
-                            {% trans "Ajouter des chants" %}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}">
-                            {% trans "Supprimer" %}
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <ul>
-                    {% for task in songbook.tasks.all %}
-                    <li><ul class="sb-generation">
-                    {% if task.state = 'FINISHED' %}
-                        <li>{% trans "Carnet généré et disponible." %}</li>
-                        <li>
-                            <a href="/medias/PDF/{{task.result.file}}" target="_blank">
-                                {% trans "Télécharger" %}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=True">
-                                {% trans "Regénérer" %}
-                            </a>
-                        </li>
-                    {% elif task.state = 'QUEUED' or task.state = 'IN_PROCESS' %}
-                        <li>{% trans "Carnet en cours de génération. Cela peut prendre plusieurs minutes." %}</li>
-                        <li>
-                            <a href="">
-                                {% trans "Rafraichir" %}
-                            </a>
-                             {% trans "pour voir les changements" %}
-                        </li>
-                    {% elif task.state = 'ERROR' %}
-                        <li>{% trans "Une erreur s'est produite. Vous pouvez relancer la génération." %}</li>
-                        <li>
-                            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=True">
-                                {% trans "Relancer la génération" %}
-                        </a>
-                        </li>
-                    {% endif %}
-                    {% empty %}
-                        <li>
-                            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}">
-                                {% trans "Générer le PDF correspondant à ce carnet." %}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul></li>
-                </ul>
-            </li>
-        </ul>
+                    </em>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{ songbook.description|truncatewords:20 }}
+                </td>
+                <td>
+                    <ul>
+                        <li>{{songbook.count_songs}}{% trans " chants" %}</li>
+                        <li>{{songbook.count_artists}}{% trans " artistes" %}</li>
+                        <li>{{songbook.count_section}}{% trans " sections" %}</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        {% for task in songbook.tasks.all %}
+                            {% if task.state = 'FINISHED' %}
+                                <li>
+                                    <a href="/medias/PDF/{{task.result.file}}" target="_blank">
+                                        {{ task.layout.name }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}">
+                        {% trans "Modifier le carnet" %}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">
+	                    {% trans "Ajouter des chants" %}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
+                        {% trans "Créer une mise en page" %}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}">
+                        {% trans "Supprimer" %}
+                    </a>
+                </td>
+            </tr>
+        </table>
         {% endfor %}
     </div>
 {% endblock %}
