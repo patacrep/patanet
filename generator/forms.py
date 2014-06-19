@@ -204,9 +204,9 @@ class LayoutForm(forms.ModelForm):
             #('onesongperpage', _(u"Une chanson par page")),
             ]
 
-    papersize = forms.ChoiceField(
-                            choices=PAPERSIZES,
-                            label=_("Taille du papier"))
+    # papersize = forms.ChoiceField(
+    #                        choices=PAPERSIZES,
+    #                        label=_("Taille du papier"))
 
     orientation = forms.ChoiceField(
                             choices=ORIENTATIONS,
@@ -224,7 +224,7 @@ class LayoutForm(forms.ModelForm):
 
         new_layout.bookoptions = bookoptions
         new_layout.other_options = {
-                        "papersize": self.cleaned_data["papersize"],
+                        #"papersize": self.cleaned_data["papersize"],
                         "orientation": self.cleaned_data["orientation"],
                         }
 

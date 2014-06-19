@@ -34,7 +34,7 @@
               {% else %}
                 <img src="{% static "img/portrait_32.png" %}" alt="{% trans "Format portrait" %}" title="{% trans "Format portrait" %}">
               {% endif %}
-              {{task.layout.other_options.papersize|upper}}
+              {% comment %}{{task.layout.other_options.papersize|upper}}{% endcomment %}
           </td>
           <td>{% if task.state = 'FINISHED' and "file" in task.result %}
                     <a href="/medias/PDF/{{task.result.file}}" target="_blank"><img src="{% static "img/download_32.png"%}" alt="{% trans "Télécharger" %}" title="{% trans "Télécharger"%}"></a>
