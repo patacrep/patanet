@@ -12,10 +12,13 @@
 
 {% block content %}
 	<p>
+        {% trans "Êtes-vous sur de vouloir supprimer ce carnet ?" %}
 		<strong>{% trans "Cette action est irréversible !" %}</strong>
 	</p>
 	<form method="post" action="">
 		{% csrf_token %}
-		<input type="submit" value="{% trans 'Confirmer la suppression' %}" /> - <a href="{% url "songbook_private_list" %}">{% trans 'Revenir aux carnets' %}</a>
+		<input type="submit" value="{% trans 'Confirmer la suppression' %}" />
+        -
+        <a href="{% url "songbook_private_list" %}">{% trans 'Revenir aux carnets' %}</a>
 	</form>
 {% endblock %}
