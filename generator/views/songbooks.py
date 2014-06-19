@@ -31,7 +31,7 @@ from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin,
                                 OwnerRequiredMixin, owner_required
 from generator.models import Songbook, ItemsInSongbook, Song, \
                              Task as GeneratorTask, Layout, Artist
-from generator.forms import SongbookCreationForm
+from generator.forms import SongbookCreationForm, LayoutForm
 
 
 class SongbookPublicList(ListView):
@@ -262,13 +262,35 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
         return get_object_or_404(Songbook, id=id, slug=slug)
 
 
-@owner_required(('id', 'id'))
-def setup_rendering(request, id, slug):
+class LayoutList(OwnerRequiredMixin, CreateView):
     """Setup the parameters for songbook rendering
     """
-    songbook = Songbook.objects.get(id=id)
-    existing_tasks = GeneratorTask.objects.filter(songbook=songbook)
-    return render(request, 'generator/setup_rendering.html', locals())
+    model = Layout
+    template_name = 'generator/setup_rendering.html'
+    form_class = LayoutForm
+
+    def get_success_url(self):
+        return reverse('render_songbook',
+                        kwargs={"id": self.kwargs["id"],
+                                "slug": self.kwargs["slug"]})
+
+    def form_valid(self, form):
+        messages.success(self.request, _(u"La mise en page a été crée."))
+        rst = super(LayoutList, self).form_valid(form)
+
+        # Set the session for layout generation
+        self.request.session["layout"] = self.object.id
+        return rst
+
+    def get_context_data(self, **kwargs):
+        context = super(LayoutList, self).get_context_data(**kwargs)
+        id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        songbook = Songbook.objects.get(id=id, slug=slug)
+        context['songbook'] = songbook
+        context['existing_tasks'] = GeneratorTask.objects.filter(
+                                                    songbook=songbook)
+        return context
 
 
 @owner_required(('id', 'id'))
@@ -278,23 +300,13 @@ def render_songbook(request, id, slug):
     force = request.REQUEST.get("force", False)
     songbook = Songbook.objects.get(id=id)
 
-    booktype = request.POST["booktype"]
-    bookoptions = []
-    if "diagram" in request.POST:
-        bookoptions.append("diagram")
-    if "pictures" in request.POST:
-        bookoptions.append("pictures")
-    orientation = request.POST["orientation"]
-    papersize = request.POST["papersize"]
+    layout_id = request.session["layout"]
 
-    layout = Layout.objects.create(bookoptions=bookoptions,
-                                   booktype=booktype,
-                                   orientation=orientation,
-                                   papersize=papersize)
+    layout = Layout.objects.get(id=layout_id)
 
     try:
-        gen_task = GeneratorTask.objects.get(songbook__id=id,
-                                             layout__id=layout.id)
+        gen_task = GeneratorTask.objects.get(songbook=songbook,
+                                             layout=layout)
         state = gen_task.state
     except GeneratorTask.DoesNotExist:
         gen_task = None
@@ -318,4 +330,4 @@ def render_songbook(request, id, slug):
         import generator.tasks as tasks
         tasks.queue_render_task(gen_task.id)
 
-    return redirect(reverse('songbook_private_list') + '#' + id)
+    return redirect(reverse('setup_rendering', kwargs={"id":id, "slug":slug}))

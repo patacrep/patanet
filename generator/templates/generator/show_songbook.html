@@ -55,8 +55,8 @@
     </div>
 
     {% if can_edit %}
-        {% include "generator/extracts/order_items_in_songbook.html" %}
+        {% include "generator/layout/order_items_in_songbook.html" %}
     {% else %}
-        {% include "generator/extracts/show_items_in_songbook.html" %}
+        {% include "generator/layout/show_items_in_songbook.html" %}
     {% endif %}
 {% endblock %}

@@ -18,7 +18,7 @@ from django.conf.urls import patterns, url
 from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
      view_profile, PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
-     UpdateSongbook, DeleteSongbook, \
+     UpdateSongbook, DeleteSongbook, LayoutList, \
      reset_password, reset_password_confirm, password_reset_done, \
      password_reset_complete, move_or_delete_items, \
     FlatPage
@@ -83,7 +83,7 @@ urlpatterns = patterns('generator.views',
                 'render_songbook',
                 name="render_songbook"),
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/setup-rendering',
-                'setup_rendering',
+                LayoutList.as_view(),
                 name="setup_rendering"),
 
 )
