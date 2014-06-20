@@ -1,80 +1,18 @@
 {% load i18n %}
-<div class="playlist">
-	{% if user.is_authenticated %}
-		{% if current_songbook %}
-			<h2 title="{{ current_songbook.title }}">
-				{{ current_songbook.title }}
-			</h2>
-			<small>
-				<a href="{% url "show_songbook" slug=current_songbook.slug id=current_songbook.id %}">
-					{% trans "Modifier l'ordre et les sections" %}
-				</a>
-			</small>
-			<ul class="section selection">
-			{% for item in current_item_list %}
-				{% if item.item_type.model == "section" %}
-					</ul>
-{% comment %} We might have an empty <ul></ul> at the beginning, but we don't really care...{% endcomment %}
-					<label for="section_{{item.item.id}}" class="section_label"><h4>{{item.item.name}}</h4></label>
-					<input type="checkbox" id="section_{{item.item.id}}" class="section_checker" />
-					<ul class="section selection">
-				{% elif item.item_type.model == "song" %}
-					<li>
-						<a href="{% url 'show_song' slug=item.item.slug artist=item.item.artist.slug %}"
-						title="{{item.item.title}} - {{ item.item.artist.name }} " class="song" >
-								{{ item.item.title }}
-								<em class="artist">- {{ item.item.artist.name }}</em>
-						</a>
-					</li>
-				{% endif %}
-			{% empty %}
-				<li>
-					<em>{% trans "Ce carnet est vide" %}</em>
-				</li>
-			{% endfor %}
-			</ul>
-			<br />
-		{% else %}
-			<h2>{% trans "Carnets de chants" %}</h2>
-		{% endif %}
-		{% with user_songbooks=user.profile.songbooks %}
-			{% if user_songbooks.count > 1 or user_songbooks.count > 0 and not current_songbook %}
-				<p>
-					{% if current_songbook %}
-						{% trans "Changer de carnet de chants :" %}
-					{% else %}
-						{% trans "Choisissez un carnet de chants à modifier :" %}
-					{% endif %}
-				</p>
-				<form method="get" action="{% url 'set_current_songbook' %}">
-						<select name="songbook">
-							{% for songbook in user_songbooks.all %}
-								{% if songbook != current_songbook %}
-									<option value="{{ songbook.id }}">
-										{{ songbook.title }}
-									</option>
-								{% endif %}
-							{% endfor %}
-						</select>
-					<input type="submit" value="{% trans "Choisir" %}"/>
-				</form>
-			{% endif %}
-			{% if current_songbook %}
-			<p>
-	                <a href="{% url 'setup_rendering' id=current_songbook.id slug=current_songbook.slug %}">
-        	            {% trans "Générer le PDF de ce carnet de chant" %}
-                	</a>
-            		</p>
-            		{% endif%}
-			<p>
-				<a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet de chant" %}</a>
-			</p>
-		{% endwith %}
-	{% else %}
-	{% url 'login' as login %}{% url 'register' as register %}
-	<h2>{% trans "Créer un carnet de chants" %}</h2>
-		{% blocktrans %}
-			Pour créer un carnet, <a href="{{login}}">connectez-vous</a> ou <a href="{{register}}">inscrivez-vous</a>.
-		{% endblocktrans %}
-	{% endif %}
+<div class="add-songs">
+    <img src="" alt="book">
+    <h3> {{current_songbook.title}} </h3>
+    <ul>
+        <li>
+            {% trans "Ajouter les chants au carnet" %}
+        </li>
+        <li>
+            <a href="{% url 'show_songbook' id=current_songbook.id slug=current_songbook.slug %}">
+                {% trans "Afficher le carnet" %}
+            </a>
+        </li>
+    </ul>
+    <a href="{% url 'songbook_private_list' %}">
+        {% trans "Changer de carnet" %}
+    </a>
 </div>
