@@ -9,7 +9,7 @@
 	<p>
 		<a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet" %}</a>
 	</p>
-	<div class="private songbooks">
+	<div class="private">
         {% for songbook in songbooks %}
         <table>
             <tr>
@@ -26,7 +26,7 @@
                     </a>
                 </td>
                 <td>
-                    {% trans "Télécharger" %}
+                    <h4>{% trans "Télécharger en PDF" %}</h4>
                 </td>
                 <td>
                     <em>
@@ -39,7 +39,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="songbook-description">
                     {{ songbook.description|truncatewords:20 }}
                 </td>
                 <td>
@@ -58,7 +58,12 @@
                                         {{ task.layout.name }}
                                     </a>
                                 </li>
+                            {% elif task.state = 'ERROR' %}
+                                {% trans "Erreur de génération" %} <!-- Ajouter lien pour relancer -->
+                            {% else %}
+                                {% trans "Génération en cours" %}
                             {% endif %}
+                        {% empty %}
                         {% endfor %}
                     </ul>
                 </td>
@@ -78,7 +83,11 @@
                 </td>
                 <td>
                     <a href="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
-                        {% trans "Créer une mise en page" %}
+                        {% if songbook.tasks.all.count > 0 %}
+                            {% trans "Nouvelle mise en page" %}
+                        {% else %}
+                            {% trans "Créer une mise en page" %}
+                        {% endif %}
                     </a>
                 </td>
                 <td>
