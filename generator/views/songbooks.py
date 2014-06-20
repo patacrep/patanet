@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -242,7 +242,7 @@ def move_or_delete_items(request, id, slug):
 
     if request.POST['new_section']:
         try:
-            section_name = str(request.POST['new_section'])
+            section_name = unicode(request.POST['new_section'])
             songbook.add_section(section_name)
         except ValueError:
             messages.error(request, _(u"Ce nom de section n'est pas valide"))

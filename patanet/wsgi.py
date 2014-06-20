@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -13,3 +13,19 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+WSGI config for Patanet project.
+
+It exposes the WSGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
+"""
+
+import os, sys
+sys.path.append('/home/songbook-web/www/songbook-web')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patanet.settings")
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -17,8 +17,8 @@
 from generator.models import Songbook, Layout, Task
 from django.conf import settings
 
-from songbook_core.build import SongbookBuilder
-from songbook_core.errors import SongbookError
+from patacrep.build import SongbookBuilder
+from patacrep.errors import SongbookError
 
 import os
 import hashlib
