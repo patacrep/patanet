@@ -5,12 +5,16 @@
 <ul class="user-menu">
     <li>
         {% blocktrans with username=user.username %}
-			Bienvenue, {{ username }} !
+			Bienvenue, {{ username }}
         {% endblocktrans %}
     </li>
 	<li>
 		{% url 'songbook_private_list' as url %}
-		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{% trans "Mes carnets" %}</a>
+		<a href="{{ url }}">{% trans "Mes carnets" %}</a>
+	</li>
+	<li>
+		{% url 'password_change' as url %}
+		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{% trans "Changer de mot de passe" %}</a>
 	</li>
     <li>
         <a href="{% url 'logout' %}">{% trans "Se déconnecter" %}</a>
