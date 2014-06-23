@@ -140,7 +140,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
         )
 
 LOGIN_URL = '/user/login'
-LOGIN_REDIRECT_URL = '/user/'
+LOGIN_REDIRECT_URL = '/songbooks/my/'
 
 SOUTH_TESTS_MIGRATE = False
 
