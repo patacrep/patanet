@@ -8,9 +8,8 @@
 			{% trans "Mes carnets" %}
 		</a>
 	{% endif %}
-	<ul class="public songbooks">
+	<div class="public">
 		{% for songbook in songbooks %}
-			<li>
 			<a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a>
 			{% if user.profile = songbook.user %}
 				<small>[<a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">
@@ -19,8 +18,25 @@
 				</small>
 			{% endif %}
 			-  {{ songbook.count_songs }}{% trans " chants" %}
-			<p class="description">{{ songbook.description|truncatewords:40 }}</p>
-			</li>
+        <div>
+			<p class="description">{{ songbook.description|truncatewords:20 }}</p>
+            <ul class=layouts><h4> {% trans "Téléchargements" %} </h4>
+                {% for task in songbook.tasks.all %}
+                    <li>
+                    {% if task.state = 'FINISHED' %}
+                        <a href="/medias/PDF/{{task.result.file}}" target="_blank">
+                            {{ task.layout.name }}
+                        </a>
+                    {% elif task.state = 'ERROR' %}
+                        {% trans "Erreur de génération" %}
+                    {% else %}
+                        {% trans "Génération en cours" %}
+                    {% endif %}
+                    </li>
+                {% empty %}
+                {% endfor %}
+            </ul>
+        </div>
 		{% endfor %}
-	</ul>
+	</div>
 {% endblock %}

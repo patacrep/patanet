@@ -31,26 +31,30 @@
 	}
 }
 
-.songbooks{
-    .sb-infos{
-      border-bottom: 1px solid #808080;
-    }
-
-    h2 {
-      font-weight:normal;
-    }
-
-    ul {
-      padding: 0px;
-      margin: 5px auto;
-      max-width: 50em;
-      text-align: center;
-    }
-
+.public{
+    margin:auto;
+    width:90%;
     li{
       list-style:none;
       padding:0 0.5em;
-      display:inline-block;
+    }
+
+    .description {
+        max-width:30em;
+        width:45%;
+        display:inline-block;
+    }
+
+    .layouts { // TODO: aligner verticalement
+        width:45%;
+        display:inline-block;
+        padding:0;
+        margin:0;
+        text-align:center;
+
+        h4 {
+            margin:0;
+        }
     }
 }
 
@@ -94,6 +98,10 @@
         }
     }
 
+    .description{
+        width:20em;
+    }
+
     ul {
         padding:0;
 
@@ -104,11 +112,10 @@
             }
         }
     }
+}
 
-    .songbook-description {
-        width:20em;
-        text-align:justify;
-    }
+.description {
+    text-align:justify;
 }
 
 
