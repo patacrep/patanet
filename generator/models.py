@@ -78,7 +78,7 @@ class Songbook(models.Model):
     items = models.ManyToManyField(ContentType,
                                    blank=True,
                                    through='ItemsInSongbook',)
-    user = models.ForeignKey('Profile', related_name='songbooks')
+    user = models.ForeignKey(User, related_name='songbooks')
     author = models.CharField(max_length=255,
                               verbose_name=_(u"auteur"),
                               default="")
@@ -290,21 +290,3 @@ class Task(models.Model):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
                                     songbook=self.songbook.title,
                                     layout=self.layout.id))
-
-###############################################################
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User)
-
-    def __unicode__(self):
-        return self.user.username
-
-    class Meta:
-        verbose_name = _(u'profil')
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.get_or_create(user=instance)

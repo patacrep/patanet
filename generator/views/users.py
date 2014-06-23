@@ -27,13 +27,6 @@ from django.shortcuts import render
 
 from generator.forms import RegisterForm
 from generator.decorators import LoginRequiredMixin
-from generator.models import Profile
-
-@login_required
-def view_profile(request):
-    profile = Profile.objects.get(user=request.user)
-    return render(request, 'generator/show_profile.html', locals())
-
 
 class Register(CreateView):
     template_name = 'generator/register.html'

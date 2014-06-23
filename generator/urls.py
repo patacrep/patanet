@@ -16,7 +16,7 @@
 
 from django.conf.urls import patterns, url
 from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
-     view_profile, PasswordChange, Register, contact, \
+     PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
      UpdateSongbook, DeleteSongbook, \
      reset_password, reset_password_confirm, password_reset_done, \
@@ -92,9 +92,6 @@ urlpatterns += patterns('',
     url(r'^contact/$',
                 contact,
                 name='contact'),
-    url(r'^user/$',
-                view_profile,
-                name='profile'),
     url(r'^user/login$',
                 'django.contrib.auth.views.login',
                 {'template_name': 'generator/login.html'},
