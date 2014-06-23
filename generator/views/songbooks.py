@@ -50,7 +50,7 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
     template_name = "generator/songbook_private_list.html"
 
     def get_queryset(self):
-        return Songbook.objects.filter(user__user=self.request.user
+        return Songbook.objects.filter(user=self.request.user
                                        ).order_by('title')
 
 
