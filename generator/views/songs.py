@@ -20,7 +20,7 @@ import os
 
 
 from django.views.generic import ListView, DetailView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
@@ -42,20 +42,20 @@ class SongList(CurrentSongbookMixin, ListView):
     queryset = Song.objects.all().order_by('slug')
 
 
-# class SongListByArtist(CurrentSongbookMixin, ListView):
-#     model = Song
-#     context_object_name = "song_list"
-#     template_name = "generator/song_list_by_artist.html"
-#     paginate_by = 30
-#
-#     def get_queryset(self):
-#         self.artist = get_object_or_404(Artist, slug=self.kwargs['artist'])
-#         return Song.objects.filter(artist=self.artist).order_by('slug')
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(SongListByArtist, self).get_context_data(**kwargs)
-#         context['artist'] = Artist.objects.get(slug=self.kwargs['artist'])
-#         return context
+class SongListByArtist(CurrentSongbookMixin, ListView):
+    model = Song
+    context_object_name = "song_list"
+    template_name = "generator/song_list_by_artist.html"
+    paginate_by = 30
+
+    def get_queryset(self):
+        self.artist = get_object_or_404(Artist, slug=self.kwargs['artist'])
+        return Song.objects.filter(artist=self.artist).order_by('slug')
+
+    def get_context_data(self, **kwargs):
+        context = super(SongListByArtist, self).get_context_data(**kwargs)
+        context['artist'] = Artist.objects.get(slug=self.kwargs['artist'])
+        return context
 
 
 def _read_song(song):

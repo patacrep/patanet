@@ -18,7 +18,7 @@ from django.conf.urls import patterns, url
 from generator.views import SongList, SongView, ArtistList, \
      view_profile, PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
-     UpdateSongbook, DeleteSongbook, LayoutList, \
+     UpdateSongbook, DeleteSongbook, LayoutList, SongListByArtist,\
      reset_password, reset_password_confirm, password_reset_done, \
      password_reset_complete, move_or_delete_items, \
     FlatPage
@@ -35,9 +35,9 @@ urlpatterns = patterns('generator.views',
     # url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/history$',
                 # MISSING_VIEW,
                 # name='song_history'),
-#    url(r'^songs/(?P<artist>[\w-]+)/$',
-#                SongListByArtist.as_view(),
-#                name="song_list_by_artist"),
+    url(r'^songs/(?P<artist>[\w-]+)/$',
+                SongListByArtist.as_view(),
+                name="song_list_by_artist"),
     url(r'^songs/$',
                 SongList.as_view(),
                 name="song_list"),
