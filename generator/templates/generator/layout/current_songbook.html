@@ -1,18 +1,21 @@
 {% load i18n %}
-<div class="add-songs">
-    <img src="" alt="book">
-    <h3> {{current_songbook.title}} </h3>
-    <ul>
-        <li>
-            {% trans "Ajouter les chants au carnet" %}
-        </li>
-        <li>
-            <a href="{% url 'show_songbook' id=current_songbook.id slug=current_songbook.slug %}">
-                {% trans "Afficher le carnet" %}
-            </a>
-        </li>
-    </ul>
-    <a href="{% url 'songbook_private_list' %}">
+{% load staticfiles %}
+<div class="current-songbook">
+    <img src="{% static "img/book.jpg" %}" alt="book">
+    <div>
+        <h3> {{current_songbook.title}} </h3>
+        <ul>
+            <li>
+                {% trans "Ajouter les chants au carnet" %}
+            </li>
+            <li>
+                <a href="{% url 'show_songbook' id=current_songbook.id slug=current_songbook.slug %}">
+                    {% trans "Afficher le carnet" %}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <a href="{% url 'songbook_private_list' %}" class="change">
         {% trans "Changer de carnet" %}
     </a>
 </div>

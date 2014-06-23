@@ -34,12 +34,10 @@
 	</div>
 
 	<main id="content" role="main">
-	<h1> {% block title %}No title{% endblock %}</h1>
-		{% block content %}No content{% endblock %}
-
-		{% if show_current_songbook %}
-			{% include "generator/layout/current_songbook.html" %}
-		{% endif %}
+	<h1>{% block title %}No title{% endblock %}</h1>
+		{% block content %}
+            No content
+        {% endblock %}
 	</main>
 
 	<footer>

@@ -33,7 +33,6 @@ class CurrentSongbookMixin(object):
 
     def get_context_data(self, **kwargs):
         context = super(CurrentSongbookMixin, self).get_context_data(**kwargs)
-        context['show_current_songbook'] = True
         try:
             songbook = Songbook.objects.get(
                             id=self.request.session['current_songbook'])
