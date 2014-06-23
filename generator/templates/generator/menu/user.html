@@ -11,13 +11,9 @@
 	<li>
 		{% url 'songbook_private_list' as url %}
 		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{% trans "Mes carnets" %}</a>
-	</li> 
-	<li>
-		{% url 'profile' as url %}
-		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{% trans "Mon profil" %}</a>
-	</li> 
+	</li>
     <li>
-        <a href="{% url 'logout' %}">{% trans "Se déconnecter" %}</a> 
+        <a href="{% url 'logout' %}">{% trans "Se déconnecter" %}</a>
     </li>
 </ul>
 
