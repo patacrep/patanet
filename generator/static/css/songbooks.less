@@ -55,35 +55,60 @@
 }
 
 
-.private table {
+.private {
     font-size:.9em;
-    &:nth-child(odd) {
-        background-color:@selection-strip-bg;
+
+    table {
+        margin:0;
+        width:100%;
     }
 
-    padding:10px;
+    .songbook-container{
+        width:100%;
+        padding:15px 0;
+
+        &:nth-child(odd) {
+            background-color:@selection-strip-bg;
+        }
+
+        border-top:solid thin;
+
+        &:first-child {
+            border-top:none;
+        }
+    }
+
     text-align:left;
-    width:90%;
-    // TODO: Better resize for small screens
+    width:80%;
+    margin:0 auto;
 
     td {
         padding:0 10px;
+
+        h2 {
+            margin:0;
+            a {
+                text-decoration:underline;
+                font-weight:bold;
+            }
+        }
     }
 
     ul {
         padding:0;
+
+        li{
+            list-style:none;
+            &:before {
+               content: '- ';
+            }
+        }
     }
 
     .songbook-description {
         width:20em;
         text-align:justify;
     }
-
-    li {
-        list-style:none;
-        //display:block;
-    }
-
 }
 
 

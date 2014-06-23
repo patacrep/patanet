@@ -11,6 +11,7 @@
 	</p>
 	<div class="private">
         {% for songbook in songbooks %}
+        <div class="songbook-container">
         <table>
             <tr>
                 <td>
@@ -26,14 +27,14 @@
                     </a>
                 </td>
                 <td>
-                    <h4>{% trans "Télécharger en PDF" %}</h4>
+                    <strong>{% trans "Télécharger en PDF" %}</strong>
                 </td>
                 <td>
                     <em>
                     {% if songbook.is_public %}
                         {% trans "Public" %}
                     {% else %}
-                        {% trans "Public" %}
+                        {% trans "Privé" %}
                     {% endif %}
                     </em>
                 </td>
@@ -97,6 +98,7 @@
                 </td>
             </tr>
         </table>
+        </div>
         {% endfor %}
     </div>
 {% endblock %}
