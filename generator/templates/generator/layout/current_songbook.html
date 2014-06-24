@@ -1,7 +1,9 @@
 {% load i18n %}
 {% load staticfiles %}
+
 <div class="current-songbook">
     <img src="{% static "img/book.jpg" %}" alt="book">
+    {% if current_songbook %}
     <div>
         <h3> {{current_songbook.title}} </h3>
         <ul>
@@ -18,4 +20,9 @@
     <a href="{% url 'songbook_private_list' %}" class="change">
         {% trans "Changer de carnet" %}
     </a>
+    {% else %}
+    <a href="{% url 'songbook_private_list' %}">
+        {% trans "Choisir un carnet pour ajouter des chants" %}
+    </a>
+    {% endif %}
 </div>
