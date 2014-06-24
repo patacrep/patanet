@@ -1,5 +1,5 @@
 $(function() {
-    $(".no-js").hide();
+    $(".script").toggle();
 
     var ordering = function(){
         // Make the ordering class sortable, with jquery-ui

@@ -84,7 +84,7 @@ def owner_required(lookups=None, instance=None, **kwargs):
             elif instance:
                 songbook = instance
 
-            if not songbook.user.user == request.user:
+            if not songbook.user == request.user:
                 return redirect(reverse('denied'))
             return view_func(request, *args, **kwargs)
         return wraps(view_func)(_wrapped_view)

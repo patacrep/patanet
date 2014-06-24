@@ -2,20 +2,21 @@
 {% load staticfiles %}
 
 <h3>{% trans "Organiser le carnet" %}</h3>
-<p class="no-js">
+<noscript>
+<p>
 {% blocktrans %}
 Pour réordonner les chants, il suffit de changer les numéros de la colonne de gauche.
 Pour supprimer un chant, il faut remplacer son numéro par un 'X'.
 {% endblocktrans %}
 </p>
-<p class="js">
+</noscript>
+<p class="script">
 {% blocktrans %}
 Vous pouvez organiser les éléments de ce carnet avec la souris.
 {% endblocktrans %}
 </p>
 <!-- Preload images for JavaScript -->
 <img class="remove" src="{% static "img/remove.png" %}" style="display:none" alt="remove">
-
 	<form class="selection" method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
     <input type="submit" value="{% trans "Enregistrer les changements" %}">

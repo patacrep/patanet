@@ -25,7 +25,7 @@ from django.utils.html import escape
 from django.conf import settings
 from django.contrib.sites.models import Site
 
-from generator.models import Profile, Song, Songbook, Layout
+from generator.models import Song, Songbook, Layout
 
 
 class RegisterForm(UserCreationForm):

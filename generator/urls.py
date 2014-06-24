@@ -15,14 +15,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls import patterns, url
+
+from django.views.generic.base import TemplateView
+
+
 from generator.views import SongList, SongView, ArtistList, \
-     view_profile, PasswordChange, Register, contact, \
+     PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
      UpdateSongbook, DeleteSongbook, LayoutList, SongListByArtist,\
      reset_password, reset_password_confirm, password_reset_done, \
      password_reset_complete, move_or_delete_items, \
     FlatPage
-from django.views.generic.base import TemplateView
+
 
 urlpatterns = patterns('generator.views',
     url(r'^$', FlatPage.as_view(url='home'), name="home"),
@@ -92,9 +96,6 @@ urlpatterns += patterns('',
     url(r'^contact/$',
                 contact,
                 name='contact'),
-    url(r'^user/$',
-                view_profile,
-                name='profile'),
     url(r'^user/login$',
                 'django.contrib.auth.views.login',
                 {'template_name': 'generator/login.html'},
