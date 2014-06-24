@@ -16,7 +16,7 @@
 
 
 from django import forms
-from generator.models import Profile, Song, Songbook
+from generator.models import Song, Songbook
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify

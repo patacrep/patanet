@@ -17,11 +17,12 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
+from django.contrib.auth.models import User
 
 DELETE = settings.SONGBOOK_DELETE_POLICY
 
 from generator.build import SONGBOOKS_PDFS
-from generator.models import Task, Profile
+from generator.models import Task
 
 from datetime import timedelta, datetime, tzinfo
 import os
@@ -69,7 +70,7 @@ def _time_delete():
 
 def _number_delete():
     # tasks = Task.objects.all()
-    users = Profile.objects.all()
+    users = User.objects.all()
     for user in users:
         try:
             tasks = Task.objects.filter(songbook__user=user

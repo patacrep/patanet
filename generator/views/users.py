@@ -19,21 +19,15 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic import CreateView, FormView
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext as _
 from django.contrib import messages
-from django.shortcuts import render
+from django.contrib.auth.views import password_reset, password_reset_confirm
+from django.shortcuts import render, redirect
 
 
 from generator.forms import RegisterForm
 from generator.decorators import LoginRequiredMixin
-from generator.models import Profile
-
-@login_required
-def view_profile(request):
-    profile = Profile.objects.get(user=request.user)
-    return render(request, 'generator/show_profile.html', locals())
-
 
 class Register(CreateView):
     template_name = 'generator/register.html'

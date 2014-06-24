@@ -50,7 +50,7 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
     template_name = "generator/songbook_private_list.html"
 
     def get_queryset(self):
-        return Songbook.objects.filter(user__user=self.request.user
+        return Songbook.objects.filter(user=self.request.user
                                        ).order_by('title')
 
 
@@ -79,7 +79,7 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
         context = super(ShowSongbook, self).get_context_data(**kwargs)
         items_list = ItemsInSongbook.objects.filter(songbook=self.object)
         context['items_list'] = items_list
-        if self.request.user == self.object.user.user:
+        if self.request.user == self.object.user:
             context['can_edit'] = True
         else:
             context['can_edit'] = False
