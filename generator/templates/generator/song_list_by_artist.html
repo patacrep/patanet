@@ -13,7 +13,7 @@
 		<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
 
 		<ol class="songs selection">
-		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
+		<input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
 		{% for song in song_list %}
 			<li>
 				<input type="checkbox" name="songs[]" value="{{ song.id }}"
@@ -25,7 +25,7 @@
 			</li>
 		{% endfor %}
 		</ol><br/>
-		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
+		<input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
 	</form>
 
 {% include "generator/layout/pagination.html" %}
