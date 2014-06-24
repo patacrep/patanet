@@ -145,8 +145,7 @@ class SongbookCreationForm(forms.ModelForm):
     def save(self, force_insert=False, force_update=False, commit=True):
         new_songbook = super(SongbookCreationForm, self).save(commit=False)
         # User is gotten in the view
-        user_profile = Profile.objects.get(user=self.user)
-        new_songbook.user = user_profile
+        new_songbook.user = self.user
         new_songbook.slug = slugify(new_songbook.title)
 
         if commit:
