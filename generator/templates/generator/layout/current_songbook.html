@@ -5,7 +5,7 @@
     <img src="{% static "img/book.jpg" %}" alt="book">
     {% if current_songbook %}
     <div>
-        <h3> {{current_songbook.title}} </h3>
+        <h3> {{current_songbook.title}} <small> - {{current_songbook.count_songs}} {% trans "chants" %}</small></h3>
         <ul>
             <li>
                 <a href="" id="add_songs">
