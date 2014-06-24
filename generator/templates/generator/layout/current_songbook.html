@@ -8,7 +8,9 @@
         <h3> {{current_songbook.title}} </h3>
         <ul>
             <li>
+                <a href="" id="add_songs">
                 {% trans "Ajouter les chants au carnet" %}
+                </a>
             </li>
             <li>
                 <a href="{% url 'show_songbook' id=current_songbook.id slug=current_songbook.slug %}">
