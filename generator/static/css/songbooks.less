@@ -17,20 +17,6 @@
   }
 }
 
-
-
-#sb_content {
-    li {
-        list-style:none;
-		padding:0 0.5em;
-    }
-	h4 {
-		margin:0;
-		text-indent:1em;
-		font-size:1.5em;
-	}
-}
-
 .public{
     margin:auto;
     width:90%;
@@ -155,5 +141,30 @@
     }
     a {
     text-decoration:underline;
+    }
+}
+
+@layout_list_width: 30%;
+.songbook-infos {
+    .description {
+        margin-right: @layout_list_width;
+    }
+    .layout-list {
+        text-align:center;
+        width:@layout_list_width;
+        float:right;
+
+        a {
+            margin:auto;
+        }
+
+        li {
+            list-style:none;
+
+            &:first-child {
+                font-weight:bold;
+                margin-bottom:10px;
+            }
+        }
     }
 }
