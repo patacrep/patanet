@@ -69,7 +69,6 @@ $(function() {
     }
 
     var add_songs = function(){
-        $(".button-link").hide();
         $("#add_songs").click(function(){
             $("#add_songs_form").submit();
             setTimeout(function(){
