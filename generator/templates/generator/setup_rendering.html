@@ -2,7 +2,7 @@
 
 {% block title %}
     {% blocktrans with songbook=songbook.title %}
-        Mise en page du carnet {{ songbook }}
+        Mise en page de "{{ songbook }}"
     {% endblocktrans %}
 {% endblock %}
 
@@ -14,18 +14,25 @@
     <div class="songbook_infos">
         <p class=songbook_description>{{ songbook.description }}</p>
     </div>
-    <h2>{% trans "Mises en page existantes :" %}</h2>
-    <table>
+
+    {% if existing_tasks.count > 0 %}
+
+    <h3>{% trans "Mises en page existantes :" %}</h3>
+    <table class="layouts">
       <tr><th>{% trans "Nom" %}</th>
-          <th>{% trans "Auteur" %}</th>
           <th>{% trans "Type" %}</th>
           <th>{% trans "Options" %}</th>
           <th>{% trans "Fichier" %}</th>
           </tr>
       {% for task in existing_tasks %}
       <tr><td>{{task.layout.name}}</td>
-          <td>{{task.songbook.author}}</td>
-          <td>{{task.layout.booktype}}</td>
+          <td>
+              {% if task.layout.booktype == "chorded" %}
+                  {% trans "Avec accords" %}
+              {% else %}
+                  {% trans "Sans accords" %}
+              {% endif %}
+          </td>
           <td>
               {% if "diagram" in task.layout.bookoptions %}<img src="{% static "img/chord_diagram_32.png" %}" alt="{% trans "Diagrammes d'accords" %}" title="{% trans "Diagrammes d'accords" %}">{% endif %}
               {% if "pictures" in task.layout.bookoptions %}<img src="{% static "img/song_image_32.jpg" %}" alt="{% trans "Couvertures d'album" %}" title="{% trans "Couvertures d'album" %}">{% endif %}
@@ -47,10 +54,21 @@
       </tr>
       {% endfor %}
     </table>
-  <h2>Créer un PDF avec une nouvelle mise en page </h2>
-  <form class="" method="post" action="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
-  </form>
+    {% endif %}
+
+    <h3>Créer un PDF avec une nouvelle mise en page </h3>
+
+    <form class="new_layout" method="post" action="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
+        {% csrf_token %}
+        <div id="bookoptions"><p>{{ form.bookoptions.label_tag }}<p> {{ form.bookoptions }} </div>
+        <div class="field_container">
+        {% for field in form.visible_fields %}
+            {{ field.errors }}
+            {% if field.name != "bookoptions" %}
+                <p>{{ field.label_tag }} {{ field }} </p>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
+    </form>
 {% endblock %}

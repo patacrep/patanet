@@ -195,12 +195,12 @@ class LayoutForm(forms.ModelForm):
                  )
     OPTIONS = [
             ('diagram', _(u"Diagrammes d'accords")),
-            #('importantdiagramonly', _(u"Diagrammes important seulement")),
+            ('importantdiagramonly', _(u"Diagrammes important seulement")),
             #('repeatchords', _(u"Accords sur tous les couplets")),
             #('tabs', _(u"Tablatures")),
             #('lilypond', _(u'Partitions Lilypond')),
             ('pictures', _(u"Couvertures d'albums")),
-            #('onesongperpage', _(u"Une chanson par page")),
+            ('onesongperpage', _(u"Une chanson par page")),
             ]
 
     # papersize = forms.ChoiceField(

@@ -196,3 +196,41 @@ a.back{
 		display:none;
 	}
 }
+
+
+.layouts {
+    text-align:center;
+
+    tr:nth-child(odd){
+        background-color:@selection-strip-bg;;
+    }
+}
+
+
+@options_width:40%;
+.new_layout {
+    width:100%;
+    .field_container {
+        margin-right:@options_width;
+    }
+    #bookoptions {
+        float:right;
+        width:@options_width;
+
+        ul {
+            list-style:none;
+        }
+        p {
+            margin: 0;
+            margin-bottom:1em;
+            label {
+                text-align:left;
+                font-weight:bold;
+                width:auto;
+            }
+        }
+    }
+    input[type="submit"] {
+        margin-top:3em;
+    }
+}
