@@ -59,8 +59,10 @@
                                         {{ task.layout.name }}
                                     </a>
                                     {% if task.hash != songbook.hash %}
-                                        <small title="{% trans "La version PDF de ce carnet n'est pas à jour." %}" class="help">
-                                            [{% trans "Ancien" %}]
+                                        <small title="{% trans "La version PDF de ce carnet n'est pas à jour." %}">
+                                            [<a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=true&layout={{task.layout.id}}" class="help">
+                                                {% trans "Regénérer" %}
+                                             </a>]
                                         </small>
                                     {% endif %}
                                 </li>
