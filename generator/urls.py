@@ -15,14 +15,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls import patterns, url
-from generator.views import SongList, SongView, SongListByArtist, ArtistList, \
+
+from django.views.generic.base import TemplateView
+
+
+from generator.views import SongList, SongView, ArtistList, \
      PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
-     UpdateSongbook, DeleteSongbook, \
+     UpdateSongbook, DeleteSongbook, LayoutList, SongListByArtist,\
      reset_password, reset_password_confirm, password_reset_done, \
      password_reset_complete, move_or_delete_items, \
     FlatPage
-from django.views.generic.base import TemplateView
+
 
 urlpatterns = patterns('generator.views',
     url(r'^$', FlatPage.as_view(url='home'), name="home"),
@@ -83,7 +87,7 @@ urlpatterns = patterns('generator.views',
                 'render_songbook',
                 name="render_songbook"),
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/setup-rendering',
-                'setup_rendering',
+                LayoutList.as_view(),
                 name="setup_rendering"),
 
 )

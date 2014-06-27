@@ -4,12 +4,15 @@
 
 {% block content %}
 {% include "generator/layout/name_pagination.html" %}
-	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}">
+{% include "generator/layout/current_songbook.html" %}
+	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "song_list" %}?page={{page_obj.number}}">
 		<ol class="songs selection">
-		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
-		{% for song in song_list %}
+        <noscript>
+            <input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
+        </noscript>
+        {% for song in song_list %}
 			<li>
 				<input type="checkbox" name="songs[]" value="{{ song.id }}"
 				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
@@ -21,6 +24,8 @@
 			</li>
 		{% endfor %}
 		</ol><br/>
-		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
-	</form>
+        <noscript>
+            <input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
+        </noscript>
+    </form>
 {% endblock %}

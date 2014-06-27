@@ -68,7 +68,17 @@ $(function() {
         });
     }
 
+    var add_songs = function(){
+        $("#add_songs").click(function(){
+            $("#add_songs_form").submit();
+            setTimeout(function(){
+                 window.location.reload();
+            }, 100);
+        });
+    }
+
     // Execute code
     ordering();
     select_artist_songs();
+    add_songs();
 });

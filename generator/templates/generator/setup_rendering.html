@@ -1,18 +1,38 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %} {% load staticfiles %}
 
-{% block title %} {% trans "Paramètres de création du PDF" %} {% endblock %}
+{% block title %}
+    {% blocktrans with songbook=songbook.title %}
+        Mise en page de "{{ songbook }}"
+    {% endblocktrans %}
+{% endblock %}
+
+{% block appmenu %}
+    {% include "generator/menu/songbook.html" %}
+{% endblock %}
 
 {% block content %}
-  <h2>Liste des PDFs déjà générés : </h2>
-    <table>
-      <tr><th>{% trans "Titre" %}</th>
-          <th>{% trans "Auteur" %}</th><th>{% trans "Type" %}</th><th>{# trans "Options" #}</th>
-          <th>{# trans "Fichier" #}</th> 
+    <div class="songbook_infos">
+        <p class=songbook_description>{{ songbook.description }}</p>
+    </div>
+
+    {% if existing_tasks.count > 0 %}
+
+    <h3>{% trans "Mises en page existantes :" %}</h3>
+    <table class="layouts">
+      <tr><th>{% trans "Nom" %}</th>
+          <th>{% trans "Type" %}</th>
+          <th>{% trans "Options" %}</th>
+          <th>{% trans "Fichier" %}</th>
           </tr>
       {% for task in existing_tasks %}
-      <tr><td><strong>{{task.songbook.title}}</strong><br>{{task.songbook.description|truncatewords:20}}</td>
-          <td>{{task.songbook.author}}</td>
-          <td>{{task.layout.booktype}}</td>
+      <tr><td>{{task.layout.name}}</td>
+          <td>
+              {% if task.layout.booktype == "chorded" %}
+                  {% trans "Avec accords" %}
+              {% else %}
+                  {% trans "Sans accords" %}
+              {% endif %}
+          </td>
           <td>
               {% if "diagram" in task.layout.bookoptions %}<img src="{% static "img/chord_diagram_32.png" %}" alt="{% trans "Diagrammes d'accords" %}" title="{% trans "Diagrammes d'accords" %}">{% endif %}
               {% if "pictures" in task.layout.bookoptions %}<img src="{% static "img/song_image_32.jpg" %}" alt="{% trans "Couvertures d'album" %}" title="{% trans "Couvertures d'album" %}">{% endif %}
@@ -21,10 +41,21 @@
               {% else %}
                 <img src="{% static "img/portrait_32.png" %}" alt="{% trans "Format portrait" %}" title="{% trans "Format portrait" %}">
               {% endif %}
-              {{task.layout.papersize|upper}}
-          </td>
-          <td>{% if task.state = 'FINISHED' and "file" in task.result %}
-                    <a href="/medias/PDF/{{task.result.file}}" target="_blank"><img src="{% static "img/download_32.png"%}" alt="{% trans "Télécharger" %}" title="{% trans "Télécharger"%}"></a>
+              {% comment %}{{task.layout.other_options.papersize|upper}}{% endcomment %}
+            </td>
+            <td>{% if task.state = 'FINISHED' and "file" in task.result %}
+                <a href="/medias/PDF/{{task.result.file}}" target="_blank">
+                    <img src="{% static "img/download_32.png"%}"
+                         alt="{% trans "Télécharger" %}"
+                         title="{% trans "Télécharger"%}">
+                </a>
+                {% if task.hash != songbook.hash %}
+                <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=true&layout={{task.layout.id}}">
+                    <img src="{% static "img/restart.png"%}"
+                         alt="{% trans "Relancer" %}"
+                         title="{% trans "Relancer"%}">
+                </a>
+                {% endif %}
               {% elif task.state = 'IN_PROCESS' or task.state = 'QUEUED' %}
                     <img src="{% static "img/processing_32.gif" %}" alt="{% trans "En cours de traitement" %}" title="{% trans "En cours de traitement" %}">
               {% else %}
@@ -34,42 +65,21 @@
       </tr>
       {% endfor %}
     </table>
-  <h2>Génerer un carnet en PDF avec de nouvelles options : </h2>
-  <form class="" method="post" action="{% url 'render_songbook' songbook.id songbook.slug %}">
-    {% csrf_token %}
-    <ul class="selection">
-      <li>
-          <label for="papersize">{% trans "Taille de page" %}</label>
-          <select name="papersize" id="papersize" value="a4">
-              <option value="a4">{% trans "A4" %}</option>
-              <option value="a5">{% trans "A5" %}</option>
-          </select>
-      </li>
-      <li>
-          <label for="orientation">{% trans "Orientation" %}</label>
-          <select name="orientation" id="orientation" value="portrait">
-              <option value="portrait">{% trans "Portrait" %}</option>
-              <option value="landscape">{% trans "Paysage" %}</option>
-          </select>
-      </li>
-      <li>
-      <label for="booktype">{% trans "Type de livre" %}</label>
-      <select name="booktype" id="booktype">
-        <option value="chorded" selected>{% trans "Avec accords" %}</option>
-        <option value="lyric">{% trans "Sans accords" %}</option>
-      </select>
-      </li>
-      <li>
-      <label for="diagram">{% trans "Avec diagrammes pour chaque chant" %}</label>
-      <input type="checkbox" name="diagram" id="diagram" value="diagram" checked>
-      </li>
-      <li>
-      <label for="pictures">{% trans "Avec images pour chaque chant" %}</label>
-      <input type="checkbox" name="pictures" id="pictures" value="pictures">
-      </li>
-      <li>
-      <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
-      </li>
-    </ul>
-  </form>
+    {% endif %}
+
+    <h3>Créer un PDF avec une nouvelle mise en page </h3>
+
+    <form class="new_layout" method="post" action="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
+        {% csrf_token %}
+        <div id="bookoptions"><p>{{ form.bookoptions.label_tag }}<p> {{ form.bookoptions }} </div>
+        <div class="field_container">
+        {% for field in form.visible_fields %}
+            {{ field.errors }}
+            {% if field.name != "bookoptions" %}
+                <p>{{ field.label_tag }} {{ field }} </p>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
+    </form>
 {% endblock %}

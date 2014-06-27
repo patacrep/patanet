@@ -20,7 +20,7 @@ import os
 
 
 from django.views.generic import ListView, DetailView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 

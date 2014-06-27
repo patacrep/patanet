@@ -17,16 +17,19 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
 </p>
 <!-- Preload images for JavaScript -->
 <img class="remove" src="{% static "img/remove.png" %}" style="display:none" alt="remove">
+
 	<form class="selection" method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
-    <input type="submit" value="{% trans "Enregistrer les changements" %}">
-	<input type="hidden" name="next" value="{% url "show_songbook" id=songbook.id slug=songbook.slug %}">
-    <p class="section">
-        <label for="new_section">
-		    {% trans "Ajouter une nouvelle section :" %}
-		</label>
-		<input type="text" name="new_section" id="new_section" class="section_name" placeholder="..."/>
-    </p>
+        <input type="hidden" name="next" value="{% url "show_songbook" id=songbook.id slug=songbook.slug %}">
+        <p class="section">
+            <label for="new_section">
+                {% trans "Nouvelle section :" %}
+            </label>
+            <input type="text" name="new_section" id="new_section" class="section_name" placeholder="..."/>
+        </p>
+
+        <input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
+
 		<ol class="selection ordering">
 		{% for item in items_list %}
 			<li class="{{ item.item_type.model}}">
@@ -55,5 +58,5 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
 			</p>
 		{% endfor %}
         </ol>
-		<input type="submit" value="{% trans "Enregistrer les changements" %}">
+		<input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
 	</form>

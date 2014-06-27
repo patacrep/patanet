@@ -96,6 +96,16 @@ class Songbook(models.Model):
                    ).count()
         return count
 
+    def count_artists(self):
+        songs = ItemsInSongbook.objects.filter(
+                   songbook=self,
+                   item_type=ContentType.objects.get_for_model(Song)
+                   )
+        artists = set()
+        for song in songs:
+            artists.add(song.item.artist.id)
+        return len(artists)
+
     def count_section(self):
         count = ItemsInSongbook.objects.filter(
                    songbook=self,
@@ -163,70 +173,45 @@ class Layout(models.Model):
     """
     This class holds layout information for generating a songbook.
     """
-    name = models.CharField(max_length=100,
-                            verbose_name=_(u"Nom"))
+
     BOOKTYPES = (("chorded", _(u"Avec accords")),
               ("lyrics", _(u"Sans accords")),
               )
 
-    ORIENTATIONS = (("portrait", _(u"Portrait")),
-                    ("landscape", _(u"Paysage")),
-                    )
+    name = models.CharField(max_length=100,
+                            verbose_name=_(u"nom de la mise en page"))
 
-    PAPERSIZES = (("a4", _(u"A4")),
-                  ("a4", _(u"A4")),
-                 )
-    bookoptions = JSONField()
-    #  diagram, pictures
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
-    orientation = models.CharField(max_length=16,
-                                   choices=ORIENTATIONS,
-                                   default="portrait")
-    papersize = models.CharField(max_length=16,
-                                 choices=PAPERSIZES,
-                                 default="a4")
+
+    bookoptions = JSONField()
+    other_options = JSONField()
+
     template = models.CharField(max_length=100,
                                  verbose_name=_(u"gabarit"),
                                  default="data.tex")
-    lang = models.CharField(max_length=10,
-                                verbose_name=_(u"langue principale"),
-                                default="french")
-    other_options = JSONField(default=[])
 
     def __eq__(self, other):
+        # TODO: Implement this
 
         if not isinstance(other, Layout):
             return False
 
-        for attr in ("diagram", "pictures"):
-            if (attr in self.bookoptions) != (attr in other.bookoptions):
-                return False
-
-        for attr in ("booktype", "orientation", "papersize",
-                     "template", "lang"):
-            if (getattr(self, attr) != getattr(other, attr)):
-                return False
-
         return True
-
-#     Other options are : web mail picture picturecopyright footer
-#     license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
-#     indexbgcolor
 
     def get_as_json(self):
         """Return a JSON representation of the layout"""
         layout = {}
-        for attr in ("booktype", "orientation", "papersize",
-                     "template", "lang", "bookoptions"):
-            layout[attr] = getattr(self, attr)
+        layout["booktype"] = self.booktype
+        layout["bookoptions"] = self.bookoptions
+        layout["template"] = self.template
         layout.update(self.other_options)
         return layout
 
     class Meta:
-        verbose_name = _(u"Layout")
+        verbose_name = _(u"Mise en page")
 
 
 class ItemsInSongbook(models.Model):

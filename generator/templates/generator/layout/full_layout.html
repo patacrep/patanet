@@ -14,7 +14,7 @@
     {% endif %}
 	   <script src="{% static "js/jquery-1.11.1.min.js" %}"></script>
        <script src="{% static "js/jquery-ui-1.10.4.min.js" %}"></script>
-       <script src="{% static "js/sb_web.js" %}"></script>
+       <script src="{% static "js/patanet.js" %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -34,12 +34,10 @@
 	</div>
 
 	<main id="content" role="main">
-	<h1> {% block title %}No title{% endblock %}</h1>
-		{% block content %}No content{% endblock %}
-
-		{% if show_current_songbook %}
-			{% include "generator/current_songbook.html" %}
-		{% endif %}
+	<h1>{% block title %}No title{% endblock %}</h1>
+		{% block content %}
+            No content
+        {% endblock %}
 	</main>
 
 	<footer>

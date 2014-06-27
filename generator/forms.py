@@ -16,7 +16,6 @@
 
 
 from django import forms
-from generator.models import Song, Songbook
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -25,6 +24,8 @@ from django.core.mail import mail_admins, send_mail
 from django.utils.html import escape
 from django.conf import settings
 from django.contrib.sites.models import Site
+
+from generator.models import Song, Songbook, Layout
 
 
 class RegisterForm(UserCreationForm):
@@ -144,8 +145,7 @@ class SongbookCreationForm(forms.ModelForm):
     def save(self, force_insert=False, force_update=False, commit=True):
         new_songbook = super(SongbookCreationForm, self).save(commit=False)
         # User is gotten in the view
-        user_profile = Profile.objects.get(user=self.user)
-        new_songbook.user = user_profile
+        new_songbook.user = self.user
         new_songbook.slug = slugify(new_songbook.title)
 
         if commit:
@@ -181,34 +181,52 @@ class SongbookCreationForm(forms.ModelForm):
                     u"merci de les supprimer : {chars}.").format(chars=CHARS))
 
 
-class SongbookLayoutForm(forms.ModelForm):
-    BOOK_OPTIONS = [('diagram', _(u"Diagrammes d'accords")),
+class LayoutForm(forms.ModelForm):
+
+    class Meta:
+        model = Layout
+        fields = ('name', 'booktype')
+
+    ORIENTATIONS = (("portrait", _(u"Portrait")),
+                    ("landscape", _(u"Paysage")),
+                    )
+    PAPERSIZES = (("a4", _(u"A4")),
+                  ("a5", _(u"A5")),
+                 )
+    OPTIONS = [
+            ('diagram', _(u"Diagrammes d'accords")),
             ('importantdiagramonly', _(u"Diagrammes important seulement")),
-            ('repeatchords', _(u"Accords sur tous les couplets")),
-            ('tabs', _(u"Tablatures")),
-            ('lilypond', _(u'Partitions Lilypond')),
+            #('repeatchords', _(u"Accords sur tous les couplets")),
+            #('tabs', _(u"Tablatures")),
+            #('lilypond', _(u'Partitions Lilypond')),
             ('pictures', _(u"Couvertures d'albums")),
             ('onesongperpage', _(u"Une chanson par page")),
             ]
-    CHORDED = 'chorded'
-    LYRICS = 'lyrics'
-    BOOK_TYPES = (
-        (CHORDED, _('Avec accords')),
-        (LYRICS, _('Sans accords')),
-        )
 
-    template = forms.CharField(initial='patacrep.tmpl',
-                             label=_(u"Mise en forme avec le gabarit")
-                             )
+    # papersize = forms.ChoiceField(
+    #                        choices=PAPERSIZES,
+    #                        label=_("Taille du papier"))
+
+    orientation = forms.ChoiceField(
+                            choices=ORIENTATIONS,
+                            label=_("Orientation du papier"))
+
     bookoptions = forms.MultipleChoiceField(
-                            choices=BOOK_OPTIONS,
-                            label=_(u'Options du receuil'),
+                            choices=OPTIONS,
+                            label=_(u'Autres options'),
                             widget=forms.CheckboxSelectMultiple(),
-                            required=False
-                            )
+                            required=False)
 
-    class Meta:
-        pass
-        # model = Layout
-        # fields = ('title', 'description', 'is_public', 'booktype')
-        # template
+    def save(self, force_insert=False, force_update=False, commit=True):
+        new_layout = super(LayoutForm, self).save(commit=False)
+        bookoptions = self.cleaned_data.get('bookoptions', None)
+
+        new_layout.bookoptions = bookoptions
+        new_layout.other_options = {
+                        #"papersize": self.cleaned_data["papersize"],
+                        "orientation": self.cleaned_data["orientation"],
+                        }
+
+        if commit:
+            new_layout.save()
+        return new_layout
