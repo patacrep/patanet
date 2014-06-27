@@ -58,6 +58,11 @@
                                     <a href="/medias/PDF/{{task.result.file}}" target="_blank">
                                         {{ task.layout.name }}
                                     </a>
+                                    {% if task.hash != songbook.hash %}
+                                        <small title="{% trans "La version PDF de ce carnet n'est pas à jour." %}" class="help">
+                                            [{% trans "Ancien" %}]
+                                        </small>
+                                    {% endif %}
                                 </li>
                             {% elif task.state = 'ERROR' %}
                                 {% trans "Erreur de génération" %} <!-- Ajouter lien pour relancer -->

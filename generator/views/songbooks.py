@@ -300,7 +300,10 @@ def render_songbook(request, id, slug):
     force = request.REQUEST.get("force", False)
     songbook = Songbook.objects.get(id=id)
 
-    layout_id = request.session["layout"]
+    layout_id = request.REQUEST.get("layout", 0)
+
+    if layout_id == 0:
+        layout_id = request.session["layout"]
 
     layout = Layout.objects.get(id=layout_id)
 

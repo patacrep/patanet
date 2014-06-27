@@ -42,9 +42,20 @@
                 <img src="{% static "img/portrait_32.png" %}" alt="{% trans "Format portrait" %}" title="{% trans "Format portrait" %}">
               {% endif %}
               {% comment %}{{task.layout.other_options.papersize|upper}}{% endcomment %}
-          </td>
-          <td>{% if task.state = 'FINISHED' and "file" in task.result %}
-                    <a href="/medias/PDF/{{task.result.file}}" target="_blank"><img src="{% static "img/download_32.png"%}" alt="{% trans "Télécharger" %}" title="{% trans "Télécharger"%}"></a>
+            </td>
+            <td>{% if task.state = 'FINISHED' and "file" in task.result %}
+                <a href="/medias/PDF/{{task.result.file}}" target="_blank">
+                    <img src="{% static "img/download_32.png"%}"
+                         alt="{% trans "Télécharger" %}"
+                         title="{% trans "Télécharger"%}">
+                </a>
+                {% if task.hash != songbook.hash %}
+                <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=true&layout={{task.layout.id}}">
+                    <img src="{% static "img/restart.png"%}"
+                         alt="{% trans "Relancer" %}"
+                         title="{% trans "Relancer"%}">
+                </a>
+                {% endif %}
               {% elif task.state = 'IN_PROCESS' or task.state = 'QUEUED' %}
                     <img src="{% static "img/processing_32.gif" %}" alt="{% trans "En cours de traitement" %}" title="{% trans "En cours de traitement" %}">
               {% else %}
