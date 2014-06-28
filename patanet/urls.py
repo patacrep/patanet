@@ -26,6 +26,10 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     )
 
+urlpatterns += patterns('',
+    url(r'^captcha/', include('captcha.urls')),
+)
+
 urlpatterns += i18n_patterns('',
     url(r'', include('generator.urls')),
     )

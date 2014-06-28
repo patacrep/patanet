@@ -25,41 +25,34 @@ from django.utils.html import escape
 from django.conf import settings
 from django.contrib.sites.models import Site
 
+from captcha.fields import CaptchaField
+
 from generator.models import Song, Songbook, Layout
 
 
 class RegisterForm(UserCreationForm):
     """ Require email address when a user signs up """
-    email = forms.EmailField(label='Email address',
-                             max_length=255,
-                             required=True)
+    captcha = CaptchaField()
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
-        self.fields['email'].label = _("Adresse mail")
-        self.fields['username'].help_text = _("30 caractères maximum.")
-        self.fields['password2'].help_text = None
+        self.fields['username'].help_text = _(u"30 caractères maximum.")
+        self.fields['password2'].help_text = ""
+        self.fields['email'].required = True
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'captcha')
 
     def clean_email(self):
         email = self.cleaned_data["email"]
         try:
             User.objects.get(email=email)
-            raise forms.ValidationError(_("Cette adresse mail existe déjà. "
-                                "Si vous avez oublié votre mot de passe, "
-                                "vous pouvez le réinitialiser."))
+            raise forms.ValidationError(_(u"Cette adresse mail existe déjà. "
+                                u"Si vous avez oublié votre mot de passe, "
+                                u"vous pouvez le réinitialiser."))
         except User.DoesNotExist:
             return email
-
-    def save(self, commit=True):
-        user = super(RegisterForm, self).save(commit=False)
-        user.email = self.cleaned_data["email"]
-        if commit:
-            user.save()
-        return user
 
 
 ADMIN_MESSAGE = _(

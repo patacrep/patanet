@@ -47,6 +47,7 @@ INSTALLED_APPS = (
 INSTALLED_APPS += (
     'south',
     'background_task',
+    'captcha',
 )
 INSTALLED_APPS += (
     'generator',
@@ -143,6 +144,10 @@ LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = '/songbooks/my/'
 
 SOUTH_TESTS_MIGRATE = False
+
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_LETTER_ROTATION = (-20, 20)
+CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
 
 try:
     from local_settings import *

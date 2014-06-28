@@ -8,4 +8,5 @@
 	{{ form.as_p }}
 	<input type="submit" value="{% trans "S'inscrire" %}"/>
 </form>
+<a href="{% url 'password_reset' %}">{% trans "Mot de passe oublié ?" %}</a>
 {% endblock %}

@@ -29,12 +29,13 @@ from django.shortcuts import render, redirect
 from generator.forms import RegisterForm
 from generator.decorators import LoginRequiredMixin
 
-class Register(CreateView):
+class Register(FormView):
     template_name = 'generator/register.html'
     form_class = RegisterForm
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
+        form.save()
         messages.success(self.request, _(u"Vous êtes à présent inscrit."
                     u"Connectez-vous pour accéder à votre profil."))
         return super(Register, self).form_valid(form)
