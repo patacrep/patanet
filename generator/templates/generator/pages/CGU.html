@@ -1,0 +1,221 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %} {% trans "Conditions Générales d’Utilisation" %} {% endblock %}
+
+{% block content %}
+
+<h2>{% trans "1. Objet" %}</h2>
+
+<p>{% blocktrans %}
+Les présentes « conditions générales d’utilisation » ont pour objet de définir l’encadrement juridique des modalités selon lesquelles TODO:Editeur, met à la disposition des utilisateurs son site internet TODO:Domaine et les conditions selon lesquelles les utilisateurs accèdent et utilisent ce site.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Toute connexion au site TODO:Domaine est soumise au respect des présentes conditions générales d’utilisation. L’accès au site par l’utilisateur entraîne son acceptation des présentes conditions générales d’utilisation et constitue donc un contrat entre l’éditeur et l’utilisateur.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+En cas de non-acceptation des conditions générales d’utilisation stipulées dans le présent contrat, l’utilisateur se doit de renoncer à l’accès des services proposés par le site.
+{% endblocktrans %}</p>
+
+<h2>{% trans "2. Mentions légales" %}</h2>
+
+<p>
+TODO: editeur
+</p>
+<p>{% trans "Vous pouvez joindre l’éditeur via le formulaire de contact de ce site" %}</p>
+<p>
+TODO: hebergeur
+</p>
+
+<h2>{% trans "3. Définitions" %}</h2>
+
+<style>
+ul {
+    list-style:none;
+    margin-left:2em;
+}
+li {
+    margin:5px;
+}
+</style>
+
+<ul>
+    <li><strong>{% trans "Utilisateur" %}</strong>
+        {% trans "Ce terme désigne toute personne qui utilise le site ou l’un des services proposés par le site." %}
+    </li>
+    <li><strong>{% trans "Membre" %}</strong>
+        {% trans "L’utilisateur devient un « Membre » dès son inscription sur le site." %}
+    </li>
+    <li><strong>{% trans "Contenu de l’utilisateur" %}</strong>
+        {% trans "Ce sont les données transmises par l’utilisateur sur le site." %}
+    </li>
+    <li><strong>{% trans "Lien hypertexte" %}</strong>
+        {% trans "Ce terme désigne les liens consultables par les visiteurs menant à une autre page du même site ou vers un autre site web." %}
+    </li>
+    <li><strong>{% trans "Identifiant et mot de passe" %}</strong>
+        {% trans "C’est l’ensemble des informations nécessaires à l’identification d’un membre sur le site. L’identifiant et le mot de passe permettent à l’utilisateur d’accéder à des services réservés aux membres du site. Le mot de passe est une information confidentielle." %}
+    </li>
+</ul>
+
+<h2>{% trans "4. Accès au site" %}</h2>
+
+<p>{% blocktrans %}
+Le site est accessible gratuitement à tout utilisateur ayant un accès à Internet. Tous les frais supportés par l’utilisateur pour accéder au service (matériel informatique, logiciels, abonnement Internet, etc.) sont à sa charge.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+L’éditeur met en œuvre tous les moyens mis à sa disposition pour assurer un accès de qualité à ses services. L’obligation étant de moyens, le site ne s’engage pas à atteindre ce résultat.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+L’accès au site peut à tout moment faire l’objet d’une interruption à des fins de maintenance, de mise à jour et pour toute autre raison (raisons techniques, force majeure, etc.) sans que l’interruption n’ouvre droit à aucune obligation ni indemnisation.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Tout événement dû à un cas de force majeur ayant pour conséquence un dysfonctionnement du réseau ou du serveur n’engage pas la responsabilité de l’éditeur.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+L’utilisateur non membre n’a pas accès aux services réservés aux membres. En effet, certaines actions sur le site sont réservées aux membres après identification à l’aide de leur identifiant et de leur mot de passe. Elles concernent la création, l'édition et la génération de carnet de chants.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Pour devenir « Membre », l’utilisateur doit créer un compte au moyen du formulaire en ligne prévu à cet effet.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Lors de son inscription, le membre choisit un identifiant et un mot de passe lesquels ont un caractère strictement personnel et confidentiel. Le membre est donc tenu de préserver la confidentialité de ces données et à supporter toutes les conséquences pouvant résulter de leur divulgation (qu’elle soit volontaire ou non).
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Pour pouvoir accéder aux services réservés aux membres, le membre doit s’identifier à l’aide de son identifiant et de son mot de passe.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+L’éditeur se réserve le droit de refuser l’accès aux services du site, unilatéralement et sans notification préalable, à tout utilisateur ne respectant pas les présentes conditions d’utilisation.
+{% endblocktrans %}</p>
+
+<h2>{% trans "5. Données personnelles" %}</h2>
+<h3>{% trans "5.1 Loi Informatique et Libertés du 6 janvier 1978" %}</h3>
+
+<p>{% blocktrans %}
+Conformément à la Loi no78-17 du 6 janvier 1978 relative à l’informatique, aux fichiers et aux libertés, le traitement des données personnelles réalisées sur le site a fait l’objet d’une déclaration auprès de la Commission Nationale Informatique et Liberté (CNIL).
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Le traitement des données personnelles de chaque membre se fait conformément à la Loi Informatique et Libertés du 6 janvier 1978 relative à l’informatique, aux fichiers et aux libertés.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+L’éditeur du site s’engage à assurer un niveau de protection suffisant des informations fournies dans le but de garantir le respect de la vie privée conformément aux prescriptions légales.
+{% endblocktrans %}</p>
+
+<h3>{% trans "5.2 Utilisation des données enregistrées" %}</h3>
+
+<p>{% blocktrans %}
+Toutes les données à caractère personnel transmises par les utilisateurs et membres du site sont recueillies dans le plus strict respect de la législation. Elles ont pour finalité une meilleure utilisation de TODO:domaine et sont donc utilisées par l’éditeur du site à cette fin.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Lors de son inscription, il est requis de l’utilisateur de fournir des informations le concernant. En particulier, l’adresse électronique pourra être utilisée par le site pour l’administration et la communication d’informations touchant l’ensemble des membres du site (par exemple : une modification importante de la structure du site, l’ajout de fonctionnalités, une modification des présentes conditions, les dernières publications du site (newsletter), etc.).
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Les données concernant les utilisateurs (membres ou non) du site peuvent être également utilisées à des fins statistiques destinées à mesurer la fréquentation du site.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+En dehors du cas prévu ci-dessus, les données personnelles ne feront l’objet d’aucune communication à des tiers. Toutefois, elles pourront être divulguées en application d’une loi ou d’un règlement ou en vertu d’une décision d’une autorité réglementaire ou judiciaire compétente.
+{% endblocktrans %}</p>
+
+<h3>{% trans "5.3 Non-acceptation, modification et suppression des données enregistrées" %}</h3>
+
+<p>{% blocktrans %}
+L’utilisateur est libre de refuser de communiquer les renseignements sollicités pour l’inscription sur le site. Dans ce cas, il ne peut pas en devenir membre.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Conformément aux articles 39 et 40 de la Loi no78-17 du 6 janvier 1978, l’utilisateur peut à tout moment accéder aux informations personnelles le concernant détenues par l’association éditrice du site et réaliser leur modification, leur rectification ou leur suppression. Tout utilisateur peut demander que les données soient rectifiées, complétées, mises à jour, ou supprimées. Pour exercer ces droits, tout utilisateur peut se servir du formulaire de contact présent sur le site ou via l’adresse de contact fournie dans les mentions légales du présent document.
+{% endblocktrans %}</p>
+
+<h3>{% trans "5.4 Politique relative à l’installation de cookies" %}</h3>
+
+<p>{% blocktrans %}
+L’éditeur du site utilise la technologie des marqueurs (cookies) afin d’améliorer la qualité du site et mieux répondre aux attentes des utilisateurs. Le membre prend acte que le site procède à l’installation de cookies sur le disque dur de son ordinateur en vue d’identifier chacune de ses connexion.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+De manière générale, les cookies sont sans dommage pour l’ordinateur du membre. Ce dernier est libre d’accepter ou refuser les cookies en configurant son navigateur internet à cet effet. Pour ce faire, le membre peut se rendre sur le site de la Commission Nationale de l’Informatique et des Libertés (CNIL) à l’adresse : <a href="http://www.cnil.fr/vos-libertes/vos-traces/les-cookies/">http://www.cnil.fr/vos-libertes/vos-traces/les-cookies/</a> donnant toutes les informations relatives à une telle configuration. Les cookies sont anonymes et ne sont en aucun cas utilisés pour collecter des données à caractère personnel, mais uniquement à des fins de connexion et statistiques.
+{% endblocktrans %}</p>
+
+<h2>{% trans "6. Propriété intellectuelle" %}</h2>
+
+<h3>{% trans "6.1 Code source du site" %}</h3>
+
+<p>{% blocktrans %}
+Le code source du présent site est mis à disposition sous licence GNU Affero General Public License v3 ; et est disponible sur Github.
+{% endblocktrans %}</p>
+
+<h3>{% trans "6.2 Contenu de ce site" %}</h3>
+
+<p>{% blocktrans %}
+Le présent site propose aux utilisateur de créer des carnets de chants à partir d'une base de donnée de chansons entrée par la communauté. Dans cette base de chansons, les paroles, titres, illustrations originelles restent la propriété des auteurs originaux ou des ayants-droit. Les accords de guitare et les partitions ajoutées par la communauté constituent des interprétations ajoutées à ces chansons, et sont diffusées sous licence Creative Commons, Paternité, Partage à l'identique (CC-BY-SA).
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Cette base de donnée de chansons n'a absolument aucune vocation commerciale et joue sur l'autorisation tacite des auteurs et des ayants droits, pensant que la publication de ces tablatures représente plutôt une publicité positive à leur égard. Cependant, si un auteur ou une société accréditée désire s'opposer à la publication de ses tablatures, merci de nous contacter et celles-ci seront immédiatement retirées du site.
+{% endblocktrans %}</p>
+
+<h2>{% trans "7. Limitation de responsabilité" %}</h2>
+
+<p>{% blocktrans %}
+L’utilisateur du site assume l’ensemble des risques découlant de l’utilisation des informations présentes sur le site ou dans les sites joignables au travers des liens hypertextes.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Le membre a l’obligation de garder son mot de passe secret. Toute divulgation du mot de passe, quelle que soit sa forme, est interdite. Ce dernier assume les risques liés à l’utilisation de son identifiant et mot de passe. Nous vous encourageons à utiliser pour votre compte des mots de passe forts (mots de passe constitués d’une combinaison de lettres majuscules et minuscules, de chiffres et de caractères spéciaux).
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Le site ne saurait être responsable d’un quelconque dommage résultant d’un manquement du membre sur ce qui précède.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Une garantie optimale de la sécurité et de la confidentialité des données transmises n’est pas assurée par le site. Toutefois, le site s’engage à mettre en œuvre tous les moyens nécessaires afin de garantir au mieux la sécurité et la confidentialité des données.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+La responsabilité du site ne peut être engagée en cas de force majeure ou du fait imprévisible et insurmontable d’un tiers.
+{% endblocktrans %}</p>
+
+<h2>{% trans "8. Liens hypertextes" %}</h2>
+
+<p>{% blocktrans %}
+Des liens hypertextes sortants sont présents sur le site, cependant les pages web où mènent ces liens n’engagent en rien la responsabilité du site qui n’a pas le contrôle de ces liens.
+{% endblocktrans %}</p>
+
+<h2>{% trans "9. Évolution des présentes conditions" %}</h2>
+
+<p>{% blocktrans %}
+L’éditeur se réserve le droit de modifier unilatéralement et à tout moment le contenu des présentes conditions générales d’utilisation.
+{% endblocktrans %}</p>
+
+<h2>{% trans "10. Durée" %}</h2>
+
+<p>{% blocktrans %}
+La durée des présentes Conditions Générales d’Utilisation est indéterminée.
+{% endblocktrans %}</p>
+
+<h2>{% trans "11. Droit applicable et juridiction compétente" %}</h2>
+
+<p>{% blocktrans %}
+La législation française s’applique au présent contrat.
+{% endblocktrans %}</p>
+
+<h2>{% trans "11. Langue des conditions d'utilisation" %}</h2>
+
+<p>{% blocktrans %}
+Les présentes Conditions Générales peuvent être présentée aux utilisateurs dans différentes langues, selon les réglages de leur navigateur. Toutefois, seule la version française fait foi, les autres étant présentées à l'utilisateur pour leur comodité.
+{% endblocktrans %}</p>
+{% endblock %}
