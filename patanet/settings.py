@@ -104,8 +104,8 @@ USE_TZ = True
 gettext = lambda x: x
 
 LANGUAGES = (
-('fr', gettext('French')),
-('en', gettext('English')),)
+('fr', gettext('Français')),
+('en', gettext('Anglais')),)
 
 LOCALE_PATHS = ( os.path.join(PROJECT_ROOT, "locale"),)
 

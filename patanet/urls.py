@@ -38,6 +38,10 @@ urlpatterns += i18n_patterns('',
     url(r'^pages/(?P<url>[\w-]+)', FlatPage.as_view(), name="flatpage"),
     )
 
+urlpatterns += patterns('patanet.views',
+    url(r'^setlang/', 'setlang' , name="setlang"),
+)
+
 
 from django.conf import settings
 if settings.DEBUG:
