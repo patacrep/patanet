@@ -65,6 +65,11 @@ class NewSongbook(LoginRequiredMixin, CreateView):
         messages.success(self.request, _(u"Le nouveau carnet a été créé."))
         return super(NewSongbook, self).form_valid(form)
 
+    def get_initial(self):
+        initial = super(NewSongbook, self).get_initial()
+        initial["author"] = self.request.user
+        return initial
+
 
 class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
     model = Songbook
