@@ -47,11 +47,6 @@ class FlatPage(TemplateView):
             raise Http404
 
 
-def home(request):
-    headertitle = _(u'Accueil')
-    return render(request, 'generator/home.html', locals())
-
-
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
