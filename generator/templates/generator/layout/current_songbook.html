@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load staticfiles %}
+{% load filters %}
 
 <div class="current-songbook">
     <img src="{% static "img/book.jpg" %}" alt="book">
@@ -11,6 +12,15 @@
                 <a href="" id="add_songs">
                 {% trans "Ajouter les chants au carnet" %}
                 </a>
+                {% if song and song|in_items:current_item_list %}
+                    <a href="" id="toggle_song">
+                    {% trans "Supprimer du carnet" %}
+                    </a>
+                {% else %}
+                    <a href="" id="toggle_song">
+                    {% trans "Ajouter au carnet" %}
+                    </a>
+                {% endif %}
             </li>
             <li>
                 <a href="{% url 'show_songbook' id=current_songbook.id slug=current_songbook.slug %}">

@@ -69,8 +69,17 @@ $(function() {
     }
 
     var add_songs = function(){
+        if ($("#add_songs_form").text().length == 0){
+            $("#add_songs").hide();
+        }
+
         $("#add_songs").click(function(){
             $("#add_songs_form").submit();
+            return false;
+        });
+
+        $("#toggle_song").click(function(){
+            $("#toogle_song_form").submit();
             return false;
         });
     }
