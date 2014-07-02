@@ -5,7 +5,7 @@ Web interface for songbook generation, as part of the [patacrep](http://www.pata
 
 ## Installation and configuration
 
-Please check the wiki about [devellopment](https://github.com/patacrep/patanet/wiki/Development-installation) installation and about [deploying the app](https://github.com/patacrep/patanet/wiki/Deploying-the-app) in production.
+Please check the wiki about [development](https://github.com/patacrep/patanet/wiki/Development-installation) installation and about [deploying the app](https://github.com/patacrep/patanet/wiki/Deploying-the-app) in production.
 
 
 ## Join the team
