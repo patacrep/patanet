@@ -60,6 +60,11 @@
                     <img src="{% static "img/processing_32.gif" %}" alt="{% trans "En cours de traitement" %}" title="{% trans "En cours de traitement" %}">
               {% else %}
                     <img src="{% static "img/error_32.png" %}" alt="{% trans "Erreur" %}" title="{% trans "Erreur" %}">
+                    <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=true&layout={{task.layout.id}}">
+                        <img src="{% static "img/restart.png"%}"
+                             alt="{% trans "Relancer" %}"
+                             title="{% trans "Relancer"%}">
+                    </a>
               {% endif %}
           </td>
       </tr>
