@@ -175,7 +175,7 @@ class Layout(models.Model):
     """
 
     BOOKTYPES = (("chorded", _(u"Avec accords")),
-              ("lyrics", _(u"Sans accords")),
+              ("lyric", _(u"Sans accords")),
               )
 
     name = models.CharField(max_length=100,
