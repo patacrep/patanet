@@ -17,14 +17,17 @@
 from django.core.management.base import BaseCommand, CommandError
 
 from generator.build import generate_songbook, GeneratorError
+from generator.models import Songbook, Layout
 
 
 class Command(BaseCommand):
-    args = "<songbook_id>"
-    help = "Build the PDF corresponding to a songbook given an id"
+    args = "<songbook_id> <layout_id>"
+    help = "Build the PDF corresponding to a songbook given a layout"
 
-    def handle(self, sb_id, *args, **options):
+    def handle(self, songbook_id, layout_id, *args, **options):
+        songbook = Songbook.objects.get(id=songbook_id)
+        layout = Layout.object.get(id=layout_id)
         try:
-            generate_songbook(sb_id)
+            generate_songbook(songbook, layout)
         except GeneratorError as e:
             raise CommandError(str(e))

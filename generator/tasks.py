@@ -27,23 +27,23 @@ LOGGER = logging.getLogger(__name__)
 @background(schedule=datetime.datetime.now())
 def queue_render_task(task_id):
 
-    gt = GeneratorTask.objects.get(id=task_id)
-    gt.state = GeneratorTask.State.IN_PROCESS
-    gt.save()
+    task = GeneratorTask.objects.get(id=task_id)
+    task.state = GeneratorTask.State.IN_PROCESS
+    task.save()
 
     try:
-        fileh = generate_songbook(gt)
+        filename = generate_songbook(task.songbook, task.layout)
     except GeneratorError:
-        gt.state = GeneratorTask.State.ERROR
-        gt.save()
+        task.state = GeneratorTask.State.ERROR
+        task.save()
         LOGGER.error("Failed task {0} (state : {1})"\
-                      .format(gt.id, gt.state))
+                      .format(task.id, task.state))
 
         return
 
-    gt.state = GeneratorTask.State.FINISHED
-    gt.result = {"file": "{0}".format(fileh)}
-    gt.save()
+    task.state = GeneratorTask.State.FINISHED
+    task.result = {"file": "{0}".format(filename)}
+    task.save()
 
     LOGGER.info("Finished task {0} (state : {1}) with result {2}"\
-                 .format(gt.id, gt.state, gt.result))
+                 .format(task.id, task.state, task.result))

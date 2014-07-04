@@ -45,13 +45,16 @@ class GeneratorError(Exception):
         return "[PDF Generator error] {0}". format(self.message)
 
 
-def generate_songbook(task):
+def generate_songbook(songbook, layout):
+    """Generate a PDF file by combining a songbook and a layout"""
 
-    content = task.get_as_json()
+    content = {}
+    content.update(songbook.get_as_json())
+    content.update(layout.get_as_json())
 
     content["datadir"] = settings.SONGS_LIBRARY_DIR
 
-    tmpfile = str(task.songbook.id) + '-' + str(task.layout.id) + '-' + \
+    tmpfile = str(songbook.id) + '-' + str(layout.id) + '-' + \
               hashlib.sha1(str(content)).hexdigest()[0:20]
 
     try:

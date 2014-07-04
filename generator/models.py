@@ -263,14 +263,6 @@ class Task(models.Model):
                              verbose_name=_(u"état"))
     result = JSONField(verbose_name=_(u"résultat"))
 
-    def get_as_json(self):
-
-        d = {}
-        d.update(self.songbook.get_as_json())
-        d.update(self.layout.get_as_json())
-
-        return d
-
     def __unicode__(self):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
                                     songbook=self.songbook.title,
