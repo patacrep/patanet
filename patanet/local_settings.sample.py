@@ -66,6 +66,57 @@ Databases
 # }
 
 '''
+Logging
+'''
+# LOGGING = {
+#    'version': 1,
+#    'disable_existing_loggers': True,
+#    'formatters': {
+#        'verbose': {
+#            'format': '[%(levelname)s] -- %(asctime)s -- %(module)s : %(message)s'
+#        },
+#        'simple': {
+#            'format': '[%(levelname)s] %(message)s'
+#        },
+#    },
+#    'handlers': {
+#        'django_log':{
+#            'level': 'WARNING',
+#            'class': 'logging.FileHandler',
+#            'filename': '/tmp/django.log',
+#            'formatter': 'verbose'
+#        },
+#	'generator_log':{
+#            'level': 'WARNING',
+#            'class': 'logging.FileHandler',
+#            'filename': '/tmp/generator.log',
+#            'formatter': 'verbose'
+#        },
+#        'mail_admins': {
+#            'level': 'ERROR',
+#            'class': 'django.utils.log.AdminEmailHandler',
+#        }
+#    },
+#    'loggers': {
+#        'django': {
+#            'handlers': ['django_log'],
+#            'propagate': True,
+#            'level': 'WARNING',
+#        },
+#        'django.request': {
+#            'handlers': ['mail_admins', 'django_log'],
+#            'level': 'ERROR',
+#            'propagate': False,
+#        },
+#        'generator': {
+#            'handlers': ['generator_log'],
+#            'level': 'WARNING',
+#        }
+#    }
+#}
+
+
+'''
 Search paths
 '''
 # Path to the songs directory (*.sg files) from the songbook repo

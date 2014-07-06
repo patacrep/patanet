@@ -29,6 +29,7 @@ import re
 import os
 import sys
 import pprint
+import logging
 
 _BLOCKS_PATTERNS = [(r"\beginverse", '<p class="verse" >'),
                     (r"\begin{verse}", '<p class="verse" >'),
@@ -44,6 +45,7 @@ _BLOCKS_PATTERNS += [(r"\endverse", '</p>'),
                     (r"\end{chorus}", '</p>'),
                     ]
 
+LOGGER = logging.getLogger(__name__)
 
 def parse_chords(content):
     content = re.sub('\\\\\\[(.*?)\]({[^\\\\\s\n]*}|[^\\\\\s\n]*)',
@@ -80,12 +82,11 @@ def parse_song(content):
     content = parse_unsuported(content)
     return content
 
-# TODO: Write all the output to a log file
 def import_song(repo, filepath):
     '''Import a song in the database'''
     data = parsetex(filepath)
-    sys.stdout.write("Processing " +
-                      pprint.pformat(data['titles'][0]))
+    LOGGER.info("Processing " + 
+                pprint.pformat(data['titles'][0]))
 
     artist_name = smart_text(data['args']['by'], 'utf-8')
     artist_slug = slugify(artist_name)
@@ -96,17 +97,17 @@ def import_song(repo, filepath):
                             )
     if not created:
         if (artist_model.name != artist_name):
-            sys.stderr.write(
+            LOGGER.warning(
                 "*** Artist name differs though "
                 "slugs are equal : "
                 + artist_name + " / "
                 + artist_model.name)
 
     if (len(data['languages']) > 1):
-        sys.stderr.write("*** Multiple languages " +
-                          "in song file; we though" +
-                          " only support one. " +
-                          "Picking any.")
+        LOGGER.warning("*** Multiple languages "
+                        "in song file; we though"
+                        " only support one. "
+                        "Picking any.")
     if (len(data['languages']) > 0):
         language_name = data["languages"].pop()
         language_code = next(
@@ -116,7 +117,7 @@ def import_song(repo, filepath):
                     ('', '')
                      )[0]
         if language_code == '':
-            sys.stderr.write("*** No code found for "
+            LOGGER.warning("*** No code found for "
                     "language : '" + language_name + "'")
 
     song_title = smart_text(data['titles'][0], 'utf-8')
@@ -147,7 +148,7 @@ def import_song(repo, filepath):
         song_model.slug = song_slug
 
     else:
-        sys.stdout.write("-> Already exists.")
+        LOGGER.info("-> Already exists.")
 
     artist_model.save()
     song_model.object_hash = object_hash
