@@ -193,14 +193,6 @@ class Layout(models.Model):
                                  verbose_name=_(u"gabarit"),
                                  default="data.tex")
 
-    def __eq__(self, other):
-        # TODO: Implement this
-
-        if not isinstance(other, Layout):
-            return False
-
-        return True
-
     def get_as_json(self):
         """Return a JSON representation of the layout"""
         layout = {}
