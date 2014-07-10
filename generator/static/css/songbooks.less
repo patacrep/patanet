@@ -17,54 +17,43 @@
   }
 }
 
-.public{
-    margin:auto;
-    width:90%;
-    li{
-      list-style:none;
-      padding:0 0.5em;
+
+
+    
+
+.songbook-container{
+
+    font-size: .9em;
+    margin:0 auto;
+    padding:0;
+    width:80%;
+
+    &.public{
+        padding-bottom: 1em;
     }
 
-    .description {
-        max-width:30em;
-        width:45%;
-        display:inline-block;
+    &:nth-child(odd) {
+        background-color:@selection-strip-bg;
+    }
+    &:nth-child(even) {
+        background-color:lighten(@selection-strip-bg, 50%);
     }
 
-    .layouts { // TODO: aligner verticalement
-        width:45%;
-        display:inline-block;
-        padding:0;
-        margin:0;
-        text-align:center;
-
-        h4 {
-            margin:0;
-        }
-    }
-}
-
-
-.private {
-    font-size:.9em;
 
     table {
         margin:0;
         width:100%;
-    }
-
-    .songbook-container{
-        width:100%;
-        padding:0;
-
-        &:nth-child(odd) {
-            background-color:@selection-strip-bg;
+        td{
+            width: 1%;
+        }
+        th{
+            text-align:left;
+            min-width: 150px;
         }
     }
 
-    text-align:left;
-    width:80%;
-    margin:0 auto;
+
+
 
     th{
         h2 {
@@ -88,6 +77,7 @@
             white-space: normal;
             height: 6em;
             overflow: hidden;
+            width: 100%;
             p{
                 display: block;
                 text-align:justify;
