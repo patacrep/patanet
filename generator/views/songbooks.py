@@ -259,7 +259,7 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
     model = Songbook
     context_object_name = "songbook"
     template_name = 'generator/delete_songbook.html'
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('songbook_private_list')
 
     def get_object(self, queryset=None):
         id = self.kwargs.get('id', None)
