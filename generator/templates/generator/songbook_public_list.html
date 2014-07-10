@@ -7,6 +7,8 @@
 		<a href="{% url "songbook_private_list" %}" class="back">
 			{% trans "Mes carnets" %}
 		</a>
+    {% else %}
+        <a href="#" class="back"></a>
 	{% endif %}
 	<div class="public">
 		{% for songbook in songbooks %}
