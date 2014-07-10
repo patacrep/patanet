@@ -25,6 +25,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
+from django.template.defaultfilters import slugify
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
@@ -106,6 +107,8 @@ class UpdateSongbook(OwnerRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.user = self.request.user
         messages.success(self.request, _(u"Le carnet a été modifié."))
+        # Update songbook slug
+        self.kwargs["slug"] = slugify(form.cleaned_data["title"])
         return super(UpdateSongbook, self).form_valid(form)
 
 
