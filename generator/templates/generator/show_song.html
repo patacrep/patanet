@@ -7,13 +7,16 @@
 {% endblocktrans %}
 {% endblock %}
 
+{% block current_songbook %}
+{% include "generator/layout/current_songbook.html" %}
+{% endblock %}
+
 {% block content %}
 	<h2 class="artist">
         <a class="back" href="{% url "song_list_by_artist" artist=song.artist.slug %}">
             {{ song.artist.name }}
         </a>
     </h2>
-    {% include "generator/layout/current_songbook.html" %}
 	{% comment %}
 	{% get_language_info for song.language as lang %}
 	<p class="infos">en {{lang.name_local}}<br />

@@ -34,7 +34,11 @@
 	</div>
 
 	<main id="content" role="main">
+		{% block current_songbook %}
+        {% endblock %}
+
 	<h1>{% block title %}No title{% endblock %}</h1>
+	
 		{% block content %}
             No content
         {% endblock %}
