@@ -55,16 +55,10 @@
 
     .songbook-container{
         width:100%;
-        padding:15px 0;
+        padding:0;
 
         &:nth-child(odd) {
             background-color:@selection-strip-bg;
-        }
-
-        border-top:solid thin;
-
-        &:first-child {
-            border-top:none;
         }
     }
 
@@ -72,24 +66,45 @@
     width:80%;
     margin:0 auto;
 
-    td {
-        padding:0 10px;
-
+    th{
         h2 {
             margin:0;
             a {
-                text-decoration:underline;
-                font-weight:bold;
+                padding: .5em .5em 0 .5em;
+                display: block;
             }
         }
     }
 
-    .description{
-        width:20em;
+    td {
+        padding:.5em .7em;
+        vertical-align: top;
+        white-space: nowrap;
+        &.privacy{
+            text-align: right;
+        }
+
+        &.description{
+            white-space: normal;
+            height: 6em;
+            overflow: hidden;
+            p{
+                display: block;
+                text-align:justify;
+                height: 0;
+                margin: 0;
+            }
+        }
+        a, &.privacy{
+            font-size: .9em;
+            opacity: 0;
+            transition: opacity .4s ease;
+        }
     }
 
     ul {
         padding:0;
+        margin: 0;
 
         li{
             list-style:none;
@@ -98,11 +113,14 @@
             }
         }
     }
+
+    table:hover{
+        a, td.privacy{
+            opacity: 1;
+        }
+    }
 }
 
-.description {
-    text-align:justify;
-}
 
 
 .button-link {
