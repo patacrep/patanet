@@ -14,25 +14,6 @@
         </a>
     </h2>
     {% include "generator/layout/current_songbook.html" %}
-	{% if song|in_items:current_item_list %}
-		<form method="post" action="{% url "remove_song" %}" id="toogle_song_form">
-            {% csrf_token %}
-			<input type="hidden" name="next" value="{% url "show_song" artist=song.artist.slug slug=song.slug %}">
-			<input type="hidden" name="song_id" value="{{ song.id }}">
-            <noscript>
-    			<input type="submit" value="{% trans "Retirer du carnet" %}" class="button-link"/>
-            </noscript>
-		</form>
-	{% else %}
-		<form method="post" action="{% url 'add_song_to_songbook' %}" id="toogle_song_form">
-			{% csrf_token %}
-			<input type="hidden" name="next" value="{% url "show_song" slug=song.slug artist=song.artist.slug %}">
-			<input type="hidden" name="songs[]" value="{{ song.id }}">
-            <noscript>
-    			<input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
-            </noscript>
-		</form>
-	{% endif %}
 	{% comment %}
 	{% get_language_info for song.language as lang %}
 	<p class="infos">en {{lang.name_local}}<br />

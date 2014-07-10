@@ -1,37 +1,42 @@
 {% load i18n %}
-{% load staticfiles %}
 {% load filters %}
 
 <div class="current-songbook">
-    <img src="{% static "img/book.jpg" %}" alt="book">
     {% if current_songbook %}
-    <div>
-        <h3> {{current_songbook.title}} <small> - {{current_songbook.count_songs}} {% trans "chants" %}</small></h3>
+        <a href="{% url 'songbook_private_list' %}" class="change">
+            {% trans "changer de carnet" %}
+        </a>
+        <h3> {{current_songbook.title}}</h3>
         <ul>
-            <li>
-                <a href="" id="add_songs">
-                {% trans "Ajouter les chants au carnet" %}
-                </a>
-                {% if song and song|in_items:current_item_list %}
-                    <a href="" id="toggle_song">
-                    {% trans "Supprimer du carnet" %}
-                    </a>
+            {% if song %}
+                <li>
+                {% if song|in_items:current_item_list %}
+                    <form method="post" action="{% url "remove_song" %}" id="toogle_song_form">
+                    <button type="submit" class="button-link" data-icon="delete">{% trans "Retirer du carnet" %}</button>
+                    <input type="hidden" name="song_id" value="{{ song.id }}">
                 {% else %}
-                    <a href="" id="toggle_song">
-                    {% trans "Ajouter au carnet" %}
-                    </a>
+                    <form method="post" action="{% url 'add_song_to_songbook' %}" id="toogle_song_form">
+                    <button type="submit" class="button-link" data-icon="add">{% trans "Ajouter au carnet" %}</button>
+                    <input type="hidden" name="songs[]" value="{{ song.id }}">
                 {% endif %}
-            </li>
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url "show_song" artist=song.artist.slug slug=song.slug %}">
+                    </form>
+                </li>
+            {% else %}
+                <li>
+                    <a href="" id="add_songs" data-icon="add-multiple">
+                    {% trans "Ajouter les chants au carnet" %}
+                    </a>
+                </li>
+            {% endif %}
             <li>
-                <a href="{% url 'show_songbook' id=current_songbook.id slug=current_songbook.slug %}">
+                <a href="{% url 'show_songbook' id=current_songbook.id slug=current_songbook.slug %}" data-icon="show-book">
                     {% trans "Afficher le carnet" %}
+                    ({{current_songbook.count_songs}} {% trans "chants" %})
                 </a>
             </li>
         </ul>
-    </div>
-    <a href="{% url 'songbook_private_list' %}" class="change">
-        {% trans "Changer de carnet" %}
-    </a>
     {% else %}
     <a href="{% url 'songbook_private_list' %}">
         {% trans "Choisir un carnet pour ajouter des chants" %}

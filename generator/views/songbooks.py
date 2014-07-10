@@ -217,7 +217,7 @@ def remove_song(request):
                                        item_id=song_id)
     item.delete()
     songbook.fill_holes()
-    messages.success(request, _(u"Ce chant a été supprimé"))
+    #messages.success(request, _(u"Ce chant a été retiré"))
     return redirect(next_url)
 
 @owner_required(('id', 'id'))
