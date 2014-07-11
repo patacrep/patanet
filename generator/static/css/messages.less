@@ -4,16 +4,14 @@
 }
 
 .messages{
-    z-index:2;
-    margin:15px auto;
-    padding:0;
-    text-align:center;
+    display: inline-block;
+
     li {
         display:inline-block;
         list-style:none;
         border:solid 2px;
         border-radius:5px;
-        padding:5px;
+        padding:5px 10px;
         max-width:30em;
     }
     .success {
@@ -29,6 +27,11 @@
         .messsages-color(@messages-warning);
     }
 }
+ul.messages{
+    margin-top: -10px;
+    margin-left: 24px;
+    animation: disappear 4s forwards;
+}
 
 .errorlist{
     .messages;
@@ -36,3 +39,9 @@
         .messsages-color(@messages-error);
     }
 }
+
+@keyframes disappear {
+    0%   {opacity: 1;}
+    75%  {opacity: 1;}
+    100% {opacity: 0;}
+} 
