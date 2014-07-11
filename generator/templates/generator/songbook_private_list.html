@@ -7,7 +7,7 @@
 		{% trans "Carnets publics" %}
 	</a>
 	<p>
-		<a href="{% url 'new_songbook' %}">{% trans "Créer un nouveau carnet" %}</a>
+		<a href="{% url 'new_songbook' %}" data-icon="add-book">{% trans "Créer un nouveau carnet" %}</a>
 	</p>
 	<div>
         {% for songbook in songbooks %}
