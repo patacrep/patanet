@@ -1,8 +1,12 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}{% trans "Nouveau carnet" %}{% endblock %}
+{% block title %}{% trans "Créer un nouveau carnet" %}{% endblock %}
 
 {% block content %}
+	<a href="{% url "songbook_private_list" %}" class="back">
+		{% trans "Retour" %}
+	</a>
+
 	<form method="post" action="{% url 'new_songbook' %}">
 		{% csrf_token %}
 		{{ form.as_p }}
