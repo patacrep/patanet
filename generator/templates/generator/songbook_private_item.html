@@ -10,13 +10,15 @@
             </h2>
         </th>
         <td class="privacy">
-            <em>
-            {% if songbook.is_public %}
-                {% trans "Public" %}
-            {% else %}
-                {% trans "Privé" %}
-            {% endif %}
-            </em>
+            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}#pid_is_public">
+                <em>
+                {% if songbook.is_public %}
+                    {% trans "Public" %}
+                {% else %}
+                    {% trans "Privé" %}
+                {% endif %}
+                </em>
+            </a>
         </td>
     </tr>
     <tr>
