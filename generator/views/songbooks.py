@@ -219,7 +219,7 @@ def remove_song(request):
                                        item_id=song_id)
     item.delete()
     songbook.fill_holes()
-    messages.success(request, _(u"Chant retiré du carnet"))
+    messages.success(request, _(u"Chant retiré du carnet"), extra_tags='removal')
     return redirect(next_url)
 
 @owner_required(('id', 'id'))
