@@ -194,6 +194,8 @@ def add_songs_to_songbook(request):
                     rank += 1
         except Artist.DoesNotExist:
             pass
+    if len(song_list) == 1 and len(artist_list) == 0:
+        messages.success(request, _(u"Chant ajouté au carnet"))
 
     return redirect(next_url)
 
@@ -217,7 +219,7 @@ def remove_song(request):
                                        item_id=song_id)
     item.delete()
     songbook.fill_holes()
-    #messages.success(request, _(u"Ce chant a été retiré"))
+    messages.success(request, _(u"Chant retiré du carnet"))
     return redirect(next_url)
 
 @owner_required(('id', 'id'))
