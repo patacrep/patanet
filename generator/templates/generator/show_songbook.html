@@ -11,7 +11,7 @@
 
 {% block content %}
 	{% if can_edit %}
-		<a href="{% url "songbook_private_list" %}" class="back">
+		<a href="{% url "songbook_private_list" %}#songbook_{{songbook.id}}" class="back">
 			{% trans "Tous mes carnets" %}
 		</a>
 	{% else %}

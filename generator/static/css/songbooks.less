@@ -21,6 +21,10 @@
 
     
 
+@keyframes emphasize {
+    20%  {background-color: #F2C96A;}
+} 
+
 .songbook-container{
 
     font-size: .9em;
@@ -37,6 +41,12 @@
     }
     &:nth-child(even) {
         background-color:lighten(@selection-strip-bg, 50%);
+    }
+
+    &:target{
+        animation: emphasize 3s;
+
+        border-left: solid 1px @link-col;
     }
 
 

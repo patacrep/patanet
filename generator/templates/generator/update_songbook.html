@@ -11,6 +11,9 @@
 {% endblock %}
 
 {% block content %}
+	<a href="{% url "songbook_private_list" %}#songbook_{{songbook.id}}" class="back">
+		{% trans "Retour" %}
+	</a>
 	<form method="post" action="{% url 'edit_songbook' id=songbook.id slug=songbook.slug%}">
 		{% csrf_token %}
 		{{ form.as_p }}

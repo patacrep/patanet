@@ -59,7 +59,9 @@ class NewSongbook(LoginRequiredMixin, CreateView):
     model = Songbook
     template_name = 'generator/new_songbook.html'
     form_class = SongbookCreationForm
-    success_url = reverse_lazy('songbook_private_list')
+
+    def get_success_url(self):
+        return _songbook_url(self.object)
 
     def form_valid(self, form):
         form.user = self.request.user
@@ -102,7 +104,7 @@ class UpdateSongbook(OwnerRequiredMixin, UpdateView):
                                        slug=self.kwargs['slug'])
 
     def get_success_url(self):
-        return reverse('show_songbook', kwargs=self.kwargs)
+        return _songbook_url(self.object)
 
     def form_valid(self, form):
         form.user = self.request.user
@@ -344,3 +346,10 @@ def render_songbook(request, id, slug):
         tasks.queue_render_task(gen_task.id)
 
     return redirect(reverse('setup_rendering', kwargs={"id":id, "slug":slug}))
+
+
+def _songbook_url(songbook):
+    url = reverse_lazy('songbook_private_list')
+    url += '#songbook_'
+    url += str(songbook.id)
+    return url
