@@ -12,7 +12,7 @@
 	{% endif %}
 	<div>
 		{% for songbook in songbooks %}
-			{% if user = songbook.user %}
+			{% if user == songbook.user %}
                 {% include 'generator/songbook_private_item.html' %}
             {% else %}
                 {% include 'generator/songbook_public_item.html' %}
