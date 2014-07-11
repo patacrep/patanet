@@ -1,0 +1,29 @@
+form{
+
+	input[type="text"], 
+	input[type="email"],
+	input[type="password"],
+	textarea{
+		width: 330px;
+	    padding: 7px 0px 7px 5px;
+	    border: 1px solid #e5e5e5;
+	    background: #fbfbfb;
+	    outline: 0;
+
+	    transition: all 0.2s ease-in-out;
+	    -webkit-transition: all 0.25s ease-in-out;
+	    &:focus{
+	    	@glow-color: lighten(@link-col, 20%);
+
+	    	border-color: @glow-color;
+		    box-shadow: 0 0 10px fade(@glow-color, 40%);
+		    -webkit-box-shadow: 0 0 5px rgba(0, 0, 255, 1); 
+	    }
+    }
+
+    label{
+    	font-weight: bold;
+    	font-size: 0.9em;
+    	padding-right: 1em;
+    }
+}
