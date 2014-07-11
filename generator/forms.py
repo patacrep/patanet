@@ -29,6 +29,24 @@ from captcha.fields import CaptchaField
 
 from generator.models import Song, Songbook, Layout
 
+from django.forms.forms import BoundField
+
+# Customize the rendering of forms : add a class to the field container with the id of the field
+css_classes_old = BoundField.css_classes
+def css_classes_custom(self, extra_classes=None):
+    """
+    Returns a string of space-separated CSS classes for this field.
+    """
+    current_classes = css_classes_old(self, extra_classes)
+    if current_classes:
+        current_classes += ' '
+
+    widget = self.field.widget
+    id_ = widget.attrs.get('id') or self.auto_id
+    id_ = 'p' + id_
+    
+    return current_classes + id_
+BoundField.css_classes = css_classes_custom
 
 class RegisterForm(UserCreationForm):
     """ Require email address when a user signs up """
