@@ -10,7 +10,7 @@
             </h2>
         </th>
         <td class="privacy">
-            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}#pid_is_public">
+            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}#pid_is_public" class="action">
                 <em>
                 {% if songbook.is_public %}
                     {% trans "Public" %}
@@ -79,17 +79,17 @@
     </tr>
     <tr>
         <td>
-            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}">
+            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}" class="action">
                 {% trans "Editer la description" %}
             </a>
         </td>
         <td>
-            <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">
+            <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" class="action">
                 {% trans "Ajouter des chants" %}
             </a>
         </td>
         <td>
-            <a href="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
+            <a href="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}" class="action">
                 {% if songbook.tasks.all.count > 0 %}
                     {% trans "Nouvelle mise en page" %}
                 {% else %}
@@ -98,7 +98,7 @@
             </a>
         </td>
         <td>
-            <a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}">
+            <a href="{% url "delete_songbook" id=songbook.id slug=songbook.slug %}" class="action">
                 {% trans "Supprimer" %}
             </a>
         </td>
