@@ -52,6 +52,16 @@ form{
         }
     }
 
+    span.captcha{
+    	vertical-align: middle;
+    	display: inline-block;
+    	text-align: center;
+    	width: 90px;
+    	& + input{
+    		width: 236px;
+    	}
+    }
+
     input[type="submit"],
     button[type="submit"]:not(.button-link){
     	background-color: darken(@link-col, 8%);
