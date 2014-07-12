@@ -2,12 +2,18 @@ form{
 
 	margin: auto;
 
+	display: table;
+
     @media (max-width:@screen-sm){
         margin:0 11px;
+        width: 100%;
     }
 
 	&.selection{
 		width: 80%;
+	}
+	&.current_songbook{
+		display: block;
 	}
 
 	p{
@@ -20,16 +26,12 @@ form{
 
 	div.non_field_errors{
 		display: table-caption;
-        @media (max-width:@screen-sm){
-            display: table-row;
-        }
 		ul.errorlist li{
 			text-align: left;
 		}
 	}
 	ul.errorlist{
 		display: table-row;
-
 		
 		&:before{
 			content: " ";
@@ -48,6 +50,7 @@ form{
 	            text-align: right;
 	        }
 	    }
+
 	    & + p > input{
 	    	@glow-color: darken(@messages-error, 30%);
 
