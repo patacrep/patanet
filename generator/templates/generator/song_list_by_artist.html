@@ -5,6 +5,10 @@
 {% endblocktrans %}
 {% endblock %}
 
+{% block choose_songbook %}
+	{% include "generator/layout/choose_songbook.html" %}
+{% endblock %}
+
 {% block content %}
 	<a class="artist back" href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a>
 	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">

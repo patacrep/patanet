@@ -2,6 +2,10 @@
 
 {% block title %} {% trans "Tous les artistes" %} {% endblock %}
 
+{% block choose_songbook %}
+    {% include "generator/layout/choose_songbook.html" %}
+{% endblock %}
+
 {% block content %}
 {% include "generator/layout/name_pagination.html" %}
 	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">

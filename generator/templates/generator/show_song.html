@@ -7,6 +7,10 @@
 {% endblocktrans %}
 {% endblock %}
 
+{% block choose_songbook %}
+	{% include "generator/layout/choose_songbook.html" %}
+{% endblock %}
+
 {% block content %}
 	<h2 class="artist">
         <a class="back" href="{% url "song_list_by_artist" artist=song.artist.slug %}">

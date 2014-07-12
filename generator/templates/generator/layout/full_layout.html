@@ -42,7 +42,8 @@
 			{% elif songbook %}
 			    {% include "generator/layout/current_songbook.html" %}
 			{% else %}
-				<!-- TODO choose songbook / login / register -->
+				{% block choose_songbook %}
+				{% endblock %}
 			{% endif %}
         {% endblock %}
 
