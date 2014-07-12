@@ -25,5 +25,27 @@ form{
     	font-weight: bold;
     	font-size: 0.9em;
     	padding-right: 1em;
+    input[type="submit"],
+    button[type="submit"]:not(.button-link){
+    	background-color: darken(@link-col, 8%);
+    	color: #eee;
+    	border: none;
+    	padding: .5em .7em;
+    	margin-top: 1em;
+    	margin-right: -100%;
+    	margin-left: 100%;
+	    transition: all 0.25s ease-in-out;
+	    -webkit-transition: all 0.25s ease-in-out;
+
+        @media (max-width:@screen-sm){
+            float: none;
+            width: 100%;
+            margin: 1em 0;
+        }
+        &:hover,
+        &:focus,
+        &:active{
+	    	background-color: darken(@link-col, 12%);
+        }
     }
 }
