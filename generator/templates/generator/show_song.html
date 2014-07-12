@@ -17,6 +17,22 @@
             {{ song.artist.name }}
         </a>
     </h2>
+	
+	{% if current_songbook %}
+		{% if song|in_items:current_item_list %}
+			<form method="post" action="{% url "remove_song" %}" id="toogle_song_form" class="current_songbook">
+			<button type="submit" class="button-link" data-icon="delete">{% trans "Retirer du carnet" %}</button>
+			<input type="hidden" name="song_id" value="{{ song.id }}">
+		{% else %}
+		    <form method="post" action="{% url 'add_song_to_songbook' %}" id="toogle_song_form" class="current_songbook">
+		    <button type="submit" class="button-link" data-icon="add">{% trans "Ajouter au carnet" %}</button>
+		    <input type="hidden" name="songs[]" value="{{ song.id }}">
+    	{% endif %}
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url "show_song" artist=song.artist.slug slug=song.slug %}">
+		    </form>
+    {% endif %}
+
 	{% comment %}
 	{% get_language_info for song.language as lang %}
 	<p class="infos">en {{lang.name_local}}<br />
