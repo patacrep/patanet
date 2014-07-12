@@ -8,9 +8,11 @@
 	{% endif %}
 	<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
 	{% csrf_token %}
-	{{ form.non_field_errors }}
+	<div class="non_field_errors">
+		{{ form.non_field_errors }}
+	</div>
 	{% for field in form %}
-		{% spaceless %}
+		{{field.errors}}
 		<p>
 		{% if field.name == "username" %}
 			<label for="id_username">
@@ -19,12 +21,11 @@
         {% else %}
           {{ field.label_tag }}
         {% endif %}
-		{% endspaceless %}
 		{{ field }} </p>
 	{% endfor %}
-	<p>
-		<input type="submit" value="{% trans "Se connecter" %}"/>
-	</p>
+		<p>
+			<input type="submit" value="{% trans "Se connecter" %}"/>
+		</p>
 		<input type="hidden" name="next" value="{{ next }}" />
 	</form>
 	<a href="{% url 'password_reset' %}">{% trans "Mot de passe oublié ?" %}</a>

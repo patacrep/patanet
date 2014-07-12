@@ -18,6 +18,48 @@ form{
         }
 	}
 
+	div.non_field_errors{
+		display: table-caption;
+        @media (max-width:@screen-sm){
+            display: table-row;
+        }
+		ul.errorlist li{
+			text-align: left;
+		}
+	}
+	ul.errorlist{
+		display: table-row;
+
+		
+		&:before{
+			content: " ";
+			display: table-cell;
+	        @media (max-width:@screen-sm){
+	            display: none;
+	        }
+		}
+
+		li{
+			list-style:none;
+        	padding:5px 10px 0 10px;
+	        color: darken(@messages-error, 30%);
+
+	        @media (max-width:@screen-sm){
+	            text-align: right;
+	        }
+	    }
+	    & + p > input{
+	    	@glow-color: darken(@messages-error, 30%);
+
+	    	border-color: @glow-color;
+	    	&:focus{
+	    		border-color: @glow-color;
+			    box-shadow: 0 0 10px fade(@glow-color, 40%);
+			    -webkit-box-shadow: 0 0 10px fade(@glow-color, 40%);
+		    }
+	    }
+	}
+
 	input[type="text"], 
 	input[type="email"],
 	input[type="password"],
@@ -38,6 +80,9 @@ form{
 		    box-shadow: 0 0 10px fade(@glow-color, 40%);
 		    -webkit-box-shadow: 0 0 10px fade(@glow-color, 40%);
 	    }
+        @media (max-width:@screen-sm){
+            width: 100%;
+        }
     }
 
     p label{
