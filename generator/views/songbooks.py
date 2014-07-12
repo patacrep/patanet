@@ -51,8 +51,11 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
     template_name = "generator/songbook_private_list.html"
 
     def get_queryset(self):
-        return Songbook.objects.filter(user=self.request.user
+        songbooks = Songbook.objects.filter(user=self.request.user
                                        ).order_by('title')
+        if len(songbooks) == 1 and 'current_songbook' not in self.request.session:
+            self.request.session['current_songbook'] = songbooks[0].id
+        return songbooks
 
 
 class NewSongbook(LoginRequiredMixin, CreateView):
