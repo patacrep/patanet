@@ -2,7 +2,7 @@
 
 {% block title %}
 	{% blocktrans with songbook=songbook.title%}
-	Suppression du carnet <em>{{songbook}}</em>
+	Suppression
 	{% endblocktrans %}
 {% endblock %}
 
@@ -11,14 +11,16 @@
 {% endblock %}
 
 {% block content %}
+    <a href="{% url "songbook_private_list" %}" class="back">{% trans 'Mes carnets' %}</a>
 	<p>
-        {% trans "Êtes-vous sur de vouloir supprimer ce carnet ?" %}
+        {% blocktrans with songbook=songbook.title%}
+        	Êtes-vous sur de vouloir supprimer le carnet <em><strong>{{songbook}}</strong></em> ?
+        {% endblocktrans %}
+        <br/>
 		<strong>{% trans "Cette action est irréversible !" %}</strong>
 	</p>
 	<form method="post" action="">
 		{% csrf_token %}
-        -
-        <a href="{% url "songbook_private_list" %}">{% trans 'Revenir aux carnets' %}</a>
 		<p>
 			<input type="submit" value="{% trans 'Confirmer la suppression' %}" />
 		</p>
