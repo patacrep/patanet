@@ -68,7 +68,7 @@ class NewSongbook(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.user = self.request.user
-        messages.success(self.request, _(u"Le nouveau carnet a été créé."))
+        messages.success(self.request, _(u"Le carnet a été créé."))
         return super(NewSongbook, self).form_valid(form)
 
     def get_initial(self):
@@ -270,6 +270,7 @@ def move_or_delete_items(request, id, slug):
         try:
             section_name = unicode(request.POST['new_section'])
             songbook.add_section(section_name)
+            messages.success(request, _(u"Nouvelle section ajoutée en fin de carnet"))
         except ValueError:
             messages.error(request, _(u"Ce nom de section n'est pas valide"))
 
@@ -280,7 +281,11 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
     model = Songbook
     context_object_name = "songbook"
     template_name = 'generator/delete_songbook.html'
-    success_url = reverse_lazy('songbook_private_list')
+
+    def get_success_url(self):
+        success_url = reverse_lazy('songbook_private_list')
+        messages.success(self.request, _(u"Le carnet a été supprimé"), extra_tags='removal')
+        return success_url
 
     def get_object(self, queryset=None):
         id = self.kwargs.get('id', None)
