@@ -215,13 +215,13 @@
 
 @layout_list_width: 30%;
 .songbook-infos {
-    .description {
-        margin-right: @layout_list_width;
+    float:right;
+    width: @layout_list_width;
+    h4{
+        text-align:center;
     }
     .layout-list {
         text-align:center;
-        width:@layout_list_width;
-        float:right;
 
         a {
             margin:auto;
@@ -229,11 +229,9 @@
 
         li {
             list-style:none;
-
-            &:first-child {
-                font-weight:bold;
-                margin-bottom:10px;
-            }
         }
+    }
+    & + div{
+        margin-right: @layout_list_width;
     }
 }
