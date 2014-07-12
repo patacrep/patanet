@@ -62,7 +62,9 @@ class NewSongbook(LoginRequiredMixin, CreateView):
     model = Songbook
     template_name = 'generator/new_songbook.html'
     form_class = SongbookCreationForm
-    success_url = reverse_lazy('song_list')
+
+    def get_success_url(self):
+        return reverse('set_current_songbook') + '?songbook=' + str(self.object.id)
 
     def form_valid(self, form):
         form.user = self.request.user
