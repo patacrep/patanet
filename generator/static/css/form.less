@@ -1,5 +1,22 @@
 form{
 
+	margin: auto;
+
+	&.selection{
+		width: 80%;
+	}
+	&.as_p{
+		display: table;
+	}
+
+	p{
+		display: table-row;
+        & > input,
+        & > textarea{
+        	margin-bottom: .5em;
+        }
+	}
+
 	input[type="text"], 
 	input[type="email"],
 	input[type="password"],
@@ -7,24 +24,33 @@ form{
 		width: 330px;
 	    padding: 7px 0px 7px 5px;
 	    border: 1px solid #c5c5c5;
-	    background: #fbfbfb;
+	    background: #f9f9f9;
 	    outline: 0;
 
-	    transition: all 0.2s ease-in-out;
-	    -webkit-transition: all 0.25s ease-in-out;
+	    transition: box-shadow 0.2s ease-in-out;
+	    -webkit-transition: box-shadow 0.2s ease-in-out;
 	    &:focus{
 	    	@glow-color: lighten(@link-col, 20%);
+	    	background-color: #fff;
 
 	    	border-color: @glow-color;
 		    box-shadow: 0 0 10px fade(@glow-color, 40%);
-		    -webkit-box-shadow: 0 0 5px rgba(0, 0, 255, 1); 
+		    -webkit-box-shadow: 0 0 10px fade(@glow-color, 40%);
 	    }
     }
 
-    label{
+    p label{
+        display: table-cell;
     	font-weight: bold;
     	font-size: 0.9em;
     	padding-right: 1em;
+        text-align: right;
+        @media (max-width:@screen-sm){
+            text-align: left;
+            display: block;
+        }
+    }
+
     input[type="submit"],
     button[type="submit"]:not(.button-link){
     	background-color: darken(@link-col, 8%);
