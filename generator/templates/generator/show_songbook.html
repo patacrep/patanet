@@ -1,25 +1,14 @@
 {% extends "generator/layout/full_layout.html" %}
 {% load i18n %}
 
-{% block title %} {{ songbook.title }} {% endblock %}
+{% block title %}{% endblock %}
+{% block headertitle %} {{ songbook.title }} {% endblock %}
 
-{% block appmenu %}
-	{% if can_edit %}
-		{% include "generator/menu/songbook.html" %}
-	{% endif %}
+{% block current_songbook %}
+    {% include "generator/layout/current_songbook_params.html" %}
 {% endblock %}
 
 {% block content %}
-	{% if can_edit %}
-		<a href="{% url "songbook_private_list" %}#songbook_{{songbook.id}}" class="back">
-			{% trans "Tous mes carnets" %}
-		</a>
-	{% else %}
-		<a href="{% url "songbook_list" %}" class="back">
-			{% trans "Carnets publics" %}
-		</a>
-	{% endif %}
-
     <div class="songbook-infos">
         <div class="layout-list">
             {% if can_edit %}

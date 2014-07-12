@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load filters %}
+
+<div class="current-songbook params">
+
+    {% if songbook.user == request.user %}
+        <a href="{% url 'songbook_private_list' %}" class="change">
+            {% trans "Mes carnets" %}
+        </a>
+        <h2> {{songbook.title}} <small>- {{songbook.count_songs}} {% trans "chants" %}</small></h2>
+        <ul>
+        {% spaceless %}
+            <li>
+                <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" data-icon="add">
+                    {% trans "Ajouter des chants" %}
+                </a>
+            </li>
+            {% with id=songbook.id slug=songbook.slug %}
+                {% url 'show_songbook' id=id slug=slug as url %}
+                    <li{% if request.path == url %} class="active"{% endif %}>
+                        <a href="{{ url }}" data-icon="show-book">
+                            {% trans "Contenu" %}
+                        </a>
+                    </li>
+                {% url 'edit_songbook' id=id slug=slug as url %}
+                    <li{% if request.path == url %} class="active"{% endif %}>
+                        <a href="{{ url }}">
+                            {% trans "Description" %}
+                        </a>
+                    </li>
+                {% url 'setup_rendering' id=id slug=slug as url %}
+                    <li{% if request.path == url %} class="active"{% endif %}>
+                        <a href="{{ url }}" data-icon="save">
+                            {% trans "Téléchargement" %}
+                        </a>
+                    </li>
+                {% url 'delete_songbook' id=id slug=slug as url %}
+                    <li{% if request.path == url %} class="active"{% endif %}>
+                        <a href="{{ url }}">
+                            {% trans "Suppression" %}
+                        </a>
+                    </li>
+            {% endwith %}
+        {% endspaceless %}
+        </ul>
+    {% else %}
+        <a href="{% url 'songbook_list' %}" class="change">
+            {% trans "Carnets publics" %}
+        </a>
+        <h1> {{songbook.title}} <small>- {{songbook.count_songs}} {% trans "chants" %}</small></h1>
+        <ul>
+        </ul>
+    {% endif %}
+</div>

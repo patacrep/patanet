@@ -1,19 +1,18 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}
+{% block title %}{% endblock %}
+
+{% block headertitle %}
 	{% blocktrans with songbook=songbook.title%}
-	 Paramètres du carnet "{{songbook}}"
+	Description du carnet "{{songbook}}"
 	{% endblocktrans %}
 {% endblock %}
 
-{% block appmenu %}
-	{% include "generator/menu/songbook.html" %}
+{% block current_songbook %}
+	{% include "generator/layout/current_songbook_params.html" %}
 {% endblock %}
 
 {% block content %}
-	<a href="{% url "songbook_private_list" %}#songbook_{{songbook.id}}" class="back">
-		{% trans "Retour" %}
-	</a>
 	<form method="post" action="{% url 'edit_songbook' id=songbook.id slug=songbook.slug%}">
 		{% csrf_token %}
 		{{ form.as_p }}

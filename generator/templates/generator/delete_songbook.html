@@ -1,17 +1,18 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}
+{% block title %}{% endblock %}
+
+{% block headertitle %}
 	{% blocktrans with songbook=songbook.title%}
-	Suppression
+	Suppression du carnet "{{songbook}}"
 	{% endblocktrans %}
 {% endblock %}
 
-{% block appmenu %}
-	{% include "generator/menu/songbook.html" %}
+{% block current_songbook %}
+	{% include "generator/layout/current_songbook_params.html" %}
 {% endblock %}
 
 {% block content %}
-    <a href="{% url "songbook_private_list" %}" class="back">{% trans 'Mes carnets' %}</a>
 	<p>
         {% blocktrans with songbook=songbook.title%}
         	Êtes-vous sur de vouloir supprimer le carnet <em><strong>{{songbook}}</strong></em> ?
