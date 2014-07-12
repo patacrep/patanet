@@ -48,4 +48,18 @@ form{
 	    	background-color: darken(@link-col, 12%);
         }
     }
+
+	.button-link{
+	    background-color: transparent;
+	    border: 0px;
+	    cursor: pointer;
+	    color: @link-col;
+	    margin: 0;
+	    &:hover{
+	        text-decoration: underline;
+	        &:active{
+	            padding-right: 6px;
+	        }
+	    }
+	}
 }
