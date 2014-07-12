@@ -28,7 +28,9 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
             <input type="text" name="new_section" id="new_section" class="section_name" placeholder="..."/>
         </p>
 
-        <input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
+        <p>
+        	<input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
+        </p>
 
 		<ol class="selection ordering">
 		{% for item in items_list %}
@@ -58,5 +60,7 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
 			</p>
 		{% endfor %}
         </ol>
-		<input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
+        <p>
+			<input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
+		</p>
 	</form>

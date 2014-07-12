@@ -17,8 +17,10 @@
 	</p>
 	<form method="post" action="">
 		{% csrf_token %}
-		<input type="submit" value="{% trans 'Confirmer la suppression' %}" />
         -
         <a href="{% url "songbook_private_list" %}">{% trans 'Revenir aux carnets' %}</a>
+		<p>
+			<input type="submit" value="{% trans 'Confirmer la suppression' %}" />
+		</p>
 	</form>
 {% endblock %}

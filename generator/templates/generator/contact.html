@@ -13,6 +13,8 @@
 	<form class="contact" action="{% url "contact" %}" method="post">
 	    {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="{% trans "Envoyer" %}"/>
+        <p>
+        	<input type="submit" value="{% trans "Envoyer" %}"/>
+        </p>
     </form>
 {% endblock %}

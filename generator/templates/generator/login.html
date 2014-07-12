@@ -22,7 +22,9 @@
 		{% endspaceless %}
 		{{ field }} </p>
 	{% endfor %}
+	<p>
 		<input type="submit" value="{% trans "Se connecter" %}"/>
+	</p>
 		<input type="hidden" name="next" value="{{ next }}" />
 	</form>
 	<a href="{% url 'password_reset' %}">{% trans "Mot de passe oublié ?" %}</a>

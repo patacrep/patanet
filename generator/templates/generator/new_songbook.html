@@ -10,6 +10,8 @@
 	<form method="post" action="{% url 'new_songbook' %}">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<input type="submit" value="{% trans "Créer un nouveau carnet" %}"/>
+		<p>
+			<input type="submit" value="{% trans "Créer un nouveau carnet" %}"/>
+		</p>
 	</form>
 {% endblock %}
