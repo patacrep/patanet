@@ -24,7 +24,7 @@
         </h2>
         <ul>
         {% spaceless %}
-            <li>
+            <li{% if current_songbook %} class="active"{% endif %}>
                 <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" data-icon="add">
                     {% trans "Ajouter des chants" %}
                 </a>
