@@ -130,7 +130,8 @@
 
 
     h1,
-    h2{
+    h2,
+    h3{
         margin: .1em;
         padding-bottom: .5em;
         small{
@@ -173,6 +174,32 @@
             border-bottom: 3px solid #fff;
             background-color: #fff;
             color: inherit;
+        }
+    }
+
+    &.choose form{
+        select,
+        input{
+            margin: 0;
+            padding: .3em;
+        }
+        input{
+            padding: .4em .5em;
+        }
+        a{
+            display: inline-block;
+            padding: .4em 0;
+        }
+
+        padding-bottom: .5em;
+    }
+
+    &.login{
+        h3{
+            font-weight: normal;
+        }
+        h3 a{
+            font-weight: bold;
         }
     }
 
