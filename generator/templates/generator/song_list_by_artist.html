@@ -15,10 +15,11 @@
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
 
+		<button type="submit" class="button-link" data-icon="add-multiple">
+			{% trans "Ajouter la sélection au carnet" %}
+		</button>
+
 		<ol class="songs selection">
-        <noscript>
-            <input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
-        </noscript>
         {% for song in song_list %}
 			<li>
 				<input type="checkbox" name="songs[]" value="{{ song.id }}"
@@ -30,9 +31,10 @@
 			</li>
 		{% endfor %}
 		</ol><br/>
-        <noscript>
-            <input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
-        </noscript>
+
+		<button type="submit" class="button-link" data-icon="add-multiple">
+			{% trans "Ajouter la sélection au carnet" %}
+		</button>
     </form>
 {% include "generator/layout/pagination.html" %}
 {% endblock %}
