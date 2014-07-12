@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="songbook-container private" id="songbook_{{songbook.id}}">
+<div class="songbook-container private">
 <table>
     <tr>
         <th colspan="3">
@@ -10,7 +10,7 @@
             </h2>
         </th>
         <td class="privacy">
-            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}#pid_is_public" class="action">
+            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}" class="action">
                 <em>
                 {% if songbook.is_public %}
                     {% trans "Public" %}
