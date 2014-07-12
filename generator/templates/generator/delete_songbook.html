@@ -8,10 +8,6 @@
 	{% endblocktrans %}
 {% endblock %}
 
-{% block current_songbook %}
-	{% include "generator/layout/current_songbook.html" %}
-{% endblock %}
-
 {% block content %}
 	<p>
         {% blocktrans with songbook=songbook.title%}

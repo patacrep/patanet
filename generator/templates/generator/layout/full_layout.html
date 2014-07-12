@@ -35,6 +35,15 @@
 
 	<main id="content" role="main">
 		{% block current_songbook %}
+			{% if current_songbook %}
+				{% with current_songbook as songbook %}
+			    	{% include "generator/layout/current_songbook.html" %}
+			    {% endwith %}
+			{% elif songbook %}
+			    {% include "generator/layout/current_songbook.html" %}
+			{% else %}
+				<!-- TODO choose songbook / login / register -->
+			{% endif %}
         {% endblock %}
 
 	<h1>{% block title %}No title{% endblock %}</h1>

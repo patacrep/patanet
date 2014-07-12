@@ -4,10 +4,6 @@
 {% block title %}{% endblock %}
 {% block headertitle %} {{ songbook.title }} {% endblock %}
 
-{% block current_songbook %}
-    {% include "generator/layout/current_songbook.html" %}
-{% endblock %}
-
 {% block content %}
 
     {% if can_edit %}
