@@ -172,6 +172,8 @@ def add_songs_to_songbook(request):
         return redirect(next_url)
 
     song_list = request.POST.getlist('songs[]')
+    song_added = 0
+
     current_item_list = [item.item for item in
                             ItemsInSongbook.objects.filter(songbook=songbook)]
     rank = _get_new_rank(songbook_id)
@@ -185,6 +187,7 @@ def add_songs_to_songbook(request):
                               current_item_list=current_item_list)
             if added:
                 rank += 1
+                song_added += 1
         except Song.DoesNotExist:  # May be useless
             pass
 
@@ -200,10 +203,15 @@ def add_songs_to_songbook(request):
                               current_item_list=current_item_list)
                 if added:
                     rank += 1
+                    song_added += 1
         except Artist.DoesNotExist:
             pass
-    if len(song_list) == 1 and len(artist_list) == 0:
-        messages.success(request, _(u"Chant ajouté au carnet"))
+    if song_added == 0:
+        messages.info(request, _(u"Aucun chant ajouté"))
+    elif song_added == 1:
+        messages.success(request, _(u"1 chants ajouté"))
+    else:
+        messages.success(request, _(u"%i chants ajoutés" % (song_added) ))
 
     return redirect(next_url)
 
