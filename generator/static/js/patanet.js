@@ -1,4 +1,31 @@
+
+//function to prevent the user from accidentally leaving a page without saving its changes
+var unsaved = false;
+function unsaved_changes(){
+    if(!unsaved){
+        window.onbeforeunload = function (e) {
+          var message = "Your have unsaved changes on the page.",
+          e = e || window.event;
+          // For IE and Firefox
+          if (e) {
+            e.returnValue = message;
+          }
+
+          // For Safari
+          return message;
+        };
+
+    }
+    unsaved = true;
+}
+
+
 $(function() {
+    
+    $("form").submit(function(e){
+        window.onbeforeunload = null;
+    });
+
     $(".script").toggle();
 
     var ordering = function(){
