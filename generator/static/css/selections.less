@@ -6,7 +6,7 @@ a.back{
 	}
 }
 
-.selection{
+ol.selection{
 	padding:0;
 	display:block;
     margin:1em auto;
@@ -86,6 +86,87 @@ a.back{
     }
 }
 
+ol.item_list{
+	display: table;
+	width: 100%;
+	li{
+		display: table-row;
+		list-style: none;
+
+		&:nth-child(odd){
+			background-color:@selection-strip-bg;
+		}
+		&:hover{
+			background-color:@selection-hover-bg;
+		}
+	}
+	label,
+	li > a,
+	li > span{
+		display: table-cell;
+		padding:0.5em;
+	}
+	.title{
+		color: darken(@link-col, 10%);
+	}
+	.artist{
+		font-style: italic;
+		font-size: .9em;
+	}
+	.section_name{
+		width: 100%;
+		background-color: transparent;
+		border-color: transparent;
+		font-weight:bold;
+		font-size:1.3em;
+		display: table-cell;
+
+		&:hover,
+		&:focus{
+			background-color: #f9f9f9;
+			box-shadow: none;
+		}
+	}
+	.remove{
+		width: 22px;
+		background:url("@{static-url}img/icon/cancel.png") center center no-repeat;
+		opacity: .5;
+		&:hover{
+			opacity: 1;
+		}
+	}
+	.removed{
+		opacity: .5;
+		text-decoration: line-through;
+		.remove{
+			background-image: url("@{static-url}img/icon/revert.png");
+		}
+	}
+	.dragger{
+		width: 22px;
+		background:url("@{static-url}img/icon/drag.png") center center no-repeat;
+		cursor: move;
+	}
+	li.ui-sortable-helper{
+		background-color: fade(lighten(@selection-hover-bg, 70%), 50%);
+		.remove{
+			display: none;
+		}
+
+		&.section{
+			.dragger{
+				padding-top: 32px;
+			}
+			.section_name{
+				position: absolute;
+				left: 38px;
+				top: 0;
+				background-color: transparent;
+			}
+		}
+	}
+}
+
 .pagination{
 	&.by_name{
         border-bottom:solid 1px gray;
@@ -108,27 +189,6 @@ a.back{
 				color:black;
 			}
 		}
-	}
-}
-
-.section_label{
-	cursor:pointer;
-	&:hover h4{
-		background-color:@selection-hover-bg;
-	}
-	h4{
-		margin:0;
-		padding:.7em 0;
-		&:before{
-			content:"\25b6  ";
-		}
-	}
-}
-
-.section_checker{
-	display:none;
-	&:checked + .section{
-		display:none;
 	}
 }
 

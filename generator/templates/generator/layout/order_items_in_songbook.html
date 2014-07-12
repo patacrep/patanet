@@ -15,10 +15,8 @@ Pour supprimer un chant, il faut remplacer son numéro par un 'X'.
 Vous pouvez organiser les éléments de ce carnet avec la souris.
 {% endblocktrans %}
 </p>
-<!-- Preload images for JavaScript -->
-<img class="remove" src="{% static "img/remove.png" %}" style="display:none" alt="remove">
 
-	<form class="selection" method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
+	<form class="item_list" method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
         <input type="hidden" name="next" value="{% url "show_songbook" id=songbook.id slug=songbook.slug %}">
         <p class="section">
@@ -26,34 +24,33 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
                 {% trans "Nouvelle section :" %}
             </label>
             <input type="text" name="new_section" id="new_section" class="section_name"/>
-            <br/><em>{% trans "Le section sera insérée à la fin du carnet" %}</em>
+            <br/><em>{% trans "La section sera insérée à la fin du carnet" %}</em>
         </p>
 
         <p>
         	<input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
         </p>
 
-		<ol class="selection ordering">
+		<ol class="item_list ordering">
 		{% for item in items_list %}
 			<li class="{{ item.item_type.model}}">
-				<input class="item-rank" id="item_{{item.id}}" name="item_{{item.id}}" value="{{item.rank}}" />
 				{% if item.item_type.model == "section" %}
-					<label for="section_{{item.id}}" class="section_name">
-						{% trans "Section :" %}
+					<label for="section_{{item.id}}" class="dragger">
 					</label>
                     <input type="text" id="section_{{item.id}}" value="{{item.item.name}}" name="section_{{item.id}}" class="section_name"/>
+					<span>
+					</span>
 				{% elif item.item_type.model == "song" %}
-					<label for="item_{{item.id}}">
-						{{ item.item.title }}
+					<label for="item_{{item.id}}" class="dragger">
 					</label>
+						<a class="details title" href="{% url "show_song" slug=item.item.slug artist=item.item.artist.slug %}">
+							{{ item.item.title }}
+						</a>
 					<a class="details artist" href="{% url "song_list_by_artist" artist=item.item.artist.slug %}" title="{{ item.item.artist.name }}">
 						{{ item.item.artist.name }}
 					</a>
-					<a class="details lyrics" href="{% url "show_song" slug=item.item.slug artist=item.item.artist.slug %}">
-						{% trans "Paroles" %}
-					</a>
-
 				{% endif %}
+				<input class="item-rank" id="item_{{item.id}}" name="item_{{item.id}}" value="{{item.rank}}" />
 			</li>
 		{% empty %}
 			<p>

@@ -35,23 +35,39 @@ $(function() {
         });
 
         $(".ordering li .item-rank").hide();
-        $('.remove').clone().css("display","inline").prependTo(".ordering li");
+        
+        var btn = $('<a>', {class:"remove button-link"});
+
+        // A click on remove add a 'X' in the input and hide it.
+        btn.click(function(){
+            var line = $(this).parent("li");
+            var input = line.children('input.item-rank');
+            var rank = input.attr('value').toUpperCase();
+            if(rank == "X"){
+                input.attr("value", "0");
+                line.removeClass('removed');
+            } else {
+                input.attr("value", "X");
+                line.addClass('removed');
+            }
+            unsaved_changes();
+            $(".ordering").trigger("sortstop");
+            })
+        btn.appendTo(".ordering li");
+        
         // Compute the rank for all the items
         $( ".ordering" ).on( "sortstop", function( event, ui ) {
               var i = 1;
               $('.ordering').children('li').each(function() {
                   var input = $(this).children('.item-rank');
                   if (input.attr("value") != "X") {
-                    input.attr("value", i);
+                    if(input.attr("value") != i){
+                        unsaved_changes();
+                        input.attr("value", i);
+                    }
                     i+=1;
                   }
               });
-        });
-        // A click on remove add a 'X' in the input and hide it.
-        $(".remove").click(function(e){
-            $(this).parent("li").children('input').attr("value", "X");
-            $(this).parent("li").hide();
-            $(".ordering").trigger("sortstop");
         });
     }
 
