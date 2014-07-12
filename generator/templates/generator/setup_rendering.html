@@ -75,17 +75,19 @@
 
     <form class="new_layout" method="post" action="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
         {% csrf_token %}
-        <div id="bookoptions"><p>{{ form.bookoptions.label_tag }}<p> {{ form.bookoptions }} </div>
         <div class="field_container">
-        {% for field in form.visible_fields %}
-            {{ field.errors }}
-            {% if field.name != "bookoptions" %}
-                <p>{{ field.label_tag }} {{ field }} </p>
-            {% endif %}
-        {% endfor %}
+          <div>
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {% if field.name != "bookoptions" %}
+                    <p>{{ field.label_tag }} {{ field }} </p>
+                {% endif %}
+            {% endfor %}
+            <p>
+              <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
+            </p>
+          </div>
         </div>
-        <p>
-          <input type="submit" value="{% trans "Génerer le fichier PDF" %}"/>
-        </p>
+        <div id="bookoptions"><p>{{ form.bookoptions.label_tag }}<p> {{ form.bookoptions }} </div>
     </form>
 {% endblock %}

@@ -151,4 +151,47 @@ form{
 	        }
 	    }
 	}
+
+
+
+	&.new_layout {
+	    width:100%;
+	    .field_container {
+	    	display: table-cell;
+	    	div{
+	    		display: table;
+	    		width: 95%;
+	    	}
+	    	input,
+	    	select{
+	    		width: 100%;
+	    	}
+
+	        @media (max-width:@screen-sm){
+	    		display: table-footer;
+	        }
+	    }
+	    #bookoptions {
+	    	display: table-cell;
+	    	white-space: nowrap;
+
+	        ul {
+	            list-style:none;
+	        }
+	        p {
+	            margin: 0;
+	            margin-bottom:1em;
+	            label {
+	                text-align:left;
+	                font-weight:bold;
+	                width:auto;
+	            }
+	        }
+	        @media (max-width:@screen-sm){
+	    		display: table-caption;
+	        }
+	    }
+
+	}
+
 }
