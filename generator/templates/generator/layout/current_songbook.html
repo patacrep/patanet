@@ -38,7 +38,7 @@
                     </li>
                 {% url 'edit_songbook' id=id slug=slug as url %}
                     <li{% if request.path == url %} class="active"{% endif %}>
-                        <a href="{{ url }}">
+                        <a href="{{ url }}" data-icon="edit-book">
                             {% trans "Description" %}
                         </a>
                     </li>
