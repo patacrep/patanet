@@ -7,6 +7,7 @@
             {% trans "Mes carnets" %}
         </a>
 		<form method="get" action="{% url 'set_current_songbook' %}">
+			<input type="hidden" name="next" value="{{ request.path }}"/>
 			<p>
 				<label>
 					{% trans "Veuillez choisir un carnet" %}
