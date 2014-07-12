@@ -127,31 +127,13 @@
 
 
 .current-songbook {
-    border:1px solid #aaa;
-    background:url("@{static-url}img/book.png") 10px center no-repeat;
+
+    background:#f8f8f8 url("@{static-url}img/book.png") 10px center no-repeat;
     background-size: auto 50px;
-    padding-left: 90px;
-    margin: 0;
+    padding: .7em .5em 0 90px;
+    
+    margin: -24px; // to cancel the parent padding
     margin-bottom: 1em;
-
-    h1,
-    h2,
-    h3 {
-        margin: .1em;
-    }
-
-    ul {
-        margin:0;
-        padding:0;
-    }
-    li {
-        display: inline-block;
-        list-style:none;
-        padding:0 5px;
-    }
-    a, .button-link{
-        font-size: .9em;
-    }
 
     .change {
         display: block;
@@ -159,58 +141,55 @@
         font-size: .8em;
         padding-right: .1em;
     }
-    .button-link{
-        display: inline-block;
-        white-space: nowrap;
+
+
+    h1,
+    h2{
+        margin: .1em;
+        padding-bottom: .5em;
+        small{
+            font-weight: normal;
+            white-space: nowrap;
+        }
+        em a{
+            font-size: .6em;
+            color: inherit;
+            display: block;
+            font-weight: normal;
+        }
+    }
+    ul{
+        margin:0;
+        padding:0;
+        margin-left: -90px;
+        padding-left: 90px;
+        border-bottom: 1px solid #aaa;
+        a{
+            display: inline-block;
+            padding: .1em .5em;
+            padding-right: .5em;
+            padding-left: .5em;
+            border: 1px solid transparent;
+            font-size: .9em;
+        }
+        a[data-icon]{
+            padding-left:24px;
+            background-position: 4px center;
+        }
+        li{
+            display: inline-block;
+            list-style:none;
+            padding: 0;
+        }
+        li.active a{
+            border-color: #aaa;
+            margin-bottom: -2px;
+            border-bottom: 3px solid #fff;
+            background-color: #fff;
+            color: inherit;
+        }
     }
 
-    &.params{
-        background-color: #f8f8f8;
-        margin: -24px;
-        border-color: #f8f8f8;
-        margin-bottom: 1em;
-        padding-top: .7em;
-        h1,
-        h2{
-            padding-bottom: .5em;
-            small{
-                font-weight: normal;
-                white-space: nowrap;
-            }
-            em a{
-                font-size: .6em;
-                color: inherit;
-                display: block;
-                font-weight: normal;
-            }
-        }
-        ul{
-            margin-left: -90px;
-            padding-left: 90px;
-            border-bottom: 1px solid #aaa;
-            a{
-                display: inline-block;
-                padding: .1em .5em;
-                padding-right: .5em;
-                padding-left: .5em;
-                border: 1px solid transparent;
-            }
-            a[data-icon]{
-                padding-left:24px;
-                background-position: 4px center;
-            }
-            li{
-                padding: 0;
-            }
-            li.active a{
-                border-color: #aaa;
-                margin-bottom: -2px;
-                border-bottom: 3px solid #fff;
-                background-color: #fff;
-                color: inherit;
-            }
-        }
-    }
 }
 
 @layout_list_width: 30%;
