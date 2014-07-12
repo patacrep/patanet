@@ -19,6 +19,7 @@ form{
 	p{
 		display: table-row;
         & > input,
+        & > select,
         & > textarea{
         	margin-bottom: .5em;
         }
@@ -51,7 +52,9 @@ form{
 	        }
 	    }
 
-	    & + p > input{
+	    & + p > input,
+	    & + p > select,
+	    & + p > textarea{
 	    	@glow-color: darken(@messages-error, 30%);
 
 	    	border-color: @glow-color;
@@ -66,6 +69,7 @@ form{
 	input[type="text"], 
 	input[type="email"],
 	input[type="password"],
+    select,
 	textarea{
 		width: 330px;
 	    padding: 7px 0px 7px 5px;
