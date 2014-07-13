@@ -83,7 +83,9 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ShowSongbook, self).get_context_data(**kwargs)
-        items_list = ItemsInSongbook.objects.filter(songbook=self.object)
+        items_list = ItemsInSongbook.objects.prefetch_related(
+                   'item', 'item_type'
+                   ).filter(songbook=self.object)
         context['items_list'] = items_list
         if self.request.user == self.object.user:
             context['can_edit'] = True
