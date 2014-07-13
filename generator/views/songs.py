@@ -87,7 +87,7 @@ class ArtistList(CurrentSongbookMixin, ListView):
     template_name = "generator/artist_list.html"
     paginate_by = 10
     paginator_class = NamePaginator
-    queryset = Artist.objects.order_by('slug')
+    queryset = Artist.objects.prefetch_related('songs').order_by('slug')
 
 
 def random_song(request):
