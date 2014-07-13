@@ -31,6 +31,8 @@ $(function() {
     var ordering = function(){
         // Make the ordering class sortable, with jquery-ui
         $( ".ordering" ).sortable({
+            axis: "y",
+            scrollSensitivity: 100,
             stop: function( event, ui ) {}
         });
 
