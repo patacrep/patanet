@@ -38,15 +38,9 @@ class CurrentSongbookMixin(object):
                             id=self.request.session['current_songbook'], user_id=self.request.user.id)
             context['current_songbook'] = songbook
             current_item_list = ItemsInSongbook.objects.prefetch_related('item').filter(
-                                                    songbook=songbook)
+                                                    songbook=songbook,
+                                                    item_type__model='song')
             context['current_item_list'] = current_item_list
-
-            if songbook.count_section() > 1:
-                context['multi_section'] = True
-                context['first_section'] = current_item_list.filter(
-                                            item_type__model='section')[0]
-            if songbook.count_section() > 0:
-                context['sb_has_section'] = True
 
         except (KeyError, Songbook.DoesNotExist):
             pass
