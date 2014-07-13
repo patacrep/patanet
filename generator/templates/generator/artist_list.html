@@ -15,17 +15,18 @@
             <li><strong>{% trans "Artiste" %}</strong></li>
 		{% for artist in artist_list %}
 			<li>
+            {% with artist.songs.all as artist_songs %}
 				<input class="artist" type="checkbox" name="artists[]" value="{{ artist.id }}" id="artist_{{ artist.id }}"
-                       {% if artist.songs.all|list_in_items:current_item_list %}checked disabled{% endif %}>
+                       {% if artist_songs|list_in_items:current_item_list %}checked disabled{% endif %}>
 				<label class="artist" for="artist_{{ artist.id }}" title="{{ artist.name }}">
 					{{ artist.name }}
 				</label>
 				<label class="details songs" for="all_songs_{{ artist.id }}">
-					{% trans "Tous les chants" %} ({{ artist.songs.count }})
+					{% trans "Tous les chants" %} ({{ artist_songs|length }})
 				</label>
                 <input type="checkbox" id="all_songs_{{ artist.id }}" class="toggle_checkbox">
                 <ul>
-            		{% for song in artist.songs.all %}
+            		{% for song in artist_songs %}
             			<li>
 				            <input class="select_song" type="checkbox" name="songs[]" value="{{ song.id }}"
             				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
@@ -38,6 +39,7 @@
             			</li>
 		            {% endfor %}
 		        </ul>
+            {% endwith %}
 			</li>
 		{% endfor %}
 		</ol><br/>
