@@ -39,7 +39,7 @@ class SongList(CurrentSongbookMixin, ListView):
     template_name = "generator/song_list.html"
     paginate_by = 10
     paginator_class = NamePaginator
-    queryset = Song.objects.all().order_by('slug')
+    queryset = Song.objects.prefetch_related('artist').all().order_by('slug')
 
 
 class SongListByArtist(CurrentSongbookMixin, ListView):
