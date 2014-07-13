@@ -35,7 +35,7 @@ class CurrentSongbookMixin(object):
         context = super(CurrentSongbookMixin, self).get_context_data(**kwargs)
         try:
             songbook = Songbook.objects.get(
-                            id=self.request.session['current_songbook'])
+                            id=self.request.session['current_songbook'], user_id=self.request.user.id)
             context['current_songbook'] = songbook
             current_item_list = ItemsInSongbook.objects.filter(
                                                     songbook=songbook)
