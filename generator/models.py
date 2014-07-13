@@ -97,7 +97,9 @@ class Songbook(models.Model):
         return count
 
     def count_artists(self):
-        songs = ItemsInSongbook.objects.filter(
+        songs = ItemsInSongbook.objects.prefetch_related(
+                   'item'
+                   ).filter(
                    songbook=self,
                    item_type=ContentType.objects.get_for_model(Song)
                    )
