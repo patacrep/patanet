@@ -257,6 +257,20 @@ def move_or_delete_items(request, id, slug):
         except ValueError:
             messages.error(request, _(u"Ce nom de section n'est pas valide"))
 
+    section_list = {}
+    for key in request.POST.keys():
+        if key.startswith('section_'):
+            section_list[key] = request.POST[key]
+
+    for key, section_name in section_list.items():
+        item_id = int(key[8:])
+        section = ItemsInSongbook.objects.get(songbook=songbook,
+                                              id=item_id)
+
+        if section.item.name != section_name:
+            section.item.name = section_name
+            section.item.save()
+
     return redirect(next_url)
 
 
