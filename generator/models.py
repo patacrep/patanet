@@ -105,7 +105,7 @@ class Songbook(models.Model):
                    )
         artists = set()
         for song in songs:
-            artists.add(song.item.artist.id)
+            artists.add(song.item.artist_id)
         return len(artists)
 
     def count_section(self):
