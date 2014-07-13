@@ -156,7 +156,7 @@ def add_songs_to_songbook(request):
 
     try:
         songbook_id = request.session['current_songbook']
-        songbook = Songbook.objects.get(id=songbook_id)
+        songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
                        _(u"Choisissez un carnet pour ajouter ces chants")
@@ -204,7 +204,7 @@ def remove_song(request):
 
     try:
         songbook_id = request.session['current_songbook']
-        songbook = Songbook.objects.get(id=songbook_id)
+        songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
                        _(u"Choisissez un carnet pour supprimer ce chants")
