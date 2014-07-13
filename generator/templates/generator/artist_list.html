@@ -22,7 +22,7 @@
 					{{ artist.name }}
 				</label>
 				<label class="details songs" for="all_songs_{{ artist.id }}">
-					{% trans "Tous les chants" %} ({{ artist.songs.count }})
+					{% trans "Tous les chants" %} ({{ artist_songs|length }})
 				</label>
                 <input type="checkbox" id="all_songs_{{ artist.id }}" class="toggle_checkbox">
                 <ul>
