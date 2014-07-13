@@ -54,7 +54,7 @@ class SongListByArtist(CurrentSongbookMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(SongListByArtist, self).get_context_data(**kwargs)
-        context['artist'] = Artist.objects.get(slug=self.kwargs['artist'])
+        context['artist'] = self.artist
         return context
 
 
