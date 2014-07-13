@@ -37,7 +37,7 @@ class CurrentSongbookMixin(object):
             songbook = Songbook.objects.get(
                             id=self.request.session['current_songbook'], user_id=self.request.user.id)
             context['current_songbook'] = songbook
-            current_item_list = ItemsInSongbook.objects.filter(
+            current_item_list = ItemsInSongbook.objects.prefetch_related('item').filter(
                                                     songbook=songbook)
             context['current_item_list'] = current_item_list
 
