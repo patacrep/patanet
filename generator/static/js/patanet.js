@@ -74,41 +74,28 @@ $(function() {
     }
 
     var select_artist_songs = function(){
-        $("input.artist ").change(function(){
+        $("input.artist").change(function(){
             var checked = this.checked;
-            $(this).siblings("ul").children("li").children("input").each(function() {
+            var songs = $(this).siblings("ul").children("li").children("input.select_song:not(:disabled)");
+            songs.each(function() {
                 this.checked = checked;
             })
+            songs.first().trigger('change');
         });
 
-        var all_checked = function(artist, songs){
-            // This function is a workaround a bug: with only the second condition
-            // (art_checked == false), two checkbox had to be unchecked before
-            // the artist checkbox was unchecked.
-            var art_checked = artist.is(":checked");
-            if (art_checked) {
-                if (songs.length == songs.filter(":checked").length + 1) {
-                    return true
-                }
-                else {
-                    return false
-                }
-            }
-            else {
-                if (songs.length == songs.filter(":checked").length) {
-                    return true
-                }
-                else {
-                    return false
-                }
-            }
-        }
+        $("input.select_song").change(function(){
+            var artist = $(this).parents("ul").siblings("input.artist");
+            var songs = artist.siblings("ul").children("li").children("input.select_song");
+            var songs_checked = songs.filter(":checked");
+            var nb_checked = songs_checked.length;
+            var nb_songs = songs.length;
 
-        $("input.select_song ").change(function(){
-            var songs = $(this).parent("li").siblings("li").children("input.select_song");
-            var artist = $(this).parents("ul").siblings(".artist");
-            artist.prop("checked", all_checked(artist, songs));
+            artist = artist.get(0);
+
+            artist.indeterminate = (nb_checked > 0 && nb_checked < nb_songs);
+            artist.checked = (nb_checked == nb_songs);
         });
+        $("ul > li:first-child > input.select_song").trigger('change');
     }
 
     var auto_template_name = function(){
