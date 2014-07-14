@@ -7,7 +7,16 @@
 	{% if debug %}
 	   <link rel="stylesheet/less" type="text/css" href="{% static "css/normalize.less" %}" />
 	   <link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
+		<script>
+		  less = {
+		    env: "development",
+		    logLevel: 2,
+		    poll: 500,
+		    dumpLineNumbers: "comments"
+		  };
+		</script>
 	   <script src="{% static "js/less-1.6.1.min.js" %}"></script>
+	   <script>less.watch();</script>
 	{% else %}
         <link type="text/css" rel="stylesheet" href="{% static "css/normalize.css" %}" />
         <link type="text/css" rel="stylesheet" href="{% static "css/main.css" %}" />
