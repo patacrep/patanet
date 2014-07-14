@@ -48,15 +48,15 @@
             </td>
             <td>{% if task.state = 'FINISHED' and "file" in task.result %}
                 <a href="/medias/PDF/{{task.result.file}}" target="_blank">
-                    <img src="{% static "img/download_32.png"%}"
+                    <img src="{% static "img/download_32.png" %}"
                          alt="{% trans "Télécharger" %}"
-                         title="{% trans "Télécharger"%}">
+                         title="{% trans "Télécharger" %}">
                 </a>
                 {% if task.hash != songbook.hash %}
                 <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=true&layout={{task.layout.id}}">
-                    <img src="{% static "img/restart.png"%}"
+                    <img src="{% static "img/restart.png" %}"
                          alt="{% trans "Relancer" %}"
-                         title="{% trans "Relancer"%}">
+                         title="{% trans "Relancer" %}">
                 </a>
                 {% endif %}
               {% elif task.state = 'IN_PROCESS' or task.state = 'QUEUED' %}
@@ -64,9 +64,9 @@
               {% else %}
                     <img src="{% static "img/error_32.png" %}" alt="{% trans "Erreur" %}" title="{% trans "Erreur" %}">
                     <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?force=true&layout={{task.layout.id}}">
-                        <img src="{% static "img/restart.png"%}"
+                        <img src="{% static "img/restart.png" %}"
                              alt="{% trans "Relancer" %}"
-                             title="{% trans "Relancer"%}">
+                             title="{% trans "Relancer" %}">
                     </a>
               {% endif %}
           </td>

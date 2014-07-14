@@ -2,9 +2,10 @@
 
 {% block title %} {{ song.title }} {% endblock %}
 
-{% block headertitle %}{% blocktrans with title=song.title artist=song.artist.name %}
-{{ title }} par {{ artist }}
-{% endblocktrans %}
+{% block headertitle %}
+	{% blocktrans with title=song.title artist=song.artist.name %}
+	{{ title }} par {{ artist }}
+	{% endblocktrans %}
 {% endblock %}
 
 {% block choose_songbook %}

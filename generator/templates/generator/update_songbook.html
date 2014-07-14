@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-	<form method="post" action="{% url 'edit_songbook' id=songbook.id slug=songbook.slug%}">
+	<form method="post" action="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
 		{{ form.as_p }}
 		<p>
