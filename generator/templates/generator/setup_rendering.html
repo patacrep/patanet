@@ -12,7 +12,7 @@
 
     {% if existing_tasks.count > 0 %}
 
-    <h3>{% trans "Mises en page existantes :" %}</h3>
+    <h3>{% trans "Mises en page disponibles" %}</h3>
     <table class="layouts">
       <tr><th>{% trans "Nom" %}</th>
           <th>{% trans "Format" %}</th>
@@ -75,7 +75,7 @@
     </table>
     {% endif %}
 
-    <h3>Créer un PDF avec une nouvelle mise en page </h3>
+    <h3>Nouvelle mise en page</h3>
 
     <form class="new_layout" method="post" action="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
         {% csrf_token %}
