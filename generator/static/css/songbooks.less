@@ -195,14 +195,18 @@
         text-align:center;
     }
     .layout-list {
-        text-align:center;
-
-        a {
-            margin:auto;
-        }
+        padding: 0 1em;
+        display: table;
 
         li {
             list-style:none;
+            display: table-row;
+        }
+        a{
+            &:before {
+               content: '- ';
+            }
+            display: table-cell;
         }
     }
     & + div{

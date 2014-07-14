@@ -10,10 +10,11 @@
         {% include "generator/layout/order_items_in_songbook.html" %}
     {% else %}
         <div class="songbook-infos">
-            <div class="layout-list">
+            <div>
                 <h4>{% trans "Téléchargement" %}</h4>
-                <ul>
+                <ul class="layout-list">
                     <!-- TODO: include the same layout list than in the private songbook list -->
+                    <!-- TODO: include the layout options in the list -->
                     {% for task in songbook.tasks.all %}
                         {% if task.state = 'FINISHED' %}
                             <li>
@@ -23,21 +24,18 @@
                             </li>
                         {% endif %}
                     {% empty %}
-                        <li>{% trans "Ce carnet n'a pas encore été généré." %}</li>
+                        <li>{% trans "Ce carnet n'est pas encore disponible au téléchargement." %}</li>
                     {% endfor %}
-                    {% if can_edit %}
-                        <li><a href="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
-                            {% trans "Voir toutes les mises en page" %}
-                         </a></li>
-                    {% endif %}
                 </ul>
             </div>
-            <div class="description">
-                <h4>
-                    {% trans "Description" %}
-                </h4>
-                <p>{{ songbook.description }}</p>
-            </div>
+            {% if songbook.description %}
+                <div class="description">
+                    <h4>
+                        {% trans "Description" %}
+                    </h4>
+                    <p>{{ songbook.description }}</p>
+                </div>
+            {% endif %}
         </div>
         <div>
             {% include "generator/layout/show_items_in_songbook.html" %}
