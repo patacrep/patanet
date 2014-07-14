@@ -75,9 +75,9 @@ $(function() {
 
     var select_artist_songs = function(){
         $("input.artist ").change(function(){
-            var checked = $(this).is(":checked");
-            $(this).siblings("ul").children("li").each(function() {
-                $(this).children("input").prop("checked", checked);
+            var checked = this.checked;
+            $(this).siblings("ul").children("li").children("input").each(function() {
+                this.checked = checked;
             })
         });
 
