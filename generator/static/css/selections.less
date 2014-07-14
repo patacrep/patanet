@@ -165,6 +165,17 @@ ol.item_list{
 			}
 		}
 	}
+
+	&.public{
+		li.section{
+			font-weight:bold;
+			font-size:1.3em;
+			&:after{ // so that it occupies the whole row
+				content: " ";
+				display: table-cell;
+			}
+		}
+	}
 }
 
 .pagination{
