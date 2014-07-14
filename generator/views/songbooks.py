@@ -188,6 +188,7 @@ def add_songs_to_songbook(request):
             if added:
                 rank += 1
                 song_added += 1
+                current_item_list.append(song)
         except Song.DoesNotExist:  # May be useless
             pass
 
