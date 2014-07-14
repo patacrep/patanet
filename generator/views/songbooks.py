@@ -319,6 +319,7 @@ class LayoutList(OwnerRequiredMixin, CreateView):
         slug = self.kwargs.get('slug', None)
         songbook = Songbook.objects.get(id=id, slug=slug)
         context['songbook'] = songbook
+        context['form_options'] = LayoutForm.OPTIONS
         context['existing_tasks'] = GeneratorTask.objects.filter(
                                                     songbook=songbook)
         return context

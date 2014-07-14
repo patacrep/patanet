@@ -38,8 +38,13 @@
               {% endif %}
           </td>
           <td>
-              {% if "diagram" in task.layout.bookoptions %}<img src="{% static "img/chord_diagram_32.png" %}" alt="{% trans "Diagrammes d'accords" %}" title="{% trans "Diagrammes d'accords" %}">{% endif %}
-              {% if "pictures" in task.layout.bookoptions %}<img src="{% static "img/song_image_32.jpg" %}" alt="{% trans "Couvertures d'album" %}" title="{% trans "Couvertures d'album" %}">{% endif %}
+              {% for option in form_options %}
+                {% if option.0 in task.layout.bookoptions %}
+                  {% with "img/bookoption/"|add:option.0|add:".png" as img_src %}
+                    <img src="{% static img_src %}" alt="{{ option.1 }}" title="{{ option.1 }}">
+                  {% endwith %}
+                {% endif %}
+              {% endfor %}
             </td>
             <td>{% if task.state = 'FINISHED' and "file" in task.result %}
                 <a href="/medias/PDF/{{task.result.file}}" target="_blank">
