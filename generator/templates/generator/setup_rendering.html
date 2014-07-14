@@ -15,12 +15,21 @@
     <h3>{% trans "Mises en page existantes :" %}</h3>
     <table class="layouts">
       <tr><th>{% trans "Nom" %}</th>
+          <th>{% trans "Format" %}</th>
           <th>{% trans "Type" %}</th>
           <th>{% trans "Options" %}</th>
           <th>{% trans "Fichier" %}</th>
           </tr>
       {% for task in existing_tasks %}
       <tr><td>{{task.layout.name}}</td>
+          <td>
+              {% comment %}{{task.layout.other_options.papersize|upper}}{% endcomment %}
+              {% if task.layout.other_options.orientation = "landscape" %}
+                <img src="{% static "img/bookoption/landscape_32.png" %}" alt="{% trans "Format paysage" %}" title="{% trans "Format paysage" %}">
+              {% else %}
+                <img src="{% static "img/bookoption/portrait_32.png" %}" alt="{% trans "Format portrait" %}" title="{% trans "Format portrait" %}">
+              {% endif %}
+          </td>
           <td>
               {% if task.layout.booktype == "chorded" %}
                   {% trans "Avec accords" %}
@@ -31,12 +40,6 @@
           <td>
               {% if "diagram" in task.layout.bookoptions %}<img src="{% static "img/chord_diagram_32.png" %}" alt="{% trans "Diagrammes d'accords" %}" title="{% trans "Diagrammes d'accords" %}">{% endif %}
               {% if "pictures" in task.layout.bookoptions %}<img src="{% static "img/song_image_32.jpg" %}" alt="{% trans "Couvertures d'album" %}" title="{% trans "Couvertures d'album" %}">{% endif %}
-              {% if task.layout.orientation = "landscape" %}
-                <img src="{% static "img/landscape_32.png" %}" alt="{% trans "Format paysage" %}" title="{% trans "Format paysage" %}">
-              {% else %}
-                <img src="{% static "img/portrait_32.png" %}" alt="{% trans "Format portrait" %}" title="{% trans "Format portrait" %}">
-              {% endif %}
-              {% comment %}{{task.layout.other_options.papersize|upper}}{% endcomment %}
             </td>
             <td>{% if task.state = 'FINISHED' and "file" in task.result %}
                 <a href="/medias/PDF/{{task.result.file}}" target="_blank">
