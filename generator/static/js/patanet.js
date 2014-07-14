@@ -113,7 +113,30 @@ $(function() {
         });
     }
 
+    var auto_template_name = function(){
+        var selects = $('form.new_layout select');
+        var input_name = $('form.new_layout #id_name');
+
+        selects.change(function(){
+            var name = 'A4';
+            for (var i = selects.length - 1; i >= 0; i--) {
+                name += '-' + selects[i].options[selects[i].selectedIndex].value;
+            };
+            input_name.attr('value', name);
+        });
+        input_name.change(function(){
+            selects.off('change');
+        });
+
+        var current_name = input_name.attr('value');
+
+        if(typeof current_name !== 'string' || current_name.length == 0){
+            selects.trigger('change');
+        }
+    }
+
     // Execute code
     ordering();
     select_artist_songs();
+    auto_template_name();
 });
