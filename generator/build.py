@@ -60,7 +60,7 @@ def generate_songbook(songbook, layout):
     try:
         os.chdir(SONGBOOKS_PDFS)
     except OSError:
-        os.mkdir(SONGBOOKS_PDFS)
+        os.makedirs(SONGBOOKS_PDFS)
         os.chdir(SONGBOOKS_PDFS)
 
     builder = SongbookBuilder(content, tmpfile)
