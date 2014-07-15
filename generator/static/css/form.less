@@ -1,3 +1,5 @@
+@glow-color: lighten(@link-col, 20%);
+
 form{
 
 	margin: auto;
@@ -68,6 +70,7 @@ form{
 	}
 
 	input[type="text"], 
+	input[type="search"], 
 	input[type="email"],
 	input[type="password"],
     select,
@@ -81,7 +84,6 @@ form{
 	    transition: box-shadow 0.2s ease-in-out;
 	    -webkit-transition: box-shadow 0.2s ease-in-out;
 	    &:focus{
-	    	@glow-color: lighten(@link-col, 20%);
 	    	background-color: #fff;
 
 	    	border-color: @glow-color;
@@ -193,6 +195,44 @@ form{
 	        }
 	    }
 
+	}
+
+	&.search{
+		display: block;
+		float: right;
+		width: auto;
+		input{
+			width: 12em;
+			transition: width .5s ease-in-out;
+	    	border-right: none;
+		}
+		input:not(:focus):invalid
+		{
+			width: 7em;
+		    box-shadow: none;
+		}
+		input:not(:focus) + span button[type="submit"]{
+			background-color: #f9f9f9;
+			border-color: #c5c5c5;
+		    box-shadow: none;
+		    -webkit-box-shadow: none;
+		}
+		button[type="submit"]{
+			display: inline-block;
+			margin: 0;
+			width: 32px;
+			overflow: hidden;
+			color: transparent;
+
+	    	border: 1px solid @glow-color;
+		    box-shadow: 0 0 10px fade(@glow-color, 40%);
+		    -webkit-box-shadow: 0 0 10px fade(@glow-color, 40%);
+
+	    	border-left: none;
+	    	padding: 7px;
+
+			background:url("@{static-url}img/icon/magnifier.png") center center no-repeat darken(@link-col, 8%);
+		}
 	}
 
 }
