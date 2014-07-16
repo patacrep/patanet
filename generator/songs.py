@@ -31,15 +31,16 @@ import sys
 import pprint
 import logging
 
-_BLOCKS_PATTERNS = [(r"\beginverse", '<p class="verse" >'),
+_BLOCKS_PATTERNS = [(r"\beginverse*", '<p class="verse_star" >'),
+                    (r"\beginverse", '<p class="verse" >'),
                     (r"\begin{verse}", '<p class="verse" >'),
-                    (r"\beginverse*", '<p class="verse_star" >'),
                     (r"\begin{verse*}", '<p class="verse_star" >'),
                     (r"\beginchorus", '<p class="chorus" >'),
                     (r"\begin{chorus}", '<p class="chorus" >'),
                     ]
 
-_BLOCKS_PATTERNS += [(r"\endverse", '</p>'),
+_BLOCKS_PATTERNS += [(r"\endverse*", '</p>'),
+                    (r"\endverse", '</p>'),
                     (r"\end{verse}", '</p>'),
                     (r"\end{verse*}", '</p>'),
                     (r"\end{chorus}", '</p>'),
