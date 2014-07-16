@@ -54,7 +54,7 @@ def parse_chords(content):
             '<span class="chord-text">\g<2></span></span>',
             content)
     content = content.replace('&', "♭")
-    content = content.replace('#', "♯&nbsp")
+    content = content.replace('#', "♯&nbsp;")
     return content
 
 
