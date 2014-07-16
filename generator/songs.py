@@ -61,6 +61,13 @@ def parse_chords(content):
 def parse_blocks(content):
     for TeX, HTML in _BLOCKS_PATTERNS:
         content = content.replace(TeX, HTML)
+
+    #remove spaces at the line-beginnings
+    content = re.sub(r'(\r|\n)+( |\t)+', '\n', content) 
+    
+    #remove linebreaks after <p> or </p> tags
+    content = re.sub(r'>(\r|\n| |\t)+', '>', content)
+    
     return content
 
 
