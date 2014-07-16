@@ -1,19 +1,19 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}
-	{% blocktrans with songbook=songbook.title%}
-	 Paramètres du carnet "{{songbook}}"
+{% block title %}{% endblock %}
+
+{% block headertitle %}
+	{% blocktrans with songbook=songbook.title %}
+	Description - {{songbook}}
 	{% endblocktrans %}
 {% endblock %}
 
-{% block appmenu %}
-	{% include "generator/menu/songbook.html" %}
-{% endblock %}
-
 {% block content %}
-	<form method="post" action="{% url 'edit_songbook' id=songbook.id slug=songbook.slug%}">
+	<form method="post" action="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<input type="submit" value="{% trans "Changer les options" %}"/>
+		<p>
+			<input type="submit" value="{% trans "Enregistrer" %}"/>
+		</p>
 	</form>
 {% endblock %}

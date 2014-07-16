@@ -1,35 +1,24 @@
 {% load i18n %}
-<ul class="selection ordering">
-    {% for item in items_list %}
+
+<ol class="item_list public">
+{% for item in items_list %}
+    <li class="{{ item.item_type.model}}">
         {% if item.item_type.model == "section" %}
-            </ul>
-                <h4 class="section">{{item.item.name}}</h4>
-            <ul class="selection">
-            {% elif item.item_type.model == "song" %}
-            {% with song=item.item %}
-            <li>
-                <label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
-                    {{ song.title }}
-                </label>
-                <a class="details artist" href="{% url "song_list_by_artist" artist=song.artist.slug %}" title="{{ song.artist.name }}">
-                    {{ song.artist.name }}
-                </a>
-                <a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">
-                    {% trans "Paroles" %}
-                </a>
-            </li>
-            {% endwith %}
-            {% endif %}
-        {% empty %}
-            <li>
-                <em>{% trans "Ce carnet est vide" %}</em>
-            </li>
-    {% endfor %}
-</ul>
-{% if can_edit %}
-    <div>
-        <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}">
-            {% trans "Ajouter des chants au carnet" %}
-        </a>
-    </div>
-{% endif %}
+            <span>
+                {{item.item.name}}
+            </span>
+        {% elif item.item_type.model == "song" %}
+            <a class="details title" href="{% url "show_song" slug=item.item.slug artist=item.item.artist.slug %}">
+                {{ item.item.title }}
+            </a>
+            <a class="details artist" href="{% url "song_list_by_artist" artist=item.item.artist.slug %}" title="{{ item.item.artist.name }}">
+                {{ item.item.artist.name }}
+            </a>
+        {% endif %}
+    </li>
+{% empty %}
+    <li>
+        {% trans "Ce carnet est vide" %}
+    </li>
+{% endfor %}
+</ol>

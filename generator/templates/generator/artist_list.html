@@ -2,22 +2,26 @@
 
 {% block title %} {% trans "Tous les artistes" %} {% endblock %}
 
+{% block choose_songbook %}
+    {% include "generator/layout/choose_songbook.html" %}
+{% endblock %}
+
 {% block content %}
 {% include "generator/layout/name_pagination.html" %}
-{% include "generator/layout/current_songbook.html" %}
-	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
+	<form class="add_songs" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "artist_list" %}?page={{page_obj.number}}">
-        <noscript>
-            <input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
-        </noscript>
+        
+        <button type="submit" class="button-link" data-icon="add-multiple">
+            {% trans "Ajouter la sélection au carnet" %}
+        </button>
+
         <ol class="artists selection">
             <li><strong>{% trans "Artiste" %}</strong></li>
 		{% for artist in artist_list %}
 			<li>
             {% with artist.songs.all as artist_songs %}
-				<input class="artist" type="checkbox" name="artists[]" value="{{ artist.id }}" id="artist_{{ artist.id }}"
-                       {% if artist_songs|list_in_items:current_item_list %}checked disabled{% endif %}>
+				<input class="artist" type="checkbox" name="artists[]" value="{{ artist.id }}" id="artist_{{ artist.id }}" {% if artist_songs|list_in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
 				<label class="artist" for="artist_{{ artist.id }}" title="{{ artist.name }}">
 					{{ artist.name }}
 				</label>
@@ -29,7 +33,7 @@
             		{% for song in artist_songs %}
             			<li>
 				            <input class="select_song" type="checkbox" name="songs[]" value="{{ song.id }}"
-            				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
+            				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
 			            	<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
         					{{ song.title }}
             				</label>
@@ -43,8 +47,9 @@
 			</li>
 		{% endfor %}
 		</ol><br/>
-        <noscript>
-            <input type="submit" value="{% trans "Ajouter au carnet" %}" class="button-link"/>
-        </noscript>
+        
+        <button type="submit" class="button-link" data-icon="add-multiple">
+            {% trans "Ajouter la sélection au carnet" %}
+        </button>
     </form>
 {% endblock %}

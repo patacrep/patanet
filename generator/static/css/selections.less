@@ -1,12 +1,12 @@
 a.back{
-	&:before{
+	&:not(:empty):before{
 		content:"\2039  ";
 		font-style:normal;
 		padding-left:-1em;
 	}
 }
 
-.selection{
+ol.selection{
 	padding:0;
 	display:block;
     margin:1em auto;
@@ -34,13 +34,14 @@ a.back{
 			opacity:0;
 		}
 
-		&:hover input,
-		input:checked,
+		&:hover input:not(:checked):not(:indeterminate),
 		input[type=text]{
 			opacity:1;
 		}
+		input:not(:checked):not(:indeterminate){
+			opacity:0.6;
+		}
 		input{
-			opacity:0.3;
 			vertical-align:middle;
         }
         .toggle_checkbox{
@@ -86,69 +87,96 @@ a.back{
     }
 }
 
-.playlist{
+ol.item_list{
+	display: table;
+	width: 100%;
+	li{
+		display: table-row;
+		list-style: none;
 
-    @media (min-width:@screen-md){
-        position:absolute;
-        top:0;
-        right:0;
-    }
-
-    background-color:darken(@link-visited,10%);
-    color:white;
-    padding: 0 .5em;
-    font-size:90%;
-    max-height:@playlist-height;
-    overflow-y:auto;
-    overflow-x:hidden;
-    max-width:35%;
-
-    box-shadow: -5px 5px 10px #888888;
-
-    h2{
-        margin-bottom:0;
-		width:15em;
-		white-space: nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-		vertical-align: middle;
-		margin-bottom: 0;
-		& + small{
-			display:inline-block;
-			float:right;
+		&:nth-child(odd){
+			background-color:@selection-strip-bg;
 		}
-    }
-    select{
-    	max-width:15em;
-    }
-    .selection{
-        display:block;
-        margin:0;
-        clear:both;
-    }
-
-    a{
-    	color:lighten(@link-col, 10%);
-    }
-    .song{
-		display:inline-block;
-		width:21em;
-		white-space: nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-		vertical-align: middle;
-		margin-bottom: 0;
-		cursor:pointer;
-		padding:.4em .4em .3em .4em;
-		color:white;
 		&:hover{
-			text-decoration:none;
+			background-color:@selection-hover-bg;
 		}
-    }
+	}
+	label,
+	li > a,
+	li > span{
+		display: table-cell;
+		padding:0.5em;
+	}
+	.title{
+		color: darken(@link-col, 10%);
+	}
+	.artist{
+		font-style: italic;
+		font-size: .9em;
+	}
+	.section_name{
+		width: 100%;
+		background-color: transparent;
+		border-color: transparent;
+		font-weight:bold;
+		font-size:1.3em;
+		display: table-cell;
 
-    .artist{
-    	color:darken(@link-col, 0%);
-    }
+		&:hover,
+		&:focus{
+			background-color: #f9f9f9;
+			box-shadow: none;
+		}
+	}
+	.remove{
+		width: 22px;
+		background:url("@{static-url}img/icon/delete.png") center center no-repeat;
+		opacity: .5;
+		&:hover{
+			opacity: 1;
+		}
+	}
+	.removed{
+		opacity: .5;
+		text-decoration: line-through;
+		.remove{
+			background-image: url("@{static-url}img/icon/revert.png");
+		}
+	}
+	.dragger{
+		width: 22px;
+		background:url("@{static-url}img/icon/drag.png") center center no-repeat;
+		cursor: move;
+	}
+	li.ui-sortable-helper{
+		background-color: fade(lighten(@selection-hover-bg, 70%), 50%);
+		.remove{
+			display: none;
+		}
+
+		&.section{
+			.dragger{
+				padding-top: 32px;
+			}
+			.section_name{
+				position: absolute;
+				left: 38px;
+				top: 0;
+				background-color: transparent;
+			}
+		}
+	}
+
+	&.public{
+		li.section{
+			font-weight:bold;
+			font-size:1.3em;
+			&:after{ // so that it occupies the whole row
+				content: " ";
+				display: table-cell;
+			}
+		}
+	}
 }
 
 .pagination{
@@ -176,61 +204,11 @@ a.back{
 	}
 }
 
-.section_label{
-	cursor:pointer;
-	&:hover h4{
-		background-color:@selection-hover-bg;
-	}
-	h4{
-		margin:0;
-		padding:.7em 0;
-		&:before{
-			content:"\25b6  ";
-		}
-	}
-}
-
-.section_checker{
-	display:none;
-	&:checked + .section{
-		display:none;
-	}
-}
-
 
 .layouts {
     text-align:center;
 
     tr:nth-child(odd){
         background-color:@selection-strip-bg;;
-    }
-}
-
-
-@options_width:40%;
-.new_layout {
-    width:100%;
-    .field_container {
-        margin-right:@options_width;
-    }
-    #bookoptions {
-        float:right;
-        width:@options_width;
-
-        ul {
-            list-style:none;
-        }
-        p {
-            margin: 0;
-            margin-bottom:1em;
-            label {
-                text-align:left;
-                font-weight:bold;
-                width:auto;
-            }
-        }
-    }
-    input[type="submit"] {
-        margin-top:3em;
     }
 }

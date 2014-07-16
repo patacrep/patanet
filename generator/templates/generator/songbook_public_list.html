@@ -8,40 +8,14 @@
 			{% trans "Mes carnets" %}
 		</a>
 	{% endif %}
-	<div class="public">
+	<br/>
+	<div>
 		{% for songbook in songbooks %}
-			<a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a>
-			{% if user.profile = songbook.user %}
-				<small>[<a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">
-				    {% trans "Paramètres" %}
-				    </a>]
-				</small>
+			{% if user == songbook.user %}
+                {% include 'generator/songbook_private_item.html' %}
+            {% else %}
+                {% include 'generator/songbook_public_item.html' %}
 			{% endif %}
-			-  {{ songbook.count_songs }}{% trans " chants" %}
-        <div>
-			<p class="description">{{ songbook.description|truncatewords:20 }}</p>
-            <ul class=layouts><h4> {% trans "Téléchargements" %} </h4>
-                {% for task in songbook.tasks.all %}
-                    <li>
-                    {% if task.state = 'FINISHED' %}
-                        <a href="/medias/PDF/{{task.result.file}}" target="_blank">
-                            {{ task.layout.name }}
-                        </a>
-                        {% if task.hash != songbook.hash %}
-                            <small title="{% trans "La version PDF de ce carnet n'est pas à jour." %}" class="help">
-                                [{% trans "Ancien" %}]
-                            </small>
-                        {% endif %}
-                    {% elif task.state = 'ERROR' %}
-                        {% trans "Erreur de génération" %}
-                    {% else %}
-                        {% trans "Génération en cours" %}
-                    {% endif %}
-                    </li>
-                {% empty %}
-                {% endfor %}
-            </ul>
-        </div>
-		{% endfor %}
-	</div>
+        {% endfor %}
+    </div>
 {% endblock %}

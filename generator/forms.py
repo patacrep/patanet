@@ -178,7 +178,7 @@ class LayoutForm(forms.ModelForm):
 
     class Meta:
         model = Layout
-        fields = ('name', 'booktype')
+        fields = ('booktype', 'orientation', 'name')
 
     ORIENTATIONS = (("portrait", _(u"Portrait")),
                     ("landscape", _(u"Paysage")),

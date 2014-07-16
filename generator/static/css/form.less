@@ -1,0 +1,248 @@
+@glow-color: lighten(@link-col, 20%);
+
+form{
+
+	margin: auto;
+
+	display: table;
+
+    @media (max-width:@screen-sm){
+        margin:0 11px;
+        width: 100%;
+    }
+
+	&.item_list{
+		width: 80%;
+		display: block;
+	}
+	&.current_songbook{
+		display: block;
+	}
+
+	p{
+		display: table-row;
+        & > input,
+        & > select,
+        & > textarea{
+        	margin-bottom: .5em;
+        }
+	}
+
+	div.non_field_errors{
+		display: table-caption;
+		ul.errorlist li{
+			text-align: left;
+		}
+	}
+	ul.errorlist{
+		display: table-row;
+		
+		&:before{
+			content: " ";
+			display: table-cell;
+	        @media (max-width:@screen-sm){
+	            display: none;
+	        }
+		}
+
+		li{
+			list-style:none;
+        	padding:5px 10px 0 10px;
+	        color: darken(@messages-error, 30%);
+
+	        @media (max-width:@screen-sm){
+	            text-align: right;
+	        }
+	    }
+
+	    & + p > input,
+	    & + p > select,
+	    & + p > textarea{
+	    	@glow-color: darken(@messages-error, 30%);
+
+	    	border-color: @glow-color;
+	    	&:focus{
+	    		border-color: @glow-color;
+			    box-shadow: 0 0 10px fade(@glow-color, 40%);
+			    -webkit-box-shadow: 0 0 10px fade(@glow-color, 40%);
+		    }
+	    }
+	}
+
+	input[type="text"], 
+	input[type="search"], 
+	input[type="email"],
+	input[type="password"],
+    select,
+	textarea{
+		width: 330px;
+	    padding: 7px 0px 7px 5px;
+	    border: 1px solid #c5c5c5;
+	    background: #f9f9f9;
+	    outline: 0;
+
+	    transition: box-shadow 0.2s ease-in-out;
+	    -webkit-transition: box-shadow 0.2s ease-in-out;
+	    &:focus{
+	    	background-color: #fff;
+
+	    	border-color: @glow-color;
+		    box-shadow: 0 0 10px fade(@glow-color, 40%);
+		    -webkit-box-shadow: 0 0 10px fade(@glow-color, 40%);
+	    }
+        @media (max-width:@screen-sm){
+            width: 100%;
+        }
+    }
+
+    p label{
+        display: table-cell;
+    	font-weight: bold;
+    	font-size: 0.9em;
+    	padding-right: 1em;
+        text-align: right;
+        @media (max-width:@screen-sm){
+            text-align: left;
+            display: block;
+        }
+    }
+
+    span.captcha{
+    	vertical-align: middle;
+    	display: inline-block;
+    	text-align: center;
+    	width: 90px;
+    	& + input{
+    		width: 236px;
+    	}
+    }
+
+    input[type="submit"],
+    button[type="submit"]:not(.button-link){
+    	background-color: darken(@link-col, 8%);
+    	color: #eee;
+    	border: none;
+    	padding: .5em .7em;
+    	margin-top: 1em;
+    	margin-right: -100%;
+    	margin-left: 100%;
+	    transition: all 0.25s ease-in-out;
+	    -webkit-transition: all 0.25s ease-in-out;
+
+        @media (max-width:@screen-sm){
+            float: none;
+            width: 100%;
+            margin: 1em 0;
+        }
+        &:hover,
+        &:focus,
+        &:active{
+	    	background-color: darken(@link-col, 12%);
+        }
+    }
+
+	.button-link{
+	    background-color: transparent;
+	    border: 0px;
+	    cursor: pointer;
+	    color: @link-col;
+	    margin: 0;
+	    &:hover{
+	        text-decoration: underline;
+	        &:active{
+	            padding-right: 6px;
+	        }
+	    }
+	}
+
+	&.add_songs{
+		margin-top: 9px;
+	}
+
+
+
+	&.new_layout {
+	    width:100%;
+	    .field_container {
+	    	display: table-cell;
+	    	div{
+	    		display: table;
+	    		width: 95%;
+	    	}
+	    	input,
+	    	select{
+	    		width: 100%;
+	    	}
+
+	        @media (max-width:@screen-sm){
+	    		display: table-footer;
+	        }
+	    }
+	    #bookoptions {
+	    	display: table-cell;
+	    	white-space: nowrap;
+
+	        ul {
+	            list-style:none;
+	        }
+	        p {
+	            margin: 0;
+	            margin-bottom:1em;
+	            label {
+	                text-align:left;
+	                font-weight:bold;
+	                width:auto;
+	            }
+	        }
+	        @media (max-width:@screen-sm){
+	    		display: table-caption;
+	        }
+	    }
+
+	}
+
+	&.search{
+		//display: block;
+		display: none;//while the backend is not ready
+
+		float: right;
+		width: auto;
+		input{
+			width: 12em;
+			transition: width .5s ease-in-out;
+	    	border-right: none;
+		}
+		input:not(:focus):invalid
+		{
+			width: 7em;
+		    box-shadow: none;
+		}
+		input:not(:focus) + span button[type="submit"]{
+			background-color: #f9f9f9;
+			border-color: #c5c5c5;
+		    box-shadow: none;
+		    -webkit-box-shadow: none;
+		}
+		button[type="submit"]{
+			display: inline-block;
+			margin: 0;
+			width: 32px;
+			overflow: hidden;
+			color: transparent;
+
+	    	border: 1px solid @glow-color;
+		    box-shadow: 0 0 10px fade(@glow-color, 40%);
+		    -webkit-box-shadow: 0 0 10px fade(@glow-color, 40%);
+
+	    	border-left: none;
+	    	padding: 7px;
+
+			background:url("@{static-url}img/icon/magnifier.png") center center no-repeat darken(@link-col, 8%);
+		}
+	}
+
+}
+
+h1 + form{
+	margin-top: 2em;
+}

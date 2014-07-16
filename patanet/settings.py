@@ -148,6 +148,7 @@ SOUTH_TESTS_MIGRATE = False
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 CAPTCHA_LETTER_ROTATION = (-20, 20)
 CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
+CAPTCHA_OUTPUT_FORMAT = u'<span class="captcha">%(image)s</span> %(text_field)s %(hidden_field)s'
 
 try:
     from local_settings import *

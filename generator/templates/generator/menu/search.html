@@ -1,0 +1,9 @@
+{% load i18n %}
+{% spaceless %}
+<form class="search" action="TODO">
+	<input type="search" name="search_term" placeholder="{% trans 'Titre, artiste' %}" value="{{ request.GET.search_term }}" required/>
+	<span class="search-btn">
+		<button type="submit">Chercher</button>
+	</span>
+</form>
+{% endspaceless %}

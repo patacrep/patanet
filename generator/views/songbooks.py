@@ -51,19 +51,24 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
     template_name = "generator/songbook_private_list.html"
 
     def get_queryset(self):
-        return Songbook.objects.filter(user=self.request.user
+        songbooks = Songbook.objects.filter(user=self.request.user
                                        ).order_by('title')
+        if len(songbooks) == 1 and 'current_songbook' not in self.request.session:
+            self.request.session['current_songbook'] = songbooks[0].id
+        return songbooks
 
 
 class NewSongbook(LoginRequiredMixin, CreateView):
     model = Songbook
     template_name = 'generator/new_songbook.html'
     form_class = SongbookCreationForm
-    success_url = reverse_lazy('songbook_private_list')
+
+    def get_success_url(self):
+        return reverse('set_current_songbook') + '?songbook=' + str(self.object.id)
 
     def form_valid(self, form):
         form.user = self.request.user
-        messages.success(self.request, _(u"Le nouveau carnet a été créé."))
+        messages.success(self.request, _(u"Le carnet a été créé."))
         return super(NewSongbook, self).form_valid(form)
 
     def get_initial(self):
@@ -104,7 +109,8 @@ class UpdateSongbook(OwnerRequiredMixin, UpdateView):
                                        slug=self.kwargs['slug'])
 
     def get_success_url(self):
-        return reverse('show_songbook', kwargs=self.kwargs)
+        return reverse('edit_songbook', kwargs=self.kwargs)
+
 
     def form_valid(self, form):
         form.user = self.request.user
@@ -121,6 +127,8 @@ def set_current_songbook(request):
     if (request.GET['songbook'] != None):
         songbook_id = request.GET['songbook']
         request.session['current_songbook'] = int(songbook_id)
+        if 'next' in request.GET:
+            return redirect(request.GET['next'])
         return redirect('song_list')
     else:
         messages.error(request, _(u"Ce carnet n'existe pas."))
@@ -166,6 +174,8 @@ def add_songs_to_songbook(request):
         return redirect(next_url)
 
     song_list = request.POST.getlist('songs[]')
+    song_added = 0
+
     current_item_list = [item.item for item in
                             ItemsInSongbook.objects.filter(songbook=songbook)]
     rank = _get_new_rank(songbook_id)
@@ -179,6 +189,8 @@ def add_songs_to_songbook(request):
                               current_item_list=current_item_list)
             if added:
                 rank += 1
+                song_added += 1
+                current_item_list.append(song)
         except Song.DoesNotExist:  # May be useless
             pass
 
@@ -194,8 +206,15 @@ def add_songs_to_songbook(request):
                               current_item_list=current_item_list)
                 if added:
                     rank += 1
+                    song_added += 1
         except Artist.DoesNotExist:
             pass
+    if song_added == 0:
+        messages.info(request, _(u"Aucun chant ajouté"))
+    elif song_added == 1:
+        messages.success(request, _(u"1 chants ajouté"))
+    else:
+        messages.success(request, _(u"%i chants ajoutés" % (song_added) ))
 
     return redirect(next_url)
 
@@ -219,7 +238,7 @@ def remove_song(request):
                                        item_id=song_id)
     item.delete()
     songbook.fill_holes()
-    messages.success(request, _(u"Ce chant a été supprimé"))
+    messages.success(request, _(u"Chant retiré du carnet"), extra_tags='removal')
     return redirect(next_url)
 
 @owner_required(('id', 'id'))
@@ -254,6 +273,7 @@ def move_or_delete_items(request, id, slug):
         try:
             section_name = unicode(request.POST['new_section'])
             songbook.add_section(section_name)
+            messages.success(request, _(u"Nouvelle section ajoutée en fin de carnet"))
         except ValueError:
             messages.error(request, _(u"Ce nom de section n'est pas valide"))
 
@@ -278,7 +298,11 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
     model = Songbook
     context_object_name = "songbook"
     template_name = 'generator/delete_songbook.html'
-    success_url = reverse_lazy('songbook_private_list')
+
+    def get_success_url(self):
+        success_url = reverse_lazy('songbook_private_list')
+        messages.success(self.request, _(u"Le carnet a été supprimé"), extra_tags='removal')
+        return success_url
 
     def get_object(self, queryset=None):
         id = self.kwargs.get('id', None)
@@ -312,6 +336,7 @@ class LayoutList(OwnerRequiredMixin, CreateView):
         slug = self.kwargs.get('slug', None)
         songbook = Songbook.objects.get(id=id, slug=slug)
         context['songbook'] = songbook
+        context['form_options'] = LayoutForm.OPTIONS
         context['existing_tasks'] = GeneratorTask.objects.filter(
                                                     songbook=songbook)
         return context

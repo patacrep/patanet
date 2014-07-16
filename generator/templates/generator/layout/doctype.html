@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="{% block lang %}fr{% endblock %}">
 	<head>
@@ -10,4 +11,9 @@
 	<body>
 		{% block body %}{% endblock %}
 	</body>
+
+   <script src="{% static "js/jquery-1.11.1.min.js" %}"></script>
+   <script src="{% static "js/jquery-ui-1.10.4.min.js" %}"></script>
+   <script src="{% static "js/patanet.js" %}"></script>
+   {% block extrafooter %}{% endblock %}
 </html>

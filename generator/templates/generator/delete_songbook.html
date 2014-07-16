@@ -1,24 +1,25 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
-{% block title %}
-	{% blocktrans with songbook=songbook.title%}
-	Suppression du carnet <em>{{songbook}}</em>
-	{% endblocktrans %}
-{% endblock %}
+{% block title %}{% endblock %}
 
-{% block appmenu %}
-	{% include "generator/menu/songbook.html" %}
+{% block headertitle %}
+	{% blocktrans with songbook=songbook.title %}
+	Suppression - {{songbook}}
+	{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
 	<p>
-        {% trans "Êtes-vous sur de vouloir supprimer ce carnet ?" %}
+        {% blocktrans with songbook=songbook.title %}
+        	Êtes-vous sur de vouloir supprimer le carnet <em><strong>{{songbook}}</strong></em> ?
+        {% endblocktrans %}
+        <br/>
 		<strong>{% trans "Cette action est irréversible !" %}</strong>
 	</p>
 	<form method="post" action="">
 		{% csrf_token %}
-		<input type="submit" value="{% trans 'Confirmer la suppression' %}" />
-        -
-        <a href="{% url "songbook_private_list" %}">{% trans 'Revenir aux carnets' %}</a>
+		<p>
+			<input type="submit" value="{% trans 'Confirmer la suppression' %}" />
+		</p>
 	</form>
 {% endblock %}
