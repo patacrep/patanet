@@ -88,7 +88,9 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ShowSongbook, self).get_context_data(**kwargs)
-        items_list = ItemsInSongbook.objects.filter(songbook=self.object)
+        items_list = ItemsInSongbook.objects.prefetch_related(
+                   'item', 'item_type'
+                   ).filter(songbook=self.object)
         context['items_list'] = items_list
         if self.request.user == self.object.user:
             context['can_edit'] = True
@@ -164,7 +166,7 @@ def add_songs_to_songbook(request):
 
     try:
         songbook_id = request.session['current_songbook']
-        songbook = Songbook.objects.get(id=songbook_id)
+        songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
                        _(u"Choisissez un carnet pour ajouter ces chants")
@@ -223,7 +225,7 @@ def remove_song(request):
 
     try:
         songbook_id = request.session['current_songbook']
-        songbook = Songbook.objects.get(id=songbook_id)
+        songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
                        _(u"Choisissez un carnet pour supprimer ce chants")
@@ -274,6 +276,20 @@ def move_or_delete_items(request, id, slug):
             messages.success(request, _(u"Nouvelle section ajoutée en fin de carnet"))
         except ValueError:
             messages.error(request, _(u"Ce nom de section n'est pas valide"))
+
+    section_list = {}
+    for key in request.POST.keys():
+        if key.startswith('section_'):
+            section_list[key] = request.POST[key]
+
+    for key, section_name in section_list.items():
+        item_id = int(key[8:])
+        section = ItemsInSongbook.objects.get(songbook=songbook,
+                                              id=item_id)
+
+        if section.item.name != section_name:
+            section.item.name = section_name
+            section.item.save()
 
     return redirect(next_url)
 

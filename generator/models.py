@@ -97,13 +97,15 @@ class Songbook(models.Model):
         return count
 
     def count_artists(self):
-        songs = ItemsInSongbook.objects.filter(
+        songs = ItemsInSongbook.objects.prefetch_related(
+                   'item'
+                   ).filter(
                    songbook=self,
                    item_type=ContentType.objects.get_for_model(Song)
                    )
         artists = set()
         for song in songs:
-            artists.add(song.item.artist.id)
+            artists.add(song.item.artist_id)
         return len(artists)
 
     def count_section(self):
@@ -147,11 +149,13 @@ class Songbook(models.Model):
                       item_type=ContentType.objects.get_for_model(Song)
                       ).order_by("rank").values_list("item_id", flat=True)
 
-        song_paths = Song.objects.filter(id__in=item_ids) \
-                            .values_list("file_path", flat=True)
+        song_paths = dict(Song.objects.filter(id__in=item_ids) \
+                            .values_list("id", "file_path"))
 
-        for song_path in song_paths:
-            d["content"].append(str(song_path))
+
+        for item_id in item_ids:
+            d["content"].append(str(song_paths[item_id]))
+        
 
         return d
 

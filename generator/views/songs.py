@@ -39,7 +39,7 @@ class SongList(CurrentSongbookMixin, ListView):
     template_name = "generator/song_list.html"
     paginate_by = 10
     paginator_class = NamePaginator
-    queryset = Song.objects.all().order_by('slug')
+    queryset = Song.objects.prefetch_related('artist').all().order_by('slug')
 
 
 class SongListByArtist(CurrentSongbookMixin, ListView):
@@ -54,7 +54,7 @@ class SongListByArtist(CurrentSongbookMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(SongListByArtist, self).get_context_data(**kwargs)
-        context['artist'] = Artist.objects.get(slug=self.kwargs['artist'])
+        context['artist'] = self.artist
         return context
 
 
@@ -87,7 +87,7 @@ class ArtistList(CurrentSongbookMixin, ListView):
     template_name = "generator/artist_list.html"
     paginate_by = 10
     paginator_class = NamePaginator
-    queryset = Artist.objects.order_by('slug')
+    queryset = Artist.objects.prefetch_related('songs').order_by('slug')
 
 
 def random_song(request):
