@@ -26,6 +26,7 @@ from django.db.models.signals import post_save
 
 from jsonfield import JSONField
 import hashlib
+import re
 
 
 class Artist(models.Model):
@@ -144,6 +145,10 @@ class Songbook(models.Model):
                "sep": ["and", "et"]
              }
              }
+
+        #Let the newlines of the description be compiled in Latex
+        d["subtitle"] = re.sub(r'(\r\n|\r|\n)', "%\r\n\\\\newline%\r\n", d["subtitle"])
+
         items = ItemsInSongbook.objects.filter(songbook=self
                       ).order_by("rank").values_list("item_id", "item_type")
         item_ids = [i[0] for i in items]
