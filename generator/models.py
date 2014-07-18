@@ -169,7 +169,6 @@ class Songbook(models.Model):
             if item_types[item_id] == types[Song]:
                 d["content"].append(str(song_paths[item_id]))
             elif item_types[item_id] == types[Section]:
-                print sections[item_id]
                 d["content"].append(["songsection", sections[item_id]])
 
         return d
