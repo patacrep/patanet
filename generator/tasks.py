@@ -33,8 +33,7 @@ def queue_render_task(task_id):
 
     try:
         filename = generate_songbook(task.songbook, task.layout)
-    #except GeneratorError:
-    except:
+    except GeneratorError:
         task.state = GeneratorTask.State.ERROR
         task.save()
         LOGGER.error("Failed task {0} (state : {1})"\
