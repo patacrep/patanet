@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -19,28 +19,23 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic import CreateView, FormView
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext as _
 from django.contrib import messages
-from django.shortcuts import render
+from django.contrib.auth.views import password_reset, password_reset_confirm
+from django.shortcuts import render, redirect
 
 
 from generator.forms import RegisterForm
 from generator.decorators import LoginRequiredMixin
-from generator.models import Profile
 
-@login_required
-def view_profile(request):
-    profile = Profile.objects.get(user=request.user)
-    return render(request, 'generator/show_profile.html', locals())
-
-
-class Register(CreateView):
+class Register(FormView):
     template_name = 'generator/register.html'
     form_class = RegisterForm
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
+        form.save()
         messages.success(self.request, _(u"Vous êtes à présent inscrit."
                     u"Connectez-vous pour accéder à votre profil."))
         return super(Register, self).form_valid(form)

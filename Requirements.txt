@@ -1,7 +1,8 @@
-Django==1.6.1
+Django>1.6
 South==0.8.4
 Unidecode==0.04.14
 jsonfield==0.9.20
 GitPython==0.3.2.RC1
-django-background-task==0.1.6
-lesscpy>0.1
+django-background-task>=0.1.8
+lesscpy>=0.1
+django-simple-captcha>=0.4.2

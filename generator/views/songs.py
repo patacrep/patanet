@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@ import os
 
 
 from django.views.generic import ListView, DetailView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
@@ -31,7 +31,7 @@ from generator.name_paginator import NamePaginator
 from generator.songs import parse_song
 
 
-from Songbook_web.settings import SONGS_LIBRARY_DIR
+from patanet.settings import SONGS_LIBRARY_DIR
 
 class SongList(CurrentSongbookMixin, ListView):
     model = Song
@@ -39,7 +39,7 @@ class SongList(CurrentSongbookMixin, ListView):
     template_name = "generator/song_list.html"
     paginate_by = 10
     paginator_class = NamePaginator
-    queryset = Song.objects.all().order_by('slug')
+    queryset = Song.objects.prefetch_related('artist').all().order_by('slug')
 
 
 class SongListByArtist(CurrentSongbookMixin, ListView):
@@ -54,7 +54,7 @@ class SongListByArtist(CurrentSongbookMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(SongListByArtist, self).get_context_data(**kwargs)
-        context['artist'] = Artist.objects.get(slug=self.kwargs['artist'])
+        context['artist'] = self.artist
         return context
 
 
@@ -85,7 +85,7 @@ class ArtistList(CurrentSongbookMixin, ListView):
     template_name = "generator/artist_list.html"
     paginate_by = 10
     paginator_class = NamePaginator
-    queryset = Artist.objects.order_by('slug')
+    queryset = Artist.objects.prefetch_related('songs').order_by('slug')
 
 
 def random_song(request):

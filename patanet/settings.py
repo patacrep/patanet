@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ SECRET_KEY = 'minimal'
 
 APPEND_SLASH = False
 
-EMAIL_SUBJECT_PREFIX = '[Songbook Web]'
+EMAIL_SUBJECT_PREFIX = '[Patanet]'
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -47,6 +47,7 @@ INSTALLED_APPS = (
 INSTALLED_APPS += (
     'south',
     'background_task',
+    'captcha',
 )
 INSTALLED_APPS += (
     'generator',
@@ -62,11 +63,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
 )
 
-ROOT_URLCONF = 'Songbook_web.urls'
+ROOT_URLCONF = 'patanet.urls'
 SITE_ID = 1
 
 
-WSGI_APPLICATION = 'Songbook_web.wsgi.application'
+WSGI_APPLICATION = 'patanet.wsgi.application'
 
 
 AUTHENTICATION_BACKENDS = (
@@ -103,8 +104,8 @@ USE_TZ = True
 gettext = lambda x: x
 
 LANGUAGES = (
-('fr', gettext('French')),
-('en', gettext('English')),)
+('fr', gettext('Français')),
+('en', gettext('Anglais')),)
 
 LOCALE_PATHS = ( os.path.join(PROJECT_ROOT, "locale"),)
 
@@ -140,9 +141,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
         )
 
 LOGIN_URL = '/user/login'
-LOGIN_REDIRECT_URL = '/user/'
+LOGIN_REDIRECT_URL = '/songbooks/my/'
 
 SOUTH_TESTS_MIGRATE = False
+
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_LETTER_ROTATION = (-20, 20)
+CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
+CAPTCHA_OUTPUT_FORMAT = u'<span class="captcha">%(image)s</span> %(text_field)s %(hidden_field)s'
 
 try:
     from local_settings import *

@@ -7,14 +7,20 @@
 	{% if debug %}
 	   <link rel="stylesheet/less" type="text/css" href="{% static "css/normalize.less" %}" />
 	   <link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
+		<script>
+		  less = {
+		    env: "development",
+		    logLevel: 2,
+		    poll: 2000,
+		    dumpLineNumbers: "comments"
+		  };
+		</script>
 	   <script src="{% static "js/less-1.6.1.min.js" %}"></script>
+	   <script>less.watch();</script>
 	{% else %}
         <link type="text/css" rel="stylesheet" href="{% static "css/normalize.css" %}" />
         <link type="text/css" rel="stylesheet" href="{% static "css/main.css" %}" />
     {% endif %}
-	   <script src="{% static "js/jquery-1.11.1.min.js" %}"></script>
-       <script src="{% static "js/jquery-ui-1.10.4.min.js" %}"></script>
-       <script src="{% static "js/sb_web.js" %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -25,21 +31,30 @@
 	<div class="top">
 	    <div class="app-menu">
             {% include "generator/menu/user.html" %}
+	    	{% include "generator/layout/messages.html" %}
         </div>
-	    {% include "generator/layout/messages.html" %}
-		<div class="app-menu">
-			{% block appmenu %}
-			{% endblock %}
-		</div>
 	</div>
 
 	<main id="content" role="main">
-	<h1> {% block title %}No title{% endblock %}</h1>
-		{% block content %}No content{% endblock %}
+		{% block current_songbook %}
+			{% if current_songbook %}
+				{% with current_songbook as songbook %}
+			    	{% include "generator/layout/current_songbook.html" %}
+					{% include "generator/menu/search.html" %}
+			    {% endwith %}
+			{% elif songbook %}
+			    {% include "generator/layout/current_songbook.html" %}
+			{% else %}
+				{% block choose_songbook %}
+				{% endblock %}
+			{% endif %}
+        {% endblock %}
 
-		{% if show_current_songbook %}
-			{% include "generator/current_songbook.html" %}
-		{% endif %}
+	<h1>{% block title %}No title{% endblock %}</h1>
+	
+		{% block content %}
+            No content
+        {% endblock %}
 	</main>
 
 	<footer>

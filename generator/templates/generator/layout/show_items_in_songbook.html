@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<ol class="item_list public">
+{% for item in items_list %}
+    <li class="{{ item.item_type.model}}">
+        {% if item.item_type.model == "section" %}
+            <span>
+                {{item.item.name}}
+            </span>
+        {% elif item.item_type.model == "song" %}
+            <a class="details title" href="{% url "show_song" slug=item.item.slug artist=item.item.artist.slug %}">
+                {{ item.item.title }}
+            </a>
+            <a class="details artist" href="{% url "song_list_by_artist" artist=item.item.artist.slug %}" title="{{ item.item.artist.name }}">
+                {{ item.item.artist.name }}
+            </a>
+        {% endif %}
+    </li>
+{% empty %}
+    <li>
+        {% trans "Ce carnet est vide" %}
+    </li>
+{% endfor %}
+</ol>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -78,7 +78,7 @@ class Songbook(models.Model):
     items = models.ManyToManyField(ContentType,
                                    blank=True,
                                    through='ItemsInSongbook',)
-    user = models.ForeignKey('Profile', related_name='songbooks')
+    user = models.ForeignKey(User, related_name='songbooks')
     author = models.CharField(max_length=255,
                               verbose_name=_(u"auteur"),
                               default="")
@@ -95,6 +95,18 @@ class Songbook(models.Model):
                    item_type=ContentType.objects.get_for_model(Song)
                    ).count()
         return count
+
+    def count_artists(self):
+        songs = ItemsInSongbook.objects.prefetch_related(
+                   'item'
+                   ).filter(
+                   songbook=self,
+                   item_type=ContentType.objects.get_for_model(Song)
+                   )
+        artists = set()
+        for song in songs:
+            artists.add(song.item.artist_id)
+        return len(artists)
 
     def count_section(self):
         count = ItemsInSongbook.objects.filter(
@@ -137,11 +149,13 @@ class Songbook(models.Model):
                       item_type=ContentType.objects.get_for_model(Song)
                       ).order_by("rank").values_list("item_id", flat=True)
 
-        song_paths = Song.objects.filter(id__in=item_ids) \
-                            .values_list("file_path", flat=True)
+        song_paths = dict(Song.objects.filter(id__in=item_ids) \
+                            .values_list("id", "file_path"))
 
-        for song_path in song_paths:
-            d["content"].append(str(song_path))
+
+        for item_id in item_ids:
+            d["content"].append(str(song_paths[item_id]))
+        
 
         return d
 
@@ -163,70 +177,37 @@ class Layout(models.Model):
     """
     This class holds layout information for generating a songbook.
     """
-    name = models.CharField(max_length=100,
-                            verbose_name=_(u"Nom"))
+
     BOOKTYPES = (("chorded", _(u"Avec accords")),
-              ("lyrics", _(u"Sans accords")),
+              ("lyric", _(u"Sans accords")),
               )
 
-    ORIENTATIONS = (("portrait", _(u"Portrait")),
-                    ("landscape", _(u"Paysage")),
-                    )
+    name = models.CharField(max_length=100,
+                            verbose_name=_(u"nom de la mise en page"))
 
-    PAPERSIZES = (("a4", _(u"A4")),
-                  ("a4", _(u"A4")),
-                 )
-    bookoptions = JSONField()
-    #  diagram, pictures
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
-    orientation = models.CharField(max_length=16,
-                                   choices=ORIENTATIONS,
-                                   default="portrait")
-    papersize = models.CharField(max_length=16,
-                                 choices=PAPERSIZES,
-                                 default="a4")
+
+    bookoptions = JSONField()
+    other_options = JSONField()
+
     template = models.CharField(max_length=100,
                                  verbose_name=_(u"gabarit"),
                                  default="data.tex")
-    lang = models.CharField(max_length=10,
-                                verbose_name=_(u"langue principale"),
-                                default="french")
-    other_options = JSONField(default=[])
-
-    def __eq__(self, other):
-
-        if not isinstance(other, Layout):
-            return False
-
-        for attr in ("diagram", "pictures"):
-            if (attr in self.bookoptions) != (attr in other.bookoptions):
-                return False
-
-        for attr in ("booktype", "orientation", "papersize",
-                     "template", "lang"):
-            if (getattr(self, attr) != getattr(other, attr)):
-                return False
-
-        return True
-
-#     Other options are : web mail picture picturecopyright footer
-#     license (a .tex file) mainfontsize songnumberbgcolor notebgcolor
-#     indexbgcolor
 
     def get_as_json(self):
         """Return a JSON representation of the layout"""
         layout = {}
-        for attr in ("booktype", "orientation", "papersize",
-                     "template", "lang", "bookoptions"):
-            layout[attr] = getattr(self, attr)
+        layout["booktype"] = self.booktype
+        layout["bookoptions"] = self.bookoptions
+        layout["template"] = self.template
         layout.update(self.other_options)
         return layout
 
     class Meta:
-        verbose_name = _(u"Layout")
+        verbose_name = _(u"Mise en page")
 
 
 class ItemsInSongbook(models.Model):
@@ -248,6 +229,7 @@ class ItemsInSongbook(models.Model):
 
     class Meta:
         ordering = ["rank"]
+        unique_together = ('item_id', 'songbook',)
 
 
 class Task(models.Model):
@@ -278,33 +260,7 @@ class Task(models.Model):
                              verbose_name=_(u"état"))
     result = JSONField(verbose_name=_(u"résultat"))
 
-    def get_as_json(self):
-
-        d = {}
-        d.update(self.songbook.get_as_json())
-        d.update(self.layout.get_as_json())
-
-        return d
-
     def __unicode__(self):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
                                     songbook=self.songbook.title,
                                     layout=self.layout.id))
-
-###############################################################
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User)
-
-    def __unicode__(self):
-        return self.user.username
-
-    class Meta:
-        verbose_name = _(u'profil')
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.get_or_create(user=instance)

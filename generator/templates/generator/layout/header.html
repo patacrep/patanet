@@ -1,46 +1,41 @@
 {% load i18n %}
+{% load staticfiles %}
 
 
 <div class="logo">
-    {% trans "Songbook-web" %}
+    <a href="/">
+        <img src="{% static "img/logo.png" %}" alt="logo patanet">
+    </a>
 </div>
 <nav>
-    <h2>
-        Menus de navigation
-    </h2>
-    <h3>
-        Navigation
-    </h3>
+    <h2>{% trans "Menus de navigation" %}</h2>
+    <h3>{% trans "Navigation" %}</h3>
     <ul>
-        <li>
-		<li><a href="{% url 'home' %}">{% trans "Page d'accueil"%}</a></li>
+		<li><a href="{% url 'home' %}">{% trans "Page d'accueil" %}</a></li>
+        <li><a href="{% url 'songbook_list' %}">{% trans "Carnets publics" %}</a></li>
 		<li><a href="{% url 'artist_list' %}">{% trans "Liste des artistes" %}</a></li>
 		<li><a href="{% url 'song_list' %}">{% trans "Liste des chansons" %}</a></li>
-		<li><a href="{% url 'songbook_list' %}">{% trans "Carnets publics" %}</a></li>
-		<li><a href="{% url 'random_song' %}">{% trans "Chanson au hasard" %}</a></li> 
+		<li><a href="{% url 'random_song' %}">{% trans "Chanson au hasard" %}</a></li>
     </ul>
-    <h3>
-        Pages
-    </h3>
+    <h3>{% trans "Pages" %}</h3>
     <ul>
         <li><a href="{% url 'flatpage' url='contribute' %}">{% trans 'Contribuer' %}</a></li>
         <li><a href="{% url 'flatpage' url='FAQ' %}">{% trans 'FAQ' %}</a></li>
         <li><a href="{% url 'flatpage' url='about' %}">{% trans 'A propos de ce site' %}</a></li>
         <li><a href="{% url 'contact' %}">{% trans 'Nous contacter' %}</a></li>
     </ul>
-    <h3>
-        Liens
-    </h3>
+    <h3>{% trans "Liens" %}</h3>
     <ul>
-        <li><a href="https://github.com/patacrep/songbook-web/">Github</a></li>
         <li><a href="http://www.patacrep.com/">Patacrep</a></li>
-        <li><a href="http://songs.sourceforge.net/">Songs package</a></li>
-        <li><a href="http://www.latex-project.org/">LaTeX</a></li>
+        <li><a href="https://github.com/patacrep/patanet/">{% trans 'Code source du site' %}</a></li>
+        <li><a href="http://songs.sourceforge.net/">{% trans 'Paquet LaTeX Songs' %}</a></li>
     </ul>
-    <!--
-    <h3>Autres langues</h3>
-    <ul>
-        <li><a href="#">Anglais</a></li>
+    <h3>{% trans "Autres langues" %}</h3>
+    <ul class="languages">
+        {% for code, lang in LANGUAGES %}
+            <li>
+                <a href="/setlang/?lang={{code}}&next={{request.get_full_path}}">{{lang}}</a>
+            </li>
+        {% endfor %}
     </ul>
-    -->
 </nav>

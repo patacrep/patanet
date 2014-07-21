@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,10 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     )
 
+urlpatterns += patterns('',
+    url(r'^captcha/', include('captcha.urls')),
+)
+
 urlpatterns += i18n_patterns('',
     url(r'', include('generator.urls')),
     )
@@ -33,6 +37,10 @@ urlpatterns += i18n_patterns('',
 urlpatterns += i18n_patterns('',
     url(r'^pages/(?P<url>[\w-]+)', FlatPage.as_view(), name="flatpage"),
     )
+
+urlpatterns += patterns('patanet.views',
+    url(r'^setlang/', 'setlang' , name="setlang"),
+)
 
 
 from django.conf import settings

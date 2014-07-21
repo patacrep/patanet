@@ -8,20 +8,26 @@
 	{% endif %}
 	<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
 	{% csrf_token %}
-	{{ form.non_field_errors }}
+	{% if form.non_field_errors %}
+		<div class="non_field_errors">
+			{{ form.non_field_errors }}
+		</div>
+	{% endif %}
 	{% for field in form %}
-		{% spaceless %}
-		<p><label>
+		{{field.errors}}
+		<p>
 		{% if field.name == "username" %}
-          {% trans "Nom d'utilisateur ou adresse mail : " %}
+			<label for="id_username">
+	          {% trans "Nom d'utilisateur ou adresse mail : " %}
+			</label>
         {% else %}
           {{ field.label_tag }}
         {% endif %}
-		</label>
-		{% endspaceless %}
 		{{ field }} </p>
 	{% endfor %}
-		<input type="submit" value="{% trans "Se connecter" %}"/>
+		<p>
+			<input type="submit" value="{% trans "Se connecter" %}"/>
+		</p>
 		<input type="hidden" name="next" value="{{ next }}" />
 	</form>
 	<a href="{% url 'password_reset' %}">{% trans "Mot de passe oublié ?" %}</a>

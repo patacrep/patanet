@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load filters %}
+
+{% if request.user.is_authenticated %}
+	<div class="current-songbook choose">
+        <a href="{% url 'songbook_private_list' %}" class="change">
+            {% trans "Mes carnets" %}
+        </a>
+		<form method="get" action="{% url 'set_current_songbook' %}">
+			<input type="hidden" name="next" value="{{ request.path }}"/>
+			<p>
+				<label>
+					{% trans "Veuillez choisir un carnet" %}
+				</label>
+				<select name="songbook">
+					{% for songbook in user.songbooks.all %}
+						<option value="{{ songbook.pk }}">
+							{{ songbook.title }}
+						</option>
+					{% endfor %}
+				</select><input type="submit" value="{% trans "Choisir" %}"/>
+			</p>
+			<p>
+				<label>
+					{% trans "ou" %}
+				</label>
+			    <a href="{% url 'new_songbook' %}">
+			        {% trans "créer un nouveau carnet" %}
+			    </a>
+	    </p>
+		</form>
+	</div>
+{% else %}
+	<div class="current-songbook login">
+		<h3>
+			{% url 'login' as login_url %}
+			{% url 'songbook_private_list' as next_url %}
+			{% url 'register' as register_url %}
+
+			{% blocktrans %}
+				Pour créer votre carnet de chant,<br/>
+				 vous devez vous
+			    <a href="{{ login_url }}?next={{ next_url }}">connecter</a>
+			    ou vous
+			    <a href="{{ register_url }}">inscrire</a>.
+
+			{% endblocktrans %}
+		</h3>
+	</div>
+{% endif %}
+
+{% include "generator/menu/search.html" %}

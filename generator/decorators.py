@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -33,21 +33,14 @@ class CurrentSongbookMixin(object):
 
     def get_context_data(self, **kwargs):
         context = super(CurrentSongbookMixin, self).get_context_data(**kwargs)
-        context['show_current_songbook'] = True
         try:
             songbook = Songbook.objects.get(
-                            id=self.request.session['current_songbook'])
+                            id=self.request.session['current_songbook'], user_id=self.request.user.id)
             context['current_songbook'] = songbook
-            current_item_list = ItemsInSongbook.objects.filter(
-                                                    songbook=songbook)
+            current_item_list = ItemsInSongbook.objects.prefetch_related('item').filter(
+                                                    songbook=songbook,
+                                                    item_type__model='song')
             context['current_item_list'] = current_item_list
-
-            if songbook.count_section() > 1:
-                context['multi_section'] = True
-                context['first_section'] = current_item_list.filter(
-                                            item_type__model='section')[0]
-            if songbook.count_section() > 0:
-                context['sb_has_section'] = True
 
         except (KeyError, Songbook.DoesNotExist):
             pass
@@ -85,7 +78,7 @@ def owner_required(lookups=None, instance=None, **kwargs):
             elif instance:
                 songbook = instance
 
-            if not songbook.user.user == request.user:
+            if not songbook.user == request.user:
                 return redirect(reverse('denied'))
             return view_func(request, *args, **kwargs)
         return wraps(view_func)(_wrapped_view)

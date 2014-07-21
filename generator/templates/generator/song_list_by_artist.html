@@ -5,27 +5,36 @@
 {% endblocktrans %}
 {% endblock %}
 
+{% block choose_songbook %}
+	{% include "generator/layout/choose_songbook.html" %}
+{% endblock %}
+
 {% block content %}
 	<a class="artist back" href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a>
-	<form class="selection" method="post" action="{% url 'add_song_to_songbook' %}">
+	<form class="add_songs" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
 
+		<button type="submit" class="button-link" data-icon="add-multiple">
+			{% trans "Ajouter la sélection au carnet" %}
+		</button>
+
 		<ol class="songs selection">
-		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
-		{% for song in song_list %}
+        {% for song in song_list %}
 			<li>
 				<input type="checkbox" name="songs[]" value="{{ song.id }}"
-				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
+				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{{ song.title }}
 				</label>
-				<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">{% trans "Paroles" %}</a>
+				<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=artist.slug %}">{% trans "Paroles" %}</a>
 			</li>
 		{% endfor %}
 		</ol><br/>
-		<input type="submit" value="{% trans "Ajouter au carnet" %}"/>
-	</form>
 
+		<button type="submit" class="button-link" data-icon="add-multiple">
+			{% trans "Ajouter la sélection au carnet" %}
+		</button>
+    </form>
 {% include "generator/layout/pagination.html" %}
 {% endblock %}

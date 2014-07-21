@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -13,3 +13,16 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""A view to change the current language"""
+
+from django.shortcuts import redirect
+
+
+def setlang(request):
+    lang = request.REQUEST.get("lang", "")
+    next_url = request.REQUEST.get("next", "/")
+    if lang=="":
+        return redirect(next_url)
+    next_path = "/".join(next_url.split('/')[2:])
+    return redirect("/" + lang + "/" + next_path)

@@ -8,19 +8,14 @@
 			{% trans "Mes carnets" %}
 		</a>
 	{% endif %}
-	<ul class="public songbooks">
+	<br/>
+	<div>
 		{% for songbook in songbooks %}
-			<li>
-			<a href="{% url "show_songbook" slug=songbook.slug id=songbook.id%}">{{ songbook.title }}</a>
-			{% if user.profile = songbook.user %}
-				<small>[<a href="{% url "edit_songbook" slug=songbook.slug id=songbook.id%}">
-				    {% trans "Paramètres" %}
-				    </a>]
-				</small>
+			{% if user == songbook.user %}
+                {% include 'generator/songbook_private_item.html' %}
+            {% else %}
+                {% include 'generator/songbook_public_item.html' %}
 			{% endif %}
-			-  {{ songbook.count_songs }}{% trans " chants" %}
-			<p class="description">{{ songbook.description|truncatewords:40 }}</p>
-			</li>
-		{% endfor %}
-	</ul>
+        {% endfor %}
+    </div>
 {% endblock %}

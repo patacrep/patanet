@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -64,6 +64,57 @@ Databases
 #         'PORT':'',
 #     }
 # }
+
+'''
+Logging
+'''
+# LOGGING = {
+#    'version': 1,
+#    'disable_existing_loggers': True,
+#    'formatters': {
+#        'verbose': {
+#            'format': '[%(levelname)s] -- %(asctime)s -- %(module)s : %(message)s'
+#        },
+#        'simple': {
+#            'format': '[%(levelname)s] %(message)s'
+#        },
+#    },
+#    'handlers': {
+#        'django_log':{
+#            'level': 'WARNING',
+#            'class': 'logging.FileHandler',
+#            'filename': '/tmp/django.log',
+#            'formatter': 'verbose'
+#        },
+#	'generator_log':{
+#            'level': 'WARNING',
+#            'class': 'logging.FileHandler',
+#            'filename': '/tmp/generator.log',
+#            'formatter': 'verbose'
+#        },
+#        'mail_admins': {
+#            'level': 'ERROR',
+#            'class': 'django.utils.log.AdminEmailHandler',
+#        }
+#    },
+#    'loggers': {
+#        'django': {
+#            'handlers': ['django_log'],
+#            'propagate': True,
+#            'level': 'WARNING',
+#        },
+#        'django.request': {
+#            'handlers': ['mail_admins', 'django_log'],
+#            'level': 'ERROR',
+#            'propagate': False,
+#        },
+#        'generator': {
+#            'handlers': ['generator_log'],
+#            'level': 'WARNING',
+#        }
+#    }
+#}
+
 
 '''
 Search paths

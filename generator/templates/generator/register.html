@@ -6,6 +6,9 @@
 <form method="post" action="{% url 'register' %}">
 	{% csrf_token %}
 	{{ form.as_p }}
-	<input type="submit" value="{% trans "S'inscrire" %}"/>
+	<p>
+		<input type="submit" value="{% trans "S'inscrire" %}"/>
+	</p>
 </form>
+<a href="{% url 'password_reset' %}">{% trans "Mot de passe oublié ?" %}</a>
 {% endblock %}

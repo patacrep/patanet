@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -17,8 +17,8 @@
 from generator.models import Songbook, Layout, Task
 from django.conf import settings
 
-from songbook_core.build import SongbookBuilder
-from songbook_core.errors import SongbookError
+from patacrep.build import SongbookBuilder
+from patacrep.errors import SongbookError
 
 import os
 import hashlib
@@ -45,19 +45,22 @@ class GeneratorError(Exception):
         return "[PDF Generator error] {0}". format(self.message)
 
 
-def generate_songbook(task):
+def generate_songbook(songbook, layout):
+    """Generate a PDF file by combining a songbook and a layout"""
 
-    content = task.get_as_json()
+    content = {}
+    content.update(songbook.get_as_json())
+    content.update(layout.get_as_json())
 
     content["datadir"] = settings.SONGS_LIBRARY_DIR
 
-    tmpfile = str(task.songbook.id) + '-' + str(task.layout.id) + '-' + \
+    tmpfile = str(songbook.id) + '-' + str(layout.id) + '-' + \
               hashlib.sha1(str(content)).hexdigest()[0:20]
 
     try:
         os.chdir(SONGBOOKS_PDFS)
     except OSError:
-        os.mkdir(SONGBOOKS_PDFS)
+        os.makedirs(SONGBOOKS_PDFS)
         os.chdir(SONGBOOKS_PDFS)
 
     builder = SongbookBuilder(content, tmpfile)

@@ -1,0 +1,58 @@
+{% load i18n %}
+<div class="songbook-container public">
+<table>
+    <tr>
+        <th colspan="3">
+            <h2 id="{{songbook.id}}">
+                <a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">
+                    {{songbook.title}}
+                </a>
+            </h2>
+        </th>
+    </tr>
+    <tr>
+        <td class="description" rowspan="2">
+            <p>
+                {{ songbook.description}}
+            </p>
+        </td>
+        <th>
+            <strong>
+                {% trans "Contenu" %}
+            </strong>
+        </th>
+        <th>
+            <strong>
+                {% trans "Téléchargement" %}
+            </strong>
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <ul>
+                <li>{{songbook.count_songs}} {% trans "chants" %}</li>
+                <li>{{songbook.count_artists}} {% trans "artistes" %}</li>
+                <li>{{songbook.count_section}} {% trans "sections" %}</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                {% for task in songbook.tasks.all %}
+                    <li>
+                        {% if task.state = 'FINISHED' %}
+                            <a href="/medias/PDF/{{task.result.file}}" target="_blank">
+                                {{ task.layout.name }}
+                            </a>
+                        {% elif task.state = 'ERROR' %}
+                            {% trans "Erreur de génération" %}
+                        {% else %}
+                            {% trans "Génération en cours" %}
+                        {% endif %}
+                    </li>
+                {% empty %}
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+</table>
+</div>

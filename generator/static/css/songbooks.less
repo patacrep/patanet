@@ -1,0 +1,214 @@
+
+.songbook-container{
+
+    font-size: .9em;
+    margin:0 auto;
+    padding:0;
+    width:80%;
+
+    &.public{
+        padding-bottom: 1em;
+    }
+
+    &:nth-child(odd) {
+        background-color:@selection-strip-bg;
+    }
+    &:nth-child(even) {
+        background-color:lighten(@selection-strip-bg, 50%);
+    }
+
+
+    table {
+        margin:0;
+        width:100%;
+        td{
+            width: 1%;
+        }
+        th{
+            text-align:left;
+            min-width: 150px;
+        }
+    }
+
+
+
+
+    th{
+        h2 {
+            margin:0;
+            a {
+                padding: .5em .5em 0 .5em;
+                display: block;
+            }
+        }
+    }
+
+    td {
+        padding:.5em .7em;
+        vertical-align: top;
+        white-space: nowrap;
+        &.privacy{
+            text-align: right;
+            a{
+                color: inherit;
+            }
+        }
+
+        &.description{
+            white-space: normal;
+            height: 6em;
+            overflow: hidden;
+            width: 100%;
+            p{
+                display: block;
+                text-align:justify;
+                height: 0;
+                margin: 0;
+            }
+        }
+        a.action{
+            font-size: .9em;
+            opacity: 0;
+            transition: opacity .4s ease;
+        }
+    }
+
+    ul {
+        padding:0;
+        margin: 0;
+
+        li{
+            list-style:none;
+            &:before {
+               content: '- ';
+            }
+        }
+    }
+
+    table:hover{
+        a.action{
+            opacity: 1;
+        }
+    }
+}
+
+
+
+.current-songbook {
+
+    background:#f8f8f8 url("@{static-url}img/book.png") 10px center no-repeat;
+    background-size: auto 50px;
+    padding: .7em .5em 0 90px;
+    
+    margin: -24px; // to cancel the parent padding
+    margin-bottom: 1em;
+
+    .change {
+        display: block;
+        float: right;
+        font-size: .8em;
+        padding-right: .1em;
+    }
+
+
+    h1,
+    h2,
+    h3{
+        margin: .1em;
+        padding-bottom: .5em;
+        small{
+            font-weight: normal;
+            white-space: nowrap;
+        }
+        em a{
+            font-size: .6em;
+            color: inherit;
+            display: block;
+            font-weight: normal;
+        }
+    }
+    ul{
+        margin:0 -8px 0 -90px;
+        padding:0;
+        padding-left: 90px;
+        border-bottom: 1px solid #aaa;
+        a{
+            display: inline-block;
+            padding: .1em .5em;
+            padding-right: .5em;
+            padding-left: .5em;
+            border: 1px solid transparent;
+            font-size: .9em;
+        }
+        a[data-icon]{
+            padding-left:24px;
+            background-position: 4px center;
+        }
+        li{
+            display: inline-block;
+            list-style:none;
+            padding: 0;
+        }
+        li.active a{
+            border-color: #aaa;
+            margin-bottom: -2px;
+            border-bottom: 3px solid #fff;
+            background-color: #fff;
+            color: inherit;
+        }
+    }
+
+    &.choose form{
+        select,
+        input{
+            margin: 0;
+            padding: .3em;
+        }
+        input{
+            padding: .4em .5em;
+        }
+        a{
+            display: inline-block;
+            padding: .4em 0;
+        }
+
+        padding-bottom: .5em;
+    }
+
+    &.login{
+        h3{
+            font-weight: normal;
+        }
+        h3 a{
+            font-weight: bold;
+        }
+    }
+
+}
+
+@layout_list_width: 30%;
+.songbook-infos {
+    float:right;
+    width: @layout_list_width;
+    h4{
+        text-align:center;
+    }
+    .layout-list {
+        padding: 0 1em;
+        display: table;
+
+        li {
+            list-style:none;
+            display: table-row;
+        }
+        a{
+            &:before {
+               content: '- ';
+            }
+            display: table-cell;
+        }
+    }
+    & + div{
+        margin-right: @layout_list_width;
+    }
+}

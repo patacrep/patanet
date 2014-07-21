@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Songbook Team
+#    Copyright (C) 2014 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,6 @@
 
 
 from django import forms
-from generator.models import Profile, Song, Songbook
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -26,39 +25,34 @@ from django.utils.html import escape
 from django.conf import settings
 from django.contrib.sites.models import Site
 
+from captcha.fields import CaptchaField
+
+from generator.models import Song, Songbook, Layout
+
 
 class RegisterForm(UserCreationForm):
     """ Require email address when a user signs up """
-    email = forms.EmailField(label='Email address',
-                             max_length=255,
-                             required=True)
+    captcha = CaptchaField()
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
-        self.fields['email'].label = _("Adresse mail")
-        self.fields['username'].help_text = _("30 caractères maximum.")
-        self.fields['password2'].help_text = None
+        self.fields['username'].help_text = _(u"30 caractères maximum.")
+        self.fields['password2'].help_text = ""
+        self.fields['email'].required = True
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'captcha')
 
     def clean_email(self):
         email = self.cleaned_data["email"]
         try:
             User.objects.get(email=email)
-            raise forms.ValidationError(_("Cette adresse mail existe déjà. "
-                                "Si vous avez oublié votre mot de passe, "
-                                "vous pouvez le réinitialiser."))
+            raise forms.ValidationError(_(u"Cette adresse mail existe déjà. "
+                                u"Si vous avez oublié votre mot de passe, "
+                                u"vous pouvez le réinitialiser."))
         except User.DoesNotExist:
             return email
-
-    def save(self, commit=True):
-        user = super(RegisterForm, self).save(commit=False)
-        user.email = self.cleaned_data["email"]
-        if commit:
-            user.save()
-        return user
 
 
 ADMIN_MESSAGE = _(
@@ -144,8 +138,7 @@ class SongbookCreationForm(forms.ModelForm):
     def save(self, force_insert=False, force_update=False, commit=True):
         new_songbook = super(SongbookCreationForm, self).save(commit=False)
         # User is gotten in the view
-        user_profile = Profile.objects.get(user=self.user)
-        new_songbook.user = user_profile
+        new_songbook.user = self.user
         new_songbook.slug = slugify(new_songbook.title)
 
         if commit:
@@ -181,34 +174,52 @@ class SongbookCreationForm(forms.ModelForm):
                     u"merci de les supprimer : {chars}.").format(chars=CHARS))
 
 
-class SongbookLayoutForm(forms.ModelForm):
-    BOOK_OPTIONS = [('diagram', _(u"Diagrammes d'accords")),
+class LayoutForm(forms.ModelForm):
+
+    class Meta:
+        model = Layout
+        fields = ('booktype', 'orientation', 'name')
+
+    ORIENTATIONS = (("portrait", _(u"Portrait")),
+                    ("landscape", _(u"Paysage")),
+                    )
+    PAPERSIZES = (("a4", _(u"A4")),
+                  ("a5", _(u"A5")),
+                 )
+    OPTIONS = [
+            ('diagram', _(u"Diagrammes d'accords")),
             ('importantdiagramonly', _(u"Diagrammes important seulement")),
-            ('repeatchords', _(u"Accords sur tous les couplets")),
-            ('tabs', _(u"Tablatures")),
-            ('lilypond', _(u'Partitions Lilypond')),
+            #('repeatchords', _(u"Accords sur tous les couplets")),
+            #('tabs', _(u"Tablatures")),
+            #('lilypond', _(u'Partitions Lilypond')),
             ('pictures', _(u"Couvertures d'albums")),
             ('onesongperpage', _(u"Une chanson par page")),
             ]
-    CHORDED = 'chorded'
-    LYRICS = 'lyrics'
-    BOOK_TYPES = (
-        (CHORDED, _('Avec accords')),
-        (LYRICS, _('Sans accords')),
-        )
 
-    template = forms.CharField(initial='patacrep.tmpl',
-                             label=_(u"Mise en forme avec le gabarit")
-                             )
+    # papersize = forms.ChoiceField(
+    #                        choices=PAPERSIZES,
+    #                        label=_("Taille du papier"))
+
+    orientation = forms.ChoiceField(
+                            choices=ORIENTATIONS,
+                            label=_("Orientation du papier"))
+
     bookoptions = forms.MultipleChoiceField(
-                            choices=BOOK_OPTIONS,
-                            label=_(u'Options du receuil'),
+                            choices=OPTIONS,
+                            label=_(u'Autres options'),
                             widget=forms.CheckboxSelectMultiple(),
-                            required=False
-                            )
+                            required=False)
 
-    class Meta:
-        pass
-        # model = Layout
-        # fields = ('title', 'description', 'is_public', 'booktype')
-        # template
+    def save(self, force_insert=False, force_update=False, commit=True):
+        new_layout = super(LayoutForm, self).save(commit=False)
+        bookoptions = self.cleaned_data.get('bookoptions', None)
+
+        new_layout.bookoptions = bookoptions
+        new_layout.other_options = {
+                        #"papersize": self.cleaned_data["papersize"],
+                        "orientation": self.cleaned_data["orientation"],
+                        }
+
+        if commit:
+            new_layout.save()
+        return new_layout
