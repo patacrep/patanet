@@ -44,23 +44,35 @@ class Renderer:
                 'bridge': self.renderVerse,
                 'par': self.renderPar,
                 'chord': self.renderChord,
+                'active::\n': self.renderPlainText(u"<br>"),
+                'dots': self.renderPlainText(u"…"),
                 }
+        self._render_text = {}
 
     def renderNodes(self, nodes):
         return "".join([
-            self._render.get(node.nodeName, self.renderDefault)(node)
+            self._render.get(
+                node.nodeName,
+                self.renderDefault
+                )(node)
             for node in nodes
             ])
 
+
     def renderDefault(self, node):
-        if getattr(node, 'tagName', None) == 'active::\n':
-            return "<br>"
-        else:
-            print("TODO Default for", unicode(node))
-            return ""
+        print("TODO Default for", unicode(node), node.nodeName)
+        return u""
+
+    def renderPlainText(self, string):
+        def __renderPlainText(__):
+            return string
+        return __renderPlainText
 
     def renderText(self, node):
-        return unicode(node)
+        return self._render_text.get(
+                unicode(node),
+                self.renderPlainText(unicode(node)),
+                )(node)
 
     def renderVerse(self, node):
         res = ""
@@ -74,14 +86,21 @@ class Renderer:
         return ""
 
     def renderChord(self, node):
-         return u"""<span class="chord">
+        # TODO Remplacer par un with
+        self._render.update({
+            'active::&': self.renderPlainText(u"♭"),
+            })
+        self._render_text.update({
+            '#': self.renderPlainText(u"♯"),
+            })
+        return u"""<span class="chord">
                  <span class="chord-name">
                  {}
                  </span><span class="chord-text">
                  {}
                  </span>
                  </span>""".format(
-                         node.chord.replace('&', u"♭").replace('#', u"♯"),
+                         self.renderNodes(node.childNodes),
                          "", # TODO
                          )
 
