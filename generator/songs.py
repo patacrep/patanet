@@ -50,6 +50,12 @@ class Renderer(object):
                 'chord': self.render_chord,
                 'active::\n': self.render_plain_text(u"<br>"),
                 'dots': self.render_plain_text(u"…"),
+                'selectlanguage': self.render_silent,
+                'songcolumns': self.render_silent,
+                'beginsong': self.render_silent,
+                'endsong': self.render_silent,
+                'cover': self.render_silent,
+                'gtab': self.render_gtab,
                 }
         self._render_text = {}
 
@@ -85,12 +91,28 @@ class Renderer(object):
             for node in nodes
             ])
 
-
     @staticmethod
     def render_default(node):
         """Default rendering of a node"""
         print("TODO Default for", unicode(node), node.nodeName)
         return u""
+
+    @staticmethod
+    def render_silent(_):
+        """Return nothing
+
+        To be used by LaTeX commands that does not produce any output.
+        """
+        return u""
+
+    @staticmethod
+    def render_gtab(node):
+        r"""Render LaTeX `\gtab` command."""
+        print "TODO GTAB"
+        return u"GTAB({chord}, {diagram})".format(
+                diagram=node.attributes["diagram"],
+                chord=node.attributes["chord"],
+                )
 
     def render_text(self, node):
         """Render a text node.
