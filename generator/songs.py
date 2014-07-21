@@ -35,68 +35,92 @@ from contextlib import contextmanager
 
 LOGGER = logging.getLogger(__name__)
 
-class Renderer:
+class Renderer(object):
+    """Render a PlasTeX-parsed song as HTML"""
+
     def __init__(self, document):
         self.document = document
         self._render = {
-                '#text': self.renderText,
-                'verse': self.renderVerse,
-                'verse*': self.renderVerse,
-                'chorus': self.renderVerse,
-                'bridge': self.renderVerse,
-                'par': self.renderPar,
-                'chord': self.renderChord,
-                'active::\n': self.renderPlainText(u"<br>"),
-                'dots': self.renderPlainText(u"…"),
+                '#text': self.render_text,
+                'verse': self.render_verse,
+                'verse*': self.render_verse,
+                'chorus': self.render_verse,
+                'bridge': self.render_verse,
+                'par': self.render_par,
+                'chord': self.render_chord,
+                'active::\n': self.render_plain_text(u"<br>"),
+                'dots': self.render_plain_text(u"…"),
                 }
         self._render_text = {}
 
     @contextmanager
     def push(self, attr, extension):
-        old = dict(getattr(self, attr)) # Copy of main dictionary
+        """With statement used to locally update a dictonary
+
+        Arguments:
+        - attr: name (as a string) of the attribute to update. `self.attr`
+          must be a dictonary.
+        - extension: dictionary to use to update the dictonary.
+        """
+        old = dict(getattr(self, attr))
         getattr(self, attr).update(extension)
         yield
         setattr(self, attr, old)
 
-    def renderNodes(self, nodes):
+    @staticmethod
+    def render_plain_text(string):
+        """Return a `render_*`-like function that return a constant string."""
+        def _render_plain_text(__node):
+            """Return constant string."""
+            return string
+        return _render_plain_text
+
+    def render_nodes(self, nodes):
+        """Render a list of nodes"""
         return "".join([
             self._render.get(
                 node.nodeName,
-                self.renderDefault
+                self.render_default
                 )(node)
             for node in nodes
             ])
 
 
-    def renderDefault(self, node):
+    @staticmethod
+    def render_default(node):
+        """Default rendering of a node"""
         print("TODO Default for", unicode(node), node.nodeName)
         return u""
 
-    def renderPlainText(self, string):
-        def __renderPlainText(__):
-            return string
-        return __renderPlainText
+    def render_text(self, node):
+        """Render a text node.
 
-    def renderText(self, node):
+        If `unicode(node)` is a key of `self._render_text`, call the
+        corresponding method. Otherwise, return unicode(node).
+        """
         return self._render_text.get(
                 unicode(node),
-                self.renderPlainText(unicode(node)),
+                self.render_plain_text(unicode(node)),
                 )(node)
 
-    def renderVerse(self, node):
+    def render_verse(self, node):
+        """Render a `verse`, `verse*` or `chorus` environment."""
         res = ""
         res += "<p class={}>\n".format(node.nodeName.replace('*', '_star'))
-        res += self.renderNodes(node.childNodes)
+        res += self.render_nodes(node.childNodes)
         res += "</p>"
         return res
 
-    def renderPar(self, node):
+    @staticmethod
+    def render_par(__node):
+        """Render a paragraph."""
         # TODO
         return ""
 
-    def renderChord(self, node):
-        with self.push("_render", {'active::&': self.renderPlainText(u"♭")}):
-            with self.push("_render_text", {'#': self.renderPlainText(u"♯")}):
+    def render_chord(self, node):
+        r"""Render a chord command `\[`."""
+        with self.push("_render", {'active::&': self.render_plain_text(u"♭")}):
+            with self.push("_render_text", {'#': self.render_plain_text(u"♯")}):
                 return u"""<span class="chord">
                          <span class="chord-name">
                          {}
@@ -104,19 +128,21 @@ class Renderer:
                          {}
                          </span>
                          </span>""".format(
-                                 self.renderNodes(node.childNodes),
+                                 self.render_nodes(node.childNodes),
                                  "", # TODO
                                  )
 
 
 def parse_song(filename):
+    """Parse song 'filename', and return the corresponding HTML code."""
+    filename = filename.replace("../patacrep/data/examples/songs/", "")
     tex = SongParser.parse(filename)
-    return Renderer(tex).renderNodes(tex.childNodes)
+    return Renderer(tex).render_nodes(tex.childNodes)
 
 def import_song(repo, filepath):
     '''Import a song in the database'''
     data = parsetex(filepath)
-    LOGGER.info("Processing " + 
+    LOGGER.info("Processing " +
                 pprint.pformat(data['titles'][0]))
 
     artist_name = smart_text(data['args']['by'], 'utf-8')
@@ -169,10 +195,11 @@ def import_song(repo, filepath):
                             title=song_title,
                             artist=artist_model,
                             defaults={
-                            'title': song_title,
-                            'language': language_code,
-                            'file_path': filepath_rel,
-                            'slug': ('%06x' % random.randrange(16**6)) })
+                                'title': song_title,
+                                'language': language_code,
+                                'file_path': filepath_rel,
+                                'slug': ('%06x' % random.randrange(16**6))
+                            })
     if created:
         if Song.objects.filter(slug=song_slug).exists():
             song_slug += '-' + str(song_model.id)
