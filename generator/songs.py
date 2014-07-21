@@ -31,6 +31,8 @@ import sys
 import pprint
 import logging
 
+from contextlib import contextmanager
+
 LOGGER = logging.getLogger(__name__)
 
 class Renderer:
@@ -48,6 +50,13 @@ class Renderer:
                 'dots': self.renderPlainText(u"…"),
                 }
         self._render_text = {}
+
+    @contextmanager
+    def push(self, attr, extension):
+        old = dict(getattr(self, attr)) # Copy of main dictionary
+        getattr(self, attr).update(extension)
+        yield
+        setattr(self, attr, old)
 
     def renderNodes(self, nodes):
         return "".join([
@@ -86,23 +95,18 @@ class Renderer:
         return ""
 
     def renderChord(self, node):
-        # TODO Remplacer par un with
-        self._render.update({
-            'active::&': self.renderPlainText(u"♭"),
-            })
-        self._render_text.update({
-            '#': self.renderPlainText(u"♯"),
-            })
-        return u"""<span class="chord">
-                 <span class="chord-name">
-                 {}
-                 </span><span class="chord-text">
-                 {}
-                 </span>
-                 </span>""".format(
-                         self.renderNodes(node.childNodes),
-                         "", # TODO
-                         )
+        with self.push("_render", {'active::&': self.renderPlainText(u"♭")}):
+            with self.push("_render_text", {'#': self.renderPlainText(u"♯")}):
+                return u"""<span class="chord">
+                         <span class="chord-name">
+                         {}
+                         </span><span class="chord-text">
+                         {}
+                         </span>
+                         </span>""".format(
+                                 self.renderNodes(node.childNodes),
+                                 "", # TODO
+                                 )
 
 
 def parse_song(filename):
