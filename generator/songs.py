@@ -49,7 +49,6 @@ class Renderer(object):
                 'par': self.render_par,
                 'chord': self.render_chord,
                 'active::\n': self.render_plain_text(u"<br>"),
-                'dots': self.render_plain_text(u"…"),
                 'selectlanguage': self.render_silent,
                 'songcolumns': self.render_silent,
                 'beginsong': self.render_silent,
@@ -84,7 +83,7 @@ class Renderer(object):
 
     def render_nodes(self, nodes):
         """Render a list of nodes"""
-        return "".join([
+        return u"".join([
             self._render.get(
                 node.nodeName,
                 self.render_default
@@ -94,9 +93,25 @@ class Renderer(object):
 
     @staticmethod
     def render_default(node):
-        """Default rendering of a node"""
-        print("TODO Default for", unicode(node), node.nodeName)
-        return node.textContent
+        """Default rendering of a node
+
+        - If `node` has an attribute `unicode`, return
+          `node.unicode`.
+        - Otherwise, return `node.textContent`.
+        """
+        if hasattr(node, 'unicode'):
+            if isinstance(node.unicode, basestring):
+                return node.unicode
+
+        LOGGER.warning(u"Cannot render node {} (type: {}; name: {})".format(
+            node,
+            type(node),
+            node.nodeName,
+            ))
+        if isinstance(node.textContent, basestring):
+            return node.textContent
+        else:
+            return u""
 
     @staticmethod
     def render_silent(_):
@@ -121,12 +136,13 @@ class Renderer(object):
     def render_text(self, node):
         """Render a text node.
 
-        If `unicode(node)` is a key of `self._render_text`, call the
-        corresponding method. Otherwise, return unicode(node).
+        - If `unicode(node)` is a key of `self._render_text`, return
+          `self._render_text[unicode(node)](node)`.
+        - Otherwise, return `self.render_default(node)`.
         """
         return self._render_text.get(
                 unicode(node),
-                self.render_plain_text(unicode(node)),
+                self.render_default,
                 )(node)
 
     def render_verse(self, node):
