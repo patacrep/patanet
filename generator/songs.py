@@ -56,6 +56,7 @@ class Renderer(object):
                 'endsong': self.render_silent,
                 'cover': self.render_silent,
                 'gtab': self.render_gtab,
+                'bgroup': self.render_group,
                 }
         self._render_text = {}
 
@@ -95,7 +96,7 @@ class Renderer(object):
     def render_default(node):
         """Default rendering of a node"""
         print("TODO Default for", unicode(node), node.nodeName)
-        return u""
+        return node.textContent
 
     @staticmethod
     def render_silent(_):
@@ -104,6 +105,9 @@ class Renderer(object):
         To be used by LaTeX commands that does not produce any output.
         """
         return u""
+
+    def render_group(self, node):
+        return """<span>\n{}\n</span>""".format(self.render_nodes(node.childNodes))
 
     @staticmethod
     def render_gtab(node):
