@@ -21,7 +21,7 @@ from django.utils.text import slugify
 from django.utils.encoding import smart_text
 from django.conf.global_settings import LANGUAGES
 
-from patacrep.plastex import parsetex, SongParser
+from patacrep.plastex import parsetex
 
 from generator.models import Song, Artist
 
@@ -38,8 +38,9 @@ LOGGER = logging.getLogger(__name__)
 class Renderer(object):
     """Render a PlasTeX-parsed song as HTML"""
 
-    def __init__(self, document):
-        self.document = document
+    def __init__(self, song):
+        self.song = song
+        self.document = song['_doc']
         self._render = {
                 '#text': self.render_text,
                 'verse': self.render_verse,
@@ -72,6 +73,10 @@ class Renderer(object):
         getattr(self, attr).update(extension)
         yield
         setattr(self, attr, old)
+
+    def render(self):
+        """Return the HTML version of self."""
+        return self.render_nodes(self.document.childNodes)
 
     @staticmethod
     def render_plain_text(string):
@@ -177,8 +182,8 @@ class Renderer(object):
 def parse_song(filename):
     """Parse song 'filename', and return the corresponding HTML code."""
     filename = filename.replace("../patacrep/data/examples/songs/", "")
-    tex = SongParser.parse(filename)
-    return Renderer(tex).render_nodes(tex.childNodes)
+    song = parsetex(filename)
+    return Renderer(song).render()
 
 def import_song(repo, filepath):
     '''Import a song in the database'''
