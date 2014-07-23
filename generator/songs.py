@@ -170,13 +170,13 @@ class Renderer(object):
             with self.push("_render_text", {'#': self.render_plain_text(u"♯")}):
                 name = self.render_nodes(node.attributes["name"])
         text = self.render_nodes(node.childNodes)
-        return u"""<span class="chord">
-                 <span class="chord-name">
-                 {name}
-                 </span><span class="chord-text">
-                 {text}
-                 </span>
-                 </span>""".format(name=name, text=text)
+        return ('<span class="chord">'
+                 '<span class="chord-name">'
+                 '{name}'
+                 '</span><span class="chord-text">'
+                 '{text}'
+                 '</span>'
+                 '</span>').format(name=name, text=text)
 
 
 def parse_song(filename):
