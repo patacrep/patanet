@@ -153,7 +153,7 @@ class Renderer(object):
     def render_verse(self, node):
         """Render a `verse`, `verse*` or `chorus` environment."""
         res = ""
-        res += "<p class={}>".format(node.nodeName.replace('*', '_star'))
+        res += "<p class=\"{}\">".format(node.nodeName.replace('*', '_star'))
         res += self.render_nodes(node.childNodes)
         res += "</p>"
         return res
