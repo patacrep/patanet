@@ -26,6 +26,7 @@ from django.db.models.signals import post_save
 
 from jsonfield import JSONField
 import hashlib
+import re
 
 
 class Artist(models.Model):
@@ -144,18 +145,31 @@ class Songbook(models.Model):
                "sep": ["and", "et"]
              }
              }
-        item_ids = ItemsInSongbook.objects.filter(
-                      songbook=self,
-                      item_type=ContentType.objects.get_for_model(Song)
-                      ).order_by("rank").values_list("item_id", flat=True)
 
+        #Let the newlines of the description be compiled in Latex
+        d["subtitle"] = re.sub(r'(\r\n|\r|\n)', "%\r\n\\\\newline%\r\n", d["subtitle"])
+
+        items = ItemsInSongbook.objects.filter(songbook=self
+                      ).order_by("rank").values_list("item_id", "item_type")
+        item_ids = [i[0] for i in items]
+        item_types = dict(items)
+
+        types = { item_type:item.id for item_type, item in \
+                 ContentType.objects.get_for_models(Song, Section).items()}
+
+        song_ids = [i[0] for i in items if i[1] == types[Song]]
         song_paths = dict(Song.objects.filter(id__in=item_ids) \
                             .values_list("id", "file_path"))
 
+        section_ids = [i[0] for i in items if i[1] == types[Section]]
+        sections = dict(Section.objects.filter(id__in=item_ids) \
+                            .values_list("id", "name"))
 
         for item_id in item_ids:
-            d["content"].append(str(song_paths[item_id]))
-        
+            if item_types[item_id] == types[Song]:
+                d["content"].append(str(song_paths[item_id]))
+            elif item_types[item_id] == types[Section]:
+                d["content"].append(["songsection", sections[item_id]])
 
         return d
 

@@ -288,10 +288,28 @@ def move_or_delete_items(request, id, slug):
                                               id=item_id)
 
         if section.item.name != section_name:
-            section.item.name = section_name
-            section.item.save()
+            error, message = _clean_latex(section_name)
+            if error:
+                messages.error(request, message)
+            else:
+                section.item.name = section_name
+                section.item.save()
 
     return redirect(next_url)
+
+def _clean_latex(string):
+        '''
+        Return true if one of the LaTeX special characters
+        is in the string
+        '''
+        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
+        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
+        MESSAGE = _(u"Les caractères suivant sont interdits, merci de les " +
+                    u"supprimer : {chars}.".format(chars=CHARS))
+        for char in TEX_CHAR:
+            if char in string:
+                return True, MESSAGE
+        return False, ""
 
 
 class DeleteSongbook(OwnerRequiredMixin, DeleteView):

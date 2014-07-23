@@ -181,7 +181,6 @@ class Renderer(object):
 
 def parse_song(filename):
     """Parse song 'filename', and return the corresponding HTML code."""
-    filename = filename.replace("../patacrep/data/examples/songs/", "")
     song = parsetex(filename)
     return Renderer(song).render()
 

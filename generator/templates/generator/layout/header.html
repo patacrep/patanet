@@ -34,7 +34,7 @@
     <ul class="languages">
         {% for code, lang in LANGUAGES %}
             <li>
-                <a href="/setlang/?lang={{code}}&next={{request.get_full_path}}">{{lang}}</a>
+                <a href="/setlang/?lang={{code}}&amp;next={{request.get_full_path}}">{{lang}}</a>
             </li>
         {% endfor %}
     </ul>
