@@ -122,7 +122,7 @@ class Renderer(object):
         return u""
 
     def render_group(self, node):
-        return """<span>\n{}\n</span>""".format(self.render_nodes(node.childNodes))
+        return self.render_nodes(node.childNodes)
 
     @staticmethod
     def render_gtab(node):
@@ -163,16 +163,15 @@ class Renderer(object):
         r"""Render a chord command `\[`."""
         with self.push("_render", {'active::&': self.render_plain_text(u"♭")}):
             with self.push("_render_text", {'#': self.render_plain_text(u"♯")}):
-                return u"""<span class="chord">
-                         <span class="chord-name">
-                         {}
-                         </span><span class="chord-text">
-                         {}
-                         </span>
-                         </span>""".format(
-                                 self.render_nodes(node.childNodes),
-                                 "", # TODO
-                                 )
+                name = self.render_nodes(node.attributes["name"])
+        text = self.render_nodes(node.childNodes)
+        return u"""<span class="chord">
+                 <span class="chord-name">
+                 {name}
+                 </span><span class="chord-text">
+                 {text}
+                 </span>
+                 </span>""".format(name=name, text=text)
 
 
 def parse_song(filename):
