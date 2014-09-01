@@ -152,17 +152,17 @@ class Renderer(object):
 
     def render_verse(self, node):
         """Render a `verse`, `verse*` or `chorus` environment."""
-        res = ""
-        res += "<p class=\"{}\">".format(node.nodeName.replace('*', '_star'))
+        res = u""
+        res += u"<p class=\"{}\">".format(node.nodeName.replace('*', '_star'))
         res += self.render_nodes(node.childNodes)
-        res += "</p>"
+        res += u"</p>"
         return res
 
     @staticmethod
     def render_par(__node):
         """Render a paragraph."""
         # TODO
-        return ""
+        return u""
 
     def render_chord(self, node):
         r"""Render a chord command `\[`."""
@@ -170,13 +170,13 @@ class Renderer(object):
             with self.push("_render_text", {'#': self.render_plain_text(u"♯")}):
                 name = self.render_nodes(node.attributes["name"])
         text = self.render_nodes(node.childNodes)
-        return ('<span class="chord">'
-                 '<span class="chord-name">'
-                 '{name}'
-                 '</span><span class="chord-text">'
-                 '{text}'
-                 '</span>'
-                 '</span>').format(name=name, text=text)
+        return (u'<span class="chord">'
+                u'<span class="chord-name">'
+                u'{name}'
+                u'</span><span class="chord-text">'
+                u'{text}'
+                u'</span>'
+                u'</span>').format(name=name, text=text)
 
 
 def parse_song(filename):
