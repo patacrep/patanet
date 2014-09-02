@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, songbook_id, layout_id, *args, **options):
         songbook = Songbook.objects.get(id=songbook_id)
-        layout = Layout.object.get(id=layout_id)
+        layout = Layout.objects.get(id=layout_id)
         try:
             generate_songbook(songbook, layout)
         except GeneratorError as e:
