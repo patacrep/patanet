@@ -1,220 +1,129 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import jsonfield.fields
+from django.conf import settings
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Artist'
-        db.create_table(u'generator_artist', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=100)),
-        ))
-        db.send_create_signal(u'generator', ['Artist'])
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('contenttypes', '0001_initial'),
+    ]
 
-        # Adding model 'Song'
-        db.create_table(u'generator_song', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=100)),
-            ('language', self.gf('django.db.models.fields.CharField')(max_length=7, null=True)),
-            ('capo', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('artist', self.gf('django.db.models.fields.related.ForeignKey')(related_name='songs', to=orm['generator.Artist'])),
-            ('file_path', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('object_hash', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal(u'generator', ['Song'])
-
-        # Adding model 'Songbook'
-        db.create_table(u'generator_songbook', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=100)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('is_public', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='songbooks', to=orm['generator.Profile'])),
-        ))
-        db.send_create_signal(u'generator', ['Songbook'])
-
-        # Adding model 'Section'
-        db.create_table(u'generator_section', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
-        ))
-        db.send_create_signal(u'generator', ['Section'])
-
-        # Adding model 'Layout'
-        db.create_table(u'generator_layout', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('bookoptions', self.gf('jsonfield.fields.JSONField')()),
-            ('booktype', self.gf('django.db.models.fields.CharField')(default='chorded', max_length=4)),
-            ('template', self.gf('django.db.models.fields.CharField')(default='patacrep.tex', max_length=100)),
-            ('lang', self.gf('django.db.models.fields.CharField')(default='french', max_length=10)),
-            ('other_options', self.gf('jsonfield.fields.JSONField')(default=[])),
-        ))
-        db.send_create_signal(u'generator', ['Layout'])
-
-        # Adding model 'ItemsInSongbook'
-        db.create_table(u'generator_itemsinsongbook', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('item_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
-            ('item_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('songbook', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['generator.Songbook'])),
-            ('rank', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal(u'generator', ['ItemsInSongbook'])
-
-        # Adding model 'Task'
-        db.create_table(u'generator_task', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('songbook', self.gf('django.db.models.fields.related.ForeignKey')(related_name='tasks', to=orm['generator.Songbook'])),
-            ('layout', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['generator.Layout'])),
-            ('hash', self.gf('django.db.models.fields.CharField')(max_length=40)),
-            ('last_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('result', self.gf('jsonfield.fields.JSONField')()),
-        ))
-        db.send_create_signal(u'generator', ['Task'])
-
-        # Adding model 'Profile'
-        db.create_table(u'generator_profile', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-        ))
-        db.send_create_signal(u'generator', ['Profile'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Artist'
-        db.delete_table(u'generator_artist')
-
-        # Deleting model 'Song'
-        db.delete_table(u'generator_song')
-
-        # Deleting model 'Songbook'
-        db.delete_table(u'generator_songbook')
-
-        # Deleting model 'Section'
-        db.delete_table(u'generator_section')
-
-        # Deleting model 'Layout'
-        db.delete_table(u'generator_layout')
-
-        # Deleting model 'ItemsInSongbook'
-        db.delete_table(u'generator_itemsinsongbook')
-
-        # Deleting model 'Task'
-        db.delete_table(u'generator_task')
-
-        # Deleting model 'Profile'
-        db.delete_table(u'generator_profile')
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'generator.artist': {
-            'Meta': {'ordering': "['name']", 'object_name': 'Artist'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'})
-        },
-        u'generator.itemsinsongbook': {
-            'Meta': {'ordering': "['rank']", 'object_name': 'ItemsInSongbook'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'item_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'item_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            'rank': ('django.db.models.fields.IntegerField', [], {}),
-            'songbook': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['generator.Songbook']"})
-        },
-        u'generator.layout': {
-            'Meta': {'object_name': 'Layout'},
-            'bookoptions': ('jsonfield.fields.JSONField', [], {}),
-            'booktype': ('django.db.models.fields.CharField', [], {'default': "'chorded'", 'max_length': '4'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'lang': ('django.db.models.fields.CharField', [], {'default': "'french'", 'max_length': '10'}),
-            'other_options': ('jsonfield.fields.JSONField', [], {'default': '[]'}),
-            'template': ('django.db.models.fields.CharField', [], {'default': "'patacrep.tex'", 'max_length': '100'})
-        },
-        u'generator.profile': {
-            'Meta': {'object_name': 'Profile'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
-        },
-        u'generator.section': {
-            'Meta': {'object_name': 'Section'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
-        },
-        u'generator.song': {
-            'Meta': {'ordering': "['title']", 'object_name': 'Song'},
-            'artist': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'songs'", 'to': u"orm['generator.Artist']"}),
-            'capo': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'file_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '7', 'null': 'True'}),
-            'object_hash': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'generator.songbook': {
-            'Meta': {'object_name': 'Songbook'},
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'items': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['contenttypes.ContentType']", 'symmetrical': 'False', 'through': u"orm['generator.ItemsInSongbook']", 'blank': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '100'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'songbooks'", 'to': u"orm['generator.Profile']"})
-        },
-        u'generator.task': {
-            'Meta': {'object_name': 'Task'},
-            'hash': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'layout': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['generator.Layout']"}),
-            'result': ('jsonfield.fields.JSONField', [], {}),
-            'songbook': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tasks'", 'to': u"orm['generator.Songbook']"}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '20'})
-        }
-    }
-
-    complete_apps = ['generator']
+    operations = [
+        migrations.CreateModel(
+            name='Artist',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=100, verbose_name=b'Nom')),
+                ('slug', models.SlugField(unique=True, max_length=100)),
+            ],
+            options={
+                'ordering': ['name'],
+                'verbose_name': 'Artist',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ItemsInSongbook',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('item_id', models.PositiveIntegerField()),
+                ('rank', models.IntegerField(verbose_name='position')),
+                ('item_type', models.ForeignKey(to='contenttypes.ContentType')),
+            ],
+            options={
+                'ordering': ['rank'],
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Layout',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=100, verbose_name='nom de la mise en page')),
+                ('booktype', models.CharField(default=b'chorded', max_length=10, verbose_name='songbook type', choices=[(b'chorded', 'With chords'), (b'lyric', 'No Chords')])),
+                ('bookoptions', jsonfield.fields.JSONField()),
+                ('other_options', jsonfield.fields.JSONField()),
+                ('template', models.CharField(default=b'data.tex', max_length=100, verbose_name='template')),
+            ],
+            options={
+                'verbose_name': 'Mise en page',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Section',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=200, verbose_name='section name')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Song',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=100, verbose_name='title')),
+                ('slug', models.SlugField(unique=True, max_length=100)),
+                ('language', models.CharField(max_length=7, null=True, choices=[(b'af', b'Afrikaans'), (b'ar', b'Arabic'), (b'ast', b'Asturian'), (b'az', b'Azerbaijani'), (b'bg', b'Bulgarian'), (b'be', b'Belarusian'), (b'bn', b'Bengali'), (b'br', b'Breton'), (b'bs', b'Bosnian'), (b'ca', b'Catalan'), (b'cs', b'Czech'), (b'cy', b'Welsh'), (b'da', b'Danish'), (b'de', b'German'), (b'el', b'Greek'), (b'en', b'English'), (b'en-au', b'Australian English'), (b'en-gb', b'British English'), (b'eo', b'Esperanto'), (b'es', b'Spanish'), (b'es-ar', b'Argentinian Spanish'), (b'es-mx', b'Mexican Spanish'), (b'es-ni', b'Nicaraguan Spanish'), (b'es-ve', b'Venezuelan Spanish'), (b'et', b'Estonian'), (b'eu', b'Basque'), (b'fa', b'Persian'), (b'fi', b'Finnish'), (b'fr', b'French'), (b'fy', b'Frisian'), (b'ga', b'Irish'), (b'gl', b'Galician'), (b'he', b'Hebrew'), (b'hi', b'Hindi'), (b'hr', b'Croatian'), (b'hu', b'Hungarian'), (b'ia', b'Interlingua'), (b'id', b'Indonesian'), (b'io', b'Ido'), (b'is', b'Icelandic'), (b'it', b'Italian'), (b'ja', b'Japanese'), (b'ka', b'Georgian'), (b'kk', b'Kazakh'), (b'km', b'Khmer'), (b'kn', b'Kannada'), (b'ko', b'Korean'), (b'lb', b'Luxembourgish'), (b'lt', b'Lithuanian'), (b'lv', b'Latvian'), (b'mk', b'Macedonian'), (b'ml', b'Malayalam'), (b'mn', b'Mongolian'), (b'mr', b'Marathi'), (b'my', b'Burmese'), (b'nb', b'Norwegian Bokmal'), (b'ne', b'Nepali'), (b'nl', b'Dutch'), (b'nn', b'Norwegian Nynorsk'), (b'os', b'Ossetic'), (b'pa', b'Punjabi'), (b'pl', b'Polish'), (b'pt', b'Portuguese'), (b'pt-br', b'Brazilian Portuguese'), (b'ro', b'Romanian'), (b'ru', b'Russian'), (b'sk', b'Slovak'), (b'sl', b'Slovenian'), (b'sq', b'Albanian'), (b'sr', b'Serbian'), (b'sr-latn', b'Serbian Latin'), (b'sv', b'Swedish'), (b'sw', b'Swahili'), (b'ta', b'Tamil'), (b'te', b'Telugu'), (b'th', b'Thai'), (b'tr', b'Turkish'), (b'tt', b'Tatar'), (b'udm', b'Udmurt'), (b'uk', b'Ukrainian'), (b'ur', b'Urdu'), (b'vi', b'Vietnamese'), (b'zh-cn', b'Simplified Chinese'), (b'zh-hans', b'Simplified Chinese'), (b'zh-hant', b'Traditional Chinese'), (b'zh-tw', b'Traditional Chinese')])),
+                ('capo', models.IntegerField(null=True, blank=True)),
+                ('file_path', models.CharField(max_length=500)),
+                ('object_hash', models.CharField(max_length=50)),
+                ('artist', models.ForeignKey(related_name=b'songs', verbose_name='Artist', to='generator.Artist')),
+            ],
+            options={
+                'ordering': ['title'],
+                'verbose_name': 'song',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Songbook',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=100, verbose_name='title')),
+                ('slug', models.SlugField(max_length=100)),
+                ('description', models.TextField(verbose_name='description', blank=True)),
+                ('is_public', models.BooleanField(default=False, verbose_name='Public songbook')),
+                ('author', models.CharField(default=b'', max_length=255, verbose_name='auteur')),
+                ('items', models.ManyToManyField(to='contenttypes.ContentType', through='generator.ItemsInSongbook', blank=True)),
+                ('user', models.ForeignKey(related_name=b'songbooks', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'songbook',
+                'verbose_name_plural': 'songbooks',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Task',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('hash', models.CharField(max_length=40, verbose_name='contents')),
+                ('last_updated', models.DateTimeField(auto_now=True, verbose_name='derni\xe8re mise \xe0 jour')),
+                ('state', models.CharField(max_length=20, verbose_name='state', choices=[(b'QUEUED', b'Queued'), (b'IN_PROCESS', b'In process'), (b'FINISHED', b'Finished'), (b'ERROR', b'Error')])),
+                ('result', jsonfield.fields.JSONField(verbose_name='result')),
+                ('layout', models.ForeignKey(verbose_name='Mise en page', to='generator.Layout')),
+                ('songbook', models.ForeignKey(related_name=b'tasks', verbose_name='carnet', to='generator.Songbook')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='itemsinsongbook',
+            name='songbook',
+            field=models.ForeignKey(to='generator.Songbook'),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='itemsinsongbook',
+            unique_together=set([('item_id', 'songbook')]),
+        ),
+    ]

@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 )
 INSTALLED_APPS += (
-    'south',
     'background_task',
     'captcha',
 )
