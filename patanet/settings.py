@@ -123,6 +123,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+STATICFILES_STORAGE = "generator.management.static_storage.LessCompileStorage"
 
 # Templates dans le dossier template
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),
