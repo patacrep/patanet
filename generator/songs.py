@@ -55,7 +55,8 @@ class Renderer(object):
                 'beginsong': self.render_silent,
                 'endsong': self.render_silent,
                 'cover': self.render_silent,
-                'gtab': self.render_gtab,
+                #'gtab': self.render_gtab,
+                'gtab': self.render_silent,
                 'bgroup': self.render_group,
                 }
         self._render_text = {}
@@ -132,7 +133,6 @@ class Renderer(object):
     @staticmethod
     def render_gtab(node):
         r"""Render LaTeX `\gtab` command."""
-        print "TODO GTAB"
         return u"GTAB({chord}, {diagram})".format(
                 diagram=node.attributes["diagram"],
                 chord=node.attributes["chord"],
