@@ -31,69 +31,163 @@ import sys
 import pprint
 import logging
 
-_BLOCKS_PATTERNS = [(r"\beginverse*", '<p class="verse_star" >'),
-                    (r"\beginverse", '<p class="verse" >'),
-                    (r"\begin{verse}", '<p class="verse" >'),
-                    (r"\begin{verse*}", '<p class="verse_star" >'),
-                    (r"\beginchorus", '<p class="chorus" >'),
-                    (r"\begin{chorus}", '<p class="chorus" >'),
-                    ]
-
-_BLOCKS_PATTERNS += [(r"\endverse*", '</p>'),
-                    (r"\endverse", '</p>'),
-                    (r"\end{verse}", '</p>'),
-                    (r"\end{verse*}", '</p>'),
-                    (r"\end{chorus}", '</p>'),
-                    ]
+from contextlib import contextmanager
 
 LOGGER = logging.getLogger(__name__)
 
-def parse_chords(content):
-    content = re.sub('\\\\\\[(.*?)\]({[^\\\\\s\n]*}|[^\\\\\s\n]*)',
-            '<span class="chord"><span class="chord-name">\g<1></span>'
-            '<span class="chord-text">\g<2></span></span>',
-            content)
-    content = content.replace('&', "♭")
-    content = content.replace('#', "♯&nbsp;")
-    return content
+class Renderer(object):
+    """Render a PlasTeX-parsed song as HTML"""
+
+    def __init__(self, song):
+        self.song = song
+        self.document = song['_doc']
+        self._render = {
+                '#text': self.render_text,
+                'verse': self.render_verse,
+                'verse*': self.render_verse,
+                'chorus': self.render_verse,
+                'bridge': self.render_verse,
+                'par': self.render_par,
+                'chord': self.render_chord,
+                'active::\n': self.render_plain_text(u"<br>"),
+                'selectlanguage': self.render_silent,
+                'songcolumns': self.render_silent,
+                'beginsong': self.render_silent,
+                'endsong': self.render_silent,
+                'cover': self.render_silent,
+                #'gtab': self.render_gtab,
+                'gtab': self.render_silent,
+                'bgroup': self.render_group,
+                }
+        self._render_text = {}
+
+    @contextmanager
+    def push(self, attr, extension):
+        """With statement used to locally update a dictonary
+
+        Arguments:
+        - attr: name (as a string) of the attribute to update. `self.attr`
+          must be a dictonary.
+        - extension: dictionary to use to update the dictonary.
+        """
+        old = dict(getattr(self, attr))
+        getattr(self, attr).update(extension)
+        yield
+        setattr(self, attr, old)
+
+    def render(self):
+        """Return the HTML version of self."""
+        return self.render_nodes(self.document.childNodes)
+
+    @staticmethod
+    def render_plain_text(string):
+        """Return a `render_*`-like function that return a constant string."""
+        def _render_plain_text(__node):
+            """Return constant string."""
+            return string
+        return _render_plain_text
+
+    def render_nodes(self, nodes):
+        """Render a list of nodes"""
+        return u"".join([
+            self._render.get(
+                node.nodeName,
+                self.render_default
+                )(node)
+            for node in nodes
+            ])
+
+    @staticmethod
+    def render_default(node):
+        """Default rendering of a node
+
+        - If `node` has an attribute `unicode`, return
+          `node.unicode`.
+        - Otherwise, return `node.textContent`.
+        """
+        if hasattr(node, 'unicode'):
+            if isinstance(node.unicode, basestring):
+                return node.unicode
+
+        LOGGER.warning(u"Cannot render node {} (type: {}; name: {})".format(
+            node,
+            type(node),
+            node.nodeName,
+            ))
+        if isinstance(node.textContent, basestring):
+            return node.textContent
+        else:
+            return u""
+
+    @staticmethod
+    def render_silent(_):
+        """Return nothing
+
+        To be used by LaTeX commands that does not produce any output.
+        """
+        return u""
+
+    def render_group(self, node):
+        return self.render_nodes(node.childNodes)
+
+    @staticmethod
+    def render_gtab(node):
+        r"""Render LaTeX `\gtab` command."""
+        return u"GTAB({chord}, {diagram})".format(
+                diagram=node.attributes["diagram"],
+                chord=node.attributes["chord"],
+                )
+
+    def render_text(self, node):
+        """Render a text node.
+
+        - If `unicode(node)` is a key of `self._render_text`, return
+          `self._render_text[unicode(node)](node)`.
+        - Otherwise, return `self.render_default(node)`.
+        """
+        return self._render_text.get(
+                unicode(node),
+                self.render_default,
+                )(node)
+
+    def render_verse(self, node):
+        """Render a `verse`, `verse*` or `chorus` environment."""
+        res = u""
+        res += u"<p class=\"{}\">".format(node.nodeName.replace('*', '_star'))
+        res += self.render_nodes(node.childNodes)
+        res += u"</p>"
+        return res
+
+    @staticmethod
+    def render_par(__node):
+        """Render a paragraph."""
+        # TODO
+        return u""
+
+    def render_chord(self, node):
+        r"""Render a chord command `\[`."""
+        with self.push("_render", {'active::&': self.render_plain_text(u"♭")}):
+            with self.push("_render_text", {'#': self.render_plain_text(u"♯")}):
+                name = self.render_nodes(node.attributes["name"])
+        text = self.render_nodes(node.childNodes)
+        return (u'<span class="chord">'
+                u'<span class="chord-name">'
+                u'{name}'
+                u'</span><span class="chord-text">'
+                u'{text}'
+                u'</span>'
+                u'</span>').format(name=name, text=text)
 
 
-def parse_blocks(content):
-    for TeX, HTML in _BLOCKS_PATTERNS:
-        content = content.replace(TeX, HTML)
-
-    #remove spaces at the line-beginnings
-    content = re.sub(r'(\r|\n)+( |\t)+', '\n', content) 
-    
-    #remove linebreaks after <p> or </p> tags
-    content = re.sub(r'>(\r|\n| |\t)+', '>', content)
-    
-    return content
-
-
-def parse_unsuported(content):
-    # remove the beggining of the song
-    content = re.sub('^(.*?)<p', '<p', content, flags=re.DOTALL)
-
-    # remove all other commands
-    content = re.sub(r'\\(\w*)[(.*)]{(.*)}', '', content)
-    content = re.sub(r'\\(\w*){(.*)}', '', content)
-    content = re.sub(r'\\(\w*)', '', content)
-
-    content = re.sub(r'{|}', '', content)
-    return content
-
-
-def parse_song(content):
-    content = parse_blocks(content)
-    content = parse_chords(content)
-    content = parse_unsuported(content)
-    return content
+def parse_song(filename):
+    """Parse song 'filename', and return the corresponding HTML code."""
+    song = parsetex(filename)
+    return Renderer(song).render()
 
 def import_song(repo, filepath):
     '''Import a song in the database'''
     data = parsetex(filepath)
-    LOGGER.info("Processing " + 
+    LOGGER.info("Processing " +
                 pprint.pformat(data['titles'][0]))
 
     artist_name = smart_text(data['args']['by'], 'utf-8')
@@ -146,10 +240,11 @@ def import_song(repo, filepath):
                             title=song_title,
                             artist=artist_model,
                             defaults={
-                            'title': song_title,
-                            'language': language_code,
-                            'file_path': filepath_rel,
-                            'slug': ('%06x' % random.randrange(16**6)) })
+                                'title': song_title,
+                                'language': language_code,
+                                'file_path': filepath_rel,
+                                'slug': ('%06x' % random.randrange(16**6))
+                            })
     if created:
         if Song.objects.filter(slug=song_slug).exists():
             song_slug += '-' + str(song_model.id)
