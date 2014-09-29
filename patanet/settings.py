@@ -62,6 +62,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
 )
 
+MIDDLEWARE_CLASSES +=(
+    'commons.multihosts.MultiHostMiddleware',
+)
+
 ROOT_URLCONF = 'patanet.urls'
 SITE_ID = 1
 

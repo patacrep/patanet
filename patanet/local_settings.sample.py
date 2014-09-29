@@ -131,3 +131,11 @@ PDF cleaning settings
 #                          "expiration_time": timedelta(weeks=1),
 #                          "number": -1
 #                          }
+
+'''
+Multihosts settings
+'''
+
+MULTIHOSTS_URLCONF = {
+#    "sub.domain.com": "patanet.urls.subdomain",
+}
