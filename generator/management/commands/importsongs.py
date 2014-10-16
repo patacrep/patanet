@@ -14,23 +14,15 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db import transaction
 
-from generator.songs import import_song
+from generator.management.songs import import_song
 
-import git
 import os
 
-
-def _file_error(error):
-    print(error)
-
-
 SONGS_DIR = os.path.join(settings.SONGS_LIBRARY_DIR, "songs")
-
 
 @transaction.atomic
 class Command(BaseCommand):
@@ -38,22 +30,20 @@ class Command(BaseCommand):
     help = "Import song information into db"
 
     def handle(self, *args, **options):
-
-        repo = git.Repo(settings.SONGS_LIBRARY_DIR)
-        gitcmd = repo.git
-
         for root, _dirs, filenames in os.walk(SONGS_DIR,
                                              topdown=True,
                                              onerror=_file_error,
                                              followlinks=False):
-
             for filename in filenames:
                 if filename.lower().endswith(".sg"):
                     filepath = os.path.realpath(os.path.join(root, filename))
                     try:
-                        import_song(repo, filepath)
+                        import_song(filepath, SONGS_DIR)
                     except IOError as e:
                         self.stderr.write("*** Failed processing file : "
                                           + filepath)
                         self.stderr.write("    I/O error({0}): {1}"
                                           .format(e.errno, e.strerror))
+
+def _file_error(error):
+    print(error)
