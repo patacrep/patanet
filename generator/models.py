@@ -31,7 +31,7 @@ import re
 
 class Artist(models.Model):
 
-    name = models.CharField(max_length=100, verbose_name='Nom')
+    name = models.CharField(max_length=100, verbose_name=_(u'Nom'))
     slug = models.SlugField(max_length=100, unique=True)
 
     def __unicode__(self):
