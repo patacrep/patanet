@@ -22,9 +22,9 @@ Install the project
 source virtualacrep/bin/activate
 git clone https://github.com/patacrep/patanet
 git clone https://github.com/patacrep/patadata
+cd patanet
 pip install -r Requirements.txt
 pip install patacrep=4.0.0alpha
-cd patanet
 cp patanet/local_settings.sample.py patanet/local_settings.py
 <edit> patanet/local_settings.py
 ./manage.py migrate
@@ -53,13 +53,13 @@ git clone https://github.com/patacrep/patadata
 
 Install the Python dependencies
 ```
+cd patanet
 pip install -r Requirements.txt
 pip install patacrep=4.0.0alpha
 ```
 
 Go to the patanet folder and configure the local settings
 ```
-cd patanet
 cp patanet/local_settings.sample.py patanet/local_settings.py
 <edit> patanet/local_settings.py
 ```
