@@ -3,6 +3,7 @@ Unidecode>=0.04
 jsonfield>=0.9
 pygit2
 cffi
-django-background-task>=0.1.8
+git+https://github.com/Luthaf/django-background-task/
 lesscpy>=0.1
 django-simple-captcha>=0.4.2
+
