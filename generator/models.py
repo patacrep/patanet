@@ -88,7 +88,7 @@ class Songbook(models.Model):
         return self.title
 
     def hash(self):
-        return hashlib.sha1(str(self.get_as_json())).hexdigest()
+        return hashlib.sha1(str(self.get_as_json()).encode()).hexdigest()
 
     def count_songs(self):
         count = ItemsInSongbook.objects.filter(

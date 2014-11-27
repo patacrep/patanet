@@ -48,6 +48,7 @@ INSTALLED_APPS += (
     'background_task',
     'captcha',
 )
+
 INSTALLED_APPS += (
     'generator',
 )

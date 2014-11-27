@@ -55,7 +55,7 @@ def generate_songbook(songbook, layout):
     content["datadir"] = settings.SONGS_LIBRARY_DIR
 
     tmpfile = str(songbook.id) + '-' + str(layout.id) + '-' + \
-              hashlib.sha1(str(content)).hexdigest()[0:20]
+              hashlib.sha1(str(content).encode()).hexdigest()[0:20]
 
     try:
         os.chdir(SONGBOOKS_PDFS)
