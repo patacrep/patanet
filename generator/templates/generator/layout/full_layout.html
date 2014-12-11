@@ -1,9 +1,10 @@
 {% extends "generator/layout/doctype.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% load settings %} {% settings "DEBUG" as debug %}
+{% load setting %} 
 
 {% block extrahead %}
+{% setting DEBUG as debug %}
 	{% if debug %}
 	   <link rel="stylesheet/less" type="text/css" href="{% static "css/normalize.less" %}" />
 	   <link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />

@@ -21,7 +21,7 @@ register = Library()
 
 
 @register.tag
-def settings(parser, token):
+def setting(parser, token):
     bits = token.split_contents()
     if len(bits) < 2:
         raise TemplateSyntaxError("'{name}' takes at least one "
