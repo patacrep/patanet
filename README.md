@@ -24,7 +24,7 @@ git clone https://github.com/patacrep/patanet
 git clone https://github.com/patacrep/patadata
 cd patanet
 pip install -r Requirements.txt
-pip install patacrep=4.0.0alpha
+pip install patacrep==4.0.0.alpha
 cp patanet/local_settings.sample.py patanet/local_settings.py
 <edit> patanet/local_settings.py
 ./manage.py migrate
@@ -55,7 +55,7 @@ Install the Python dependencies
 ```
 cd patanet
 pip install -r Requirements.txt
-pip install patacrep=4.0.0alpha
+pip install patacrep==4.0.0.alpha
 ```
 
 Go to the patanet folder and configure the local settings
