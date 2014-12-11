@@ -39,12 +39,12 @@ class NamePaginator(object):
         # we sort them by the first model ordering key
         for obj in self.object_list:
             if queryset:
-                obj_str = unicode(getattr(obj, obj._meta.ordering[0]))
+                obj_str = str(getattr(obj, obj._meta.ordering[0]))
             else:
-                obj_str = unicode(obj)
+                obj_str = str(obj)
 
             try:
-                letter = unicode.upper(obj_str[0])
+                letter = str.upper(obj_str[0])
             except:
                 # If obj_str is empty, just ignore it.
                 continue
