@@ -155,6 +155,6 @@ CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
 CAPTCHA_OUTPUT_FORMAT = u'<span class="captcha">%(image)s</span> %(text_field)s %(hidden_field)s'
 
 try:
-    from .local_settings import *
+    from local_settings import *
 except ImportError:
     pass
