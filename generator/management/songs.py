@@ -20,7 +20,7 @@ from django.conf.global_settings import LANGUAGES
 from django.utils.text import slugify
 
 from generator.models import Song, Artist
-from patacrep.plastex import parsetex
+from patacrep.latex import parsesong
 
 import pygit2 as git
 import pprint
@@ -30,11 +30,11 @@ LOGGER = logging.getLogger(__name__)
 
 def import_song(filepath, song_directory):
     '''Import a song in the database'''
-    data = parsetex(filepath)
+    data = parsesong(filepath, "UTF8")
     LOGGER.info("Processing " +
-                pprint.pformat(data['titles'][0]))
+                pprint.pformat(data['@titles'][0]))
 
-    artist_name = data['args']['by']
+    artist_name = data['by']
     artist_slug = slugify(artist_name)
 
     artist_model, created = Artist.objects.get_or_create(
@@ -49,13 +49,13 @@ def import_song(filepath, song_directory):
                 + artist_name + " / "
                 + artist_model.name)
 
-    if (len(data['languages']) > 1):
+    if (len(data['@languages']) > 1):
         LOGGER.warning("*** Multiple languages "
                         "in song file; we though"
                         " only support one. "
                         "Picking any.")
-    if (len(data['languages']) > 0):
-        language_name = data["languages"].pop()
+    if (len(data['@languages']) > 0):
+        language_name = data["@languages"].pop()
         language_code = next(
                     (x for x in LANGUAGES
                      if x[1].lower() == language_name.lower()
@@ -66,7 +66,7 @@ def import_song(filepath, song_directory):
             LOGGER.warning("*** No code found for "
                     "language : '" + language_name + "'")
 
-    song_title = data['titles'][0]
+    song_title = data['@titles'][0]
     song_slug = slugify(song_title)
 
     object_hash = git.hashfile(filepath)
