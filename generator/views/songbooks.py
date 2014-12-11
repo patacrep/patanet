@@ -271,7 +271,7 @@ def move_or_delete_items(request, id, slug):
 
     if request.POST['new_section']:
         try:
-            section_name = unicode(request.POST['new_section'])
+            section_name = str(request.POST['new_section'])
             songbook.add_section(section_name)
             messages.success(request, _(u"Nouvelle section ajoutée en fin de carnet"))
         except ValueError:
