@@ -125,3 +125,10 @@ $(function() {
     select_artist_songs();
     auto_template_name();
 });
+
+
+function songbook_details(elt, e){
+    if(e.target.tagName !== 'A'){
+        $(elt.parentNode).toggleClass('see_more');
+    }
+}

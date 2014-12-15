@@ -1,95 +1,71 @@
-
 .songbook-container{
-
-    font-size: .9em;
     margin:0 auto;
     padding:0;
     width:80%;
 
-    &.public{
-        padding-bottom: 1em;
-    }
+    border-bottom:1px solid fadeout(@link-col, 70%);
 
-    &:nth-child(odd) {
-        background-color:@selection-strip-bg;
-    }
-    &:nth-child(even) {
-        background-color:lighten(@selection-strip-bg, 50%);
-    }
-
-
-    table {
+    h2{
         margin:0;
-        width:100%;
-        td{
-            width: 1%;
-        }
-        th{
-            text-align:left;
-            min-width: 150px;
+        a{
+            font-family: @font-s;
+            padding: .3em 0 0 .7em;
+            display: block;
+            position: relative;
         }
     }
-
-
-
-
-    th{
-        h2 {
-            margin:0;
-            a {
-                padding: .5em .5em 0 .5em;
-                display: block;
-            }
-        }
+    .details{
+        font-size: 90%;
+        padding-left: 18px;
+        padding-bottom: 5px;
+        cursor: pointer;
     }
-
-    td {
-        padding:.5em .7em;
-        vertical-align: top;
-        white-space: nowrap;
-        &.privacy{
-            text-align: right;
-            a{
-                color: inherit;
-            }
-        }
-
-        &.description{
-            white-space: normal;
-            height: 6em;
+    .description{
+        color: #333;
+        position: relative;
+        overflow: auto;
+        margin-bottom: 2px;
+    }
+    &:not(:target):not(.see_more){
+        .description{
+            color: #666;
+            max-height: 1.4em;
             overflow: hidden;
-            width: 100%;
-            p{
-                display: block;
-                text-align:justify;
-                height: 0;
-                margin: 0;
-            }
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
-        a.action{
-            font-size: .9em;
-            opacity: 0;
-            transition: opacity .4s ease;
+
+        .features{
+            color:#333;
+            font-weight: normal;
         }
+        .more{
+            display: none;
+        }
+        background-color: transparent;
+    }
+    background-color:@selection-strip-bg;
+
+    .features{
+        overflow: hidden;
+        display: block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-weight: bold;
+    }
+    .more{
+        font-weight: normal;
+    }
+    ul.songbook-actions{
+        margin: 5px 0 -5px -18px;
+        text-align: center;
+        background-color: #fff;
+
+        background-color: fadeout(@link-col, 90%);
+
     }
 
-    ul {
-        padding:0;
-        margin: 0;
 
-        li{
-            list-style:none;
-            &:before {
-               content: '- ';
-            }
-        }
-    }
-
-    table:hover{
-        a.action{
-            opacity: 1;
-        }
-    }
 }
 
 

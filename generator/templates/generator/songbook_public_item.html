@@ -1,58 +1,50 @@
 {% load i18n %}
-<div class="songbook-container public">
-<table>
-    <tr>
-        <th colspan="3">
-            <h2 id="{{songbook.id}}">
-                <a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">
-                    {{songbook.title}}
-                </a>
-            </h2>
-        </th>
-    </tr>
-    <tr>
-        <td class="description" rowspan="2">
-            <p>
-                {{ songbook.description|linebreaksbr }}
-            </p>
-        </td>
-        <th>
-            <strong>
-                {% trans "Contenu" %}
-            </strong>
-        </th>
-        <th>
-            <strong>
-                {% trans "Téléchargement" %}
-            </strong>
-        </th>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                <li>{{songbook.count_songs}} {% trans "chants" %}</li>
-                <li>{{songbook.count_artists}} {% trans "artistes" %}</li>
-                <li>{{songbook.count_section}} {% trans "sections" %}</li>
-            </ul>
-        </td>
-        <td>
-            <ul>
-                {% for task in songbook.tasks.all %}
-                    <li>
-                        {% if task.state = 'FINISHED' %}
-                            <a href="/medias/PDF/{{task.result.file}}" target="_blank">
-                                {{ task.layout.name }}
-                            </a>
-                        {% elif task.state = 'ERROR' %}
-                            {% trans "Erreur de génération" %}
+<div class="songbook-container public" id="{{songbook.id}}">
+
+    <h2>
+        <a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">
+            {{songbook.title}}
+        </a>
+    </h2>
+    <div class="details" onclick="var e = arguments[0] || window.event;songbook_details(this, e)">
+        <div class="description">
+            {{ songbook.description|linebreaksbr }}
+        </div>
+        <div class="features">
+            {{songbook.count_songs}} {% trans "chants" %} &sdot;
+            <span class="more">
+                {{songbook.count_artists}} {% trans "artistes" %}
+                {% if songbook.count_section %}
+                    &sdot; {{songbook.count_section}} {% trans "sections" %}
+                {% endif %}
+                <br/>
+            </span>
+
+            {{songbook.finished_tasks.count}} {% trans "éditions" %}
+            <span class="more">
+                {% for task in songbook.finished_tasks.all %}
+                    {% if task.state = 'FINISHED' %}
+                        {% if forloop.first %}
+                            :
                         {% else %}
-                            {% trans "Génération en cours" %}
+                            &sdot;
                         {% endif %}
-                    </li>
-                {% empty %}
+                        <a href="/medias/PDF/{{task.result.file}}" target="_blank">
+                            {{ task.layout.name }}</a>
+                    {% endif %}
                 {% endfor %}
+            </span>
+            <br/>
+        </div>
+        <div class="more">
+            <ul class="songbook-actions">
+                <li>
+                    <a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}" data-icon="show-book">
+                         {% trans "Voir le contenu" %}
+                    </a>
+                </li>
             </ul>
-        </td>
-    </tr>
-</table>
+        </div>
+
+    </div>
 </div>
