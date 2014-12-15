@@ -127,35 +127,14 @@
             font-weight: normal;
         }
     }
-    ul{
+
+
+    ul.songbook-actions{
         margin:0 -8px 0 -90px;
         padding:0;
         padding-left: 90px;
         border-bottom: 1px solid #aaa;
-        a{
-            display: inline-block;
-            padding: .1em .5em;
-            padding-right: .5em;
-            padding-left: .5em;
-            border: 1px solid transparent;
-            font-size: .9em;
-        }
-        a[data-icon]{
-            padding-left:24px;
-            background-position: 4px center;
-        }
-        li{
-            display: inline-block;
-            list-style:none;
-            padding: 0;
-        }
-        li.active a{
-            border-color: #aaa;
-            margin-bottom: -2px;
-            border-bottom: 3px solid #fff;
-            background-color: #fff;
-            color: inherit;
-        }
+
     }
 
     &.choose form{
@@ -210,5 +189,33 @@
     }
     & + div{
         margin-right: @layout_list_width;
+    }
+}
+
+ul.songbook-actions{
+    margin: 0;
+    a{
+        display: inline-block;
+        padding: .1em .5em;
+        padding-right: .5em;
+        padding-left: .5em;
+        border: 1px solid transparent;
+        font-size: .9em;
+    }
+    a[data-icon]{
+        padding-left:24px;
+        background-position: 4px center;
+    }
+    li{
+        display: inline-block;
+        list-style:none;
+        padding: 0;
+    }
+    li.active a{
+        border-color: #aaa;
+        margin-bottom: -2px;
+        border-bottom: 3px solid #fff;
+        background-color: #fff;
+        color: inherit;
     }
 }
