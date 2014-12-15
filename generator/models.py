@@ -173,6 +173,11 @@ class Songbook(models.Model):
 
         return d
 
+    def finished_tasks(self):
+        return self.tasks.filter(
+                   state='FINISHED'
+                   )
+
     class Meta:
         verbose_name = _(u"carnet de chants")
         verbose_name_plural = _(u"carnets de chants")
