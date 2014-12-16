@@ -65,12 +65,12 @@ def _get_songbook(lookups, **kwargs):
 
 
 def login_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
-    
     def _decorated(request, *args, **kwargs):
         from django.contrib.auth.decorators import login_required
-        from django.utils.translation import get_language
-        request.session['django_language'] = get_language()
-        fn = login_required(function, redirect_field_name, login_url)
+        locale_login_url = login_url
+        if locale_login_url == None:
+            locale_login_url = reverse('login')
+        fn = login_required(function, redirect_field_name, locale_login_url)
         return fn(request, *args, **kwargs)
     return _decorated
 
