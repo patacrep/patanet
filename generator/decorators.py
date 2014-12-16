@@ -18,8 +18,8 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.contrib.auth import REDIRECT_FIELD_NAME
 
 from functools import wraps
 
@@ -62,6 +62,17 @@ def _get_songbook(lookups, **kwargs):
                 "into view function" % view_arg)
         lookup_dict[lookup] = kwargs[view_arg]
     return get_object_or_404(model, **lookup_dict)
+
+
+def login_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    
+    def _decorated(request, *args, **kwargs):
+        from django.contrib.auth.decorators import login_required
+        from django.utils.translation import get_language
+        request.session['django_language'] = get_language()
+        fn = login_required(function, redirect_field_name, login_url)
+        return fn(request, *args, **kwargs)
+    return _decorated
 
 
 def owner_required(lookups=None, instance=None, **kwargs):
