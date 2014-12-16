@@ -19,6 +19,7 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, \
                                  DeleteView
 from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404, render
@@ -28,7 +29,7 @@ from django.template.defaultfilters import slugify
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
-                                OwnerRequiredMixin, login_required, owner_required
+                                OwnerRequiredMixin, owner_required
 from generator.models import Songbook, ItemsInSongbook, Song, \
                              Task as GeneratorTask, Layout, Artist
 from generator.forms import SongbookCreationForm, LayoutForm

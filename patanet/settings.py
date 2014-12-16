@@ -146,8 +146,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
         "django.contrib.messages.context_processors.messages",
         )
 
-LOGIN_URL = '/user/login'
-LOGIN_REDIRECT_URL = '/songbooks/my/'
+LOGIN_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = reverse_lazy('songbook_private_list')
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
 SOUTH_TESTS_MIGRATE = False
