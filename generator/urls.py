@@ -18,6 +18,8 @@ from django.conf.urls import patterns, url
 
 from django.views.generic.base import TemplateView
 
+from django.core.urlresolvers import reverse_lazy
+
 
 from generator.views import SongList, SongView, ArtistList, \
      PasswordChange, Register, contact, \
@@ -102,7 +104,7 @@ urlpatterns += patterns('',
                 name='login'),
     url(r'^user/logout$',
                 'django.contrib.auth.views.logout',
-                {'next_page': '/'},
+                {'next_page': reverse_lazy('home')},
                 name='logout'),
     url(r'^denied$',
                 TemplateView.as_view(template_name="generator/denied.html"),
