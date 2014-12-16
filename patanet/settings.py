@@ -26,6 +26,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(PROJECT_ROOT, ...)
 import os
+from django.core.urlresolvers import reverse_lazy
 PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -147,6 +148,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = '/songbooks/my/'
+LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
 SOUTH_TESTS_MIGRATE = False
 
