@@ -16,7 +16,6 @@
 
 """Users views"""
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic import CreateView, FormView
 from django.core.urlresolvers import reverse_lazy, reverse

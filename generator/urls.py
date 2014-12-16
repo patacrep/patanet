@@ -15,6 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls import patterns, url
+from django.conf import settings
 
 from django.views.generic.base import TemplateView
 
@@ -102,7 +103,7 @@ urlpatterns += patterns('',
                 name='login'),
     url(r'^user/logout$',
                 'django.contrib.auth.views.logout',
-                {'next_page': '/'},
+                {'next_page': settings.LOGOUT_REDIRECT_URL},
                 name='logout'),
     url(r'^denied$',
                 TemplateView.as_view(template_name="generator/denied.html"),
