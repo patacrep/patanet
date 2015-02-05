@@ -148,7 +148,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
         )
 
 LOGIN_URL = reverse_lazy('login')
-LOGIN_REDIRECT_URL = reverse_lazy('songbook_private_list')
+LOGIN_REDIRECT_URL = reverse_lazy('logged_in')
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
 SOUTH_TESTS_MIGRATE = False

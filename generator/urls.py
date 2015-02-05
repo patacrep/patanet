@@ -25,7 +25,7 @@ from generator.views import SongList, SongView, ArtistList, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
      UpdateSongbook, DeleteSongbook, LayoutList, SongListByArtist,\
      reset_password, reset_password_confirm, password_reset_done, \
-     password_reset_complete, move_or_delete_items, \
+     password_reset_complete, move_or_delete_items, login_complete, \
     FlatPage
 
 
@@ -101,6 +101,9 @@ urlpatterns += patterns('',
                 'django.contrib.auth.views.login',
                 {'template_name': 'generator/login.html'},
                 name='login'),
+    url(r'^user/logged-in$',
+                login_complete,
+                name='logged_in'),
     url(r'^user/logout$',
                 'django.contrib.auth.views.logout',
                 {'next_page': settings.LOGOUT_REDIRECT_URL},
