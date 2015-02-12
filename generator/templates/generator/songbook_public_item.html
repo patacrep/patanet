@@ -1,12 +1,12 @@
 {% load i18n %}
-<div class="songbook-container public" id="{{songbook.id}}">
+<div class="songbook-container public" id="{{songbook.id}}" onclick="var e = arguments[0] || window.event;songbook_details(this, e)">
 
     <h2>
         <a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">
             {{songbook.title}}
         </a>
     </h2>
-    <div class="details" onclick="var e = arguments[0] || window.event;songbook_details(this, e)">
+    <div class="details">
         <div class="description">
             {{ songbook.description|linebreaksbr }}
         </div>

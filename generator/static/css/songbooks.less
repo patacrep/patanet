@@ -9,16 +9,13 @@
         margin:0;
         a{
             font-family: @font-s;
-            padding: .3em 0 0 .7em;
-            display: block;
-            position: relative;
+            padding: .3em .7em 0 .7em;
         }
     }
     .details{
         font-size: 90%;
         padding-left: 18px;
         padding-bottom: 5px;
-        cursor: pointer;
     }
     .description{
         color: #333;
@@ -33,6 +30,14 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            margin-left: -18px;
+            padding-left: 18px;
+            background-color: #fff;
+            transition:color 0.4s;
+        }
+        .details{
+            cursor: pointer;
+            transition:color 0.4s, background-color 0.4s;
         }
 
         .features{
@@ -47,6 +52,12 @@
         &:hover{
             .details{
                 background-color: #CFEACF;
+            }
+            .features{
+                color:#000;
+            }
+            .description{
+                color: #444;
             }
         }
     }

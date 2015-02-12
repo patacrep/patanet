@@ -129,6 +129,6 @@ $(function() {
 
 function songbook_details(elt, e){
     if(e.target.tagName !== 'A'){
-        $(elt.parentNode).toggleClass('see_more');
+        $(elt).toggleClass('see_more');
     }
 }
