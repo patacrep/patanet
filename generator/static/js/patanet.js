@@ -127,8 +127,14 @@ $(function() {
 });
 
 
-function songbook_details(elt, e){
-    if(e.target.tagName !== 'A'){
+function toggle_see_more(elt, e){
+    switch(e.target.tagName){
+        case 'A':
+        case 'INPUT':
+        case 'LABEL':
+        break;
+
+        default:
         $(elt).toggleClass('see_more');
     }
 }
