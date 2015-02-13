@@ -64,20 +64,25 @@ def login_complete(request):
     songbooks = request.user.songbooks.all()
     songbook_number = songbooks.count()
 
-    redirect_url = 'songbook_private_list'
+    redirect_url = reverse('songbook_private_list')
 
     if songbook_number == 0:
         messages.success(request, _(u"Bienvenue! "
                                 u"Pour commencer, vous pouvez créez un carnet de chant."))
         return redirect(reverse('new_songbook'))
     elif songbook_number == 1:
-        messages.success(request, _(u"Carnet de chant '%s' sélectionné.") % songbooks[0].title)
-        request.session['current_songbook'] = songbooks[0].id
-        redirect_url = 'song_list'
+        songbook = songbooks[0];
+        messages.success(request, _(u"Carnet de chant '%s' sélectionné.") % songbook.title)
+        request.session['current_songbook'] = songbook.id
+        
+        if songbook.count_songs() > 0:
+            redirect_url = reverse('show_songbook', kwargs={'id': songbook.id, 'slug': songbook.slug})
+        else :
+            redirect_url = reverse('artist_list')
 
     if 'next' in request.GET:
         return redirect(request.GET['next'])
-    return redirect(reverse(redirect_url))
+    return redirect(redirect_url)
 
 
 def reset_password(request):
