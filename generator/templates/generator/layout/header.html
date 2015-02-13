@@ -14,7 +14,9 @@
     <ul>
 		<li><a href="{% url 'home' %}">{% trans "Page d'accueil" %}</a></li>
         <li><a href="{% url 'songbook_list' %}">{% trans "Carnets publics" %}</a></li>
-        <li><a href="{% url 'songbook_private_list' %}">{% trans "Carnets privés" %}</a></li>
+        {% if request.user.is_authenticated %}
+            <li><a href="{% url 'songbook_private_list' %}">{% trans "Carnets privés" %}</a></li>
+        {% endif %}
         <li><a href="{% url 'new_songbook' %}">{% trans "Nouveau carnet" %}</a></li>
     </ul>
 
