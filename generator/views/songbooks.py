@@ -129,7 +129,7 @@ def set_current_songbook(request):
         request.session['current_songbook'] = int(songbook_id)
         if 'next' in request.GET:
             return redirect(request.GET['next'])
-        return redirect('song_list')
+        return redirect('artist_list')
     else:
         messages.error(request, _(u"Ce carnet n'existe pas."))
         return redirect('songbook_list')
