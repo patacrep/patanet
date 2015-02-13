@@ -2,7 +2,7 @@
     <ul class="songbook-actions">
     {% spaceless %}
         <li{% if current_songbook %} class="active"{% endif %}>
-            <a href="{% url "set_current_songbook" %}?songbook={{songbook.id}}" data-icon="add">
+            <a href="{% if not current_songbook %}{% url "set_current_songbook" %}?songbook={{songbook.id}}{% endif %}" data-icon="add">
                 {% trans "Ajouter des chants" %}
             </a>
         </li>
