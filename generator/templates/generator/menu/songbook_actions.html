@@ -3,7 +3,7 @@
     {% spaceless %}
         <li{% if current_songbook %} class="active"{% endif %}>
             <a href="{% if not current_songbook %}{% url "set_current_songbook" %}?songbook={{songbook.id}}{% endif %}" data-icon="add">
-                {% trans "Ajouter des chants" %}
+                {% trans "Ajout de chants" %}
             </a>
         </li>
         {% with id=songbook.id slug=songbook.slug %}
