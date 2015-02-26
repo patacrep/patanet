@@ -1,4 +1,4 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
 {% block title %} {% trans "Tous les artistes" %} {% endblock %}
 
@@ -18,37 +18,11 @@
             </button>
         {% endif %}
 
-        <ol class="artists selection">
-            <li><strong>{% trans "Artiste" %}</strong></li>
+        <ol class="artists">
 		{% for artist in artist_list %}
-			<li>
-            {% with artist.songs.all as artist_songs %}
-				<input class="artist" type="checkbox" name="artists[]" value="{{ artist.id }}" id="artist_{{ artist.id }}" {% if artist_songs|list_in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
-				<label class="artist" for="artist_{{ artist.id }}" title="{{ artist.name }}">
-					{{ artist.name }}
-				</label>
-				<label class="details songs" for="all_songs_{{ artist.id }}">
-					{% trans "Tous les chants" %} ({{ artist_songs|length }})
-				</label>
-                <input type="checkbox" id="all_songs_{{ artist.id }}" class="toggle_checkbox">
-                <ul>
-            		{% for song in artist_songs %}
-            			<li>
-				            <input class="select_song" type="checkbox" name="songs[]" value="{{ song.id }}"
-            				id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
-			            	<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
-        					{{ song.title }}
-            				</label>
-            				<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">
-                                {% trans "Paroles" %}
-                            </a>
-            			</li>
-		            {% endfor %}
-		        </ul>
-            {% endwith %}
-			</li>
+            {% include 'generator/artist_item.html' %}
 		{% endfor %}
-		</ol><br/>
+        </ol>
         
         {% if current_item_list %}
             <button type="submit" class="button-link" data-icon="add-multiple">

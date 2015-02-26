@@ -1,0 +1,37 @@
+{% load i18n %}{% load filters %}
+{% with artist.songs.all as artist_songs %} 
+
+<li class="item-container artist" id="{{artist.id}}">
+    <h2>
+        <a href="{% url 'song_list_by_artist' artist=artist.slug %}">{{ artist.name }}</a> 
+        <small class="number">
+             &nbsp; 
+            {% if current_item_list %}
+                {% with artist_songs|intersection:current_item_list|length as intersection %} 
+                    <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}">{{ intersection }}</span>
+                {% endwith %}
+            {% endif %}
+            {{ artist_songs|length }} {% trans "chants" %}
+        </small>
+    </h2>
+    <div class="songs">
+        <ul>
+            {% for song in artist_songs %}
+                <li>
+                    <label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
+                        {% if current_item_list %}
+                        <input class="select_song" type="checkbox" name="songs[]" value="{{ song.id }}"
+                        id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
+                        {% endif %}
+                        {{ song.title }}
+                        <a class="lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}" title="{% trans "Paroles" %}" >
+                            {% trans "Paroles" %}
+                        </a>
+                    </label>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</li>
+
+{% endwith %}
