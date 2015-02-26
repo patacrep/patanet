@@ -12,7 +12,7 @@
 {% block content %}
 	<a class="artist back" href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a>
 	<form class="add_songs" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
-		{% if current_item_list %}
+		{% if current_songbook %}
 			{% csrf_token %}
 			<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
 
@@ -34,7 +34,7 @@
 		{% endfor %}
 		</ol><br/>
 
-		{% if current_item_list %}
+		{% if current_songbook %}
 			<button type="submit" class="button-link" data-icon="add-multiple">
 				{% trans "Ajouter la sélection au carnet" %}
 			</button>
