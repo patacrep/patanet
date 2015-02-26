@@ -29,6 +29,8 @@
 {% endblock %}
 
 {% block body %}
+	<input id="toggle_header" name="toggle_header" type="checkbox"/>
+	<label for="toggle_header" class="toggle_header"><h2>{% trans "Menu" %}<span></span></h2></label>
 	<header>
 		{% include "generator/layout/header.html" %}
 	</header>
