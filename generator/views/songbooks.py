@@ -233,9 +233,15 @@ def remove_song(request):
         return redirect(next_url)
     song_id = request.POST["song_id"]
     type = ContentType.objects.get(app_label="generator", model="song")
-    item = ItemsInSongbook.objects.get(songbook=songbook,
-                                       item_type=type,
-                                       item_id=song_id)
+    try:
+        item = ItemsInSongbook.objects.get(songbook=songbook,
+                                           item_type=type,
+                                           item_id=song_id)
+    except (KeyError, ItemsInSongbook.DoesNotExist):
+        messages.info(request,
+                       _(u"Ce chant n'appartient pas au carnet")
+                       )
+        return redirect(next_url)
     item.delete()
     songbook.fill_holes()
     messages.success(request, _(u"Chant retiré du carnet"), extra_tags='removal')
