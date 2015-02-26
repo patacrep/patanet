@@ -12,12 +12,14 @@
 {% block content %}
 	<a class="artist back" href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a>
 	<form class="add_songs" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
-		{% csrf_token %}
-		<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
+		{% if current_item_list %}
+			{% csrf_token %}
+			<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
 
-		<button type="submit" class="button-link" data-icon="add-multiple">
-			{% trans "Ajouter la sélection au carnet" %}
-		</button>
+			<button type="submit" class="button-link" data-icon="add-multiple">
+				{% trans "Ajouter la sélection au carnet" %}
+			</button>
+		{% endif %}
 
 		<ol class="songs selection">
         {% for song in song_list %}
@@ -32,9 +34,11 @@
 		{% endfor %}
 		</ol><br/>
 
-		<button type="submit" class="button-link" data-icon="add-multiple">
-			{% trans "Ajouter la sélection au carnet" %}
-		</button>
+		{% if current_item_list %}
+			<button type="submit" class="button-link" data-icon="add-multiple">
+				{% trans "Ajouter la sélection au carnet" %}
+			</button>
+		{% endif %}
     </form>
 {% include "generator/layout/pagination.html" %}
 {% endblock %}
