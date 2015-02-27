@@ -27,6 +27,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
+from django.http import JsonResponse
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
@@ -159,6 +160,30 @@ def _get_new_rank(songbook_id):
         return rank + 1
 
 
+def _redirect_or_json(request, next_url, song_added=0):
+    ajax_query = request.is_ajax()
+
+    if ajax_query:
+        success = True
+        messages_json = {}
+        i = 0
+        for message in messages.get_messages(request):
+            messages_json[i] = {
+                                "msg" : message.message,
+                                "tags" : message.tags
+                                }
+            if message.level > messages.SUCCESS:
+                success = False
+        json = {
+                "song_added" : song_added,
+                "success" : success,
+                "messages" : messages_json
+                }
+        return JsonResponse(json)
+    else:
+        return redirect(next_url)
+
+
 @require_POST
 @login_required
 def add_songs_to_songbook(request):
@@ -173,7 +198,7 @@ def add_songs_to_songbook(request):
         messages.error(request,
                        _(u"Choisissez un carnet pour ajouter ces chants")
                        )
-        return redirect(next_url)
+        return _redirect_or_json(request, next_url)
 
     song_list = request.POST.getlist('songs[]')
     song_added = 0
@@ -218,7 +243,7 @@ def add_songs_to_songbook(request):
     else:
         messages.success(request, _(u"%i chants ajoutés au carnet" % (song_added) ))
 
-    return redirect(next_url)
+    return _redirect_or_json(request, next_url, song_added)
 
 @require_POST
 @login_required
@@ -244,7 +269,7 @@ def remove_songs(request):
         messages.info(request,
                        _(u"Ce chant n'appartient pas au carnet")
                        )
-        return redirect(next_url)
+        return _redirect_or_json(request, next_url)
     song_removed = items.count()
     items.delete()
     songbook.fill_holes()
@@ -255,7 +280,7 @@ def remove_songs(request):
         messages.success(request, _(u"Chant retiré du carnet"), extra_tags='removal')
     else:
         messages.success(request, _(u"%i chants retirés du carnet" % (song_removed) ), extra_tags='removal')
-    return redirect(next_url)
+    return _redirect_or_json(request, next_url, -song_removed)
 
 @owner_required(('id', 'id'))
 def move_or_delete_items(request, id, slug):
