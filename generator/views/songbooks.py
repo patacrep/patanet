@@ -212,14 +212,14 @@ def add_songs_to_songbook(request):
     if song_added == 0:
         messages.info(request, _(u"Aucun chant ajouté"))
     elif song_added == 1:
-        messages.success(request, _(u"1 chants ajouté"))
+        messages.success(request, _(u"Chant ajouté au carnet"))
     else:
-        messages.success(request, _(u"%i chants ajoutés" % (song_added) ))
+        messages.success(request, _(u"%i chants ajoutés au carnet" % (song_added) ))
 
     return redirect(next_url)
 
 @login_required
-def remove_song(request):
+def remove_songs(request):
     """Remove a song from the current songbook"""
     next_url = request.POST['next']
 
@@ -231,20 +231,27 @@ def remove_song(request):
                        _(u"Choisissez un carnet pour supprimer ce chants")
                        )
         return redirect(next_url)
-    song_id = request.POST["song_id"]
+    song_ids = request.POST.getlist('songs[]')
     type = ContentType.objects.get(app_label="generator", model="song")
     try:
-        item = ItemsInSongbook.objects.get(songbook=songbook,
+        items = ItemsInSongbook.objects.filter(songbook=songbook,
                                            item_type=type,
-                                           item_id=song_id)
+                                           item_id__in=song_ids)
     except (KeyError, ItemsInSongbook.DoesNotExist):
         messages.info(request,
                        _(u"Ce chant n'appartient pas au carnet")
                        )
         return redirect(next_url)
-    item.delete()
+    song_removed = items.count()
+    items.delete()
     songbook.fill_holes()
-    messages.success(request, _(u"Chant retiré du carnet"), extra_tags='removal')
+
+    if song_removed == 0:
+        messages.info(request, _(u"Aucun chant retiré"))
+    elif song_removed == 1:
+        messages.success(request, _(u"Chant retiré du carnet"), extra_tags='removal')
+    else:
+        messages.success(request, _(u"%i chants retirés du carnet" % (song_removed) ), extra_tags='removal')
     return redirect(next_url)
 
 @owner_required(('id', 'id'))
