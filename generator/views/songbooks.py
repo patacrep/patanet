@@ -212,9 +212,9 @@ def add_songs_to_songbook(request):
     if song_added == 0:
         messages.info(request, _(u"Aucun chant ajouté"))
     elif song_added == 1:
-        messages.success(request, _(u"1 chants ajouté"))
+        messages.success(request, _(u"Chant ajouté au carnet"))
     else:
-        messages.success(request, _(u"%i chants ajoutés" % (song_added) ))
+        messages.success(request, _(u"%i chants ajoutés au carnet" % (song_added) ))
 
     return redirect(next_url)
 
