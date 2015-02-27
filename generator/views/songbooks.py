@@ -20,6 +20,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, \
                                  DeleteView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404, render
@@ -158,6 +159,7 @@ def _get_new_rank(songbook_id):
         return rank + 1
 
 
+@require_POST
 @login_required
 def add_songs_to_songbook(request):
     """Add a list of songs to the current songbook.
@@ -218,6 +220,7 @@ def add_songs_to_songbook(request):
 
     return redirect(next_url)
 
+@require_POST
 @login_required
 def remove_songs(request):
     """Remove a song from the current songbook"""
