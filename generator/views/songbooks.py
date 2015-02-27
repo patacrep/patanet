@@ -189,7 +189,7 @@ def _redirect_or_json(request, next_url, song_added=0):
 def add_songs_to_songbook(request):
     """Add a list of songs to the current songbook.
     """
-    next_url = request.POST['next']
+    next_url = request.POST.get('next')
 
     try:
         songbook_id = request.session['current_songbook']
@@ -249,7 +249,7 @@ def add_songs_to_songbook(request):
 @login_required
 def remove_songs(request):
     """Remove a song from the current songbook"""
-    next_url = request.POST['next']
+    next_url = request.POST.get('next')
 
     try:
         songbook_id = request.session['current_songbook']
