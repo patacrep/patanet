@@ -20,7 +20,7 @@
                 <li>
                     <label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
                         {% if current_songbook %}
-                        <input class="select_song" type="checkbox" name="songs[]" value="{{ song.id }}"
+                        <input class="song_selection" type="checkbox" name="songs[]" value="{{ song.id }}"
                         id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
                         {% endif %}
                         {{ song.title }}

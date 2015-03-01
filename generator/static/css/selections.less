@@ -407,3 +407,34 @@ ol.artists{
 		}
 	}
 }
+
+label.ajax.song{
+	background: url("@{static-url}img/icon/add.png") 4px center no-repeat;
+	background-image: none;
+	transition:background-color 1s;
+	input.song_selection{
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	&.added{
+		background-image : url("@{static-url}img/icon/check.png");
+	}
+	&:hover{
+		background-image : url("@{static-url}img/icon/add.png");
+	}
+	&.added:hover{
+		background-image : url("@{static-url}img/icon/delete.png");
+	}
+
+	&.updating{
+		background-image : url("@{static-url}img/icon/processing.gif") !important;
+		background-color: #6EB558;
+		transition: background-color 0s;
+	}
+	&.updating.added{
+		background-color: #E9594D;
+	}
+
+}
+
