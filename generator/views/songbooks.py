@@ -140,20 +140,6 @@ def _set_and_get_current_songbook(request, songbook_id):
         request.session['current_songbook'] = songbook_id
     return songbook
 
-def _add_item(item, songbook, rank, current_item_list):
-    """Add an item to a songbook.
-    Return True if it has been added, false if not.
-    """
-    if item not in current_item_list:
-        item_in_songbook = ItemsInSongbook(item=item,
-                                            songbook=songbook,
-                                            rank=rank)
-        item_in_songbook.save()
-        return True
-    else:
-        return False
-
-
 def _get_new_rank(songbook_id):
     """Get the last song in the section, and return this rank plus 1."""
     rank = ItemsInSongbook.objects.filter(songbook=songbook_id).count()
@@ -202,26 +188,24 @@ def add_songs_to_songbook(request):
                        )
         return _redirect_or_json(request, next_url)
 
-    song_list = request.POST.getlist('songs[]')
-    song_added = 0
+    song_id_list = request.POST.getlist('songs[]')
+    song_list = Song.objects.filter(id__in=song_id_list)
 
     current_item_list = [item.item for item in
                             ItemsInSongbook.objects.filter(songbook=songbook)]
-    rank = _get_new_rank(songbook_id)
 
-    for song_id in song_list:
-        try:
-            song = Song.objects.get(id=song_id)
-            added = _add_item(item=song,
-                              songbook=songbook,
-                              rank=rank,
-                              current_item_list=current_item_list)
-            if added:
-                rank += 1
-                song_added += 1
-                current_item_list.append(song)
-        except Song.DoesNotExist:  # May be useless
-            pass
+    item_count = len(current_item_list)
+    items_to_insert = []
+    for song in song_list:
+        if song not in current_item_list:
+            item_count += 1
+            items_to_insert.append(
+                                    ItemsInSongbook(item=song,
+                                                songbook=songbook,
+                                                rank=item_count)
+                                  )
+    ItemsInSongbook.objects.bulk_create(items_to_insert)
+    song_added = len(items_to_insert)
 
     if song_added == 0:
         messages.info(request, _(u"Aucun chant ajouté"))
