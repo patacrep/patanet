@@ -192,7 +192,7 @@ def add_songs_to_songbook(request):
     next_url = request.POST.get('next')
 
     try:
-        songbook_id = request.session['current_songbook']
+        songbook_id = request.POST.get('current_songbook')
         songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
@@ -252,7 +252,7 @@ def remove_songs(request):
     next_url = request.POST.get('next')
 
     try:
-        songbook_id = request.session['current_songbook']
+        songbook_id = request.POST.get('current_songbook')
         songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,

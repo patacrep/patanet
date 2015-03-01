@@ -111,7 +111,10 @@ $(function() {
         $(elt.parentNode).addClass('updating');
 
         var id = elt.value;
-        var data = { 'songs[]' : id};
+        var data = { 
+            'songs[]' : id,
+            'current_songbook' : $('#current_songbook_id').get(0).value
+        };
 
         var url = baseurl+'songbooks/';
         url += (add_song) ? 'add' : 'remove';

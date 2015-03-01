@@ -31,6 +31,7 @@
     	{% endif %}
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{% url "show_song" artist=song.artist.slug slug=song.slug %}">
+                <input type="hidden" name="current_songbook" id="current_songbook_id" value="{{ current_songbook.id }}">
 		    </form>
     {% endif %}
 
