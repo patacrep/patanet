@@ -136,7 +136,8 @@ def set_current_songbook(request):
 
 def _set_and_get_current_songbook(request, songbook_id):
     songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
-    request.session['current_songbook'] = songbook_id
+    if request.session['current_songbook'] != songbook_id:
+        request.session['current_songbook'] = songbook_id
     return songbook
 
 def _add_item(item, songbook, rank, current_item_list):
