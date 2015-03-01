@@ -222,21 +222,6 @@ def add_songs_to_songbook(request):
         except Song.DoesNotExist:  # May be useless
             pass
 
-    artist_list = request.POST.getlist('artists[]')
-    for artist_id in artist_list:
-        try:
-            artist = Artist.objects.get(id=artist_id)
-            song_list = artist.songs.all()
-            for song in song_list:
-                added = _add_item(item=song,
-                              songbook=songbook,
-                              rank=rank,
-                              current_item_list=current_item_list)
-                if added:
-                    rank += 1
-                    song_added += 1
-        except Artist.DoesNotExist:
-            pass
     if song_added == 0:
         messages.info(request, _(u"Aucun chant ajouté"))
     elif song_added == 1:
