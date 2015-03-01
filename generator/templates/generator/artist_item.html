@@ -8,7 +8,7 @@
              &nbsp; 
             {% if current_songbook %}
                 {% with artist_songs|intersection:current_item_list|length as intersection %} 
-                    <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}">{{ intersection }}</span>
+                    <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}"></span>
                 {% endwith %}
             {% endif %}
             {{ artist_songs|length }} {% trans "chants" %}
