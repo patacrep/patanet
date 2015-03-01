@@ -16,7 +16,7 @@
 			{% csrf_token %}
 			<input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
 
-			<button type="submit" class="button-link" data-icon="add-multiple">
+			<button class="selection" type="submit" class="button-link" data-icon="add-multiple">
 				{% trans "Ajouter la sélection au carnet" %}
 			</button>
 		{% endif %}
@@ -35,7 +35,7 @@
 		</ol><br/>
 
 		{% if current_songbook %}
-			<button type="submit" class="button-link" data-icon="add-multiple">
+			<button class="selection" type="submit" class="button-link" data-icon="add-multiple">
 				{% trans "Ajouter la sélection au carnet" %}
 			</button>
 		{% endif %}
