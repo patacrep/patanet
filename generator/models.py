@@ -254,6 +254,13 @@ class ItemsInSongbook(models.Model):
         ordering = ["rank"]
         unique_together = ('item_id', 'songbook',)
 
+    def save(self, *args, **kwargs):
+        # automatically add a rank, if needed
+        if not self.rank:
+            count = self.songbook.count_items()
+            self.rank = count + 1
+        super(ItemsInSongbook, self).save(*args, **kwargs)
+
 
 class Task(models.Model):
     """Model holding information for asynchronous PDF generation"""
