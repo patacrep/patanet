@@ -135,9 +135,7 @@ class Songbook(models.Model):
         section = Section.objects.create(name=name)
         section.save()
 
-        rank = ItemsInSongbook.objects.filter(songbook=self).count() + 1
-
-        ItemsInSongbook.objects.create(songbook=self, item=section, rank=rank)
+        ItemsInSongbook.objects.create(songbook=self, item=section)
 
     def get_as_json(self):
 
