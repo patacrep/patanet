@@ -116,6 +116,10 @@ class Songbook(models.Model):
                    ).count()
         return count
 
+    def count_items(self):
+        count = ItemsInSongbook.objects.filter(songbook=self).count()
+        return count
+
     def fill_holes(self):
         """fill the holes in the rank after deletion
         If their is two equal ranks, items are randomly sorted !
