@@ -140,15 +140,6 @@ def _set_and_get_current_songbook(request, songbook_id):
         request.session['current_songbook'] = songbook_id
     return songbook
 
-def _get_new_rank(songbook_id):
-    """Get the last song in the section, and return this rank plus 1."""
-    rank = ItemsInSongbook.objects.filter(songbook=songbook_id).count()
-    if rank == None:
-        return 1
-    else:
-        return rank + 1
-
-
 def _redirect_or_json(request, next_url, song_added=0):
     ajax_query = request.is_ajax()
 
