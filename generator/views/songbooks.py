@@ -258,7 +258,7 @@ def remove_songs(request):
         messages.error(request,
                        _(u"Choisissez un carnet pour supprimer ce chants")
                        )
-        return redirect(next_url)
+        return _redirect_or_json(request, next_url)
     song_ids = request.POST.getlist('songs[]')
     type = ContentType.objects.get(app_label="generator", model="song")
     try:
