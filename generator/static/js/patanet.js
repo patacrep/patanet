@@ -105,17 +105,17 @@ $(function() {
     }
 
     var ajax_change_song = function(elt, add_song){
+        // disable to prevent the user from clicking it again
+        // before the whole processing is done
+        elt.disabled = true;
+        $(elt.parentNode).addClass('updating');
+
         var id = elt.value;
         var data = { 'songs[]' : id};
 
         var url = baseurl+'songbooks/';
         url += (add_song) ? 'add' : 'remove';
         url += '-song';
-
-        // disable to prevent the user from clicking it again
-        // before the whole processing is done
-        elt.disabled = true;
-        $(elt.parentNode).addClass('updating');
 
         $.post(url, data)
 
