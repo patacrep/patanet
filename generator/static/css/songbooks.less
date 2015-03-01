@@ -123,3 +123,9 @@ ul.songbook-actions{
         color: inherit;
     }
 }
+
+#current_songbook_count{
+    &:after{
+        content: " - " attr(data-value) " " attr(data-text);
+    }
+}
