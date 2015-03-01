@@ -126,15 +126,13 @@ class UpdateSongbook(OwnerRequiredMixin, UpdateView):
 def set_current_songbook(request):
     """Set a songbook for edition with sessions
      """
-    if (request.GET['songbook'] != None):
-        songbook_id = request.GET['songbook']
-        request.session['current_songbook'] = int(songbook_id)
-        if 'next' in request.GET:
-            return redirect(request.GET['next'])
-        return redirect('artist_list')
-    else:
+    next = request.GET.get('next', 'artist_list')
+    try:
+        _set_and_get_current_songbook(request, request.GET.get('songbook'))
+    except (KeyError, Songbook.DoesNotExist):
         messages.error(request, _(u"Ce carnet n'existe pas."))
-        return redirect('songbook_list')
+        next = 'songbook_private_list'
+    return redirect(next)
 
 def _set_and_get_current_songbook(request, songbook_id):
     songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
@@ -196,11 +194,10 @@ def add_songs_to_songbook(request):
     next_url = request.POST.get('next')
 
     try:
-        songbook_id = request.POST.get('current_songbook')
-        songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
+        songbook = _set_and_get_current_songbook(request, request.POST.get('current_songbook'))
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
-                       _(u"Choisissez un carnet pour ajouter ces chants")
+                       _(u"Ce carnet n'existe plus.")
                        )
         return _redirect_or_json(request, next_url)
 
@@ -256,11 +253,10 @@ def remove_songs(request):
     next_url = request.POST.get('next')
 
     try:
-        songbook_id = request.POST.get('current_songbook')
-        songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
+        songbook = _set_and_get_current_songbook(request, request.POST.get('current_songbook'))
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
-                       _(u"Choisissez un carnet pour supprimer ce chants")
+                       _(u"Ce carnet n'existe plus.")
                        )
         return _redirect_or_json(request, next_url)
     song_ids = request.POST.getlist('songs[]')
