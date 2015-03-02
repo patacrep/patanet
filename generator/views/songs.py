@@ -23,7 +23,7 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-
+import random
 
 from generator.decorators import CurrentSongbookMixin
 from generator.models import Song, Artist
@@ -79,8 +79,10 @@ class ArtistList(CurrentSongbookMixin, ListView):
 
 
 def random_song(request):
-    song = Song.objects.order_by('?')[0]
+    count = Song.objects.all().count()
+    random_index = random.randrange(0, count) # to have a number between 0 and count -1
+    song = Song.objects.values('slug', 'artist__slug').all()[random_index]
     return redirect(reverse('show_song',
-                            kwargs={'artist': song.artist.slug,
-                                    'slug': song.slug}
+                            kwargs={'artist': song['artist__slug'],
+                                    'slug': song['slug']}
                             ))
