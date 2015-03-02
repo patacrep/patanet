@@ -3,7 +3,7 @@
 
 <li class="item-container artist" id="{{artist.id}}">
     <h2>
-        <a href="{% url 'song_list_by_artist' artist=artist.slug %}">{{ artist.name }}</a> 
+        <a href="{% url "show_artist" slug=artist.slug %}">{{ artist.name }}</a> 
         <small class="number">
              &nbsp; 
             {% if current_songbook %}

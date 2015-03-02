@@ -14,7 +14,7 @@
 
 {% block content %}
 	<h2 class="artist">
-        <a class="back" href="{% url "song_list_by_artist" artist=song.artist.slug %}">
+        <a class="back" href="{% url "show_artist" slug=song.artist.slug %}">
             {{ song.artist.name }}
         </a>
     </h2>
