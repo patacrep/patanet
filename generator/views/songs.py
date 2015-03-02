@@ -79,9 +79,7 @@ class ArtistList(CurrentSongbookMixin, ListView):
 
 
 def random_song(request):
-    count = Song.objects.all().count()
-    random_index = random.randrange(0, count) # to have a number between 0 and count -1
-    song = Song.objects.values('slug', 'artist__slug').all()[random_index]
+    song = Song.objects.order_by('?').values('slug', 'artist__slug').all()[0]
     return redirect(reverse('show_song',
                             kwargs={'artist': song['artist__slug'],
                                     'slug': song['slug']}
