@@ -19,8 +19,10 @@
         {% for song in song_list %}
 			<li>
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
-					<input type="checkbox" name="songs[]" value="{{ song.id }}" class="song_selection"
-					id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
+					{% if current_songbook %}
+						<input type="checkbox" name="songs[]" value="{{ song.id }}" class="song_selection"
+						id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
+					{% endif %}
 					{{ song.title }}
 				</label>
 				<a class="details artist" href="{% url "show_artist" slug=song.artist.slug %}" title="{{ song.artist.name }}">{{ song.artist.name }}</a>
