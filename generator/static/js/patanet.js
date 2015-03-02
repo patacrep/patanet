@@ -104,6 +104,116 @@ $(function() {
         elt.dataset.value = value;
     }
 
+    var toggle_add_remove_all_button = function(elt){
+        var max = parseInt(elt.dataset.max);
+        var value = parseInt(elt.dataset.value);
+        var btn = $(elt).siblings('button').first();
+        if(value < max){
+            btn.addClass('clickable');
+        } else {
+            btn.removeClass('clickable');
+        }
+    }
+
+    var ajax_change_artist_songs = function(elt, add_song){
+        // disable to prevent the user from clicking it again
+        // before the whole processing is done
+        elt.disabled = true;
+        var container = $(elt).closest(".item-container");
+        if(add_song){
+            container.addClass('adding');
+        } else {
+            container.addClass('deleting');
+        }
+
+        var ids = [];
+        var inputs = container.find('.songs li input');
+        inputs.each(function(){
+            ids.push(this.value);
+        });
+
+        var data = { 
+            'songs[]' : ids,
+            'current_songbook' : $('#current_songbook_id').get(0).value
+        };
+
+        var url = baseurl+'songbooks/';
+        url += (add_song) ? 'add' : 'remove';
+        url += '-song';
+
+        $.post(url, data)
+
+            // successfully treated
+            .done(function(data) {
+
+                // but something wrong on server side
+                if(!data.success){
+                    // we have messages to display
+                    if(data.success === false && data.messages){
+                        var messages_container = $('ul.messages');
+                        $.each(data.messages, function(i, value){
+                            var new_message = document.createElement('li');
+                            new_message.className = value.tags;
+                            new_message.innerHTML = value.msg;
+                            messages_container.append(new_message);
+                        })
+                        window.scrollTo(0, 0);
+                        return;
+                    }
+                    console.log('Something wrong on the server side :');
+                    console.log(data);
+                    if(confirm('Unexpected server response, you should try to reload the page')){
+                        document.location.reload();
+                    }
+                    return;
+                }
+
+                var song_added = 0;
+                inputs.each(function(){
+                    if(this.checked != add_song){
+                        this.checked = add_song;
+                        song_added += 1;
+                        if(add_song){
+                            $(this.parentNode).addClass('added');
+                        } else {
+                            $(this.parentNode).removeClass('added');
+                        }
+                    }
+                });
+
+                song_added = (add_song) ? song_added : -song_added;
+
+                // update the global counter
+                var global_counter = $('#current_songbook_count').get(0);
+                increase_dataset_value(global_counter, song_added);
+
+                // update the artist counter
+                var artist_counter = $(elt).closest(".item-container").find(".intersection").get(0);
+                if(artist_counter){
+                    increase_dataset_value(artist_counter, song_added);
+                    toggle_add_remove_all_button(artist_counter);
+                }
+
+            })
+            // failure
+            .fail(function(data) {
+                console.log('Something wrong on the server side :');
+                console.log(data.responseText);
+                if(confirm('Unexpected server response, you should try to reload the page')){
+                    document.location.reload();
+                }
+            })
+            // anyway
+            .always(function() {
+                if(add_song){
+                    container.removeClass('adding');
+                } else {
+                    container.removeClass('deleting');
+                }
+                elt.disabled = false;
+            });
+    }
+
     var ajax_change_song = function(elt, add_song){
         // disable to prevent the user from clicking it again
         // before the whole processing is done
@@ -164,6 +274,7 @@ $(function() {
                 var artist_counter = $(elt).closest(".item-container").find(".intersection").get(0);
                 if(artist_counter){
                     increase_dataset_value(artist_counter, song_added);
+                    toggle_add_remove_all_button(artist_counter);
                 }
 
             })
@@ -206,6 +317,19 @@ $(function() {
         // hide "add selection" buttons
         $('form#add_songs_form > button.selection').hide();
 
+
+        // attach callbacks to "add/remove all" buttons
+        $('form#add_songs_form .item-container h2 button').each(function(){
+            $(this).click(function(){
+                var add = (this.dataset.icon == 'add-multiple');
+                ajax_change_artist_songs(this, add);
+            });
+        });
+
+        // show "add/remove all" 
+        $('form#add_songs_form .item-container h2 .intersection').each(function(){
+            toggle_add_remove_all_button(this);
+        });
     }
 
     var auto_template_name = function(){

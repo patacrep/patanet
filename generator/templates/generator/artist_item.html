@@ -8,10 +8,16 @@
              &nbsp; 
             {% if current_songbook %}
                 {% with artist_songs|intersection:current_item_list|length as intersection %} 
-                    <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}"></span>
+                    <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}" data-max="{{ artist_songs|length }}"></span>
                 {% endwith %}
             {% endif %}
             {{ artist_songs|length }} {% trans "chants" %}
+            <button type="button" class="button-link script" data-icon="add-multiple">
+                {% trans "Tout ajouter" %}
+            </button>
+            <button type="button" class="button-link script" data-icon="delete-multiple">
+                {% trans "Tout retirer" %}
+            </button>
         </small>
     </h2>
     <div class="songs">

@@ -406,6 +406,46 @@ ol.artists{
 			font-weight: normal;
 		}
 	}
+
+	button{
+		float: right;
+		padding-left: 6px;
+		padding-right: 20px;
+		background-position: right 2px center;
+		&:not(:hover):not(:disabled){
+			color: transparent;
+			opacity: 0.6;
+		}
+		&:active{
+			padding-right: 19px;
+		}
+	}
+
+	&.deleting,
+	&.adding,
+	&:hover{
+		button:not(.clickable) ~ button,
+		button.clickable{
+			display: inline-block !important;
+		}
+	}
+
+	&.deleting,
+	&.adding{
+		button{
+			background-image : url("@{static-url}img/icon/processing.gif");
+		}
+		label.ajax.song{
+
+			transition: background-color 0s;
+			background-color: #E9594D;
+		}
+	}
+	&.deleting label.ajax.song{
+	}
+	&.adding label.ajax.song{
+		background-color: #6EB558;
+	}
 }
 
 label.ajax.song{
