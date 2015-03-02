@@ -27,11 +27,10 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
-from django.http import JsonResponse
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
-                                OwnerRequiredMixin, owner_required
+                                OwnerRequiredMixin, owner_required, return_json_on_ajax
 from generator.models import Songbook, ItemsInSongbook, Song, \
                              Task as GeneratorTask, Layout, Artist
 from generator.forms import SongbookCreationForm, LayoutForm
@@ -140,32 +139,9 @@ def _set_and_get_current_songbook(request, songbook_id):
         request.session['current_songbook'] = songbook_id
     return songbook
 
-def _redirect_or_json(request, next_url, song_added=0):
-    ajax_query = request.is_ajax()
-
-    if ajax_query:
-        success = True
-        messages_json = {}
-        i = 0
-        for message in messages.get_messages(request):
-            messages_json[i] = {
-                                "msg" : message.message,
-                                "tags" : message.tags
-                                }
-            if message.level > messages.SUCCESS:
-                success = False
-        json = {
-                "song_added" : song_added,
-                "success" : success,
-                "messages" : messages_json
-                }
-        return JsonResponse(json)
-    else:
-        return redirect(next_url)
-
-
 @require_POST
 @login_required
+@return_json_on_ajax
 def add_songs_to_songbook(request):
     """Add a list of songs to the current songbook.
     """
@@ -177,7 +153,7 @@ def add_songs_to_songbook(request):
         messages.error(request,
                        _(u"Ce carnet n'existe plus.")
                        )
-        return _redirect_or_json(request, next_url)
+        return redirect(next_url)
 
     song_id_list = request.POST.getlist('songs[]')
     song_list = Song.objects.filter(id__in=song_id_list)
@@ -205,10 +181,11 @@ def add_songs_to_songbook(request):
     else:
         messages.success(request, _(u"%i chants ajoutés au carnet" % (song_added) ))
 
-    return _redirect_or_json(request, next_url, song_added)
+    return redirect(next_url)
 
 @require_POST
 @login_required
+@return_json_on_ajax
 def remove_songs(request):
     """Remove a song from the current songbook"""
     next_url = request.POST.get('next')
@@ -219,7 +196,7 @@ def remove_songs(request):
         messages.error(request,
                        _(u"Ce carnet n'existe plus.")
                        )
-        return _redirect_or_json(request, next_url)
+        return redirect(next_url)
     song_ids = request.POST.getlist('songs[]')
     type = ContentType.objects.get(app_label="generator", model="song")
     try:
@@ -230,7 +207,7 @@ def remove_songs(request):
         messages.info(request,
                        _(u"Ce chant n'appartient pas au carnet")
                        )
-        return _redirect_or_json(request, next_url)
+        return redirect(next_url)
     song_removed = items.count()
     items.delete()
     songbook.fill_holes()
@@ -241,7 +218,7 @@ def remove_songs(request):
         messages.success(request, _(u"Chant retiré du carnet"), extra_tags='removal')
     else:
         messages.success(request, _(u"%i chants retirés du carnet" % (song_removed) ), extra_tags='removal')
-    return _redirect_or_json(request, next_url, -song_removed)
+    return redirect(next_url)
 
 @owner_required(('id', 'id'))
 def move_or_delete_items(request, id, slug):

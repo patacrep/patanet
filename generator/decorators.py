@@ -20,6 +20,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.contrib import messages
+from django.http import JsonResponse
 
 from functools import wraps
 
@@ -104,6 +106,36 @@ def owner_or_public_required(lookups=None, **kwargs):
         return wraps(view_func)(_wrapped_view)
     return decorator
 
+def return_json_on_ajax(view_func):
+    """
+    Decorator to return a JSON response with messages instead of a redirection
+    if the request was made throught AJAX.
+    """
+    @wraps(view_func)
+    def decorator(request, *args, **kwargs):
+        original_response = view_func(request, *args, **kwargs)
+
+        ajax_query = request.is_ajax()
+        if ajax_query:
+            success = True
+            messages_json = {}
+            i = 0
+            for message in messages.get_messages(request):
+                messages_json[i] = {
+                                    "msg" : message.message,
+                                    "tags" : message.tags
+                                    }
+                if message.level > messages.SUCCESS:
+                    success = False
+            json = {
+                    "success" : success,
+                    "messages" : messages_json
+                    }
+            return JsonResponse(json)
+        else:
+            return original_response
+    return decorator
+    
 # # Some mixins for view acess
 #################################
 
