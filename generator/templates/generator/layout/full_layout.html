@@ -11,8 +11,8 @@
 		<script>
 		  less = {
 		    env: "development",
-		    logLevel: 2,
-		    poll: 2000,
+		    logLevel: 1,
+		    poll: 5000,
 		    dumpLineNumbers: "comments"
 		  };
 		</script>
@@ -26,9 +26,12 @@
    <script type="text/javascript" src="{% static "js/jquery-1.11.1.min.js" %}" defer></script>
    <script type="text/javascript" src="{% static "js/jquery-ui-1.10.4.min.js" %}" defer></script>
    <script type="text/javascript" src="{% static "js/patanet.js" %}" defer></script>
+   <script type="text/javascript">baseurl = '{% url 'home' %}';</script>
 {% endblock %}
 
 {% block body %}
+	<input id="toggle_header" name="toggle_header" type="checkbox"/>
+	<label for="toggle_header" class="toggle_header"><h2>{% trans "Menu" %}<span></span></h2></label>
 	<header>
 		{% include "generator/layout/header.html" %}
 	</header>
@@ -55,6 +58,7 @@
 			{% endif %}
         {% endblock %}
 
+	<div class="breadcrumb">{% block breadcrumb %}{% endblock %}</div>
 	<h1>{% block title %}No title{% endblock %}</h1>
 	
 		{% block content %}

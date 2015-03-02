@@ -6,7 +6,7 @@
 
 html{
     width:100%;
-    font-family:sans-serif;
+    font-family:@font-ss;
     background-color:@menu-bg;
 }
 
@@ -16,6 +16,7 @@ body{
     padding:1em 0;
 }
 header{
+    margin-left: 0;
     width:@nav-width;
     float:left;
     background-color:@menu-bg;
@@ -23,11 +24,15 @@ header{
 }
 main, .top, footer{
     margin-left:@nav-width + 10px;//padding
+    margin-right: 0;
 }
 main{
     background-color:white;
     position:relative;
-    min-height:@playlist-height;
+}
+
+.breadcrumb{
+    font-size: 0.8em;
 }
 
 a{
@@ -49,9 +54,145 @@ table {
 
 // Hide JS specific content
 .script {
-    display:none;
+    display:none !important;
 }
 
 .help {
     cursor:help;
+}
+
+
+
+
+// Management of the menu toggling for smal screens
+
+input#toggle_header,
+label.toggle_header{
+    display: none;
+}
+@media (max-width:@screen-sm){
+    header{
+        transition: margin .3s, width .3s, padding-left .3s;
+        .logo{
+            display: none;
+        }
+        padding-top: 32px;
+        margin-top: -32px;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        width: @nav-width;
+        padding-left: 5px;
+    }
+    label.toggle_header{
+        margin-left: 0;
+        display: block;
+    }
+    main, .top, footer{
+        margin-right: -(@nav-width + 10px);
+        transition: margin .3s;
+    }
+
+    input#toggle_header:not(:checked){
+        & ~ header{
+            margin-left: -(@nav-width + 10px);
+            width: 115px;
+            padding-left: 50px;
+        }
+
+        & ~ label.toggle_header,
+        & ~ main,
+        & ~  .top,
+        & ~  footer{
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+    }
+}
+
+@media (max-width:@screen-sm){
+}
+
+label.toggle_header{
+    position: relative;
+    transition: margin .3s;
+    margin-left: @nav-width - 42px;
+    
+    padding: 0;
+    width: 100%;
+    
+    height: 48px;
+    line-height: 48px;
+    
+    box-shadow: none;
+    cursor: pointer;
+    margin-top: -16px;
+    margin-bottom: 16px;
+
+    background: url("@{static-url}img/logo_wide.png") 50% 50% no-repeat;
+    background-size: auto 48px;
+
+    h2{
+        margin: 0;
+        color: #fff;
+        font-weight: normal;
+        padding-left: 5px;
+        background-color: @link-col;
+        transition: margin .3s, background-color .3s;
+        width: @nav-width - 42px;
+        padding-right: 47px;
+        position: relative;
+        margin-left: -@nav-width + 42px;
+    }
+    span{
+        display: block;
+        position: absolute;
+        top: 22px;
+        right: 8px;
+        height: 3px;
+
+        width: 36px;
+        background-color: #fff;
+        transition:background 0.3s 0.3s;
+        
+        &::before,
+        &::after{
+            position: absolute;
+            display: block;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #fff;
+            content: "";
+            transition-property: top, bottom, transform;
+            transition-delay: 0.1s;
+            transition-duration: 0.3s;
+        }
+        &::before{
+            top: -13px;
+        }
+        &::after{
+            bottom: -13px;
+        }
+    }
+
+}
+input#toggle_header:checked ~ label.toggle_header{
+    h2{
+        background-color: darken(@link-col, 8%);
+    }
+    span{
+        background: none;
+        &::before{
+            top:0;
+            transform: rotate(45deg);
+        }
+        &::after{
+            bottom: 0;
+            transform: rotate(-45deg);
+        }
+        &::before,
+        &::after{
+            transition-delay:0.4s;
+        }
+    }
 }

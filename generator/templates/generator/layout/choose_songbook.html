@@ -34,13 +34,12 @@
 	<div class="current-songbook login">
 		<h3>
 			{% url 'login' as login_url %}
-			{% url 'songbook_private_list' as next_url %}
 			{% url 'register' as register_url %}
 
 			{% blocktrans %}
 				Pour créer votre carnet de chant,<br/>
-				 vous devez vous
-			    <a href="{{ login_url }}?next={{ next_url }}">connecter</a>
+				 veuillez vous
+			    <a href="{{ login_url }}">connecter</a>
 			    ou vous
 			    <a href="{{ register_url }}">inscrire</a>.
 

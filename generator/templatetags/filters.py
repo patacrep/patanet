@@ -35,3 +35,9 @@ def list_in_items(value, arg):
 def in_items(value, arg):
     items = [item.item for item in arg]
     return value in items
+
+@register.filter(name='intersection')
+def intersection(value, arg):
+    items = [item.item for item in arg]
+    values = [val for val in value]
+    return set.intersection(set(items), set(values))

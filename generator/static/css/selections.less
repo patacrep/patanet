@@ -32,14 +32,13 @@ ol.selection{
 		}
 		.details.lyrics{
 			opacity:0;
+			background: url("@{static-url}img/icon/lyrics.png") 2px center no-repeat;
+        	transition:opacity 0.4s;
+        	padding: 5px 20px;
 		}
 
-		&:hover input:not(:checked):not(:indeterminate),
 		input[type=text]{
 			opacity:1;
-		}
-		input:not(:checked):not(:indeterminate){
-			opacity:0.6;
 		}
 		input{
 			vertical-align:middle;
@@ -212,3 +211,275 @@ ol.item_list{
         background-color:@selection-strip-bg;
     }
 }
+
+
+.item-container{
+    margin:0 auto;
+    padding:0;
+
+	@media (min-width:@screen-sm){
+	    width:80%;
+	}
+
+    border-bottom:1px solid fadeout(@link-col, 70%);
+
+    h2{
+        margin:0;
+        font-family: @font-s;
+        padding-top: .3em;
+        a,
+        .title{
+            padding: .3em .7em 0 .7em;
+        }
+    }
+    .details{
+        font-size: 90%;
+        padding-left: 18px;
+        padding-bottom: 5px;
+    }
+    .songs,
+    .description{
+        color: #333;
+        position: relative;
+        overflow: auto;
+        margin-bottom: 2px;
+    }
+    &:not(:target):not(.see_more){
+        .description{
+            color: #666;
+            max-height: 1.4em;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            margin-left: -18px;
+            padding-left: 18px;
+            background-color: #fff;
+            transition:color 0.4s;
+        }
+
+
+        .details{
+            cursor: pointer;
+            transition:color 0.4s, background-color 0.4s;
+        }
+
+        .features{
+            color:#333;
+            font-weight: normal;
+        }
+        .more{
+            display: none;
+        }
+        background-color: transparent;
+
+        &:hover{
+            .details{
+                background-color: #CFEACF;
+            }
+            .features{
+                color:#000;
+            }
+            .description{
+                color: #444;
+            }
+        }
+    }
+    background-color:@selection-strip-bg;
+
+    .features{
+        overflow: hidden;
+        display: block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-weight: bold;
+    }
+    .more{
+        font-weight: normal;
+    }
+    ul.songbook-actions{
+        margin: 5px 0 -5px -18px;
+        text-align: center;
+        background-color: #fff;
+
+        background-color: fadeout(@link-col, 90%);
+
+    }
+
+
+}
+
+ol.artists{
+	list-style: none;
+}
+
+.artists.alone{
+	margin-top: -9px;
+	.item-container{
+		.title{
+			font-size: 1.5em;
+		}
+		border-bottom: none;
+	}
+}
+
+.item-container.artist{
+	.number{
+		color: #444;
+		font-size: .6em;
+		font-weight: normal;
+		margin-left: -16px;
+        transition:color 0.4s;
+	}
+
+	.songs{
+		margin-bottom: 1.5em;
+		ul{
+			margin: .5em 0;
+			input{
+				margin-top: 5px;
+				margin-left: -5px;
+				//visibility: hidden;
+			}
+		}
+		li{
+			display: block;
+			float: left;
+			list-style: none;
+			width: 100%;
+			background-color:@selection-strip-bg;
+			position: relative;
+			
+			&:nth-child(odd){
+				background-color:fadeout(@selection-strip-bg, 5%);
+			}
+
+			label{
+				display: block;
+				width: 100%;
+	            white-space: nowrap;
+	            text-overflow: ellipsis;
+				overflow: hidden;
+				line-height: 1.5em;
+			}
+			label:before{
+				content:"";
+				padding-left: 10px;
+			}
+			@media (min-width:@screen-md){
+				width: 50%;
+				&:nth-child(odd){
+					background-color:@selection-strip-bg;
+				}
+				&:nth-child(4n), &:nth-child(4n+1){
+					background-color:fadeout(@selection-strip-bg, 5%);
+				}
+			}
+
+			.lyrics{
+				background: url("@{static-url}img/icon/lyrics.png") 2px center no-repeat;
+				.text-hide();
+				opacity: 0;
+				width: 18px;
+				height: 100%;
+				display: block;
+				position: absolute;
+				right: 5px;
+				top:0;
+
+            	transition:opacity 0.4s;
+			}
+
+			&:hover .lyrics{
+				opacity: 1;
+			}
+		}
+	}
+
+	.intersection{
+		&:before{
+			content: attr(data-value);
+		}
+		&[data-value="0"]{
+			color: #AAA;
+		}
+		&:not([data-value="0"]){
+			font-weight: bold;
+			font-size: 1.1em;
+		}
+		&:after{
+			content:" / ";
+			font-weight: normal;
+		}
+	}
+
+	button{
+		float: right;
+		padding-left: 6px;
+		padding-right: 20px;
+		background-position: right 2px center;
+		transition:opacity 0.4s;
+		&:not(:hover):not(:disabled){
+			color: transparent;
+			opacity: 0.6;
+		}
+		&:active{
+			padding-right: 19px;
+		}
+	}
+
+	&.deleting,
+	&.adding,
+	&:hover{
+		button:not(.clickable) ~ button,
+		button.clickable{
+			display: inline-block !important;
+		}
+	}
+
+	&.deleting,
+	&.adding{
+		button{
+			background-image : url("@{static-url}img/icon/processing.gif");
+		}
+		label.ajax.song{
+			transition: background-color 0s;
+			background-color: #E9594D;
+		}
+	}
+	&.deleting label.ajax.song{
+	}
+	&.adding label.ajax.song{
+		background-color: #6EB558;
+	}
+}
+
+label.ajax.song{
+	background: url("@{static-url}img/icon/add.png") 4px center no-repeat;
+	background-image: none;
+	transition:background-color 1s;
+	input.song_selection{
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	&.added{
+		background-image : url("@{static-url}img/icon/check.png");
+	}
+	&:hover{
+		background-image : url("@{static-url}img/icon/add.png");
+	}
+	&.added:hover{
+		background-image : url("@{static-url}img/icon/delete.png");
+	}
+
+	&.updating{
+		background-image : url("@{static-url}img/icon/processing.gif") !important;
+		background-color: #6EB558;
+		transition: background-color 0s;
+	}
+	&.updating.added{
+		background-color: #E9594D;
+	}
+
+}
+

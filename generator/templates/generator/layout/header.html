@@ -8,28 +8,43 @@
     </a>
 </div>
 <nav>
-    <h2>{% trans "Menus de navigation" %}</h2>
-    <h3>{% trans "Navigation" %}</h3>
+    <h2>{% trans "Menu" %}</h2>
+
+    <h3>{% trans "Carnets de chants" %}</h3>
     <ul>
 		<li><a href="{% url 'home' %}">{% trans "Page d'accueil" %}</a></li>
         <li><a href="{% url 'songbook_list' %}">{% trans "Carnets publics" %}</a></li>
-		<li><a href="{% url 'artist_list' %}">{% trans "Liste des artistes" %}</a></li>
-		<li><a href="{% url 'song_list' %}">{% trans "Liste des chansons" %}</a></li>
-		<li><a href="{% url 'random_song' %}">{% trans "Chanson au hasard" %}</a></li>
+        {% if request.user.is_authenticated %}
+            <li><a href="{% url 'songbook_private_list' %}">{% trans "Carnets privés" %}</a></li>
+        {% endif %}
+        <li><a href="{% url 'new_songbook' %}">{% trans "Nouveau carnet" %}</a></li>
     </ul>
-    <h3>{% trans "Pages" %}</h3>
+
+    <h3>{% trans "Catalogue musical" %}</h3>
     <ul>
+        <li><a href="{% url 'song_list' %}">{% trans "Chansons" %}</a></li>
+        <li><a href="{% url 'artist_list' %}">{% trans "Artistes" %}</a></li>
+        <!--<li><a href="#TODO">{% trans "Catégories" %}</a></li>-->
+        <li><a href="{% url 'random_song' %}">{% trans "Chanson au hasard" %}</a></li>
+        <!--<li><a href="#TODO">{% trans "Rechercher" %}</a></li>-->
         <li><a href="{% url 'flatpage' url='contribute' %}">{% trans 'Contribuer' %}</a></li>
+    </ul>
+
+    <h3>{% trans "Support" %}</h3>
+    <ul>
         <li><a href="{% url 'flatpage' url='FAQ' %}">{% trans 'FAQ' %}</a></li>
         <li><a href="{% url 'flatpage' url='about' %}">{% trans 'A propos de ce site' %}</a></li>
         <li><a href="{% url 'contact' %}">{% trans 'Nous contacter' %}</a></li>
     </ul>
-    <h3>{% trans "Liens" %}</h3>
+
+    <h3>{% trans "Développement" %}</h3>
     <ul>
+        <li><a href="{% url 'flatpage' url='contribute_dev' %}">{% trans 'Contribuer' %}</a></li>
+        <li><a href="https://github.com/patacrep/patanet/">{% trans 'Patanet' %}</a></li>
         <li><a href="http://www.patacrep.com/">Patacrep</a></li>
-        <li><a href="https://github.com/patacrep/patanet/">{% trans 'Code source du site' %}</a></li>
         <li><a href="http://songs.sourceforge.net/">{% trans 'Paquet LaTeX Songs' %}</a></li>
     </ul>
+
     <h3>{% trans "Autres langues" %}</h3>
     <ul class="languages">
         {% for code, lang in LANGUAGES %}

@@ -23,6 +23,7 @@ from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.contrib.auth.views import password_reset, password_reset_confirm
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 
 from generator.forms import RegisterForm
@@ -56,6 +57,31 @@ class PasswordChange(LoginRequiredMixin, FormView):
                          _(u"Votre mot de passe a bien été modifié.")
                          )
         return super(PasswordChange, self).form_valid(form)
+
+
+@login_required
+def login_complete(request):
+    songbooks = request.user.songbooks.all()
+    songbook_number = songbooks.count()
+
+    redirect_url = reverse('songbook_private_list')
+
+    if songbook_number == 0:
+        messages.success(request, _(u"Bienvenue! "
+                                u"Pour commencer, vous pouvez créez un carnet de chant."))
+        return redirect(reverse('new_songbook'))
+    elif songbook_number == 1:
+        songbook = songbooks[0];
+        _set_and_get_current_songbook(songbook.id)
+        messages.success(request, _(u"Carnet de chant '%s' sélectionné.") % songbook.title)
+        
+        if songbook.count_songs() > 0:
+            redirect_url = reverse('show_songbook', kwargs={'id': songbook.id, 'slug': songbook.slug})
+        else :
+            redirect_url = reverse('artist_list')
+
+    redirect_url = request.GET.get('next', redirect_url)
+    return redirect(redirect_url)
 
 
 def reset_password(request):

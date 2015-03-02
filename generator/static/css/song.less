@@ -5,14 +5,23 @@ main{
     clear:right;
     padding:1.5em;
     
-    h1,.artist, .album{
+    h1, .album{
         font-weight:normal;
         margin:0;
         padding:0;
     }
 
-	h2.artist{
-        font-size:1.4em;
+    h1 .song_title{
+        font-family: @font-s;
+        font-weight:bold;
+        display: block;
+        width: 80%;
+        margin: 0 auto;
+        padding: .3em .7em 0 .7em;
+    }
+
+    form.show_song{
+        text-align: right;
     }
     .back{
         border-bottom:solid 1px gray;

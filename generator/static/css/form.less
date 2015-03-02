@@ -4,8 +4,6 @@ form{
 
 	margin: auto;
 
-	display: table;
-
     @media (max-width:@screen-sm){
         margin:0 11px;
         width: 100%;
@@ -13,9 +11,6 @@ form{
 
 	&.item_list{
 		width: 80%;
-		display: block;
-	}
-	&.current_songbook{
 		display: block;
 	}
 
@@ -202,7 +197,7 @@ form{
 	}
 
 	&.search{
-		//display: block;
+		display: block;
 		display: none;//while the backend is not ready
 
 		float: right;
@@ -241,8 +236,4 @@ form{
 		}
 	}
 
-}
-
-h1 + form{
-	margin-top: 2em;
 }

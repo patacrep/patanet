@@ -4,4 +4,3 @@ patanet/local_settings.py
 .DS_Store
 medias/PDF
 initial_data.json
-static

@@ -1,17 +1,26 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
 
-{% block title %} {% trans "Tous les artistes" %} {% endblock %}
+{% block headertitle %}
+{{ artist.name }}
+{% endblock %}
+
+{% block title %}{% endblock %}
 
 {% block choose_songbook %}
-    {% include "generator/layout/choose_songbook.html" %}
+	{% include "generator/layout/choose_songbook.html" %}
+{% endblock %}
+
+{% block breadcrumb %}
+	<a href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a> &#x009B;
 {% endblock %}
 
 {% block content %}
-{% include "generator/layout/name_pagination.html" %}
+    
+
 	<form class="add_songs" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
         {% if current_songbook %}
     		{% csrf_token %}
-    		<input type="hidden" name="next" value="{% url "artist_list" %}?page={{page_obj.number}}">
+    		<input type="hidden" name="next" value="{% url "show_artist" slug=artist.slug %}">
             <input type="hidden" name="current_songbook" id="current_songbook_id" value="{{ current_songbook.id }}">
             
             <button class="selection button-link" type="submit" data-icon="add-multiple">
@@ -19,12 +28,8 @@
             </button>
         {% endif %}
 
-        <ol class="artists">
-        {% with True as in_list %}
-    		{% for artist in artist_list %}
-                {% include 'generator/artist_item.html' %}
-    		{% endfor %}
-        {% endwith %}
+        <ol class="artists alone">
+        	{% include 'generator/artist_item.html' %}
         </ol>
         
         {% if current_songbook %}
@@ -33,4 +38,5 @@
             </button>
         {% endif %}
     </form>
+
 {% endblock %}

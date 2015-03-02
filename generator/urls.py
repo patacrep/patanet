@@ -23,9 +23,9 @@ from django.views.generic.base import TemplateView
 from generator.views import SongList, SongView, ArtistList, \
      PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
-     UpdateSongbook, DeleteSongbook, LayoutList, SongListByArtist,\
+     UpdateSongbook, DeleteSongbook, LayoutList, ArtistView,\
      reset_password, reset_password_confirm, password_reset_done, \
-     password_reset_complete, move_or_delete_items, \
+     password_reset_complete, move_or_delete_items, login_complete, \
     FlatPage
 
 
@@ -40,9 +40,9 @@ urlpatterns = patterns('generator.views',
     # url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/history$',
                 # MISSING_VIEW,
                 # name='song_history'),
-    url(r'^songs/(?P<artist>[\w-]+)/$',
-                SongListByArtist.as_view(),
-                name="song_list_by_artist"),
+    url(r'^songs/(?P<slug>[\w-]+)/$',
+                ArtistView.as_view(),
+                name="show_artist"),
     url(r'^songs/$',
                 SongList.as_view(),
                 name="song_list"),
@@ -101,6 +101,9 @@ urlpatterns += patterns('',
                 'django.contrib.auth.views.login',
                 {'template_name': 'generator/login.html'},
                 name='login'),
+    url(r'^user/logged-in$',
+                login_complete,
+                name='logged_in'),
     url(r'^user/logout$',
                 'django.contrib.auth.views.logout',
                 {'next_page': settings.LOGOUT_REDIRECT_URL},

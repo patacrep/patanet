@@ -116,6 +116,10 @@ class Songbook(models.Model):
                    ).count()
         return count
 
+    def count_items(self):
+        count = ItemsInSongbook.objects.filter(songbook=self).count()
+        return count
+
     def fill_holes(self):
         """fill the holes in the rank after deletion
         If their is two equal ranks, items are randomly sorted !
@@ -131,9 +135,7 @@ class Songbook(models.Model):
         section = Section.objects.create(name=name)
         section.save()
 
-        rank = ItemsInSongbook.objects.filter(songbook=self).count() + 1
-
-        ItemsInSongbook.objects.create(songbook=self, item=section, rank=rank)
+        ItemsInSongbook.objects.create(songbook=self, item=section)
 
     def get_as_json(self):
 
@@ -172,6 +174,11 @@ class Songbook(models.Model):
                 d["content"].append(["songsection", sections[item_id]])
 
         return d
+
+    def finished_tasks(self):
+        return self.tasks.filter(
+                   state='FINISHED'
+                   )
 
     class Meta:
         verbose_name = _(u"carnet de chants")
@@ -244,6 +251,13 @@ class ItemsInSongbook(models.Model):
     class Meta:
         ordering = ["rank"]
         unique_together = ('item_id', 'songbook',)
+
+    def save(self, *args, **kwargs):
+        # automatically add a rank, if needed
+        if not self.rank:
+            count = self.songbook.count_items()
+            self.rank = count + 1
+        super(ItemsInSongbook, self).save(*args, **kwargs)
 
 
 class Task(models.Model):

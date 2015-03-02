@@ -42,20 +42,10 @@ class SongList(CurrentSongbookMixin, ListView):
     queryset = Song.objects.prefetch_related('artist').all().order_by('slug')
 
 
-class SongListByArtist(CurrentSongbookMixin, ListView):
-    model = Song
-    context_object_name = "song_list"
-    template_name = "generator/song_list_by_artist.html"
-    paginate_by = 30
-
-    def get_queryset(self):
-        self.artist = get_object_or_404(Artist, slug=self.kwargs['artist'])
-        return Song.objects.filter(artist=self.artist).order_by('slug')
-
-    def get_context_data(self, **kwargs):
-        context = super(SongListByArtist, self).get_context_data(**kwargs)
-        context['artist'] = self.artist
-        return context
+class ArtistView(CurrentSongbookMixin, DetailView):
+    model = Artist
+    context_object_name = "artist"
+    template_name = "generator/show_artist.html"
 
 
 def _read_song(song):
@@ -89,8 +79,8 @@ class ArtistList(CurrentSongbookMixin, ListView):
 
 
 def random_song(request):
-    song = Song.objects.order_by('?')[0]
+    song = Song.objects.order_by('?').values('slug', 'artist__slug').all()[0]
     return redirect(reverse('show_song',
-                            kwargs={'artist': song.artist.slug,
-                                    'slug': song.slug}
+                            kwargs={'artist': song['artist__slug'],
+                                    'slug': song['slug']}
                             ))
