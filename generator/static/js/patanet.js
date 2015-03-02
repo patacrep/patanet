@@ -179,7 +179,6 @@ $(function() {
             // anyway
             .always(function() {
                 var parent = $(elt.parentNode);
-                parent.addClass('updated');
                 parent.removeClass('updating');
                 elt.disabled = false;
             });
