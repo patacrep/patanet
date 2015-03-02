@@ -72,16 +72,15 @@ def login_complete(request):
         return redirect(reverse('new_songbook'))
     elif songbook_number == 1:
         songbook = songbooks[0];
+        _set_and_get_current_songbook(songbook.id)
         messages.success(request, _(u"Carnet de chant '%s' sélectionné.") % songbook.title)
-        request.session['current_songbook'] = songbook.id
         
         if songbook.count_songs() > 0:
             redirect_url = reverse('show_songbook', kwargs={'id': songbook.id, 'slug': songbook.slug})
         else :
             redirect_url = reverse('artist_list')
 
-    if 'next' in request.GET:
-        return redirect(request.GET['next'])
+    redirect_url = request.GET.get('next', redirect_url)
     return redirect(redirect_url)
 
 

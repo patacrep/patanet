@@ -11,7 +11,7 @@
             <a class="details title" href="{% url "show_song" slug=item.item.slug artist=item.item.artist.slug %}">
                 {{ item.item.title }}
             </a>
-            <a class="details artist" href="{% url "song_list_by_artist" artist=item.item.artist.slug %}" title="{{ item.item.artist.name }}">
+            <a class="details artist" href="{% url "show_artist" slug=item.item.artist.slug %}" title="{{ item.item.artist.name }}">
                 {{ item.item.artist.name }}
             </a>
         {% endif %}

@@ -20,7 +20,6 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, \
                                  DeleteView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
 from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404, render
@@ -30,7 +29,7 @@ from django.template.defaultfilters import slugify
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
-                                OwnerRequiredMixin, owner_required
+                                OwnerRequiredMixin, owner_required, return_json_on_ajax
 from generator.models import Songbook, ItemsInSongbook, Song, \
                              Task as GeneratorTask, Layout, Artist
 from generator.forms import SongbookCreationForm, LayoutForm
@@ -125,92 +124,54 @@ class UpdateSongbook(OwnerRequiredMixin, UpdateView):
 def set_current_songbook(request):
     """Set a songbook for edition with sessions
      """
-    if (request.GET['songbook'] != None):
-        songbook_id = request.GET['songbook']
-        request.session['current_songbook'] = int(songbook_id)
-        if 'next' in request.GET:
-            return redirect(request.GET['next'])
-        return redirect('artist_list')
-    else:
+    next = request.GET.get('next', 'artist_list')
+    try:
+        _set_and_get_current_songbook(request, request.GET.get('songbook'))
+    except (KeyError, Songbook.DoesNotExist):
         messages.error(request, _(u"Ce carnet n'existe pas."))
-        return redirect('songbook_list')
+        next = 'songbook_private_list'
+    return redirect(next)
 
+def _set_and_get_current_songbook(request, songbook_id):
+    songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
+    if request.session.get('current_songbook') != songbook_id:
+        request.session['current_songbook'] = songbook_id
+    return songbook
 
-def _add_item(item, songbook, rank, current_item_list):
-    """Add an item to a songbook.
-    Return True if it has been added, false if not.
-    """
-    if item not in current_item_list:
-        item_in_songbook = ItemsInSongbook(item=item,
-                                            songbook=songbook,
-                                            rank=rank)
-        item_in_songbook.save()
-        return True
-    else:
-        return False
-
-
-def _get_new_rank(songbook_id):
-    """Get the last song in the section, and return this rank plus 1."""
-    rank = ItemsInSongbook.objects.filter(songbook=songbook_id).count()
-    if rank == None:
-        return 1
-    else:
-        return rank + 1
-
-
-@require_POST
 @login_required
+@return_json_on_ajax
 def add_songs_to_songbook(request):
     """Add a list of songs to the current songbook.
     """
-    next_url = request.POST['next']
+    next_url = request.POST.get('next', 'artist_list')
 
     try:
-        songbook_id = request.session['current_songbook']
-        songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
+        songbook = _set_and_get_current_songbook(request, request.POST.get('current_songbook'))
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
-                       _(u"Choisissez un carnet pour ajouter ces chants")
+                       _(u"Ce carnet n'existe plus.")
                        )
         return redirect(next_url)
 
-    song_list = request.POST.getlist('songs[]')
-    song_added = 0
+    song_id_list = request.POST.getlist('songs[]')
+    song_list = Song.objects.filter(id__in=song_id_list)
 
     current_item_list = [item.item for item in
                             ItemsInSongbook.objects.filter(songbook=songbook)]
-    rank = _get_new_rank(songbook_id)
 
-    for song_id in song_list:
-        try:
-            song = Song.objects.get(id=song_id)
-            added = _add_item(item=song,
-                              songbook=songbook,
-                              rank=rank,
-                              current_item_list=current_item_list)
-            if added:
-                rank += 1
-                song_added += 1
-                current_item_list.append(song)
-        except Song.DoesNotExist:  # May be useless
-            pass
+    item_count = len(current_item_list)
+    items_to_insert = []
+    for song in song_list:
+        if song not in current_item_list:
+            item_count += 1
+            items_to_insert.append(
+                                    ItemsInSongbook(item=song,
+                                                songbook=songbook,
+                                                rank=item_count)
+                                  )
+    ItemsInSongbook.objects.bulk_create(items_to_insert)
+    song_added = len(items_to_insert)
 
-    artist_list = request.POST.getlist('artists[]')
-    for artist_id in artist_list:
-        try:
-            artist = Artist.objects.get(id=artist_id)
-            song_list = artist.songs.all()
-            for song in song_list:
-                added = _add_item(item=song,
-                              songbook=songbook,
-                              rank=rank,
-                              current_item_list=current_item_list)
-                if added:
-                    rank += 1
-                    song_added += 1
-        except Artist.DoesNotExist:
-            pass
     if song_added == 0:
         messages.info(request, _(u"Aucun chant ajouté"))
     elif song_added == 1:
@@ -220,18 +181,17 @@ def add_songs_to_songbook(request):
 
     return redirect(next_url)
 
-@require_POST
 @login_required
+@return_json_on_ajax
 def remove_songs(request):
     """Remove a song from the current songbook"""
-    next_url = request.POST['next']
+    next_url = request.POST.get('next', 'artist_list')
 
     try:
-        songbook_id = request.session['current_songbook']
-        songbook = Songbook.objects.get(id=songbook_id, user_id=request.user.id)
+        songbook = _set_and_get_current_songbook(request, request.POST.get('current_songbook'))
     except (KeyError, Songbook.DoesNotExist):
         messages.error(request,
-                       _(u"Choisissez un carnet pour supprimer ce chants")
+                       _(u"Ce carnet n'existe plus.")
                        )
         return redirect(next_url)
     song_ids = request.POST.getlist('songs[]')

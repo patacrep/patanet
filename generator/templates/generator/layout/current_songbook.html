@@ -9,8 +9,7 @@
         </a>
         <h2> {{songbook.title}} 
 
-        <small>
-            - {{songbook.count_songs}} {% trans "chants" %}
+        <small id="current_songbook_count" data-value="{{ songbook.count_songs }}" data-text="{% trans "chants" %}">
         </small>
         <em>
             <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}">

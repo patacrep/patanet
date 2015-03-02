@@ -32,14 +32,13 @@ ol.selection{
 		}
 		.details.lyrics{
 			opacity:0;
+			background: url("@{static-url}img/icon/lyrics.png") 2px center no-repeat;
+        	transition:opacity 0.4s;
+        	padding: 5px 20px;
 		}
 
-		&:hover input:not(:checked):not(:indeterminate),
 		input[type=text]{
 			opacity:1;
-		}
-		input:not(:checked):not(:indeterminate){
-			opacity:0.6;
 		}
 		input{
 			vertical-align:middle;
@@ -228,7 +227,8 @@ ol.item_list{
         margin:0;
         font-family: @font-s;
         padding-top: .3em;
-        a{
+        a,
+        .title{
             padding: .3em .7em 0 .7em;
         }
     }
@@ -312,6 +312,16 @@ ol.artists{
 	list-style: none;
 }
 
+.artists.alone{
+	margin-top: -9px;
+	.item-container{
+		.title{
+			font-size: 1.5em;
+		}
+		border-bottom: none;
+	}
+}
+
 .item-container.artist{
 	.number{
 		color: #444;
@@ -320,11 +330,6 @@ ol.artists{
 		margin-left: -16px;
         transition:color 0.4s;
 	}
-
-
-
-
-
 
 	.songs{
 		margin-bottom: 1.5em;
@@ -374,7 +379,7 @@ ol.artists{
 				background: url("@{static-url}img/icon/lyrics.png") 2px center no-repeat;
 				.text-hide();
 				opacity: 0;
-				width: 16px;
+				width: 18px;
 				height: 100%;
 				display: block;
 				position: absolute;
@@ -390,15 +395,91 @@ ol.artists{
 		}
 	}
 
-	.intersection[data-value="0"]{
-		color: #AAA;
+	.intersection{
+		&:before{
+			content: attr(data-value);
+		}
+		&[data-value="0"]{
+			color: #AAA;
+		}
+		&:not([data-value="0"]){
+			font-weight: bold;
+			font-size: 1.1em;
+		}
+		&:after{
+			content:" / ";
+			font-weight: normal;
+		}
 	}
-	.intersection:not([data-value="0"]){
-		font-weight: bold;
-		font-size: 1.1em;
+
+	button{
+		float: right;
+		padding-left: 6px;
+		padding-right: 20px;
+		background-position: right 2px center;
+		transition:opacity 0.4s;
+		&:not(:hover):not(:disabled){
+			color: transparent;
+			opacity: 0.6;
+		}
+		&:active{
+			padding-right: 19px;
+		}
 	}
-	.intersection:after{
-		content:" / ";
-		font-weight: normal;
+
+	&.deleting,
+	&.adding,
+	&:hover{
+		button:not(.clickable) ~ button,
+		button.clickable{
+			display: inline-block !important;
+		}
+	}
+
+	&.deleting,
+	&.adding{
+		button{
+			background-image : url("@{static-url}img/icon/processing.gif");
+		}
+		label.ajax.song{
+			transition: background-color 0s;
+			background-color: #E9594D;
+		}
+	}
+	&.deleting label.ajax.song{
+	}
+	&.adding label.ajax.song{
+		background-color: #6EB558;
 	}
 }
+
+label.ajax.song{
+	background: url("@{static-url}img/icon/add.png") 4px center no-repeat;
+	background-image: none;
+	transition:background-color 1s;
+	input.song_selection{
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	&.added{
+		background-image : url("@{static-url}img/icon/check.png");
+	}
+	&:hover{
+		background-image : url("@{static-url}img/icon/add.png");
+	}
+	&.added:hover{
+		background-image : url("@{static-url}img/icon/delete.png");
+	}
+
+	&.updating{
+		background-image : url("@{static-url}img/icon/processing.gif") !important;
+		background-color: #6EB558;
+		transition: background-color 0s;
+	}
+	&.updating.added{
+		background-color: #E9594D;
+	}
+
+}
+

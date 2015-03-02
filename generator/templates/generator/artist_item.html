@@ -3,15 +3,29 @@
 
 <li class="item-container artist" id="{{artist.id}}">
     <h2>
-        <a href="{% url 'song_list_by_artist' artist=artist.slug %}">{{ artist.name }}</a> 
+        {% if in_list %}
+            <a href="{% url "show_artist" slug=artist.slug %}">{{ artist.name }}</a> 
+        {% else %}
+            <span class="title">{{ artist.name }}</span>
+        {% endif %}
         <small class="number">
              &nbsp; 
             {% if current_songbook %}
                 {% with artist_songs|intersection:current_item_list|length as intersection %} 
-                    <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}">{{ intersection }}</span>
+                    <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}" data-max="{{ artist_songs|length }}"></span>
                 {% endwith %}
             {% endif %}
+            
             {{ artist_songs|length }} {% trans "chants" %}
+            
+            {% if current_songbook %}
+                <button type="button" class="button-link script" data-icon="add-multiple">
+                    {% trans "Tout ajouter" %}
+                </button>
+                <button type="button" class="button-link script" data-icon="delete-multiple">
+                    {% trans "Tout retirer" %}
+                </button>
+            {% endif %}
         </small>
     </h2>
     <div class="songs">
@@ -20,8 +34,8 @@
                 <li>
                     <label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
                         {% if current_songbook %}
-                        <input class="select_song" type="checkbox" name="songs[]" value="{{ song.id }}"
-                        id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
+                        <input class="song_selection" type="checkbox" name="songs[]" value="{{ song.id }}"
+                        id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
                         {% endif %}
                         {{ song.title }}
                         <a class="lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}" title="{% trans "Paroles" %}" >
