@@ -307,7 +307,6 @@ $(function() {
             }
             label.addClass('ajax');
             $this = $(this);
-            $this.removeAttr('onclick');
             $this.change(function(){
                 ajax_change_song(this, this.checked);
             });
