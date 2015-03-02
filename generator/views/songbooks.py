@@ -145,7 +145,7 @@ def _set_and_get_current_songbook(request, songbook_id):
 def add_songs_to_songbook(request):
     """Add a list of songs to the current songbook.
     """
-    next_url = request.POST.get('next')
+    next_url = request.POST.get('next', 'artist_list')
 
     try:
         songbook = _set_and_get_current_songbook(request, request.POST.get('current_songbook'))
@@ -188,7 +188,7 @@ def add_songs_to_songbook(request):
 @return_json_on_ajax
 def remove_songs(request):
     """Remove a song from the current songbook"""
-    next_url = request.POST.get('next')
+    next_url = request.POST.get('next', 'artist_list')
 
     try:
         songbook = _set_and_get_current_songbook(request, request.POST.get('current_songbook'))
