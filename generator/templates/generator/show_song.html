@@ -1,6 +1,6 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
 
-{% block title %} {{ song.title }} {% endblock %}
+{% block title %}<span class="song_title">{{ song.title }}</span>{% endblock %}
 
 {% block headertitle %}
 	{% blocktrans with title=song.title artist=song.artist.name %}
@@ -21,10 +21,10 @@
 	
 	{% if current_songbook %}
 		{% if song|in_items:current_item_list %}
-			<form method="post" action="{% url "remove_song" %}">
+			<form method="post" action="{% url "remove_song" %}" class="show_song">
 			<button type="submit" class="button-link" data-icon="delete">{% trans "Retirer du carnet" %}</button>
 		{% else %}
-		    <form method="post" action="{% url 'add_song_to_songbook' %}">
+		    <form method="post" action="{% url 'add_song_to_songbook' %}" class="show_song">
 		    <button type="submit" class="button-link" data-icon="add">{% trans "Ajouter au carnet" %}</button>
     	{% endif %}
                 {% csrf_token %}
