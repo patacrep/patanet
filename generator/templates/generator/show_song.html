@@ -40,7 +40,9 @@
 	{% endif %}
 	</p>
 	{% endcomment %}
-	<div class="song_content">{{ content|safe }}</div>
+	{% if user.is_authenticated %}
+		<div class="song_content">{{ content|safe }}</div>
+	{% endif %}
 
 {% endblock %}
 
