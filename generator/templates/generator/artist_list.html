@@ -20,9 +20,11 @@
         {% endif %}
 
         <ol class="artists">
-		{% for artist in artist_list %}
-            {% include 'generator/artist_item.html' %}
-		{% endfor %}
+        {% with True as in_list %}
+    		{% for artist in artist_list %}
+                {% include 'generator/artist_item.html' %}
+    		{% endfor %}
+        {% endwith %}
         </ol>
         
         {% if current_songbook %}

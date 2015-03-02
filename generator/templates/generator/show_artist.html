@@ -1,45 +1,38 @@
 {% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
 
-{% block title %}{% blocktrans with artist=artist.name %}
-{{ artist }}
-{% endblocktrans %}
+{% block headertitle %}
+{{ artist.name }}
 {% endblock %}
 
+{% block title %}{% endblock %}
+
 {% block choose_songbook %}
-    {% include "generator/layout/choose_songbook.html" %}
+	{% include "generator/layout/choose_songbook.html" %}
 {% endblock %}
 
 {% block content %}
-    <a class="artist back" href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a>
-    <form class="add_songs" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
-        {% if current_songbook %}
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{% url "song_list_by_artist" artist=artist.slug %}">
-            <input type="hidden" name="current_songbook" id="current_songbook_id" value="{{ current_songbook.id }}">
+    
 
+	<form class="add_songs" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
+        {% if current_songbook %}
+    		{% csrf_token %}
+    		<input type="hidden" name="next" value="{% url "show_artist" slug=artist.slug %}">
+            <input type="hidden" name="current_songbook" id="current_songbook_id" value="{{ current_songbook.id }}">
+            
             <button class="selection button-link" type="submit" data-icon="add-multiple">
                 {% trans "Ajouter la sélection au carnet" %}
             </button>
         {% endif %}
 
-        <ol class="songs selection">
-        {% for song in song_list %}
-            <li>
-                <input type="checkbox" name="songs[]" value="{{ song.id }}"
-                id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %} onclick="unsaved_changes()">
-                <label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
-                    {{ song.title }}
-                </label>
-                <a class="details lyrics" href="{% url "show_song" slug=song.slug artist=artist.slug %}">{% trans "Paroles" %}</a>
-            </li>
-        {% endfor %}
-        </ol><br/>
-
+        <ol class="artists alone">
+        	{% include 'generator/artist_item.html' %}
+        </ol>
+        
         {% if current_songbook %}
             <button class="selection button-link" type="submit" data-icon="add-multiple">
                 {% trans "Ajouter la sélection au carnet" %}
             </button>
         {% endif %}
     </form>
-{% include "generator/layout/pagination.html" %}
+
 {% endblock %}

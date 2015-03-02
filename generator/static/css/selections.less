@@ -228,7 +228,8 @@ ol.item_list{
         margin:0;
         font-family: @font-s;
         padding-top: .3em;
-        a{
+        a,
+        .title{
             padding: .3em .7em 0 .7em;
         }
     }
@@ -310,6 +311,15 @@ ol.item_list{
 
 ol.artists{
 	list-style: none;
+}
+
+.artists.alone{
+	.item-container{
+		.title{
+			font-size: 1.5em;
+		}
+		border-bottom: none;
+	}
 }
 
 .item-container.artist{
