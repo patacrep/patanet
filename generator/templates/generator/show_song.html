@@ -12,6 +12,11 @@
 	{% include "generator/layout/choose_songbook.html" %}
 {% endblock %}
 
+{% block breadcrumb %}
+	<a href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a> &#x009B;
+    <a class="artist" href="{% url "show_artist" slug=song.artist.slug %}">{{ song.artist.name }}</a> &#x009B;
+{% endblock %}
+
 {% block content %}
 	
 	{% if current_songbook %}

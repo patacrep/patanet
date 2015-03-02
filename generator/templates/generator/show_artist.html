@@ -10,6 +10,10 @@
 	{% include "generator/layout/choose_songbook.html" %}
 {% endblock %}
 
+{% block breadcrumb %}
+	<a href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a> &#x009B;
+{% endblock %}
+
 {% block content %}
     
 
