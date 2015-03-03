@@ -26,7 +26,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
@@ -43,7 +43,26 @@ class SongbookPublicList(ListView):
 
     def get_queryset(self):
         public_songbooks = Songbook.objects.filter(is_public=True
-                                   ).order_by('title')
+                                   ).order_by('title').prefetch_related(
+                                        Prefetch(
+                                            'tasks', 
+                                            queryset=GeneratorTask.objects.filter(state='FINISHED').select_related('layout'), 
+                                            to_attr='finished_tasks')
+                                    )
+
+        
+        
+        # If the user is connected :
+        if self.request.user.is_authenticated():
+            #  exclude his songbooks from the public list
+            public_songbooks = public_songbooks.exclude(user=self.request.user)
+
+            #  fetch his public songbooks (with more related data)
+            my_songbooks = SongbookPrivateList.get_queryset(self).exclude(is_public=False)
+
+            # Concatenate the two sets
+            from itertools import chain
+            public_songbooks = list(chain(public_songbooks, my_songbooks))
         
         _add_attr_numbers(public_songbooks)
         return public_songbooks
@@ -85,9 +104,11 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         songbooks = Songbook.objects.filter(user=self.request.user
-                                       ).order_by('title')
-        if len(songbooks) == 1 and 'current_songbook' not in self.request.session:
-            self.request.session['current_songbook'] = songbooks[0].id
+                                       ).order_by('title').prefetch_related(
+                                            Prefetch(
+                                                'tasks', 
+                                                queryset=GeneratorTask.objects.select_related('layout'))
+                                        )
         _add_attr_numbers(songbooks)
         return songbooks
 
