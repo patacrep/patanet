@@ -20,9 +20,10 @@
                 <br/>
             </span>
 
-            {{songbook.finished_tasks.count}} {% trans "éditions" %}
+            {% with songbook.finished_tasks.all as finished_tasks %}
+            {{ finished_tasks|length }} {% trans "éditions" %}
             <span class="more">
-                {% for task in songbook.finished_tasks.all %}
+                {% for task in finished_tasks %}
                     {% if forloop.first %}
                         :
                     {% else %}
@@ -33,6 +34,7 @@
                     </a>
                 {% endfor %}
             </span>
+            {% endwith %}
             <br/>
         </div>
         <div class="more">
