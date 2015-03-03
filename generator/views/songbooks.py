@@ -26,6 +26,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
+from django.db.models import Count
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
@@ -43,6 +44,38 @@ class SongbookPublicList(ListView):
     def get_queryset(self):
         return Songbook.objects.filter(is_public=True
                                        ).order_by('title')
+
+    def get_context_data(self, **kwargs):
+        context = super(SongbookPublicList, self).get_context_data(**kwargs)
+
+
+        # Retrieve the number of songs, section and artists in "only" 4 queries (instead of a query per songbook)
+        song_type = ContentType.objects.get(app_label="generator", model="song")
+        section_type = ContentType.objects.get(app_label="generator", model="section")
+
+
+        count_songs = ItemsInSongbook.objects.filter(
+                        songbook__in=self.object_list,
+                        item_type=song_type,
+                        ).values('songbook').annotate(songs=Count("item_id")).order_by('songbook')
+        count_artists = Song.objects.filter(
+                        items_in_songbook__songbook__in=self.object_list,
+                        ).values('items_in_songbook__songbook').annotate(artists=Count("artist_id", distinct=True)).order_by('items_in_songbook__songbook')
+        count_sections = ItemsInSongbook.objects.filter(
+                        songbook__in=self.object_list,
+                        item_type=section_type,
+                        ).values('songbook').annotate(sections=Count("item_id")).order_by('songbook')
+
+        inv_songs = {row['songbook']: row['songs'] for row in count_songs}
+        inv_artists = {row['items_in_songbook__songbook']: row['artists'] for row in count_artists}
+        inv_sections = {row['songbook']: row['sections'] for row in count_sections}
+
+        for songbook in self.object_list:
+            setattr(songbook, 'num_songs', inv_songs.get(songbook.id, 0))
+            setattr(songbook, 'num_artists', inv_artists.get(songbook.id, 0))
+            setattr(songbook, 'num_sections', inv_sections.get(songbook.id, 0))
+
+        return context
 
 
 class SongbookPrivateList(LoginRequiredMixin, ListView):

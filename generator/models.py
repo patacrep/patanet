@@ -54,6 +54,7 @@ class Song(models.Model):
                                related_name="songs")
     file_path = models.CharField(max_length=500)
     object_hash = models.CharField(max_length=50)
+    items_in_songbook = generic.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
     def __unicode__(self):
         return self.title
