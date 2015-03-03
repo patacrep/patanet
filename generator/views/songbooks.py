@@ -42,41 +42,41 @@ class SongbookPublicList(ListView):
     template_name = "generator/songbook_public_list.html"
 
     def get_queryset(self):
-        return Songbook.objects.filter(is_public=True
-                                       ).order_by('title')
+        public_songbooks = Songbook.objects.filter(is_public=True
+                                   ).order_by('title')
+        
+        _add_attr_numbers(public_songbooks)
+        return public_songbooks
 
-    def get_context_data(self, **kwargs):
-        context = super(SongbookPublicList, self).get_context_data(**kwargs)
-
-
-        # Retrieve the number of songs, section and artists in "only" 4 queries (instead of a query per songbook)
-        song_type = ContentType.objects.get(app_label="generator", model="song")
-        section_type = ContentType.objects.get(app_label="generator", model="section")
+def _add_attr_numbers(songbooks):
 
 
-        count_songs = ItemsInSongbook.objects.filter(
-                        songbook__in=self.object_list,
-                        item_type=song_type,
-                        ).values('songbook').annotate(songs=Count("item_id")).order_by('songbook')
-        count_artists = Song.objects.filter(
-                        items_in_songbook__songbook__in=self.object_list,
-                        ).values('items_in_songbook__songbook').annotate(artists=Count("artist_id", distinct=True)).order_by('items_in_songbook__songbook')
-        count_sections = ItemsInSongbook.objects.filter(
-                        songbook__in=self.object_list,
-                        item_type=section_type,
-                        ).values('songbook').annotate(sections=Count("item_id")).order_by('songbook')
+    # Retrieve the number of songs, section and artists in "only" 4 queries (instead of a query per songbook)
+    song_type = ContentType.objects.get(app_label="generator", model="song")
+    section_type = ContentType.objects.get(app_label="generator", model="section")
 
-        inv_songs = {row['songbook']: row['songs'] for row in count_songs}
-        inv_artists = {row['items_in_songbook__songbook']: row['artists'] for row in count_artists}
-        inv_sections = {row['songbook']: row['sections'] for row in count_sections}
 
-        for songbook in self.object_list:
-            setattr(songbook, 'num_songs', inv_songs.get(songbook.id, 0))
-            setattr(songbook, 'num_artists', inv_artists.get(songbook.id, 0))
-            setattr(songbook, 'num_sections', inv_sections.get(songbook.id, 0))
+    count_songs = ItemsInSongbook.objects.filter(
+                    songbook__in=songbooks,
+                    item_type=song_type,
+                    ).values('songbook').annotate(songs=Count("item_id")).order_by('songbook')
+    count_artists = Song.objects.filter(
+                    items_in_songbook__songbook__in=songbooks,
+                    ).values('items_in_songbook__songbook').annotate(artists=Count("artist_id", distinct=True)).order_by('items_in_songbook__songbook')
+    count_sections = ItemsInSongbook.objects.filter(
+                    songbook__in=songbooks,
+                    item_type=section_type,
+                    ).values('songbook').annotate(sections=Count("item_id")).order_by('songbook')
 
-        return context
+    inv_songs = {row['songbook']: row['songs'] for row in count_songs}
+    inv_artists = {row['items_in_songbook__songbook']: row['artists'] for row in count_artists}
+    inv_sections = {row['songbook']: row['sections'] for row in count_sections}
 
+    for songbook in songbooks:
+        setattr(songbook, 'num_songs', inv_songs.get(songbook.id, 0))
+        setattr(songbook, 'num_artists', inv_artists.get(songbook.id, 0))
+        setattr(songbook, 'num_sections', inv_sections.get(songbook.id, 0))
+    return songbooks
 
 class SongbookPrivateList(LoginRequiredMixin, ListView):
     model = Songbook
@@ -88,6 +88,7 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
                                        ).order_by('title')
         if len(songbooks) == 1 and 'current_songbook' not in self.request.session:
             self.request.session['current_songbook'] = songbooks[0].id
+        _add_attr_numbers(songbooks)
         return songbooks
 
 
