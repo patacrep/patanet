@@ -3,7 +3,7 @@
 
 <div class="current-songbook params">
 
-    {% if songbook.user == request.user %}
+    {% if songbook.user_id == request.user.id %}
         <a href="{% url 'songbook_private_list' %}" class="change">
             {% trans "Mes carnets" %}
         </a>
