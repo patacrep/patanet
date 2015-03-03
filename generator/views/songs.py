@@ -85,11 +85,11 @@ class SongSearch(CurrentSongbookMixin, TemplateView):
         
         if terms:
             song_query = _get_query(terms, ['title', 'slug',])
-            songs = Song.objects.filter(song_query)
+            songs = Song.objects.filter(song_query).select_related('artist')
             context['song_list'] = songs[:MAX_RESULT]
         
             artist_query = _get_query(terms, ['name', 'slug',])
-            artists = Artist.objects.filter(artist_query)
+            artists = Artist.objects.filter(artist_query).prefetch_related('songs')
             context['artist_list'] = artists[:MAX_RESULT]
             
             context['search_terms'] = terms
