@@ -9,8 +9,8 @@
 {% block content %}
 	
 	{% if search_terms %}
+		<h2>{% trans "Parmi les artistes :" %}</h2>
 		{% if artist_list %}
-			<h2>{% trans "Parmi les artistes :" %}</h2>
 			<ol class="artists search_result">
 	    		{% for artist in artist_list %}
 	    			{% with artist.songs.all as artist_songs %}
@@ -40,8 +40,8 @@
 		    </p>
 	    {% endif %}
 
+		<h2>{% trans "Parmi les chansons :" %}</h2>
 		{% if song_list %}
-			<h2>{% trans "Parmi les chansons :" %}</h2>
 			<form class="add_songs_form" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
 				{% csrf_token %}
 				<input type="hidden" name="next" value="{% url "song_list" %}?page={{page_obj.number}}">
