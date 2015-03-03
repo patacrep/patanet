@@ -87,6 +87,10 @@ class SongSearch(CurrentSongbookMixin, TemplateView):
             song_query = _get_query(terms, ['title', 'slug',])
             songs = Song.objects.filter(song_query)
             context['song_list'] = songs[:MAX_RESULT]
+        
+            artist_query = _get_query(terms, ['name', 'slug',])
+            artists = Artist.objects.filter(artist_query)
+            context['artist_list'] = artists[:MAX_RESULT]
             
             context['search_terms'] = terms
 

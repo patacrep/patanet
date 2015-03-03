@@ -484,3 +484,26 @@ label.ajax.song{
 
 }
 
+
+.search_result{
+	.number{
+		float: right;
+		padding: 0.3em .5em;
+	}
+	h2{
+		padding: 0;
+	}
+	h2 a{
+		display: block;
+		padding: 0.3em .5em;
+		&:hover{
+			background-color:@selection-hover-bg;
+		}
+	}
+	li.item-container{
+		border:none;
+		&:nth-child(odd){
+			background-color:@selection-strip-bg;
+		}
+	}
+}
