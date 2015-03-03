@@ -68,7 +68,7 @@ def generate_songbook(songbook, layout):
     for step in ["tex", "pdf", "sbx", "pdf", "clean"]:
         try:
             builder.build_steps([step])
-        except SongbookError:
-            raise GeneratorError("Error during the step '{0}'".format(step))
+        except SongbookError as e:
+            raise GeneratorError("Error during the step '{0}': {1}".format(step, e))
 
     return tmpfile + ".pdf"
