@@ -23,15 +23,14 @@
             {{songbook.finished_tasks.count}} {% trans "éditions" %}
             <span class="more">
                 {% for task in songbook.finished_tasks.all %}
-                    {% if task.state = 'FINISHED' %}
-                        {% if forloop.first %}
-                            :
-                        {% else %}
-                            &sdot;
-                        {% endif %}
-                        <a href="/medias/PDF/{{task.result.file}}" target="_blank">
-                            {{ task.layout.name }}</a>
+                    {% if forloop.first %}
+                        :
+                    {% else %}
+                        &sdot;
                     {% endif %}
+                    <a href="/medias/PDF/{{task.result.file}}" target="_blank">
+                        {{ task.layout.name }}
+                    </a>
                 {% endfor %}
             </span>
             <br/>
