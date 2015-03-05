@@ -10,18 +10,11 @@
 	{% endblocktrans %}
 	</p>
 
-	<h3>{% trans "J'aimerais ajouter <em>cette</em> chanson à mon carnet. Comment faire ?" %}</h3>
+	<h3>{% trans "J'aimerais ajouter/modifier <em>cette</em> chanson à mon carnet. Comment faire ?" %}</h3>
 	<p>
     {% url 'flatpage' url='contribute' as contrib %}
 	{% blocktrans %}
-	Allez voir sur la page <a href="{{contrib}}">comment contribuer</a> pour une réponse plus précise à cette question.
-	{% endblocktrans %}
-	</p>
-
-	<h3>{% trans "Je voudrais modifier la mise en page de mon carnet, comment faire ?" %}</h3>
-	<p>
-	{% blocktrans %}
-	Si les différents templates, et leurs différentes options ne vous conviennent pas, vous pouvez écrire votre propre template de mise en page. Récupérez les sources du <a href="http://github.com/patacrep/songbook-core/">moteur</a> et des <a href="http://github.com/patacrep/songbook-data/">données</a> sur Github, écrivez votre propre template et envoyez-le nous pour le partager avec le tout le monde !
+	Allez voir sur la page <a href="{{contrib}}">comment contribuer au catalogue</a> pour une réponse plus précise à cette question.
 	{% endblocktrans %}
 	</p>
 
@@ -42,26 +35,18 @@
 	{% endblocktrans %}
 	</p>
 	
-	<h3>{% trans "C'est un super projet, j'aimerais beaucoup participer, mais je ne sais pas quoi faire." %}</h3>
+	<h3>{% trans "Je voudrais modifier la mise en page de mon carnet, comment faire ?" %}</h3>
+	<p>
+	{% blocktrans %}
+	Si les différents templates, et leurs différentes options ne vous conviennent pas, vous pouvez écrire votre propre template de mise en page. Récupérez les sources du <a href="http://github.com/patacrep/songbook-core/">moteur</a> et des <a href="http://github.com/patacrep/songbook-data/">données</a> sur Github, écrivez votre propre template et envoyez-le nous pour le partager avec le tout le monde !
+	{% endblocktrans %}
+	</p>
+
+	<h3>{% trans "C'est un super projet et j'ai plein d'idées d'améliorations." %}</h3>
     <p>
+    {% url 'flatpage' url='contribute_dev' as contrib_dev %}
     {% blocktrans %}
-    Toutes les bonnes volontés sont acceptées pour améliorer ce projet. Plusieurs compétences peuvent être utiles :
-    <ul>
-        <li>Des développeurs Python/Django, pour améliorer ce site</li>
-        <li>Des développeurs web (HTML, CSS, JS) pour améliorer la présentation et l'interface de ce site</li>
-        <li>Des développeurs C++/Qt, pour améliorer le <a href="http://github.com/patacrep/songbook-gui/">client local</a></li>
-        <li>Des développeurs Python et/ou LaTeX pour améliorer le <a href="http://github.com/patacrep/songbook-core/">moteur de rendu</a></li>
-    </ul>
-    <em>Et si je ne suis pas développeur, je ne peux pas aider ?</em><br />
-    Si bien sûr ! Il nous faut aussi :
-    <ul>
-    	<li>Des traducteurs, pour que nous puissions dominer le monde. La priorité est la traduction en anglais, mais toutes les contributions sont les bienvenues !</li>
-        <li>Des gens qui ajoutent des chansons (voir <a href="{{ contrib }}">comment contribuer</a>), en écrivant des fichiers .sg</li>
-        <li>Des gens qui aiment Lilypond, et qui rajoutent des partitions ou des tablatures aux chansons</li>
-        <li>Des gens qui aiment le dessin, et qui proposent de nouvelles illustrations</li>
-        <li>Et des gens qui peuvent nous aider mais nous ne le savons pas encore !</li>
-    </ul>
-    Dans tous les cas, n'hésitez pas à nous <a href="{{contact}}">contacter</a> !
+	Toutes les manières de nous aider sont regroupées sur la page de <a href="{{contrib_dev}}">contribution au développement</a> !
     {% endblocktrans %}
     </p>
 {% endblock %}
