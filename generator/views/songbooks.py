@@ -64,38 +64,64 @@ class SongbookPublicList(ListView):
             from itertools import chain
             public_songbooks = list(chain(public_songbooks, my_songbooks))
         
-        _add_attr_numbers(public_songbooks)
+        Quick_Counter().attach_as_attributes(['songs', 'artists', 'sections'], public_songbooks)
         return public_songbooks
 
-def _add_attr_numbers(songbooks):
+class Quick_Counter(object):
+    """
+    Count the number of a certain item in all the songbooks in a few queries as possible.
+    Return tuple { 'songbook_id' : number_of_item }
+    """
+    def songs(self, songbooks):
+        """
+        Count the number of songs in all the songbooks in a few queries as possible.
+        Return tuple { 'songbook_id' : number_of_songs }
+        """
+        song_type = ContentType.objects.get(app_label="generator", model="song")
 
+        count_songs = ItemsInSongbook.objects.filter(
+                        songbook__in=songbooks,
+                        item_type=song_type,
+                        ).values('songbook').annotate(songs=Count("item_id")).order_by('songbook')
+        normalized_songs = {row['songbook']: row['songs'] for row in count_songs}
 
-    # Retrieve the number of songs, section and artists in "only" 4 queries (instead of a query per songbook)
-    song_type = ContentType.objects.get(app_label="generator", model="song")
-    section_type = ContentType.objects.get(app_label="generator", model="section")
+        return normalized_songs
 
+    def artists(self, songbooks):
+        """
+        Count the number of artists in all the songbooks in a few queries as possible.
+        Return tuple { 'songbook_id' : number_of_artists }
+        """
+        count_artists = Song.objects.filter(
+                        items_in_songbook__songbook__in=songbooks,
+                        ).values('items_in_songbook__songbook').annotate(artists=Count("artist_id", distinct=True)).order_by('items_in_songbook__songbook')
 
-    count_songs = ItemsInSongbook.objects.filter(
-                    songbook__in=songbooks,
-                    item_type=song_type,
-                    ).values('songbook').annotate(songs=Count("item_id")).order_by('songbook')
-    count_artists = Song.objects.filter(
-                    items_in_songbook__songbook__in=songbooks,
-                    ).values('items_in_songbook__songbook').annotate(artists=Count("artist_id", distinct=True)).order_by('items_in_songbook__songbook')
-    count_sections = ItemsInSongbook.objects.filter(
-                    songbook__in=songbooks,
-                    item_type=section_type,
-                    ).values('songbook').annotate(sections=Count("item_id")).order_by('songbook')
+        normalized_artists = {row['items_in_songbook__songbook']: row['artists'] for row in count_artists}
 
-    inv_songs = {row['songbook']: row['songs'] for row in count_songs}
-    inv_artists = {row['items_in_songbook__songbook']: row['artists'] for row in count_artists}
-    inv_sections = {row['songbook']: row['sections'] for row in count_sections}
+        return normalized_artists
 
-    for songbook in songbooks:
-        setattr(songbook, 'num_songs', inv_songs.get(songbook.id, 0))
-        setattr(songbook, 'num_artists', inv_artists.get(songbook.id, 0))
-        setattr(songbook, 'num_sections', inv_sections.get(songbook.id, 0))
-    return songbooks
+    def sections(self, songbooks):
+        """
+        Count the number of sections in all the songbooks in a few queries as possible.
+        Return tuple { 'songbook_id' : number_of_sections }
+        """
+        section_type = ContentType.objects.get(app_label="generator", model="section")
+
+        count_sections = ItemsInSongbook.objects.filter(
+                        songbook__in=songbooks,
+                        item_type=section_type,
+                        ).values('songbook').annotate(sections=Count("item_id")).order_by('songbook')
+
+        normalized_sections = {row['songbook']: row['sections'] for row in count_sections}
+
+        return normalized_sections
+
+    def attach_as_attributes(self, item_types, songbooks):
+        for item_type in item_types:
+            counter_method = getattr(self, item_type)
+            count = counter_method(songbooks)
+            for songbook in songbooks:
+                setattr(songbook, 'num_' + item_type, count.get(songbook.id, 0))    
 
 class SongbookPrivateList(LoginRequiredMixin, ListView):
     model = Songbook
@@ -109,7 +135,7 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
                                                 'tasks', 
                                                 queryset=GeneratorTask.objects.select_related('layout'))
                                         )
-        _add_attr_numbers(songbooks)
+        Quick_Counter().attach_as_attributes(['songs', 'artists', 'sections'], songbooks)
         return songbooks
 
 
