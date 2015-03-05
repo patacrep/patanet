@@ -1,0 +1,47 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %} {% trans "Contribuer au projet" %} {% endblock %}
+
+{% block content %}
+	
+	{% url 'flatpage' url='contribute' as contrib %}
+	{% url 'contact' as contact %}
+    
+    {% blocktrans %}
+    <p>
+    Toutes les bonnes volontés sont acceptées pour améliorer ce projet, quelques soient tes compétences !
+    </p>
+
+    <h3>Tu n'y connais rien en développement ?</h3>
+    <p>
+		Il y a des missions pour toi :
+	</p>
+    <ul>
+        <li>nous indiquer les <strong>fautes de français, les bugs</strong>...</li>
+        <li>proposer des amélioration de design ou d'interface</li>
+    	<!-- Décommenter ces liens lorsqu'ils sont pertinents :
+    	<li>traduire le site pour dominer le monde</li>
+    	A améliorer avec un lien vers le ficjhier à traduire ? 
+    	https://github.com/patacrep/patanet/issues/64
+
+        <li>ajouter des chansons (voir <a href="{{ contrib }}">comment contribuer au catalogue musical</a>)</li>
+        <li>proposer de nouvelles illustrations</li>
+        -->
+    </ul>
+
+
+    <h3>Tu a des compétences en informatique ?</h3>
+    <p>
+    	Choisi ce qui te plait parmi les aspects suivants :
+	</p>
+    <ul>
+        <li><strong>Python/Django</strong> pour améliorer le <a href="https://github.com/patacrep/patanet">backend du site</a></li>
+        <li><strong>HTML, CSS, JS</strong> pour améliorer la <a href="https://github.com/patacrep/patanet/tree/master/generator/templates/generator">présentation et l'interface de ce site</a></li>
+        <li><strong>Python et/ou LaTeX</strong> pour améliorer le <a href="http://github.com/patacrep/patacrep">moteur de rendu</a></li>
+        <li><strong>C++/Qt</strong> pour améliorer le <a href="http://github.com/patacrep/patagui">client local</a></li>
+    </ul>
+    <p>
+    Dans tous les cas, n'hésitez pas à nous <a href="{{contact}}">contacter</a> !
+    </p>
+    {% endblocktrans %}
+{% endblock %}
