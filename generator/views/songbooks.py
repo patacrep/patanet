@@ -89,23 +89,8 @@ class Quick_Counter(object):
                         ).values('songbook').annotate(item_quantity=Count("item_id")).order_by('songbook')
 
         normalized_count = {row['songbook']: row['item_quantity'] for row in count_items}
-        
+
         return normalized_count
-
-    def songs(self, songbooks):
-        """
-        Count the number of songs in all the songbooks in a few queries as possible.
-        Return tuple { 'songbook_id' : number_of_songs }
-        """
-        song_type = ContentType.objects.get(app_label="generator", model="song")
-
-        count_songs = ItemsInSongbook.objects.filter(
-                        songbook__in=songbooks,
-                        item_type=song_type,
-                        ).values('songbook').annotate(songs=Count("item_id")).order_by('songbook')
-        normalized_songs = {row['songbook']: row['songs'] for row in count_songs}
-
-        return normalized_songs
 
     def artists(self, songbooks):
         """
@@ -119,22 +104,6 @@ class Quick_Counter(object):
         normalized_artists = {row['items_in_songbook__songbook']: row['artists'] for row in count_artists}
 
         return normalized_artists
-
-    def sections(self, songbooks):
-        """
-        Count the number of sections in all the songbooks in a few queries as possible.
-        Return tuple { 'songbook_id' : number_of_sections }
-        """
-        section_type = ContentType.objects.get(app_label="generator", model="section")
-
-        count_sections = ItemsInSongbook.objects.filter(
-                        songbook__in=songbooks,
-                        item_type=section_type,
-                        ).values('songbook').annotate(sections=Count("item_id")).order_by('songbook')
-
-        normalized_sections = {row['songbook']: row['sections'] for row in count_sections}
-
-        return normalized_sections
 
     def attach_as_attributes(self, item_types, songbooks):
         for item_type in item_types:
