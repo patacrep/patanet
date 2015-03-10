@@ -78,6 +78,9 @@ class Quick_Counter(object):
         Count the number of irems of type 'type' in all the songbooks in a few queries as possible.
         Return tuple { 'songbook_id' : number_of_items }
         """
+        if item_string_type == "artist":
+            return self.artists(songbooks)
+
         item_type = ContentType.objects.get(app_label="generator", model=item_string_type)
 
         count_items = ItemsInSongbook.objects.filter(
