@@ -27,6 +27,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.db.models import Count, Prefetch, F
+from django.core.exceptions import ValidationError
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
@@ -364,8 +365,8 @@ def move_or_delete_items(request, id, slug):
             section_name = str(request.POST['new_section'])
             songbook.add_section(section_name)
             messages.success(request, _(u"Nouvelle section ajoutée en fin de carnet"))
-        except ValueError:
-            messages.error(request, _(u"Ce nom de section n'est pas valide"))
+        except ValidationError as e:
+            messages.error(request, e.message_dict['name'][0])
 
     section_list = {}
     for key in request.POST.keys():
@@ -378,29 +379,13 @@ def move_or_delete_items(request, id, slug):
                                               id=item_id)
 
         if section.item.name != section_name:
-            error, message = _clean_latex(section_name)
-            if error:
-                messages.error(request, message)
-            else:
+            try:
                 section.item.name = section_name
                 section.item.save()
+            except ValidationError as e:
+                messages.error(request, e.message_dict['name'][0])
 
     return redirect(next_url)
-
-def _clean_latex(string):
-        '''
-        Return true if one of the LaTeX special characters
-        is in the string
-        '''
-        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
-        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
-        MESSAGE = _(u"Les caractères suivant sont interdits, merci de les " +
-                    u"supprimer : {chars}.".format(chars=CHARS))
-        for char in TEX_CHAR:
-            if char in string:
-                return True, MESSAGE
-        return False, ""
-
 
 class DeleteSongbook(OwnerRequiredMixin, DeleteView):
     model = Songbook
