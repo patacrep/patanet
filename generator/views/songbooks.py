@@ -64,7 +64,7 @@ class SongbookPublicList(ListView):
             from itertools import chain
             public_songbooks = list(chain(public_songbooks, my_songbooks))
         
-        Quick_Counter().attach_as_attributes(['songs', 'artists', 'sections'], public_songbooks)
+        Quick_Counter().attach_as_attributes(['song', 'artist', 'section'], public_songbooks)
         return public_songbooks
 
 class Quick_Counter(object):
@@ -138,8 +138,7 @@ class Quick_Counter(object):
 
     def attach_as_attributes(self, item_types, songbooks):
         for item_type in item_types:
-            counter_method = getattr(self, item_type)
-            count = counter_method(songbooks)
+            count = self.item_of_type(item_type, songbooks)
             for songbook in songbooks:
                 setattr(songbook, 'num_' + item_type, count.get(songbook.id, 0))    
 
@@ -155,7 +154,7 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
                                                 'tasks', 
                                                 queryset=GeneratorTask.objects.select_related('layout'))
                                         )
-        Quick_Counter().attach_as_attributes(['songs', 'artists', 'sections'], songbooks)
+        Quick_Counter().attach_as_attributes(['song', 'artist', 'section'], songbooks)
         return songbooks
 
 
