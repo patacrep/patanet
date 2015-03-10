@@ -11,11 +11,11 @@
             {{ songbook.description|linebreaksbr }}
         </div>
         <div class="features">
-            {{songbook.num_song}} {% trans "chants" %} &sdot;
+            {{songbook.song_quantity}} {% trans "chants" %} &sdot;
             <span class="more">
-                {{songbook.num_artist}} {% trans "artistes" %}
-                {% if songbook.num_section %}
-                    &sdot; {{songbook.num_section}} {% trans "sections" %}
+                {{songbook.artist_quantity}} {% trans "artistes" %}
+                {% if songbook.section_quantity %}
+                    &sdot; {{songbook.section_quantity}} {% trans "sections" %}
                 {% endif %}
                 <br/>
             </span>

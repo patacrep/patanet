@@ -103,7 +103,7 @@ def _count_and_attach_as_attributes(item_types, songbooks):
     for item_type in item_types:
         count = _count_item_of_type(item_type, songbooks)
         for songbook in songbooks:
-            setattr(songbook, 'num_' + item_type, count.get(songbook.id, 0))    
+            setattr(songbook, item_type + '_quantity', count.get(songbook.id, 0))    
 
 class SongbookPrivateList(LoginRequiredMixin, ListView):
     model = Songbook
