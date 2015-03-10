@@ -88,9 +88,9 @@ class Quick_Counter(object):
                         item_type=item_type,
                         ).values('songbook').annotate(item_quantity=Count("item_id")).order_by('songbook')
 
-        normalized_sections = {row['songbook']: row['item_quantity'] for row in count_items}
-
-        return normalized_sections
+        normalized_count = {row['songbook']: row['item_quantity'] for row in count_items}
+        
+        return normalized_count
 
     def songs(self, songbooks):
         """
