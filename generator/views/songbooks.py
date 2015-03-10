@@ -72,6 +72,23 @@ class Quick_Counter(object):
     Count the number of a certain item in all the songbooks in a few queries as possible.
     Return tuple { 'songbook_id' : number_of_item }
     """
+
+    def item_of_type(self, item_string_type, songbooks):
+        """
+        Count the number of irems of type 'type' in all the songbooks in a few queries as possible.
+        Return tuple { 'songbook_id' : number_of_items }
+        """
+        item_type = ContentType.objects.get(app_label="generator", model=item_string_type)
+
+        count_items = ItemsInSongbook.objects.filter(
+                        songbook__in=songbooks,
+                        item_type=item_type,
+                        ).values('songbook').annotate(item_quantity=Count("item_id")).order_by('songbook')
+
+        normalized_sections = {row['songbook']: row['item_quantity'] for row in count_items}
+
+        return normalized_sections
+
     def songs(self, songbooks):
         """
         Count the number of songs in all the songbooks in a few queries as possible.
