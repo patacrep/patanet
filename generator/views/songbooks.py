@@ -67,15 +67,15 @@ class SongbookPublicList(ListView):
         _count_and_attach_as_attributes(['song', 'artist', 'section'], public_songbooks)
         return public_songbooks
 
-def _count_item_of_type(item_string_type, songbooks):
+def _count_item_of_type(item_type, songbooks):
     """
-    Count the number of irems of type 'item_string_type' in all the songbooks with as few queries as possible.
+    Count the number of irems of type 'item_type' in all the songbooks with as few queries as possible.
     Return tuple { 'songbook_id' : number_of_items }
     """
-    if item_string_type == "artist":
+    if item_type == "artist":
         return _count_item_of_type_artist(songbooks)
 
-    item_type = ContentType.objects.get(app_label="generator", model=item_string_type)
+    item_type = ContentType.objects.get(app_label="generator", model=item_type)
 
     count_items = ItemsInSongbook.objects.filter(
                     songbook__in=songbooks,
