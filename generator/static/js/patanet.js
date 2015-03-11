@@ -413,6 +413,7 @@ $(function() {
     auto_template_name();
     song_selection_with_ajax();
     letters_overview_background();
+    insert_new_section_via_js();
 });
 
 
