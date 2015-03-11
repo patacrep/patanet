@@ -99,43 +99,37 @@ $(function() {
     }
 
     var insert_new_section_via_js = function(){
-        var button = $('form .new_section_input button');
-        button.click(insert_new_section);
+        // show / hide the new_section containers
+        $('form p.new_section').toggleClass('script');
+
         new_section_id = 0;
         new_section_dom = $('#new_section_dom').detach();
+        new_section_dom.addClass('section');
+        new_section_dom.removeAttr('id');
 
+        var button = $('form p.new_section button');
+        button.click(insert_new_section);
+    }
+
+    var append_to_id = function(elt, suffix){
+        var new_id = elt.attr('id') + suffix;
+        elt.attr('id', new_id);
     }
 
     var insert_new_section = function(){
-        var input = $('form input#new_section').get(0);
-        var value = input.value.trim();
-        input.value = '';
+        var new_section = new_section_dom.clone(true);
         new_section_id += 1;
 
-        if(!value){
-            return false;
-        }
-
-        var new_section = new_section_dom.clone(true);
-
-        new_section.addClass('section');
-        new_section.removeAttr('id');
-
         var name_input = new_section.find('input#new_section_');
-        name_input.attr('value', value);
-        var name = name_input.attr('id') + new_section_id;
-        name_input.attr('id', name);
+        append_to_id(name_input, new_section_id);
 
         var rank_input = new_section.find('input#new_item_');
-        var name = rank_input.attr('id') + new_section_id;
-        rank_input.attr('id', name);
+        append_to_id(rank_input, new_section_id);
 
         $('ol.item_list').append(new_section);
         $(".ordering").trigger("sortstop");
         unsaved_changes();
         name_input.focus();
-
-        return false;
     }
     
     var increase_dataset_value = function(elt, incr){
