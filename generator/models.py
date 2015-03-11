@@ -134,11 +134,11 @@ class Songbook(models.Model):
                 item.save()
             rank += 1
 
-    def add_section(self, name):
+    def add_section(self, name, rank=None):
         section = Section.objects.create(name=name)
         section.save()
 
-        ItemsInSongbook.objects.create(songbook=self, item=section)
+        ItemsInSongbook.objects.create(songbook=self, item=section, rank=rank)
 
     def get_as_json(self):
 
