@@ -202,6 +202,7 @@ class Section(models.Model):
                             verbose_name=_(u"nom de section"),
                             validators=[validate_latex_free]
                             )
+    items_in_songbook = generic.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
     def __unicode__(self):
         return self.name
