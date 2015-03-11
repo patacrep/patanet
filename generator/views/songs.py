@@ -25,6 +25,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.db.models import Q
+from django.conf import settings
 
 
 from generator.decorators import CurrentSongbookMixin
@@ -77,7 +78,7 @@ class SongSearch(CurrentSongbookMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(SongSearch, self).get_context_data(**kwargs)
 
-        MAX_RESULT = 50
+        max_result = settings.MAX_SEARCH_RESULT
 
         query_string = self.request.GET.get('search_term', '')
         terms = _normalize_query(query_string)
@@ -86,11 +87,11 @@ class SongSearch(CurrentSongbookMixin, TemplateView):
         if terms:
             song_query = _get_query(terms, ['title', 'slug',])
             songs = Song.objects.filter(song_query).select_related('artist')
-            context['song_list'] = songs[:MAX_RESULT]
+            context['song_list'] = songs[:max_result]
         
             artist_query = _get_query(terms, ['name', 'slug',])
             artists = Artist.objects.filter(artist_query).prefetch_related('songs')
-            context['artist_list'] = artists[:MAX_RESULT]
+            context['artist_list'] = artists[:max_result]
             
             context['search_terms'] = terms
 

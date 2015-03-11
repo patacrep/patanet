@@ -158,6 +158,8 @@ CAPTCHA_LETTER_ROTATION = (-20, 20)
 CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
 CAPTCHA_OUTPUT_FORMAT = u'<span class="captcha">%(image)s</span> %(text_field)s %(hidden_field)s'
 
+MAX_SEARCH_RESULT = 50
+
 try:
     from .local_settings import *
 except ImportError:
