@@ -1,0 +1,82 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
+
+{% block title %} {% trans "Résultat de la recherche" %} {% endblock %}
+
+{% block choose_songbook %}
+	{% include "generator/layout/choose_songbook.html" %}
+{% endblock %}
+
+{% block content %}
+	
+	{% if search_terms %}
+		<h2>{% trans "Parmi les artistes :" %}</h2>
+		{% if artist_list %}
+			<ol class="artists search_result">
+	    		{% for artist in artist_list %}
+	    			{% with artist.songs.all as artist_songs %}
+					<li class="item-container artist" id="{{artist.id}}">
+					    <h2>
+				            <a href="{% url "show_artist" slug=artist.slug %}">
+				            	{{ artist.name }}
+						        <small class="number">
+						             &nbsp; 
+						            {% if current_songbook %}
+						                {% with artist_songs|intersection:current_item_list|length as intersection %} 
+						                    <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}" data-max="{{ artist_songs|length }}"></span>
+						                {% endwith %}
+						            {% endif %}
+						            
+						            {{ artist_songs|length }} {% trans "chants" %}
+						        </small>
+					        </a> 
+					    </h2>
+				    </li>
+				    {% endwith %}
+	    		{% endfor %}
+	        </ol>
+	    {% else %}
+		    <p>
+		    	<em>{% trans "Aucun artiste trouvé." %}</em>
+		    </p>
+	    {% endif %}
+
+		<h2>{% trans "Parmi les chansons :" %}</h2>
+		{% if song_list %}
+			<form class="add_songs_form" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
+				{% csrf_token %}
+				<input type="hidden" name="next" value="{% url "song_list" %}?page={{page_obj.number}}">
+				<input type="hidden" name="current_songbook" id="current_songbook_id" value="{{ current_songbook.id }}">
+				<button type="submit" class="button-link selection" data-icon="add-multiple">
+					{% trans "Ajouter la sélection au carnet" %}
+				</button>
+				<ol class="songs selection">
+		        {% for song in song_list %}
+					<li>
+						<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
+							{% if current_songbook %}
+								<input type="checkbox" name="songs[]" value="{{ song.id }}" class="song_selection"
+								id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
+							{% endif %}
+							{{ song.title }}
+						</label>
+						<a class="details artist" href="{% url "show_artist" slug=song.artist.slug %}" title="{{ song.artist.name }}">{{ song.artist.name }}</a>
+						<a class="details lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}">{% trans "Paroles" %}</a>
+					</li>
+				{% endfor %}
+				</ol><br/>
+				<button type="submit" class="button-link selection" data-icon="add-multiple">
+					{% trans "Ajouter la sélection au carnet" %}
+				</button>
+		    </form>
+	    {% else %}
+		    <p>
+		    	<em>{% trans "Aucune chanson trouvée." %}</em>
+		    </p>
+	    {% endif %}
+    {% else %}
+    	<p>
+			{% trans "Veuillez renseigner le champ de recherche." %}
+		</p>
+    {% endif %}
+
+{% endblock %}
