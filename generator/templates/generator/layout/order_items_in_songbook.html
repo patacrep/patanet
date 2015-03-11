@@ -64,4 +64,15 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
         <p>
 			<input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
 		</p>
+		<ol class="script ordering">
+			<!-- DOM for section insertion via JS -->
+			<li id="new_section_dom">
+				<label for="section_{{item.id}}" class="dragger">
+				</label>
+                <input type="text" id="new_section_" value="" name="new_section[]" class="section_name"/>
+				<span>
+				</span>
+				<input class="item-rank" id="new_item_" name="new_item[]" value="{{ songbook.count_items|add:1 }}" />
+			</li>
+		</ol>
 	</form>
