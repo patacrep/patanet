@@ -20,7 +20,7 @@ from django.conf import settings
 from django.views.generic.base import TemplateView
 
 
-from generator.views import SongList, SongView, ArtistList, \
+from generator.views import SongList, SongView, SongSearch, ArtistList, \
      PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
      UpdateSongbook, DeleteSongbook, LayoutList, ArtistView,\
@@ -49,7 +49,9 @@ urlpatterns = patterns('generator.views',
     url(r'^song/random$',
                 'random_song',
                 name="random_song"),
-    # url(r'^songs/search', MISSING_VIEW, name="song_search"),
+    url(r'^song/search',
+                SongSearch.as_view(),
+                name="song_search"),
     url(r'^artists/$',
                 ArtistList.as_view(),
                 name="artist_list"),

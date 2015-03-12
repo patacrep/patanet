@@ -18,11 +18,14 @@
 
 import os
 
+import re
 
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.db.models import Q
+from django.conf import settings
 
 
 from generator.decorators import CurrentSongbookMixin
@@ -67,6 +70,65 @@ class SongView(CurrentSongbookMixin, DetailView):
         context = super(SongView, self).get_context_data(**kwargs)
         context['content'] = _read_song(context['song'])
         return context
+
+
+class SongSearch(CurrentSongbookMixin, TemplateView):
+    template_name = "generator/search_songs.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(SongSearch, self).get_context_data(**kwargs)
+
+        max_result = settings.MAX_SEARCH_RESULT
+
+        query_string = self.request.GET.get('search_term', '')
+        terms = _normalize_query(query_string)
+        
+        
+        if terms:
+            song_query = _get_query(terms, ['title', 'slug',])
+            songs = Song.objects.filter(song_query).select_related('artist')
+            context['song_list'] = songs[:max_result]
+        
+            artist_query = _get_query(terms, ['name', 'slug',])
+            artists = Artist.objects.filter(artist_query).prefetch_related('songs')
+            context['artist_list'] = artists[:max_result]
+            
+            context['search_terms'] = terms
+
+        return context
+
+def _normalize_query(query_string,
+                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+                    normspace=re.compile(r'\s{2,}').sub):
+    ''' Splits the query string in invidual keywords, getting rid of unecessary spaces
+        and grouping quoted words together.
+        Example:
+        
+        >>> normalize_query('  some random  words "with   quotes  " and   spaces')
+        ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
+    
+    '''
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)] 
+
+def _get_query(terms, search_fields):
+    ''' Returns a query, that is a combination of Q objects. That combination
+        aims to search keywords within a model by testing the given search fields.
+    
+    '''
+    query = None # Query to search for every search term        
+    for term in terms:
+        or_query = None # Query to search for a given term in each field
+        for field_name in search_fields:
+            q = Q(**{"%s__icontains" % field_name: term})
+            if or_query is None:
+                or_query = q
+            else:
+                or_query = or_query | q
+        if query is None:
+            query = or_query
+        else:
+            query = query & or_query
+    return query
 
 
 class ArtistList(CurrentSongbookMixin, ListView):
