@@ -26,6 +26,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
+from django.db.models import Count, Prefetch
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
@@ -41,9 +42,68 @@ class SongbookPublicList(ListView):
     template_name = "generator/songbook_public_list.html"
 
     def get_queryset(self):
-        return Songbook.objects.filter(is_public=True
-                                       ).order_by('title')
+        public_songbooks = Songbook.objects.filter(is_public=True
+                                   ).order_by('title').prefetch_related(
+                                        Prefetch(
+                                            'tasks', 
+                                            queryset=GeneratorTask.objects.filter(state='FINISHED').select_related('layout'), 
+                                            to_attr='finished_tasks')
+                                    )
 
+        
+        
+        # If the user is connected :
+        if self.request.user.is_authenticated():
+            #  exclude his songbooks from the public list
+            public_songbooks = public_songbooks.exclude(user=self.request.user)
+
+            #  fetch his public songbooks (with more related data)
+            my_songbooks = SongbookPrivateList.get_queryset(self).exclude(is_public=False)
+
+            # Concatenate the two sets
+            from itertools import chain
+            public_songbooks = list(chain(public_songbooks, my_songbooks))
+        
+        _count_and_attach_as_attributes(['song', 'artist', 'section'], public_songbooks)
+        return public_songbooks
+
+def _count_item_of_type(item_type, songbooks):
+    """
+    Count the number of irems of type 'item_type' in all the songbooks with as few queries as possible.
+    Return tuple { 'songbook_id' : number_of_items }
+    """
+    if item_type == "artist":
+        return _count_item_of_type_artist(songbooks)
+
+    item_type = ContentType.objects.get(app_label="generator", model=item_type)
+
+    count_items = ItemsInSongbook.objects.filter(
+                    songbook__in=songbooks,
+                    item_type=item_type,
+                    ).values('songbook').annotate(item_quantity=Count("item_id")).order_by('songbook')
+
+    normalized_count = {row['songbook']: row['item_quantity'] for row in count_items}
+
+    return normalized_count
+
+def _count_item_of_type_artist(songbooks):
+    """
+    Count the number of artists in all the songbooks with as few queries as possible.
+    Return tuple { 'songbook_id' : number_of_artists }
+    """
+    count_artists = Song.objects.filter(
+                    items_in_songbook__songbook__in=songbooks,
+                    ).values('items_in_songbook__songbook').annotate(artists=Count("artist_id", distinct=True)).order_by('items_in_songbook__songbook')
+
+    normalized_artists = {row['items_in_songbook__songbook']: row['artists'] for row in count_artists}
+
+    return normalized_artists
+
+def _count_and_attach_as_attributes(item_types, songbooks):
+    for item_type in item_types:
+        count = _count_item_of_type(item_type, songbooks)
+        for songbook in songbooks:
+            setattr(songbook, item_type + '_quantity', count.get(songbook.id, 0))    
 
 class SongbookPrivateList(LoginRequiredMixin, ListView):
     model = Songbook
@@ -52,9 +112,12 @@ class SongbookPrivateList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         songbooks = Songbook.objects.filter(user=self.request.user
-                                       ).order_by('title')
-        if len(songbooks) == 1 and 'current_songbook' not in self.request.session:
-            self.request.session['current_songbook'] = songbooks[0].id
+                                       ).order_by('title').prefetch_related(
+                                            Prefetch(
+                                                'tasks', 
+                                                queryset=GeneratorTask.objects.select_related('layout'))
+                                        )
+        _count_and_attach_as_attributes(['song', 'artist', 'section'], songbooks)
         return songbooks
 
 
@@ -88,11 +151,42 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ShowSongbook, self).get_context_data(**kwargs)
-        items_list = ItemsInSongbook.objects.prefetch_related(
-                   'item', 'item_type'
-                   ).filter(songbook=self.object)
+        base_query = ItemsInSongbook.objects.filter(
+                        songbook=self.object
+                        ).select_related('item_type')
+
+        # Different queries if it's a song or a section
+        song_type = ContentType.objects.get(app_label="generator", model="song")
+        song_list = base_query.filter(
+                        item_type=song_type
+                        ).prefetch_related('item__artist')
+        section_type = ContentType.objects.get(app_label="generator", model="section")
+        section_list = base_query.filter(
+                        item_type=section_type
+                        ).prefetch_related('item')
+
+        # Merge the two queries
+        items_list = []
+        section_index = 0
+        section_max = len(section_list)
+        song_index = 0
+        song_max = len(song_list)
+        while section_index < section_max and song_index < song_max:
+            item_section = section_list[section_index]
+            item_song = song_list[song_index]
+            if item_section.rank <= item_song.rank:
+                items_list.append(item_section)
+                section_index += 1
+            else:
+                items_list.append(item_song)
+                song_index += 1
+
+        # append the remaining elements
+        items_list.extend(section_list[section_index:])
+        items_list.extend(song_list[song_index:])
+        
         context['items_list'] = items_list
-        if self.request.user == self.object.user:
+        if self.request.user.id == self.object.user_id:
             context['can_edit'] = True
         else:
             context['can_edit'] = False

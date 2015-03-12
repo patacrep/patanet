@@ -11,29 +11,30 @@
             {{ songbook.description|linebreaksbr }}
         </div>
         <div class="features">
-            {{songbook.count_songs}} {% trans "chants" %} &sdot;
+            {{songbook.song_quantity}} {% trans "chants" %} &sdot;
             <span class="more">
-                {{songbook.count_artists}} {% trans "artistes" %}
-                {% if songbook.count_section %}
-                    &sdot; {{songbook.count_section}} {% trans "sections" %}
+                {{songbook.artist_quantity}} {% trans "artistes" %}
+                {% if songbook.section_quantity %}
+                    &sdot; {{songbook.section_quantity}} {% trans "sections" %}
                 {% endif %}
                 <br/>
             </span>
 
-            {{songbook.finished_tasks.count}} {% trans "éditions" %}
+            {% with songbook.finished_tasks.all as finished_tasks %}
+            {{ finished_tasks|length }} {% trans "éditions" %}
             <span class="more">
-                {% for task in songbook.finished_tasks.all %}
-                    {% if task.state = 'FINISHED' %}
-                        {% if forloop.first %}
-                            :
-                        {% else %}
-                            &sdot;
-                        {% endif %}
-                        <a href="/medias/PDF/{{task.result.file}}" target="_blank">
-                            {{ task.layout.name }}</a>
+                {% for task in finished_tasks %}
+                    {% if forloop.first %}
+                        :
+                    {% else %}
+                        &sdot;
                     {% endif %}
+                    <a href="/medias/PDF/{{task.result.file}}" target="_blank">
+                        {{ task.layout.name }}
+                    </a>
                 {% endfor %}
             </span>
+            {% endwith %}
             <br/>
         </div>
         <div class="more">
