@@ -319,11 +319,10 @@ def remove_songs(request):
                                        rank__gt=previous_rank,
                                        ).update(rank=F('rank')-idx-1)
 
-
+    song_removed = len(items)
     items.delete()
     songbook.fill_holes()
 
-    song_removed = len(items)
     if song_removed == 0:
         messages.info(request, _(u"Aucun chant retiré"))
     elif song_removed == 1:
