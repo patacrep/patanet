@@ -13,7 +13,7 @@
         border-radius:5px;
         padding:5px 10px;
         max-width:30em;
-        animation: disappear 4s forwards;
+        animation: disappear 1s forwards 5s;
     }
     .success {
         .messsages-color(@messages-success);
@@ -35,7 +35,6 @@ ul.messages{
 
 
 @keyframes disappear {
-    0%   {opacity: 1;}
-    75%  {opacity: 1;}
-    100% {opacity: 0;}
+    from {opacity: 1;}
+    to {opacity: 0;}
 } 
