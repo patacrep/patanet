@@ -7,7 +7,7 @@
 {% setting DEBUG as debug %}
    <link rel="stylesheet/less" type="text/css" href="{% static "css/normalize.less" %}" />
    <link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
-	{% if debug and False %}
+	{% if debug %}
 		<script>
 		  less = {
 		    env: "development",
