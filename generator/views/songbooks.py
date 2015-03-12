@@ -248,21 +248,22 @@ def add_songs_to_songbook(request):
         return redirect(next_url)
 
     song_id_list = request.POST.getlist('songs[]')
-    song_list = Song.objects.filter(id__in=song_id_list)
+    song_list = Song.objects.filter(
+                        id__in=song_id_list,
+                        ).exclude(
+                        items_in_songbook__songbook=songbook
+                        )
 
-    current_item_list = [item.item for item in
-                            ItemsInSongbook.objects.filter(songbook=songbook)]
-
-    item_count = len(current_item_list)
+    item_count = ItemsInSongbook.objects.filter(songbook=songbook).count()
     items_to_insert = []
     for song in song_list:
-        if song not in current_item_list:
-            item_count += 1
-            items_to_insert.append(
-                                    ItemsInSongbook(item=song,
-                                                songbook=songbook,
-                                                rank=item_count)
-                                  )
+        item_count += 1
+        items_to_insert.append(
+                                ItemsInSongbook(item=song,
+                                            songbook=songbook,
+                                            rank=item_count)
+                              )
+
     ItemsInSongbook.objects.bulk_create(items_to_insert)
     song_added = len(items_to_insert)
 
