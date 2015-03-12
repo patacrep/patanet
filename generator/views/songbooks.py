@@ -151,9 +151,40 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ShowSongbook, self).get_context_data(**kwargs)
-        items_list = ItemsInSongbook.objects.prefetch_related(
-                   'item', 'item_type'
-                   ).filter(songbook=self.object)
+        base_query = ItemsInSongbook.objects.filter(
+                        songbook=self.object
+                        ).select_related('item_type')
+
+        # Different queries if it's a song or a section
+        song_type = ContentType.objects.get(app_label="generator", model="song")
+        song_list = base_query.filter(
+                        item_type=song_type
+                        ).prefetch_related('item__artist')
+        section_type = ContentType.objects.get(app_label="generator", model="section")
+        section_list = base_query.filter(
+                        item_type=section_type
+                        ).prefetch_related('item')
+
+        # Merge the two queries
+        items_list = []
+        section_index = 0
+        section_max = len(section_list)
+        song_index = 0
+        song_max = len(song_list)
+        while section_index < section_max and song_index < song_max:
+            item_section = section_list[section_index]
+            item_song = song_list[song_index]
+            if item_section.rank <= item_song.rank:
+                items_list.append(item_section)
+                section_index += 1
+            else:
+                items_list.append(item_song)
+                song_index += 1
+
+        # append the remaining elements
+        items_list.extend(section_list[section_index:])
+        items_list.extend(song_list[song_index:])
+        
         context['items_list'] = items_list
         if self.request.user.id == self.object.user_id:
             context['can_edit'] = True
