@@ -265,6 +265,7 @@ def add_songs_to_songbook(request):
                               )
 
     ItemsInSongbook.objects.bulk_create(items_to_insert)
+    songbook.fill_holes()
 
     song_added = len(items_to_insert)
     if song_added == 0:
