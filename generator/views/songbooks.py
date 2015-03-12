@@ -265,8 +265,8 @@ def add_songs_to_songbook(request):
                               )
 
     ItemsInSongbook.objects.bulk_create(items_to_insert)
-    song_added = len(items_to_insert)
 
+    song_added = len(items_to_insert)
     if song_added == 0:
         messages.info(request, _(u"Aucun chant ajouté"))
     elif song_added == 1:
@@ -300,7 +300,6 @@ def remove_songs(request):
                        _(u"Ce chant n'appartient pas au carnet")
                        )
         return redirect(next_url)
-    song_removed = items.count()
 
     # Update the rank of the items that are between the deleted items
     ranks = items.values_list('rank', flat=True)
@@ -323,6 +322,7 @@ def remove_songs(request):
     items.delete()
     songbook.fill_holes()
 
+    song_removed = len(items)
     if song_removed == 0:
         messages.info(request, _(u"Aucun chant retiré"))
     elif song_removed == 1:
