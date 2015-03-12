@@ -155,7 +155,7 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
                    'item', 'item_type'
                    ).filter(songbook=self.object)
         context['items_list'] = items_list
-        if self.request.user == self.object.user:
+        if self.request.user.id == self.object.user_id:
             context['can_edit'] = True
         else:
             context['can_edit'] = False
