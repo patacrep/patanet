@@ -26,7 +26,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, F
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
@@ -301,6 +301,25 @@ def remove_songs(request):
                        )
         return redirect(next_url)
     song_removed = items.count()
+
+    # Update the rank of the items that are between the deleted items
+    ranks = items.values_list('rank', flat=True)
+    previous_rank = None
+    for idx, current_rank in enumerate(ranks):
+        if previous_rank and (current_rank - previous_rank) > 1:
+            ItemsInSongbook.objects.filter(songbook=songbook,
+                                           rank__gt=previous_rank,
+                                           rank__lt=current_rank,
+                                           ).update(rank=F('rank')-idx)
+        previous_rank = current_rank
+
+    # Update the rank of the items that are after the last deleted item
+    if previous_rank:
+        ItemsInSongbook.objects.filter(songbook=songbook,
+                                       rank__gt=previous_rank,
+                                       ).update(rank=F('rank')-idx-1)
+
+
     items.delete()
     songbook.fill_holes()
 
