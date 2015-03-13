@@ -27,6 +27,7 @@
    <script type="text/javascript" src="{% static "js/jquery-ui-1.10.4.min.js" %}" defer></script>
    <script type="text/javascript" src="{% static "js/patanet.js" %}" defer></script>
    <script type="text/javascript">baseurl = '{% url 'home' %}';</script>
+   {% include "generator/layout/favicon.html" %}
 {% endblock %}
 
 {% block body %}
