@@ -6,8 +6,8 @@
 {% block extrahead %}
 {% setting DEBUG as debug %}
 	{% if debug %}
-	   <link rel="stylesheet/less" type="text/css" href="{% static "css/normalize.less" %}" />
-	   <link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
+	    <link rel="stylesheet/less" type="text/css" href="{% static "css/normalize.less" %}" />
+	    <link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
 		<script>
 		  less = {
 		    env: "development",
@@ -17,7 +17,7 @@
 		  };
 		</script>
 		<script type="text/javascript" src="{% static "js/less-1.6.1.min.js" %}"></script>
-		<script>less.watch();</script>
+		<!--<script>less.watch();</script>-->
 	{% else %}
         <link type="text/css" rel="stylesheet" href="{% static "css/normalize.css" %}" />
         <link type="text/css" rel="stylesheet" href="{% static "css/main.css" %}" />

@@ -26,7 +26,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, F
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
@@ -248,24 +248,26 @@ def add_songs_to_songbook(request):
         return redirect(next_url)
 
     song_id_list = request.POST.getlist('songs[]')
-    song_list = Song.objects.filter(id__in=song_id_list)
+    song_list = Song.objects.filter(
+                        id__in=song_id_list,
+                        ).exclude(
+                        items_in_songbook__songbook=songbook
+                        )
 
-    current_item_list = [item.item for item in
-                            ItemsInSongbook.objects.filter(songbook=songbook)]
-
-    item_count = len(current_item_list)
+    item_count = ItemsInSongbook.objects.filter(songbook=songbook).count()
     items_to_insert = []
     for song in song_list:
-        if song not in current_item_list:
-            item_count += 1
-            items_to_insert.append(
-                                    ItemsInSongbook(item=song,
-                                                songbook=songbook,
-                                                rank=item_count)
-                                  )
-    ItemsInSongbook.objects.bulk_create(items_to_insert)
-    song_added = len(items_to_insert)
+        item_count += 1
+        items_to_insert.append(
+                                ItemsInSongbook(item=song,
+                                            songbook=songbook,
+                                            rank=item_count)
+                              )
 
+    ItemsInSongbook.objects.bulk_create(items_to_insert)
+    songbook.fill_holes()
+
+    song_added = len(items_to_insert)
     if song_added == 0:
         messages.info(request, _(u"Aucun chant ajouté"))
     elif song_added == 1:
@@ -299,7 +301,25 @@ def remove_songs(request):
                        _(u"Ce chant n'appartient pas au carnet")
                        )
         return redirect(next_url)
-    song_removed = items.count()
+
+    # Update the rank of the items that are between the deleted items
+    ranks = items.values_list('rank', flat=True)
+    previous_rank = None
+    for idx, current_rank in enumerate(ranks):
+        if previous_rank and (current_rank - previous_rank) > 1:
+            ItemsInSongbook.objects.filter(songbook=songbook,
+                                           rank__gt=previous_rank,
+                                           rank__lt=current_rank,
+                                           ).update(rank=F('rank')-idx)
+        previous_rank = current_rank
+
+    # Update the rank of the items that are after the last deleted item
+    if previous_rank:
+        ItemsInSongbook.objects.filter(songbook=songbook,
+                                       rank__gt=previous_rank,
+                                       ).update(rank=F('rank')-idx-1)
+
+    song_removed = len(items)
     items.delete()
     songbook.fill_holes()
 

@@ -128,8 +128,9 @@ class Songbook(models.Model):
         rank = 1
         item_list = ItemsInSongbook.objects.filter(songbook=self)
         for item in item_list:
-            item.rank = rank
-            item.save()
+            if not item.rank == rank:
+                item.rank = rank
+                item.save()
             rank += 1
 
     def add_section(self, name):
