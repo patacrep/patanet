@@ -47,3 +47,8 @@ def intersection(value, arg):
 @register.filter(name='first_letter')
 def first_letter(name):
 	return letter_page(name)
+
+@register.filter(name='intersection_id')
+def intersection_id(objects, ids):
+    object_ids = [obj.id for obj in objects]
+    return set.intersection(set(ids), set(object_ids))
