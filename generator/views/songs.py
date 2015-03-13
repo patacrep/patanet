@@ -30,7 +30,6 @@ from django.conf import settings
 
 from generator.decorators import CurrentSongbookMixin
 from generator.models import Song, Artist
-from generator.name_paginator import NamePaginator
 from generator.songs import parse_song
 from generator.views.utils import LetterListView
 
