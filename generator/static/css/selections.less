@@ -179,6 +179,7 @@ ol.item_list{
 }
 
 .pagination{
+	&.by_letter,
 	&.by_name{
         border-bottom:solid 1px gray;
         margin-top:.5em;
@@ -199,6 +200,9 @@ ol.item_list{
 			a{
 				color:black;
 			}
+		}
+		&:not(.active) a.empty{
+			opacity: 0.3;
 		}
 	}
 }

@@ -1,0 +1,17 @@
+{% if paginator %}
+{% load i18n %}
+<div class="pagination by_letter">
+    <ul>
+    {% spaceless %}
+    	<li {% if not paginator.current_letter %}class="active"{% endif %}>
+		    <a href="./">{% trans "Aperçu" %}</a>
+		</li>
+		{% for letter, ids in paginator.letters.items %}
+			<li {% ifequal letter paginator.current_letter %}class="active"{% endifequal %}>
+				<a href="?letter={{ letter }}" {% ifequal ids|length 0 %}class="empty"{% endifequal %}>{{ letter }}</a>
+			</li>
+		{% endfor %}
+	{% endspaceless %}
+    </ul>
+</div>
+{% endif %}
