@@ -247,7 +247,7 @@ class ItemsInSongbook(models.Model):
 
     class Meta:
         ordering = ["rank"]
-        unique_together = ('item_id', 'songbook',)
+        unique_together = ('item_id', 'item_type', 'songbook',)
 
     def save(self, *args, **kwargs):
         # automatically add a rank, if needed
