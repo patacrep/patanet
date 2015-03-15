@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block content %}
-{% include "generator/layout/name_pagination.html" %}
+{% include "generator/layout/letter_pagination.html" %}
+{% if paginator.current_letter %}
 	<form class="add_songs" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
         {% if current_songbook %}
     		{% csrf_token %}
@@ -33,4 +34,8 @@
             </button>
         {% endif %}
     </form>
+    {% include "generator/layout/letter_rel_pagination.html" %}
+{% else %}
+    {% include "generator/layout/letter_overview.html" %}
+{% endif %}
 {% endblock %}
