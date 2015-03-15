@@ -23,6 +23,7 @@ from django.conf.global_settings import LANGUAGES
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
+from django.core.exceptions import ValidationError
 
 from jsonfield import JSONField
 import hashlib
@@ -133,11 +134,11 @@ class Songbook(models.Model):
                 item.save()
             rank += 1
 
-    def add_section(self, name):
+    def add_section(self, name, rank=None):
         section = Section.objects.create(name=name)
         section.save()
 
-        ItemsInSongbook.objects.create(songbook=self, item=section)
+        ItemsInSongbook.objects.create(songbook=self, item=section, rank=rank)
 
     def get_as_json(self):
 
@@ -181,14 +182,34 @@ class Songbook(models.Model):
         verbose_name = _(u"carnet de chants")
         verbose_name_plural = _(u"carnets de chants")
 
+def validate_latex_free(string):
+        '''
+        Return true if one of the LaTeX special characters
+        is in the string
+        '''
+        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
+        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
+        MESSAGE = _(u"Les caractères suivant sont interdits, merci de les " +
+                    u"supprimer : {chars}.".format(chars=CHARS))
+
+        for char in TEX_CHAR:
+            if char in string:
+                raise ValidationError(MESSAGE)
+
 
 class Section(models.Model):
     name = models.CharField(max_length=200,
                             verbose_name=_(u"nom de section"),
+                            validators=[validate_latex_free]
                             )
+    items_in_songbook = generic.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
     def __unicode__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(Section, self).save(*args, **kwargs)
 
 
 class Layout(models.Model):

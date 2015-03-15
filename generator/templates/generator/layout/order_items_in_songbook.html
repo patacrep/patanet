@@ -19,7 +19,7 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
 	<form class="item_list" method="post" action="{% url 'change_item_list' id=songbook.id slug=songbook.slug %}">
 		{% csrf_token %}
         <input type="hidden" name="next" value="{% url "show_songbook" id=songbook.id slug=songbook.slug %}">
-        <p class="section">
+        <p class="new_section">
             <label for="new_section">
                 {% trans "Nouvelle section :" %}
             </label>
@@ -30,6 +30,9 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
         <p>
         	<input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
         </p>
+        <p class="new_section script">
+			<button class="insert_section button-link" data-icon="add-section" type="button">{% trans "Insérer une nouvelle section" %}</button>
+		</p>
 
 		<ol class="item_list ordering">
 		{% for item in items_list %}
@@ -61,4 +64,15 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
         <p>
 			<input type="submit" value="{% trans "Enregistrer les changements" %}" class="button-link">
 		</p>
+		<ol class="script ordering">
+			<!-- DOM for section insertion via JS -->
+			<li id="new_section_dom">
+				<label for="section_{{item.id}}" class="dragger">
+				</label>
+                <input type="text" id="new_section_" value="" name="new_section[]" class="section_name"/>
+				<span>
+				</span>
+				<input class="item-rank" id="new_item_" name="new_item[]" value="{{ songbook.count_items|add:1 }}" />
+			</li>
+		</ol>
 	</form>

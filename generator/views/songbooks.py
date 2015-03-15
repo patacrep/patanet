@@ -27,12 +27,13 @@ from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.db.models import Count, Prefetch, F
+from django.core.exceptions import ValidationError
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
                                 OwnerRequiredMixin, owner_required, return_json_on_ajax
 from generator.models import Songbook, ItemsInSongbook, Song, \
-                             Task as GeneratorTask, Layout, Artist
+                             Task as GeneratorTask, Layout, Artist, Section, validate_latex_free
 from generator.forms import SongbookCreationForm, LayoutForm
 
 
@@ -337,70 +338,125 @@ def move_or_delete_items(request, id, slug):
     """
     next_url = request.POST['next']
     songbook = Songbook.objects.get(id=id, slug=slug)
-    item_list = {}
 
-    for key in request.POST.keys():
-        if key.startswith('item_'):
-            item_list[key] = request.POST[key]
 
-    for item_key in item_list.keys():
-        item_id = int(item_key[5:])
-        try:
-            rank = int(item_list[item_key])
-            ItemsInSongbook.objects.filter(songbook=songbook,
-                                           id=item_id
-                                           ).update(rank=rank)
-        except ValueError:
-            if str(item_list[item_key]).lower() == 'x':
-                ItemsInSongbook.objects.filter(
-                        songbook=songbook,
-                        id=item_id
-                        ).delete()
+    """
+    Parse the POST data into some arrays
+    """
+    posted_section_name = {}
+    remove_array = []
+    posted_rank_list = {}
+    for key, value in request.POST.items():
 
-    songbook.fill_holes()
+        if key.startswith('section_'):
+            key = int(key[8:])
+            posted_section_name[key] = value
+        elif key.startswith('item_'):
+            key = int(key[5:])
+            if str(value).lower() == 'x':
+                remove_array.append(key)
+            else:
+                posted_rank_list[key] = int(value)
 
+
+    """
+    Remove the items from the songbook
+    """
+    # The sections will be removed with a dedicated query
+    remove_section_array = []
+    for key in remove_array:
+        if key in posted_section_name:
+            remove_section_array.append(key)
+            # Remove this section from the other arrays (renaming and generic item removal)
+            del posted_section_name[key]
+            remove_array.remove(key)
+
+    # Remove the Sections from the songbook
+    Section.objects.filter(
+            items_in_songbook__songbook=songbook,
+            items_in_songbook__id__in=remove_section_array
+            ).delete()
+
+    # Remove the items from the songbook
+    ItemsInSongbook.objects.filter(
+            songbook=songbook,
+            id__in=remove_array
+            ).delete()
+    
+    """
+    Add the new section(s) to the songbook
+    """
+    # Section added without javascript
     if request.POST['new_section']:
         try:
             section_name = str(request.POST['new_section'])
             songbook.add_section(section_name)
             messages.success(request, _(u"Nouvelle section ajoutée en fin de carnet"))
-        except ValueError:
-            messages.error(request, _(u"Ce nom de section n'est pas valide"))
+        except ValidationError as e:
+            messages.error(request, e.message_dict['name'][0])
 
-    section_list = {}
-    for key in request.POST.keys():
-        if key.startswith('section_'):
-            section_list[key] = request.POST[key]
+    # Sections added with javascript
+    new_sections = request.POST.getlist('new_section[]')
+    if new_sections:
+        new_ranks = request.POST.getlist('new_item[]')
+        for index, section_name in enumerate(new_sections):
+            if not section_name:
+                continue
+            try:
+                new_rank = int(new_ranks[index])
+            except ValueError: # because the rank is now 'X'
+                continue
+            try:
+                songbook.add_section(section_name, new_rank)
+            except ValidationError as e:
+                messages.error(request, e.message_dict['name'][0])
 
-    for key, section_name in section_list.items():
-        item_id = int(key[8:])
-        section = ItemsInSongbook.objects.get(songbook=songbook,
-                                              id=item_id)
 
-        if section.item.name != section_name:
-            error, message = _clean_latex(section_name)
-            if error:
-                messages.error(request, message)
-            else:
-                section.item.name = section_name
-                section.item.save()
+    """
+    Rename the section that need to be renamed
+    """
+    section_list = Section.objects.filter(
+                    items_in_songbook__songbook=songbook,
+                    ).values('id', 'name', 'items_in_songbook__id')
+
+    for section in section_list:
+        item_id = section['items_in_songbook__id']
+        new_name = posted_section_name.get(item_id)
+        if new_name and section['name'] != new_name:
+            try:
+                # We need to validate manually
+                validate_latex_free(new_name)
+                Section.objects.filter(id=section['id']).update(name=new_name)
+            except ValidationError as e:
+                messages.error(request, e.message_dict['name'][0])
+
+    """
+    Set an increasing the rank for all items
+    """
+    # list all the rank of the current elements, and set the new rank
+    old_rank_list = ItemsInSongbook.objects.filter(songbook=songbook).values_list('id','rank')
+    new_rank_list = []
+    for item_id, old_rank in old_rank_list:
+        new_rank = old_rank
+        if posted_rank_list.get(item_id, 0) > 0:
+            new_rank = posted_rank_list[item_id]
+        new_rank_list.append((item_id, new_rank))
+
+    # Sort the list according to the new rank
+    new_rank_list = sorted(new_rank_list, key=lambda x: x[1])
+
+    # update the rank of each item in the DB if necessary
+    old_rank_dict = dict(old_rank_list)
+    rank = 1
+    for key in new_rank_list:
+        item_id = key[0]
+        if rank != old_rank_dict[item_id]:
+            ItemsInSongbook.objects.filter(songbook=songbook,
+                                           id=item_id
+                                           ).update(rank=rank)
+        rank += 1
 
     return redirect(next_url)
-
-def _clean_latex(string):
-        '''
-        Return true if one of the LaTeX special characters
-        is in the string
-        '''
-        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
-        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
-        MESSAGE = _(u"Les caractères suivant sont interdits, merci de les " +
-                    u"supprimer : {chars}.".format(chars=CHARS))
-        for char in TEX_CHAR:
-            if char in string:
-                return True, MESSAGE
-        return False, ""
-
 
 class DeleteSongbook(OwnerRequiredMixin, DeleteView):
     model = Songbook
