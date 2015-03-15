@@ -20,7 +20,7 @@
 {% block content %}
 	
 	{% if current_songbook %}
-		{% if song|in_items:current_item_list %}
+		{% if song.id in current_songbook_songs %}
 			<form method="post" action="{% url "remove_song" %}" class="show_song">
 			<button type="submit" class="button-link" data-icon="delete">{% trans "Retirer du carnet" %}</button>
 		{% else %}

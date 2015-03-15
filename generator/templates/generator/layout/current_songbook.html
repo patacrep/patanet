@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load filters %}
 
 <div class="current-songbook params">
 
@@ -9,7 +8,7 @@
         </a>
         <h2> {{songbook.title}} 
 
-        <small id="current_songbook_count" data-value="{{ songbook.count_songs }}" data-text="{% trans "chants" %}">
+        <small id="current_songbook_count" data-value="{{ current_songbook_songs|length }}" data-text="{% trans "chants" %}">
         </small>
         <em>
             <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}">

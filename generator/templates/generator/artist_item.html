@@ -11,7 +11,7 @@
         <small class="number">
              &nbsp; 
             {% if current_songbook %}
-                {% with artist_songs|intersection:current_item_list|length as intersection %} 
+                {% with artist_songs|intersection_id:current_songbook_songs|length as intersection %} 
                     <span id="artist_intersect_{{ artist.id }}" class="intersection" data-value="{{ intersection }}" data-max="{{ artist_songs|length }}"></span>
                 {% endwith %}
             {% endif %}
@@ -35,7 +35,7 @@
                     <label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
                         {% if current_songbook %}
                         <input class="song_selection" type="checkbox" name="songs[]" value="{{ song.id }}"
-                        id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
+                        id="song_{{ song.id }}" {% if song.id in current_songbook_songs %}checked disabled{% endif %}>
                         {% endif %}
                         {{ song.title }}
                         <a class="lyrics" href="{% url "show_song" slug=song.slug artist=song.artist.slug %}" title="{% trans "Paroles" %}" >

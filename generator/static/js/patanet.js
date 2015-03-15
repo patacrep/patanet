@@ -354,9 +354,12 @@ $(function() {
     }
 
     var letters_overview_background = function(){
-        var prefix_bg = $('.letter_overview a').first().css('background-color');
+        var letters = $('.letter_overview a');
+        if(!letters.length){
+            return;
+        }
+        var prefix_bg = letters.first().css('background-color');
         prefix_bg = prefix_bg.substr(0, prefix_bg.length - 4);
-        //alert(prefix_bg);
         $('.letter_overview a').each(function(){
             $this = $(this);
             var opa = $this.attr('data-weight');

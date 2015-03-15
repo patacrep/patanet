@@ -1,4 +1,4 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
 
 {% block title %} {% trans "Toutes les chansons" %} {% endblock %}
 
@@ -22,7 +22,7 @@
 				<label class="song" for="song_{{ song.id }}" title="{{ song.title }}">
 					{% if current_songbook %}
 						<input type="checkbox" name="songs[]" value="{{ song.id }}" class="song_selection"
-						id="song_{{ song.id }}" {% if song|in_items:current_item_list %}checked disabled{% endif %}>
+						id="song_{{ song.id }}" {% if song.id in current_songbook_songs %}checked disabled{% endif %}>
 					{% endif %}
 					{{ song.title }}
 				</label>

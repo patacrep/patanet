@@ -23,27 +23,11 @@ from generator.views.utils import letter_page
 ##############################################
 register = template.Library()
 
-@register.filter(name='in')
-def in_queryset(value, arg):
-    return value in arg
-
-@register.filter(name='list_in_items')
-def list_in_items(value, arg):
-    items = [item.item for item in arg]
-    values = [val for val in value]
-    return set(values).issubset(set(items))
-
-@register.filter(name='in_items')
-def in_items(value, arg):
-    items = [item.item for item in arg]
-    return value in items
-
-@register.filter(name='intersection')
-def intersection(value, arg):
-    items = [item.item for item in arg]
-    values = [val for val in value]
-    return set.intersection(set(items), set(values))
-
 @register.filter(name='first_letter')
 def first_letter(name):
 	return letter_page(name)
+
+@register.filter(name='intersection_id')
+def intersection_id(objects, ids):
+    object_ids = [obj.id for obj in objects]
+    return set.intersection(set(ids), set(object_ids))

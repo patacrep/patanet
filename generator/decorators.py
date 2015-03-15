@@ -39,10 +39,11 @@ class CurrentSongbookMixin(object):
             songbook = Songbook.objects.get(
                             id=self.request.session['current_songbook'], user_id=self.request.user.id)
             context['current_songbook'] = songbook
-            current_item_list = ItemsInSongbook.objects.prefetch_related('item').filter(
+            current_songbook_songs = ItemsInSongbook.objects.filter(
                                                     songbook=songbook,
-                                                    item_type__model='song')
-            context['current_item_list'] = current_item_list
+                                                    item_type__model='song'
+                                                    ).values_list('item_id', flat=True)
+            context['current_songbook_songs'] = current_songbook_songs
 
         except (KeyError, Songbook.DoesNotExist):
             pass
