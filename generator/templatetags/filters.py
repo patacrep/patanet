@@ -17,6 +17,8 @@
 
 from django import template
 
+from generator.views.utils import letter_page
+
 ## Template filters
 ##############################################
 register = template.Library()
@@ -41,3 +43,7 @@ def intersection(value, arg):
     items = [item.item for item in arg]
     values = [val for val in value]
     return set.intersection(set(items), set(values))
+
+@register.filter(name='first_letter')
+def first_letter(name):
+	return letter_page(name)
