@@ -1,0 +1,9 @@
+<div class="pagination letter_overview">
+	{% spaceless %}
+	{% for letter, weight in paginator.letters.items %}
+		<a href="?letter={{ letter }}" data-weight="{{ weight }}" {% ifequal weight 0 %}class="empty"{% endifequal %}>
+			{{ letter }}
+		</a>
+	{% endfor %}
+	{% endspaceless %}
+</div>

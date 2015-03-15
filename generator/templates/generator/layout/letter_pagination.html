@@ -6,9 +6,9 @@
     	<li {% if not paginator.current_letter %}class="active"{% endif %}>
 		    <a href="./">{% trans "Aperçu" %}</a>
 		</li>
-		{% for letter, ids in paginator.letters.items %}
+		{% for letter, weight in paginator.letters.items %}
 			<li {% ifequal letter paginator.current_letter %}class="active"{% endifequal %}>
-				<a href="?letter={{ letter }}" {% ifequal ids|length 0 %}class="empty"{% endifequal %}>{{ letter }}</a>
+				<a href="?letter={{ letter }}" {% ifequal weight 0 %}class="empty"{% endifequal %}>{{ letter }}</a>
 			</li>
 		{% endfor %}
 	{% endspaceless %}

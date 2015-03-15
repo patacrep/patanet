@@ -353,10 +353,23 @@ $(function() {
         }
     }
 
+    var letters_overview_background = function(){
+        var prefix_bg = $('.letter_overview a').first().css('background-color');
+        prefix_bg = prefix_bg.substr(0, prefix_bg.length - 4);
+        //alert(prefix_bg);
+        $('.letter_overview a').each(function(){
+            $this = $(this);
+            var opa = $this.attr('data-weight');
+            var new_bg = prefix_bg + opa + ')';
+            $(this).css('background-color', new_bg);
+        });
+    }
+
     // Execute code
     ordering();
     auto_template_name();
     song_selection_with_ajax();
+    letters_overview_background();
 });
 
 

@@ -102,8 +102,9 @@ class LetterListView(ListView):
 
         paginator = {'current_letter': self.current_letter}
 
-        paginator['letters'] = self.pages
-        
+        # Add the weight of every letter
+        paginator['letters'] = _compute_letters_weight(self.pages)
+
         # Add relative links to previous and next page
         if self.current_letter:
             letters = list(self.pages.keys())
@@ -152,3 +153,32 @@ def _construct_pages(names):
 
     return pages
 
+
+def _compute_letters_weight(pages):
+    """
+    Input : dict of pages with list of ids
+        key : letter (or "0-9" or "~")
+        value : [ids of the objects starting with the key]
+
+    Output : dict of letters with a weight of the number of ids
+        key : letter (or "0-9" or "~")
+        value : weight (between 0 and 1) of the number of pages
+    """
+    # replace the list of ids, with the length
+    pages.update((letter, len(ids)) for letter, ids in pages.items())
+
+    sorted_length = sorted(pages.values(), reverse=True)
+    num_pages = len(pages)
+
+    def normalize(length):
+        if length > 0:
+            return str(int(100*sort_normalize(length))/100)
+        else:
+            return 0
+    def sort_normalize(length):
+        i = num_pages - sorted_length.index(length)
+        return i/num_pages
+
+    pages.update((letter, normalize(length)) for letter, length in pages.items())
+
+    return pages
