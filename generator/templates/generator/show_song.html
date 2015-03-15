@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block breadcrumb %}
-	<a href="{% url "artist_list" %}">{% trans "Tous les artistes" %}</a> &#x009B;
+	<a href="{% url "artist_list" %}?letter={{ song.artist.name|first_letter }}">{% trans "Tous les artistes" %}</a> &#x009B;
     <a class="artist" href="{% url "show_artist" slug=song.artist.slug %}">{{ song.artist.name }}</a> &#x009B;
 {% endblock %}
 

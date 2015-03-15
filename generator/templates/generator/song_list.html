@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block content %}
-{% include "generator/layout/name_pagination.html" %}
+{% include "generator/layout/letter_pagination.html" %}
+{% if paginator.current_letter %}
 	<form class="add_songs_form" method="post" action="{% url 'add_song_to_songbook' %}" id="add_songs_form">
 		{% csrf_token %}
 		<input type="hidden" name="next" value="{% url "song_list" %}?page={{page_obj.number}}">
@@ -34,4 +35,8 @@
 			{% trans "Ajouter la sélection au carnet" %}
 		</button>
     </form>
+	{% include "generator/layout/letter_rel_pagination.html" %}
+{% else %}
+	{% include "generator/layout/letter_overview.html" %}
+{% endif %}
 {% endblock %}

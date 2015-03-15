@@ -30,19 +30,18 @@ from django.conf import settings
 
 from generator.decorators import CurrentSongbookMixin
 from generator.models import Song, Artist
-from generator.name_paginator import NamePaginator
 from generator.songs import parse_song
+from generator.views.utils import LetterListView
 
 
 from patanet.settings import SONGS_LIBRARY_DIR
 
-class SongList(CurrentSongbookMixin, ListView):
+class SongList(CurrentSongbookMixin, LetterListView):
     model = Song
     context_object_name = "song_list"
     template_name = "generator/song_list.html"
-    paginate_by = 10
-    paginator_class = NamePaginator
-    queryset = Song.objects.prefetch_related('artist').all().order_by('slug')
+    name_field = 'title'
+    queryset = Song.objects.prefetch_related('artist').order_by('slug')
 
 
 class ArtistView(CurrentSongbookMixin, DetailView):
@@ -131,12 +130,11 @@ def _get_query(terms, search_fields):
     return query
 
 
-class ArtistList(CurrentSongbookMixin, ListView):
+class ArtistList(CurrentSongbookMixin, LetterListView):
     model = Artist
     context_object_name = "artist_list"
     template_name = "generator/artist_list.html"
-    paginate_by = 10
-    paginator_class = NamePaginator
+    name_field = 'name'
     queryset = Artist.objects.prefetch_related('songs').order_by('slug')
 
 
