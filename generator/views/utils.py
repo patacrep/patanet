@@ -104,6 +104,16 @@ class LetterListView(ListView):
 
         paginator['letters'] = self.pages
         
+        # Add relative links to previous and next page
+        if self.current_letter:
+            letters = list(self.pages.keys())
+
+            index = letters.index(self.current_letter)
+            if index > 0:
+                paginator['previous_letter'] = letters[index - 1]
+            if index < len(letters) - 1:
+                paginator['next_letter'] = letters[index + 1]
+
         context['paginator'] = paginator
         return context
 

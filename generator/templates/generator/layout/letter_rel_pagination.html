@@ -1,0 +1,12 @@
+{% if paginator.current_letter %}
+{% load i18n %}
+<div class="pagination relative">
+    {% if paginator.previous_letter %}
+        <a href="?letter={{ paginator.previous_letter }}" rel="prev">&larr; {{ paginator.previous_letter }}&nbsp;</a>
+    {% endif %}
+    &nbsp;
+    {% if paginator.next_letter %}
+        <a href="?letter={{ paginator.next_letter }}" rel="next">&nbsp;{{ paginator.next_letter }} &rarr;</a>
+    {% endif %}
+</div>
+{% endif %}
