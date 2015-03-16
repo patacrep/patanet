@@ -6,6 +6,27 @@
 {% block extrahead %}
 {% setting DEBUG as debug %}
 	{% if debug %}
+		<script type="text/javascript">
+			// Alert on JS error
+			window.onerror = function(msg, url, line, col, error) {
+				var extra = !error ? '' : '\n\n' + error;
+
+				// Remove domain part of the url
+				var i = url.indexOf('/data/');
+				if(i > 0){
+					url = url.substr(i);
+				}
+				alert("JS Error: " + msg + extra + "\n\nFile: " + url + ":" + line);
+
+				// TODO: Report this error via ajax to can keep track
+				//       of what pages have JS issues
+
+				var suppressErrorAlert = true;
+				// If you return true, then error alerts (like in older versions of 
+				// Internet Explorer) will be suppressed.
+				return suppressErrorAlert;
+			};
+		</script>
 	    <link rel="stylesheet/less" type="text/css" href="{% static "css/normalize.less" %}" />
 	    <link rel="stylesheet/less" type="text/css" href="{% static "css/main.less" %}" />
 		<script>
