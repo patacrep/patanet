@@ -187,14 +187,20 @@ def validate_latex_free(string):
         Return true if one of the LaTeX special characters
         is in the string
         '''
+        TEX_CHAR, MESSAGE = forbidden_latex_chars()
+        for char in TEX_CHAR:
+            if char in string:
+                raise ValidationError(MESSAGE)
+
+def forbidden_latex_chars():
+        '''
+        Return the LaTeX special characters and a corresponding error string
+        '''
         TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
         CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
         MESSAGE = _(u"Les caractères suivant sont interdits, merci de les " +
                     u"supprimer : {chars}.".format(chars=CHARS))
-
-        for char in TEX_CHAR:
-            if char in string:
-                raise ValidationError(MESSAGE)
+        return TEX_CHAR, MESSAGE
 
 
 class Section(models.Model):
