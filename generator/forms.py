@@ -27,7 +27,7 @@ from django.contrib.sites.models import Site
 
 from captcha.fields import CaptchaField
 
-from generator.models import Song, Songbook, Layout, validate_latex_free
+from generator.models import Song, Songbook, Layout, validate_latex_free, forbidden_latex_chars
 
 
 class RegisterForm(UserCreationForm):
@@ -129,11 +129,28 @@ class ContactForm(forms.Form):
 
         return message
 
+def latex_free_attributes():
+    TEX_CHAR, MESSAGE = forbidden_latex_chars()
+    escaped_chars = ''.join(['\\{char}'.format(char=char) for char in TEX_CHAR])
+    escaped_chars = '[^'+ escaped_chars +']*'
+
+    error_message = MESSAGE.replace("'","\\'")
+
+    return {
+        'pattern' : escaped_chars,
+        'title' : error_message
+    }
 
 class SongbookCreationForm(forms.ModelForm):
     class Meta:
         model = Songbook
         fields = ('title', 'description', 'author', 'is_public')
+
+    def __init__(self, *args, **kwargs):
+        super(SongbookCreationForm, self).__init__(*args, **kwargs)
+        latex_free_fields = latex_free_attributes()
+        for field in ('title', 'description', 'author'):
+            self.fields[field].widget.attrs.update(latex_free_fields)
 
     def save(self, force_insert=False, force_update=False, commit=True):
         new_songbook = super(SongbookCreationForm, self).save(commit=False)
