@@ -1,4 +1,20 @@
 
+// Create a namespace to store all patanet related functions
+// (ideally, all functions must be registred there)
+var patanet = {
+    display_messages: function(messages){
+        var messages_container = $('ul.messages');
+        $.each(messages, function(i, value){
+            var new_message = document.createElement('li');
+            new_message.className = value.tags;
+            new_message.innerHTML = value.msg;
+            messages_container.append(new_message);
+        })
+        window.scrollTo(0, 0);
+    },
+};
+
+
 //function to prevent the user from accidentally leaving a page without saving its changes
 var unsaved = false;
 function unsaved_changes(){
@@ -184,14 +200,7 @@ $(function() {
                 if(!data.success){
                     // we have messages to display
                     if(data.success === false && data.messages){
-                        var messages_container = $('ul.messages');
-                        $.each(data.messages, function(i, value){
-                            var new_message = document.createElement('li');
-                            new_message.className = value.tags;
-                            new_message.innerHTML = value.msg;
-                            messages_container.append(new_message);
-                        })
-                        window.scrollTo(0, 0);
+                        patanet.display_messages(data.messages);
                         return;
                     }
                     console.log('Something wrong on the server side :');
