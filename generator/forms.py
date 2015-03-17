@@ -27,7 +27,7 @@ from django.contrib.sites.models import Site
 
 from captcha.fields import CaptchaField
 
-from generator.models import Song, Songbook, Layout
+from generator.models import Song, Songbook, Layout, validate_latex_free
 
 
 class RegisterForm(UserCreationForm):
@@ -147,31 +147,18 @@ class SongbookCreationForm(forms.ModelForm):
 
     def clean_title(self):
         title = self.cleaned_data['title']
-        self._clean_latex(title)
+        validate_latex_free(title)
         return title
 
     def clean_description(self):
         description = self.cleaned_data['description']
-        self._clean_latex(description)
+        validate_latex_free(description)
         return description
 
     def clean_author(self):
         author = self.cleaned_data["author"]
-        self._clean_latex(author)
+        validate_latex_free(author)
         return author
-
-    def _clean_latex(self, string):
-        '''
-        Raise errors if one of the LaTeX special characters
-        is in the string
-        '''
-        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
-        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
-        for char in TEX_CHAR:
-            if char in string:
-                raise forms.ValidationError(
-                    _(u"Les caractères suivant sont interdits, "
-                    u"merci de les supprimer : {chars}.").format(chars=CHARS))
 
 
 class LayoutForm(forms.ModelForm):
