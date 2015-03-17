@@ -12,28 +12,26 @@ var patanet = {
         })
         window.scrollTo(0, 0);
     },
-};
 
 
-//function to prevent the user from accidentally leaving a page without saving its changes
-var unsaved = false;
-function unsaved_changes(){
-    if(!unsaved){
-        window.onbeforeunload = function (e) {
-          var message = "Your have unsaved changes on the page.",
-          e = e || window.event;
-          // For IE and Firefox
-          if (e) {
-            e.returnValue = message;
-          }
-
-          // For Safari
-          return message;
-        };
-
+    //function to prevent the user from accidentally leaving a page without saving its changes
+    unsaved: false,
+    unsaved_changes: function(){
+        if(!patanet.unsaved){
+            window.onbeforeunload = function (e) {
+              var message = "Your have unsaved changes on the page.",
+              e = e || window.event;
+              // For IE and Firefox
+              if (e) {
+                e.returnValue = message;
+              }
+              // For Safari
+              return message;
+            };
+        }
+        patanet.unsaved = true;
     }
-    unsaved = true;
-}
+};
 
 
 $(function() {
@@ -93,7 +91,7 @@ $(function() {
                 input.attr("value", "X");
                 line.addClass('removed');
             }
-            unsaved_changes();
+            patanet.unsaved_changes();
             $(".ordering").trigger("sortstop");
             })
         btn.appendTo(".ordering li");
@@ -105,7 +103,7 @@ $(function() {
                   var input = $(this).children('.item-rank');
                   if (input.attr("value") != "X") {
                     if(input.attr("value") != i){
-                        unsaved_changes();
+                        patanet.unsaved_changes();
                         input.attr("value", i);
                     }
                     i+=1;
@@ -144,7 +142,7 @@ $(function() {
 
         $('ol.item_list').append(new_section);
         $(".ordering").trigger("sortstop");
-        unsaved_changes();
+        patanet.unsaved_changes();
         name_input.focus();
     }
     
