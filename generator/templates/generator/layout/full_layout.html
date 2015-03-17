@@ -7,23 +7,21 @@
 {% setting DEBUG as debug %}
 	{% if debug %}
 		<script type="text/javascript">
-			// Alert on JS error
+			// Report JS error to the user
+			// TODO: Report this error via ajax to keep track on production
 			window.onerror = function(msg, url, line, col, error) {
-				var extra = !error ? '' : '\n\n' + error;
-
-				// Remove domain part of the url
-				var i = url.indexOf('/data/');
-				if(i > 0){
-					url = url.substr(i);
+				var msg = {
+					msg: "Erreur Javascript !\n(voir la console du navigateur)",
+					tags: "error"
+				};
+				try{
+					patanet.display_messages([msg]);
+				}catch(err){
+					alert(msg.msg);
 				}
-				alert("JS Error: " + msg + extra + "\n\nFile: " + url + ":" + line);
 
-				// TODO: Report this error via ajax to can keep track
-				//       of what pages have JS issues
-
-				var suppressErrorAlert = true;
-				// If you return true, then error alerts (like in older versions of 
-				// Internet Explorer) will be suppressed.
+				var suppressErrorAlert = false;
+				// If you return true, the error might not appear in the console logs.
 				return suppressErrorAlert;
 			};
 		</script>
