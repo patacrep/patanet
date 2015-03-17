@@ -428,7 +428,7 @@ def move_or_delete_items(request, id, slug):
                 validate_latex_free(new_name)
                 Section.objects.filter(id=section['id']).update(name=new_name)
             except ValidationError as e:
-                messages.error(request, e.message_dict['name'][0])
+                messages.error(request, e.messages[0])
 
     """
     Set an increasing the rank for all items
