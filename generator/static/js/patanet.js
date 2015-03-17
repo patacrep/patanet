@@ -1,23 +1,37 @@
 
-//function to prevent the user from accidentally leaving a page without saving its changes
-var unsaved = false;
-function unsaved_changes(){
-    if(!unsaved){
-        window.onbeforeunload = function (e) {
-          var message = "Your have unsaved changes on the page.",
-          e = e || window.event;
-          // For IE and Firefox
-          if (e) {
-            e.returnValue = message;
-          }
+// Create a namespace to store all patanet related functions
+// (ideally, all functions must be registred there)
+var patanet = {
+    display_messages: function(messages){
+        var messages_container = $('ul.messages');
+        $.each(messages, function(i, value){
+            var new_message = document.createElement('li');
+            new_message.className = value.tags;
+            new_message.innerHTML = value.msg;
+            messages_container.append(new_message);
+        })
+        window.scrollTo(0, 0);
+    },
 
-          // For Safari
-          return message;
-        };
 
+    //function to prevent the user from accidentally leaving a page without saving its changes
+    unsaved: false,
+    unsaved_changes: function(){
+        if(!patanet.unsaved){
+            window.onbeforeunload = function (e) {
+              var message = "Your have unsaved changes on the page.",
+              e = e || window.event;
+              // For IE and Firefox
+              if (e) {
+                e.returnValue = message;
+              }
+              // For Safari
+              return message;
+            };
+        }
+        patanet.unsaved = true;
     }
-    unsaved = true;
-}
+};
 
 
 $(function() {
@@ -77,7 +91,7 @@ $(function() {
                 input.attr("value", "X");
                 line.addClass('removed');
             }
-            unsaved_changes();
+            patanet.unsaved_changes();
             $(".ordering").trigger("sortstop");
             })
         btn.appendTo(".ordering li");
@@ -89,7 +103,7 @@ $(function() {
                   var input = $(this).children('.item-rank');
                   if (input.attr("value") != "X") {
                     if(input.attr("value") != i){
-                        unsaved_changes();
+                        patanet.unsaved_changes();
                         input.attr("value", i);
                     }
                     i+=1;
@@ -128,7 +142,7 @@ $(function() {
 
         $('ol.item_list').append(new_section);
         $(".ordering").trigger("sortstop");
-        unsaved_changes();
+        patanet.unsaved_changes();
         name_input.focus();
     }
     
@@ -184,14 +198,7 @@ $(function() {
                 if(!data.success){
                     // we have messages to display
                     if(data.success === false && data.messages){
-                        var messages_container = $('ul.messages');
-                        $.each(data.messages, function(i, value){
-                            var new_message = document.createElement('li');
-                            new_message.className = value.tags;
-                            new_message.innerHTML = value.msg;
-                            messages_container.append(new_message);
-                        })
-                        window.scrollTo(0, 0);
+                        patanet.display_messages(data.messages);
                         return;
                     }
                     console.log('Something wrong on the server side :');
@@ -402,23 +409,25 @@ $(function() {
         });
     }
 
+    var toggle_see_more = function(elements){
+        elements.click(function(e){
+            switch(e.target.tagName){
+                case 'A':
+                case 'INPUT':
+                case 'LABEL':
+                break;
+
+                default:
+                    $(this).toggleClass('see_more');
+            }
+        })
+    }
+
     // Execute code
     ordering();
     auto_template_name();
     song_selection_with_ajax();
     letters_overview_background();
     insert_new_section_via_js();
+    toggle_see_more($('.item-container.songbook'));
 });
-
-
-function toggle_see_more(elt, e){
-    switch(e.target.tagName){
-        case 'A':
-        case 'INPUT':
-        case 'LABEL':
-        break;
-
-        default:
-        $(elt).toggleClass('see_more');
-    }
-}
