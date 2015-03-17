@@ -18,6 +18,7 @@
 from django import template
 
 from generator.views.utils import letter_page
+from generator.forms import latex_free_attributes as latex_free_dict
 
 ## Template filters
 ##############################################
@@ -31,3 +32,9 @@ def first_letter(name):
 def intersection_id(objects, ids):
     object_ids = [obj.id for obj in objects]
     return set.intersection(set(ids), set(object_ids))
+
+@register.simple_tag
+def latex_free_attributes():
+	attributes = latex_free_dict()
+	attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
+	return attr
