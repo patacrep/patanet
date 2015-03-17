@@ -198,7 +198,7 @@ def forbidden_latex_chars():
         '''
         TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
         CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
-        MESSAGE = _(u"Les caractères suivant sont interdits, merci de les " +
+        MESSAGE = _(u"Les caractères suivants sont interdits, merci de les " +
                     u"supprimer : {chars}.".format(chars=CHARS))
         return TEX_CHAR, MESSAGE
 
