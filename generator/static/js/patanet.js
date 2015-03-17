@@ -411,23 +411,25 @@ $(function() {
         });
     }
 
+    var toggle_see_more = function(elements){
+        elements.click(function(e){
+            switch(e.target.tagName){
+                case 'A':
+                case 'INPUT':
+                case 'LABEL':
+                break;
+
+                default:
+                    $(this).toggleClass('see_more');
+            }
+        })
+    }
+
     // Execute code
     ordering();
     auto_template_name();
     song_selection_with_ajax();
     letters_overview_background();
     insert_new_section_via_js();
+    toggle_see_more($('.item-container.songbook'));
 });
-
-
-function toggle_see_more(elt, e){
-    switch(e.target.tagName){
-        case 'A':
-        case 'INPUT':
-        case 'LABEL':
-        break;
-
-        default:
-        $(elt).toggleClass('see_more');
-    }
-}
