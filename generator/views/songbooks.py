@@ -33,8 +33,8 @@ from django.core.exceptions import ValidationError
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
                                 OwnerRequiredMixin, owner_required, return_json_on_ajax
 from generator.models import Songbook, ItemsInSongbook, Song, \
-                             Task as GeneratorTask, Layout, Artist, Section, validate_latex_free
-from generator.forms import SongbookCreationForm, LayoutForm
+                             Task as GeneratorTask, Layout, Artist, Section
+from generator.forms import SongbookCreationForm, LayoutForm, validate_latex_free
 
 
 class SongbookPublicList(ListView):

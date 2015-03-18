@@ -24,10 +24,11 @@ from django.core.mail import mail_admins, send_mail
 from django.utils.html import escape
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.core.exceptions import ValidationError
 
 from captcha.fields import CaptchaField
 
-from generator.models import Song, Songbook, Layout, validate_latex_free, forbidden_latex_chars
+from generator.models import Song, Songbook, Layout
 
 
 class RegisterForm(UserCreationForm):
@@ -128,6 +129,26 @@ class ContactForm(forms.Form):
                  )
 
         return message
+
+def validate_latex_free(string):
+        '''
+        Return true if one of the LaTeX special characters
+        is in the string
+        '''
+        TEX_CHAR, MESSAGE = forbidden_latex_chars()
+        for char in TEX_CHAR:
+            if char in string:
+                raise ValidationError(MESSAGE)
+
+def forbidden_latex_chars():
+        '''
+        Return the LaTeX special characters and a corresponding error string
+        '''
+        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
+        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
+        MESSAGE = _(u"Les caractères suivants sont interdits, merci de les " +
+                    u"supprimer : {chars}.".format(chars=CHARS))
+        return TEX_CHAR, MESSAGE
 
 def latex_free_attributes():
     TEX_CHAR, MESSAGE = forbidden_latex_chars()
