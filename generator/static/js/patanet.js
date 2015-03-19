@@ -67,13 +67,21 @@ $(function() {
          } 
     });
 
-    var ordering = function(){
-        // Make the ordering class sortable, with jquery-ui
-        $( ".ordering" ).sortable({
-            axis: "y",
-            scrollSensitivity: 100,
-            stop: function( event, ui ) {}
+    var set_rank_according_to_dom = function() {
+        var i = 1;
+        $('.ordering').children('li').each(function() {
+          var input = $(this).children('.item-rank');
+          if (input.attr("value") != "X") {
+            if(input.attr("value") != i){
+                patanet.unsaved_changes();
+                input.attr("value", i);
+            }
+            i+=1;
+          }
         });
+    };
+
+    var ordering = function(){
 
         $(".ordering li .item-rank").hide();
         
@@ -92,23 +100,16 @@ $(function() {
                 line.addClass('removed');
             }
             patanet.unsaved_changes();
-            $(".ordering").trigger("sortstop");
+            set_rank_according_to_dom();
             })
         btn.appendTo(".ordering li");
         
-        // Compute the rank for all the items
-        $( ".ordering" ).on( "sortstop", function( event, ui ) {
-              var i = 1;
-              $('.ordering').children('li').each(function() {
-                  var input = $(this).children('.item-rank');
-                  if (input.attr("value") != "X") {
-                    if(input.attr("value") != i){
-                        patanet.unsaved_changes();
-                        input.attr("value", i);
-                    }
-                    i+=1;
-                  }
-              });
+        // Make the ordering class sortable, with jquery-ui
+        $( ".ordering" ).sortable({
+            axis: "y",
+            scrollSensitivity: 100,
+            // Compute the rank for all the items
+            stop: set_rank_according_to_dom       
         });
     }
 
@@ -141,7 +142,7 @@ $(function() {
         append_to_id(rank_input, new_section_id);
 
         $('ol.item_list').append(new_section);
-        $(".ordering").trigger("sortstop");
+        set_rank_according_to_dom();
         patanet.unsaved_changes();
         name_input.focus();
     }
