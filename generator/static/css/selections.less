@@ -546,3 +546,47 @@ label.ajax.song{
 		}
 	}
 }
+
+ol.item_list li.sorting{
+	&,
+	&:hover{
+		background-color: inherit;
+	}
+
+	button{
+	    background-color: transparent;
+	    cursor: pointer;
+	    border:none;
+	    margin: 0;
+    	position: relative;
+    	min-height: 26px;
+    	line-height: 26px;
+
+	    &.by_artist{
+	    	margin-left:26px;
+	    }
+
+	    &.by_artist:before{
+	    	content:"";
+	    	display: block;
+	    	width: 26px;
+	    	height: 26px;
+	    	left:-26px;
+	    	position: absolute;
+	    	background: url("@{static-url}img/icon/sort.png") center center no-repeat;
+	    }
+
+	    &:hover,
+	    &.by_artist:hover:before,
+	    &:not(.by_artist):hover + .by_artist:before{
+	    	background-color:@selection-hover-bg;
+	    }
+	}
+}
+
+ol.item_list li.section:not(:hover){
+	button{
+		opacity: 0;
+	}
+}
+

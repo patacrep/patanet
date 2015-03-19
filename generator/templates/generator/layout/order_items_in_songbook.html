@@ -36,8 +36,25 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
 		</p>
 
 		<ol class="item_list ordering">
+			<li class="sorting">
+				<label>
+				</label>
+				<span >
+					<em>{% trans "Tri indépendant des sections:" %}</em>
+				</span>
+				<span>
+				{% spaceless %}
+					<button type="button" class="by_title sort">
+						{% trans "par Titre" %}
+					</button>
+					<button type="button" class="by_artist sort">
+						{% trans "par Artiste" %}
+					</button>
+				{% endspaceless %}
+				</span>
+			</li>
 		{% for item in items_list %}
-			<li class="{{ item.item_type.model}}">
+			<li class="{{ item.item_type.model}} orderable">
 				{% if item.item_type.model == "section" %}
 					<label for="section_{{item.id}}" class="dragger">
 					</label>
