@@ -552,6 +552,9 @@ ol.item_list li.sorting{
 	&:hover{
 		background-color: inherit;
 	}
+	&:not(:hover) button{
+		color:transparent;
+	}
 }
 
 ol.item_list li.section,
@@ -565,6 +568,8 @@ ol.item_list li.sorting{
     	position: relative;
     	min-height: 26px;
     	line-height: 26px;
+    	font-style: italic;
+    	font-size: .8em;
 
 	    &.by_artist{
 	    	margin-left:26px;
@@ -583,7 +588,7 @@ ol.item_list li.sorting{
 	    &:hover,
 	    &.by_artist:hover:before,
 	    &:not(.by_artist):hover + .by_artist:before{
-	    	background-color:@selection-hover-bg;
+	    	background-color:@selection-strip-bg;
 	    }
 	}
 }
