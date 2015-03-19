@@ -552,6 +552,10 @@ ol.item_list li.sorting{
 	&:hover{
 		background-color: inherit;
 	}
+}
+
+ol.item_list li.section,
+ol.item_list li.sorting{
 
 	button{
 	    background-color: transparent;
@@ -584,7 +588,8 @@ ol.item_list li.sorting{
 	}
 }
 
-ol.item_list li.section:not(:hover){
+ol.item_list li.section:not(:hover),
+ol.item_list li.section.ui-sortable-helper{
 	button{
 		opacity: 0;
 	}

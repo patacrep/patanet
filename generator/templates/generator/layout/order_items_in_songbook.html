@@ -60,6 +60,14 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
 					</label>
                     <input type="text" id="section_{{item.id}}" value="{{item.item.name}}" name="section_{{item.id}}" class="section_name" {% latex_free_attributes %}/>
 					<span>
+					{% spaceless %}
+						<button type="button" class="by_title sort">
+							{% trans "par Titre" %}
+						</button>
+						<button type="button" class="by_artist sort">
+							{% trans "par Artiste" %}
+						</button>
+					{% endspaceless %}
 					</span>
 				{% elif item.item_type.model == "song" %}
 					<label for="item_{{item.id}}" class="dragger">

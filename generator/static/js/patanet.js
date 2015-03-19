@@ -430,6 +430,7 @@ $(function() {
             var $this = $(this);
             var artist_first = $this.hasClass('by_artist');
             var line = $this.parents("li").first();
+            var section_only = line.hasClass('section');
 
             var $next = line.next();
             var to_sort = [];
@@ -437,6 +438,9 @@ $(function() {
             while($next.length > 0){
                 // simply ignore the sections
                 if($next.hasClass('section')){
+                    if(section_only){
+                        break
+                    }
                     $next = $next.next();
                     continue;
                 }
