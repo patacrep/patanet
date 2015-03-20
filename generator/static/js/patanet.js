@@ -67,13 +67,21 @@ $(function() {
          } 
     });
 
-    var ordering = function(){
-        // Make the ordering class sortable, with jquery-ui
-        $( ".ordering" ).sortable({
-            axis: "y",
-            scrollSensitivity: 100,
-            stop: function( event, ui ) {}
+    var set_rank_according_to_dom = function() {
+        var i = 1;
+        $('.ordering').children('li.orderable').each(function() {
+          var input = $(this).children('.item-rank');
+          if (input.attr("value") != "X") {
+            if(input.attr("value") != i){
+                patanet.unsaved_changes();
+                input.attr("value", i);
+            }
+            i+=1;
+          }
         });
+    };
+
+    var ordering = function(){
 
         $(".ordering li .item-rank").hide();
         
@@ -92,23 +100,17 @@ $(function() {
                 line.addClass('removed');
             }
             patanet.unsaved_changes();
-            $(".ordering").trigger("sortstop");
+            set_rank_according_to_dom();
             })
-        btn.appendTo(".ordering li");
+        btn.appendTo(".ordering li.orderable");
         
-        // Compute the rank for all the items
-        $( ".ordering" ).on( "sortstop", function( event, ui ) {
-              var i = 1;
-              $('.ordering').children('li').each(function() {
-                  var input = $(this).children('.item-rank');
-                  if (input.attr("value") != "X") {
-                    if(input.attr("value") != i){
-                        patanet.unsaved_changes();
-                        input.attr("value", i);
-                    }
-                    i+=1;
-                  }
-              });
+        // Make the ordering class sortable, with jquery-ui
+        $( ".ordering" ).sortable({
+            axis: "y",
+            scrollSensitivity: 100,
+            items: '.orderable',
+            // Compute the rank for all the items
+            stop: set_rank_according_to_dom       
         });
     }
 
@@ -141,7 +143,7 @@ $(function() {
         append_to_id(rank_input, new_section_id);
 
         $('ol.item_list').append(new_section);
-        $(".ordering").trigger("sortstop");
+        set_rank_according_to_dom();
         patanet.unsaved_changes();
         name_input.focus();
     }
@@ -423,6 +425,54 @@ $(function() {
         })
     }
 
+    var add_sorting_callback = function(elements){
+        elements.click(function(e){
+            var $this = $(this);
+            var artist_first = $this.hasClass('by_artist');
+            var line = $this.parents("li").first();
+            var section_only = line.hasClass('section');
+
+            var $next = line.next();
+            var to_sort = [];
+            var links, artist, title;
+            while($next.length > 0){
+                // simply ignore the sections
+                if($next.hasClass('section')){
+                    if(section_only){
+                        break
+                    }
+                    $next = $next.next();
+                    continue;
+                }
+                links = $next.children('a')
+                title = links[0].innerHTML.trim();
+                artist = links[1].innerHTML.trim();
+                if(artist_first){
+                    to_sort.push([artist, title, $next]);
+                } else {
+                    to_sort.push([title, artist, $next]);
+                }
+                $next = $next.next();
+            }
+
+            to_sort.sort(function(a, b){
+                    // if a should come after b, return 1
+                    if (a[0] == b[0]) {
+                        return a[1].localeCompare(b[1]);
+                    } else {
+                        return a[0].localeCompare(b[0]);
+                    }
+                }
+            );
+
+            for (var i = to_sort.length - 1; i >= 0; i--) {
+                to_sort[i][2].insertAfter(line);
+            };
+            set_rank_according_to_dom();
+        })
+
+    }
+
     // Execute code
     ordering();
     auto_template_name();
@@ -430,4 +480,5 @@ $(function() {
     letters_overview_background();
     insert_new_section_via_js();
     toggle_see_more($('.item-container.songbook'));
+    add_sorting_callback($('button.sort'));
 });
