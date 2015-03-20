@@ -33,8 +33,8 @@ from django.core.exceptions import ValidationError
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
                                 OwnerRequiredMixin, owner_required, return_json_on_ajax
 from generator.models import Songbook, ItemsInSongbook, Song, \
-                             Task as GeneratorTask, Layout, Artist, Section, validate_latex_free
-from generator.forms import SongbookCreationForm, LayoutForm
+                             Task as GeneratorTask, Layout, Artist, Section
+from generator.forms import SongbookCreationForm, LayoutForm, validate_latex_free
 
 
 class SongbookPublicList(ListView):
@@ -428,7 +428,7 @@ def move_or_delete_items(request, id, slug):
                 validate_latex_free(new_name)
                 Section.objects.filter(id=section['id']).update(name=new_name)
             except ValidationError as e:
-                messages.error(request, e.message_dict['name'][0])
+                messages.error(request, e.messages[0])
 
     """
     Set an increasing the rank for all items

@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load staticfiles %}
+{% load filters %}
 
 <h3>{% trans "Organiser le carnet" %}</h3>
 <noscript>
@@ -23,7 +24,7 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
             <label for="new_section">
                 {% trans "Nouvelle section :" %}
             </label>
-            <input type="text" name="new_section" id="new_section" class="section_name"/>
+            <input type="text" name="new_section" id="new_section" class="section_name" {% latex_free_attributes %}/>
             <br/><em>{% trans "La section sera insérée à la fin du carnet" %}</em>
         </p>
 
@@ -40,7 +41,7 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
 				{% if item.item_type.model == "section" %}
 					<label for="section_{{item.id}}" class="dragger">
 					</label>
-                    <input type="text" id="section_{{item.id}}" value="{{item.item.name}}" name="section_{{item.id}}" class="section_name"/>
+                    <input type="text" id="section_{{item.id}}" value="{{item.item.name}}" name="section_{{item.id}}" class="section_name" {% latex_free_attributes %}/>
 					<span>
 					</span>
 				{% elif item.item_type.model == "song" %}
@@ -69,7 +70,7 @@ Vous pouvez organiser les éléments de ce carnet avec la souris.
 			<li id="new_section_dom">
 				<label for="section_{{item.id}}" class="dragger">
 				</label>
-                <input type="text" id="new_section_" value="" name="new_section[]" class="section_name"/>
+                <input type="text" id="new_section_" value="" name="new_section[]" class="section_name" {% latex_free_attributes %}/>
 				<span>
 				</span>
 				<input class="item-rank" id="new_item_" name="new_item[]" value="{{ songbook.count_items|add:1 }}" />

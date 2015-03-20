@@ -24,6 +24,7 @@ from django.core.mail import mail_admins, send_mail
 from django.utils.html import escape
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.core.exceptions import ValidationError
 
 from captcha.fields import CaptchaField
 
@@ -129,11 +130,48 @@ class ContactForm(forms.Form):
 
         return message
 
+def validate_latex_free(string):
+        '''
+        Return true if one of the LaTeX special characters
+        is in the string
+        '''
+        TEX_CHAR, MESSAGE = forbidden_latex_chars()
+        for char in TEX_CHAR:
+            if char in string:
+                raise ValidationError(MESSAGE)
+
+def forbidden_latex_chars():
+        '''
+        Return the LaTeX special characters and a corresponding error string
+        '''
+        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
+        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
+        MESSAGE = _(u"Les caractères suivants sont interdits, merci de les " +
+                    u"supprimer : {chars}.".format(chars=CHARS))
+        return TEX_CHAR, MESSAGE
+
+def latex_free_attributes():
+    TEX_CHAR, MESSAGE = forbidden_latex_chars()
+    escaped_chars = ''.join(['\\{char}'.format(char=char) for char in TEX_CHAR])
+    escaped_chars = '[^'+ escaped_chars +']*'
+
+    error_message = MESSAGE.replace("'","\\'")
+
+    return {
+        'pattern' : escaped_chars,
+        'title' : error_message
+    }
 
 class SongbookCreationForm(forms.ModelForm):
     class Meta:
         model = Songbook
         fields = ('title', 'description', 'author', 'is_public')
+
+    def __init__(self, *args, **kwargs):
+        super(SongbookCreationForm, self).__init__(*args, **kwargs)
+        latex_free_fields = latex_free_attributes()
+        for field in ('title', 'description', 'author'):
+            self.fields[field].widget.attrs.update(latex_free_fields)
 
     def save(self, force_insert=False, force_update=False, commit=True):
         new_songbook = super(SongbookCreationForm, self).save(commit=False)
@@ -147,31 +185,18 @@ class SongbookCreationForm(forms.ModelForm):
 
     def clean_title(self):
         title = self.cleaned_data['title']
-        self._clean_latex(title)
+        validate_latex_free(title)
         return title
 
     def clean_description(self):
         description = self.cleaned_data['description']
-        self._clean_latex(description)
+        validate_latex_free(description)
         return description
 
     def clean_author(self):
         author = self.cleaned_data["author"]
-        self._clean_latex(author)
+        validate_latex_free(author)
         return author
-
-    def _clean_latex(self, string):
-        '''
-        Raise errors if one of the LaTeX special characters
-        is in the string
-        '''
-        TEX_CHAR = ['\\', '{', '}', '&', '[', ']', '^', '~']
-        CHARS = ', '.join(['"{char}"'.format(char=char) for char in TEX_CHAR])
-        for char in TEX_CHAR:
-            if char in string:
-                raise forms.ValidationError(
-                    _(u"Les caractères suivant sont interdits, "
-                    u"merci de les supprimer : {chars}.").format(chars=CHARS))
 
 
 class LayoutForm(forms.ModelForm):
