@@ -1,17 +1,18 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% extends "generator/user/layout.html" %} {% load i18n %}
 
-{% block title %} {% trans "Mes carnets" %} {% endblock %}
+{% block title %}{% endblock %}
+{% block headertitle %} {% trans "Mes carnets" %} {% endblock %}
 
 {% block content %}
-	<a href="{% url "songbook_list" %}" class="back">
-		{% trans "Carnets publics" %}
-	</a>
-	<p>
-		<a href="{% url 'new_songbook' %}" data-icon="add-book">{% trans "Créer un nouveau carnet" %}</a>
-	</p>
 	<div>
         {% for songbook in songbooks %}
             {% include 'generator/songbook_private_item.html' %}
         {% endfor %}
     </div>
+	<p>
+		<a href="{% url 'new_songbook' %}" data-icon="add-book">{% trans "Créer un nouveau carnet" %}</a>
+	</p>
+	<a href="{% url "songbook_list" %}" class="back">
+		{% trans "Carnets publics" %}
+	</a>
 {% endblock %}

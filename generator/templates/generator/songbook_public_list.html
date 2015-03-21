@@ -1,13 +1,8 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+{% extends "generator/user/layout.html" %} {% load i18n %}
 
 {% block title %} {% trans "Carnets publics" %} {% endblock %}
 
 {% block content %}
-	{% if user.is_authenticated %}
-		<a href="{% url "songbook_private_list" %}" class="back">
-			{% trans "Mes carnets" %}
-		</a>
-	{% endif %}
 	<br/>
 	<div>
 		{% for songbook in songbooks %}
