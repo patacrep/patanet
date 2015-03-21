@@ -431,6 +431,7 @@ $(function() {
             var artist_first = $this.hasClass('by_artist');
             var line = $this.parents("li").first();
             var section_only = line.hasClass('section');
+            var ask_confirmation = true;
 
             var $next = line.next();
             var to_sort = [];
@@ -441,6 +442,10 @@ $(function() {
                     if(section_only){
                         break
                     }
+                    if(ask_confirmation && !confirm(line.attr("data-confirmation"))){
+                        return;
+                    }
+                    ask_confirmation = false;
                     $next = $next.next();
                     continue;
                 }
