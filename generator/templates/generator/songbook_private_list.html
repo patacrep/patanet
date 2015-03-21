@@ -8,9 +8,15 @@
         {% for songbook in songbooks %}
             {% include 'generator/songbook_private_item.html' %}
         {% endfor %}
+        <div class="item-container songbook new">
+			<a href="{% url 'new_songbook' %}">
+				<span data-icon="add-book">
+					{% trans "Créer un nouveau carnet" %}
+				</span>
+			</a>
+    	</div>
     </div>
 	<p>
-		<a href="{% url 'new_songbook' %}" data-icon="add-book">{% trans "Créer un nouveau carnet" %}</a>
 	</p>
 	<a href="{% url "songbook_list" %}" class="back">
 		{% trans "Carnets publics" %}
