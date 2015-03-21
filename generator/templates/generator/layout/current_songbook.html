@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<div class="current-songbook params">
+<div class="current-object songbook">
 
     {% if songbook.user_id == request.user.id %}
         <a href="{% url 'songbook_private_list' %}" class="change">

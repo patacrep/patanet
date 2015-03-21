@@ -64,7 +64,7 @@
 	</div>
 
 	<main id="content" role="main">
-		{% block current_songbook %}
+		{% block current_object %}
 			{% if current_songbook %}
 				{% with current_songbook as songbook %}
 			    	{% include "generator/layout/current_songbook.html" %}
