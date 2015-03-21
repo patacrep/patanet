@@ -4,7 +4,7 @@
 {% block headertitle %} {% trans "Mes carnets" %} {% endblock %}
 
 {% block content %}
-	<div>
+	<div class="private-songbooks">
         {% for songbook in songbooks %}
             {% include 'generator/songbook_private_item.html' %}
         {% endfor %}
