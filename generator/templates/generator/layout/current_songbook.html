@@ -6,19 +6,20 @@
         <a href="{% url 'songbook_private_list' %}" class="change">
             {% trans "Mes carnets" %}
         </a>
-        <h2> {{songbook.title}} 
+        <h2>
+            {{songbook.title}} 
 
-        <small id="current_songbook_count" data-value="{{ current_songbook_songs|length|default:songbook.count_songs  }}" data-text="{% trans "chants" %}">
-        </small>
-        <em>
-            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}">
-                {% if songbook.is_public %}
-                    {% trans "Public" %}
-                {% else %}
-                    {% trans "Privé" %}
-                {% endif %}
-            </a>
-        </em>
+            <small id="current_songbook_count" data-value="{{ current_songbook_songs|length|default:songbook.count_songs  }}" data-text="{% trans "chants" %}">
+            </small>
+            <em>
+                <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}" {% if songbook.is_public %} class="public"{% endif %}>
+                    {% if songbook.is_public %}
+                        {% trans "Public" %}
+                    {% else %}
+                        {% trans "Privé" %}
+                    {% endif %}
+                </a>
+            </em>
         </h2>
         {% include 'generator/menu/songbook_actions.html' %}
     {% else %}
