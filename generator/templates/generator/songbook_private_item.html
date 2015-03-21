@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="item-container songbook private{% if songbook.is_public %} public{% endif %}" id="{{songbook.id}}" >
 
-    <h2>
+    <h2{% if songbook.is_public %} title="{% trans "Public" %}"{% endif %}>
         <a href="{% url 'show_songbook' id=songbook.id slug=songbook.slug %}">
             {{songbook.title}}
         </a>
