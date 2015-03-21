@@ -23,10 +23,10 @@
 {% else %}
 <ul class="user-menu">
     <li>
-        <a href="{% url 'register' %}">{% trans "Créer un compte" %}</a>
+        <a href="{% url 'register' %}" data-icon="user-register">{% trans "Créer un compte" %}</a>
     </li>
     <li>
-        <a href="{% url 'login' %}">{% trans "Connexion" %}</a>
+        <a href="{% url 'login' %}"  data-icon="user-login">{% trans "Connexion" %}</a>
     </li>
 </ul>
 {% endif %}
