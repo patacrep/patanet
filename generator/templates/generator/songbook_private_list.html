@@ -4,6 +4,9 @@
 {% block headertitle %} {% trans "Mes carnets" %} {% endblock %}
 
 {% block content %}
+	<a href="{% url "songbook_list" %}" class="related">
+		{% trans "Carnets publics" %}
+	</a>
 	<div class="private-songbooks">
         {% for songbook in songbooks %}
             {% include 'generator/songbook_private_item.html' %}
@@ -18,7 +21,4 @@
     </div>
 	<p>
 	</p>
-	<a href="{% url "songbook_list" %}" class="back">
-		{% trans "Carnets publics" %}
-	</a>
 {% endblock %}

@@ -2,7 +2,7 @@
 
 {% if request.user.is_authenticated %}
 	<div class="current-object choose">
-        <a href="{% url 'songbook_private_list' %}" class="change">
+        <a href="{% url 'songbook_private_list' %}" class="related">
             {% trans "Mes carnets" %}
         </a>
 		<form method="get" action="{% url 'set_current_songbook' %}">

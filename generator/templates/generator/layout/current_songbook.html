@@ -3,7 +3,7 @@
 <div class="current-object songbook">
 
     {% if songbook.user_id == request.user.id %}
-        <a href="{% url 'songbook_private_list' %}" class="change">
+        <a href="{% url 'songbook_private_list' %}" class="related">
             {% trans "Mes carnets" %}
         </a>
         <h2>
@@ -23,7 +23,7 @@
         </h2>
         {% include 'generator/menu/songbook_actions.html' %}
     {% else %}
-        <a href="{% url 'songbook_list' %}" class="change">
+        <a href="{% url 'songbook_list' %}" class="related">
             {% trans "Carnets publics" %}
         </a>
         <h1> {{songbook.title}} <small>- {{songbook.count_songs}} {% trans "chants" %}</small></h1>
