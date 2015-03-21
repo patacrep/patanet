@@ -15,9 +15,10 @@
 		<li><a href="{% url 'home' %}">{% trans "Page d'accueil" %}</a></li>
         <li><a href="{% url 'songbook_list' %}">{% trans "Carnets publics" %}</a></li>
         {% if request.user.is_authenticated %}
-            <li><a href="{% url 'songbook_private_list' %}">{% trans "Carnets privés" %}</a></li>
+            <li><a href="{% url 'songbook_private_list' %}">{% trans "Mes carnets" %}</a></li>
+        {% else %}
+            <li><a href="{% url 'new_songbook' %}">{% trans "Nouveau carnet" %}</a></li>
         {% endif %}
-        <li><a href="{% url 'new_songbook' %}">{% trans "Nouveau carnet" %}</a></li>
     </ul>
 
     <h3>{% trans "Catalogue musical" %}</h3>
