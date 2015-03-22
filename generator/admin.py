@@ -80,6 +80,6 @@ admin.site.register(Task, TaskAdmin)
 
 
 class LayoutAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name',)
 
 admin.site.register(Layout, LayoutAdmin)
