@@ -18,7 +18,7 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-from generator.models import Song, Artist, Songbook, Task, Layout
+from generator.models import Song, Artist, Songbook, Task, Layout, ItemsInSongbook
 
 
 class SongAdmin(admin.ModelAdmin):
@@ -83,3 +83,24 @@ class LayoutAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
 admin.site.register(Layout, LayoutAdmin)
+
+class ItemsInSongbookAdmin(admin.ModelAdmin):
+    list_display = ('songbook_title','item','rank',)
+    list_filter = ('songbook__title',)
+    ordering = ('songbook','rank',)
+
+
+    def songbook_title(self, obj):
+        return obj.songbook.title
+    songbook_title.short_description = 'Songbook'
+    songbook_title.admin_order_field = 'songbook__title'
+
+    def item(self, obj):
+        try:
+            title = '[Song] ' + obj.item.title + ' - ' + obj.item.artist.name
+        except AttributeError:
+            title = '[Section] ' + obj.item.name
+        
+        return title
+
+admin.site.register(ItemsInSongbook, ItemsInSongbookAdmin)
