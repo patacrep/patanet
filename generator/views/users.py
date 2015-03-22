@@ -42,7 +42,7 @@ class Register(FormView):
 
 
 class PasswordChange(LoginRequiredMixin, FormView):
-    template_name = 'generator/password_change.html'
+    template_name = 'generator/user/password_change.html'
     form_class = PasswordChangeForm
     success_url = reverse_lazy('profile')
 

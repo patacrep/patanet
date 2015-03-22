@@ -251,6 +251,19 @@ ol.item_list{
     }
 }
 
+.item-container.new.songbook{
+	border-color: transparent;
+	text-align: center;
+	a{
+		background-color: #E6F6E6;
+		padding: .9em 1em;
+		display: block;
+		&:hover{
+			background-color: #CFEACF;
+		}
+	}
+}
+
 
 .item-container{
     margin:0 auto;
@@ -335,7 +348,7 @@ ol.item_list{
     .more{
         font-weight: normal;
     }
-    ul.songbook-actions{
+    ul.songbook.actions{
         margin: 5px 0 -5px -18px;
         text-align: center;
         background-color: #fff;
@@ -345,6 +358,17 @@ ol.item_list{
     }
 
 
+}
+
+.item-container.private.public h2{
+	background: url("@{static-url}img/icon/mine.png") right 16px center no-repeat;
+}
+
+.private-songbooks{
+	clear: right;
+	.item-container.public h2{
+		background-image: url("@{static-url}img/icon/public.png");
+	}
 }
 
 ol.artists{

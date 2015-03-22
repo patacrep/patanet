@@ -1,8 +1,8 @@
 {% load i18n %}
 
 {% if request.user.is_authenticated %}
-	<div class="current-songbook choose">
-        <a href="{% url 'songbook_private_list' %}" class="change">
+	<div class="current-object choose">
+        <a href="{% url 'songbook_private_list' %}" class="related">
             {% trans "Mes carnets" %}
         </a>
 		<form method="get" action="{% url 'set_current_songbook' %}">
@@ -30,7 +30,7 @@
 		</form>
 	</div>
 {% else %}
-	<div class="current-songbook login">
+	<div class="current-object login">
 		<h3>
 			{% url 'login' as login_url %}
 			{% url 'register' as register_url %}

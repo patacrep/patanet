@@ -1,0 +1,45 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block current_object %}
+	{% if user.is_authenticated %}
+	<div class="current-object params">
+
+	    <h2>
+	    	{{ user.username }}
+	    	<em>
+	    		<a href="mailto:{{ user.email }}">
+	    		{{ user.email }}
+	    		</a>
+	    	</em>
+	    </h2>
+	    <ul class="user actions">
+	    {% spaceless %}
+            {% url 'songbook_private_list' as url %}
+                <li{% if request.path == url %} class="active"{% endif %}>
+                    <a href="{{ url }}" data-icon="books">
+                        {% trans "Mes carnets" %}
+                    </a>
+                </li>
+            {% url 'password_change' as url %}
+                <li{% if request.path == url %} class="active"{% endif %}>
+                    <a href="{{ url }}" data-icon="change-password">
+                        {% trans "Mot de passe" %}
+                    </a>
+                </li>
+            {% url 'logout' as url %}
+                <li{% if request.path == url %} class="active"{% endif %}>
+                    <a href="{{ url }}" data-icon="logout">
+                        {% trans "Déconnexion" %}
+                    </a>
+                </li>
+
+            {% comment %}
+	            Here we can add:
+	            - delete account (or suspend ?)
+            	
+            {% endcomment %}
+	    {% endspaceless %}
+	    </ul>
+	</div>
+	{% endif %}
+{% endblock %}

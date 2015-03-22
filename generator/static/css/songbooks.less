@@ -1,18 +1,25 @@
-.current-songbook {
 
-    background:#f8f8f8 url("@{static-url}img/book.png") 10px center no-repeat;
-    background-size: auto 50px;
+a.related {
+    display: block;
+    float: right;
+    font-size: .8em;
+    padding-right: .1em;
+}
+
+.current-object {
+
+    &.songbook{
+        background:#f8f8f8 url("@{static-url}img/book.png") 10px center no-repeat;
+        background-size: auto 50px;
+        .public{
+            background: url("@{static-url}img/icon/public.png") right 16px center no-repeat;
+        }
+    }
+    background-color:#f8f8f8;
     padding: .7em .5em 0 90px;
     
     margin: -24px; // to cancel the parent padding
     margin-bottom: 1em;
-
-    .change {
-        display: block;
-        float: right;
-        font-size: .8em;
-        padding-right: .1em;
-    }
 
 
     h1,
@@ -33,7 +40,7 @@
     }
 
 
-    ul.songbook-actions{
+    ul.actions{
         margin:0 -8px 0 -90px;
         padding:0;
         padding-left: 90px;
@@ -96,7 +103,7 @@
     }
 }
 
-ul.songbook-actions{
+ul.actions{
     margin: 0;
     a{
         display: inline-block;

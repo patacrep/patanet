@@ -1,28 +1,29 @@
 {% load i18n %}
 
-<div class="current-songbook params">
+<div class="current-object songbook">
 
     {% if songbook.user_id == request.user.id %}
-        <a href="{% url 'songbook_private_list' %}" class="change">
+        <a href="{% url 'songbook_private_list' %}" class="related">
             {% trans "Mes carnets" %}
         </a>
-        <h2> {{songbook.title}} 
+        <h2>
+            {{songbook.title}} 
 
-        <small id="current_songbook_count" data-value="{{ current_songbook_songs|length|default:songbook.count_songs  }}" data-text="{% trans "chants" %}">
-        </small>
-        <em>
-            <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}">
-                {% if songbook.is_public %}
-                    {% trans "Public" %}
-                {% else %}
-                    {% trans "Privé" %}
-                {% endif %}
-            </a>
-        </em>
+            <small id="current_songbook_count" data-value="{{ current_songbook_songs|length|default:songbook.count_songs  }}" data-text="{% trans "chants" %}">
+            </small>
+            <em>
+                <a href="{% url 'edit_songbook' id=songbook.id slug=songbook.slug %}" {% if songbook.is_public %} class="public"{% endif %}>
+                    {% if songbook.is_public %}
+                        {% trans "Public" %}
+                    {% else %}
+                        {% trans "Privé" %}
+                    {% endif %}
+                </a>
+            </em>
         </h2>
         {% include 'generator/menu/songbook_actions.html' %}
     {% else %}
-        <a href="{% url 'songbook_list' %}" class="change">
+        <a href="{% url 'songbook_list' %}" class="related">
             {% trans "Carnets publics" %}
         </a>
         <h1> {{songbook.title}} <small>- {{songbook.count_songs}} {% trans "chants" %}</small></h1>

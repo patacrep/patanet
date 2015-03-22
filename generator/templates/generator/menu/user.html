@@ -3,31 +3,30 @@
 {% spaceless %}
 {% if user.is_authenticated %}
 <ul class="user-menu">
+    {% if user.is_superuser %}
+        {% load admin_urls %}
+        <li>
+            {% url 'admin:index' as url%}
+            <a href="{{ url }}">
+                Django administration
+            </a>
+        </li>
+    {% endif %}
     <li>
-        {% blocktrans with username=user.username %}
-			Bienvenue, {{ username }}
-        {% endblocktrans %}
-    </li>
-	<li>
-		{% url 'songbook_private_list' as url %}
-		<a href="{{ url }}">{% trans "Mes carnets" %}</a>
-	</li>
-	<li>
-		{% url 'password_change' as url %}
-		<a href="{{ url }}"{% if request.path == url %} class="active"{% endif %}>{% trans "Changer de mot de passe" %}</a>
-	</li>
-    <li>
-        <a href="{% url 'logout' %}">{% trans "Se déconnecter" %}</a>
+        {% url 'songbook_private_list' as url %}
+        <a href="{{ url }}" data-icon="user">
+            &nbsp;{{ user.username }}&nbsp;
+        </a>
     </li>
 </ul>
 
 {% else %}
 <ul class="user-menu">
     <li>
-        <a href="{% url 'register' %}">{% trans "Créer un compte" %}</a>
+        <a href="{% url 'register' %}" data-icon="user-register">{% trans "Créer un compte" %}</a>
     </li>
     <li>
-        <a href="{% url 'login' %}">{% trans "Connexion" %}</a>
+        <a href="{% url 'login' %}"  data-icon="user-login">{% trans "Connexion" %}</a>
     </li>
 </ul>
 {% endif %}
