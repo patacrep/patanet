@@ -218,8 +218,8 @@ class Layout(models.Model):
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
 
-    bookoptions = JSONField()
-    other_options = JSONField()
+    bookoptions = JSONField(default={}, blank=True)
+    other_options = JSONField(default={}, blank=True)
 
     template = models.CharField(max_length=100,
                                  verbose_name=_(u"gabarit"),
