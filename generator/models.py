@@ -286,7 +286,8 @@ class Task(models.Model):
                                  related_name="tasks",
                                  verbose_name=_(u"carnet"))
     layout = models.ForeignKey(Layout,
-                               verbose_name=_(u"Mise en page"))
+                                related_name="task",
+                                verbose_name=_(u"Mise en page"))
     hash = models.CharField(max_length=40,
                             verbose_name=_(u"contenu"))
     last_updated = models.DateTimeField(auto_now=True,
@@ -295,6 +296,9 @@ class Task(models.Model):
                              choices=STATES,
                              verbose_name=_(u"état"))
     result = JSONField(verbose_name=_(u"résultat"))
+
+    class Meta:
+        unique_together = ('songbook', 'layout',)
 
     def __unicode__(self):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
