@@ -80,7 +80,7 @@
 
     <h3>Nouvelle mise en page</h3>
 
-    <form class="new_layout" method="post" action="{% url 'setup_rendering' id=songbook.id slug=songbook.slug %}">
+    <form class="new_layout" method="post" action="{% url 'download_songbook' id=songbook.id slug=songbook.slug %}">
         {% csrf_token %}
         <div class="field_container">
           <div>

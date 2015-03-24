@@ -478,7 +478,7 @@ class LayoutList(OwnerRequiredMixin, CreateView):
     """Setup the parameters for songbook rendering
     """
     model = Layout
-    template_name = 'generator/setup_rendering.html'
+    template_name = 'generator/download_songbook.html'
     form_class = LayoutForm
 
     def get_success_url(self):
@@ -546,4 +546,4 @@ def render_songbook(request, id, slug):
         import generator.tasks as tasks
         tasks.queue_render_task(gen_task.id)
 
-    return redirect(reverse('setup_rendering', kwargs={"id":id, "slug":slug}))
+    return redirect(reverse('download_songbook', kwargs={"id":id, "slug":slug}))
