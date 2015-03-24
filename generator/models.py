@@ -211,6 +211,7 @@ class Layout(models.Model):
 
     name = models.CharField(max_length=100,
                             verbose_name=_(u"nom de la mise en page"))
+    user = models.ForeignKey(User, related_name='layouts', blank=True, null=True)
 
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
@@ -235,6 +236,7 @@ class Layout(models.Model):
 
     class Meta:
         verbose_name = _(u"Mise en page")
+        ordering = ["user_id"]
 
 
 class ItemsInSongbook(models.Model):
