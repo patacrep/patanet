@@ -18,12 +18,35 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
 
 from generator.models import Song, Artist, Songbook, Task, Layout, ItemsInSongbook
 
 import re
 from django.conf import settings
 
+def id_attr(instance):
+    return "n° " + str(instance.id)
+
+def add_link_field(target_model = None, field = '', app='generator', field_name='link',
+                   link_text=id_attr):
+    def add_link(cls):
+        reverse_name = target_model or cls.model.__name__.lower()
+        def link(self, instance):
+            app_name = app or instance._meta.app_label
+            reverse_path = "admin:%s_%s_change" % (app_name, reverse_name)
+            link_obj = getattr(instance, field, None) or instance
+            if hasattr(link_obj, 'get'):
+                link_obj = link_obj.get()
+            url = reverse(reverse_path, args = (link_obj.id,))
+            return mark_safe("<a href='%s'>%s</a>" % (url, link_text(link_obj)))
+        link.allow_tags = True
+        link.short_description = reverse_name + ' link'
+        setattr(cls, field_name, link)
+        cls.readonly_fields = list(getattr(cls, 'readonly_fields', [])) + \
+            [field_name]
+        return cls
+    return add_link
 
 class SongAdmin(admin.ModelAdmin):
     list_display = ('title', 'language', 'artist')
@@ -73,8 +96,10 @@ class SongbookAdmin(admin.ModelAdmin):
 admin.site.register(Songbook, SongbookAdmin)
 
 
+@add_link_field('songbook', 'songbook', field_name="songbook_link")
+@add_link_field('layout', 'layout')
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('songbook', 'user', 'layout', 'last_updated', 'state', 'log_link', )
+    list_display = ('songbook', 'user', 'last_updated', 'state', 'log_link', 'link', 'songbook_link', )
     readonly_fields = ('log_link',)
     ordering = ('state',)
 
@@ -100,8 +125,9 @@ def make_layout_public(modeladmin, request, queryset):
 make_layout_public.short_description = _(u'Rendre les mise en page utilisables par tous')
 
 
+@add_link_field('task', 'task')
 class LayoutAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'link', )
     actions = [make_layout_public]
 
 admin.site.register(Layout, LayoutAdmin)
