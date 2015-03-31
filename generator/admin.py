@@ -17,8 +17,12 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
 
 from generator.models import Song, Artist, Songbook, Task, Layout, ItemsInSongbook
+
+import re
+from django.conf import settings
 
 
 class SongAdmin(admin.ModelAdmin):
@@ -70,11 +74,23 @@ admin.site.register(Songbook, SongbookAdmin)
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('songbook', 'user', 'layout', 'last_updated', 'state')
+    list_display = ('songbook', 'user', 'layout', 'last_updated', 'state', 'log_link', )
+    readonly_fields = ('log_link',)
     ordering = ('state',)
 
     def user(self, task):
         return task.songbook.user
+
+
+    def log_link(self, obj):
+        msg = obj.result.get('error_msg', '')
+        match = re.search('([^" \']+\.log)', msg)
+        if(match):
+            url = settings.MEDIA_URL +'PDF/' + match.group(0)
+            return mark_safe("<a href='%s'>Voir les logs</a>" % url)
+        return None
+
+    log_link.allow_tags = True
 
 admin.site.register(Task, TaskAdmin)
 
