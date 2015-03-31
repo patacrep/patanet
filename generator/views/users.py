@@ -28,6 +28,7 @@ from django.contrib.auth.decorators import login_required
 
 from generator.forms import RegisterForm
 from generator.decorators import LoginRequiredMixin
+from .songbooks import _set_and_get_current_songbook
 
 class Register(FormView):
     template_name = 'generator/register.html'
@@ -72,7 +73,7 @@ def login_complete(request):
         return redirect(reverse('new_songbook'))
     elif songbook_number == 1:
         songbook = songbooks[0];
-        _set_and_get_current_songbook(songbook.id)
+        _set_and_get_current_songbook(request, songbook.id)
         messages.success(request, _(u"Carnet de chant '%s' sélectionné.") % songbook.title)
         
         if songbook.count_songs() > 0:
