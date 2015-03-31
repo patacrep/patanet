@@ -5,11 +5,15 @@
     <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank">
         {% trans "Télécharger" %}
     </a><br/>
-    <small>
-        <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}&amp;force=true">
-            {% trans "Recompiler" %}
-        </a>
-    </small>
+    {% if task.hash != songbook.hash %}
+        <small>
+            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
+                {% trans "Recompiler" %}
+            </a>
+        </small>
+    {% else %}
+        &nbsp;
+    {% endif %}
 {% elif task.state = 'QUEUED' %}
     <small>
         {% trans "Compilation en attente..." %}
