@@ -23,7 +23,7 @@ from django.views.generic.base import TemplateView
 from generator.views import SongList, SongView, SongSearch, ArtistList, \
      PasswordChange, Register, contact, \
      NewSongbook, ShowSongbook, SongbookPublicList, SongbookPrivateList, \
-     UpdateSongbook, DeleteSongbook, LayoutList, ArtistView,\
+     UpdateSongbook, DeleteSongbook, NewLayout, LayoutList, ArtistView,\
      reset_password, reset_password_confirm, password_reset_done, \
      password_reset_complete, move_or_delete_items, login_complete, \
     FlatPage
@@ -89,6 +89,9 @@ urlpatterns = patterns('generator.views',
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/render',
                 'render_songbook',
                 name="render_songbook"),
+    url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/download/new',
+                NewLayout.as_view(),
+                name="new_download"),
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/download',
                 LayoutList.as_view(),
                 name="download_songbook"),

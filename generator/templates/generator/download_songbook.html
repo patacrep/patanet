@@ -78,23 +78,10 @@
     </table>
     {% endif %}
 
-    <h3>Nouvelle mise en page</h3>
 
-    <form class="new_layout" method="post" action="{% url 'download_songbook' id=songbook.id slug=songbook.slug %}">
-        {% csrf_token %}
-        <div class="field_container">
-          <div>
-            {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {% if field.name != "bookoptions" %}
-                    <p>{{ field.label_tag }} {{ field }} </p>
-                {% endif %}
-            {% endfor %}
-            <p>
-              <input type="submit" value="{% trans "Créer une mise en page" %}"/>
-            </p>
-          </div>
-        </div>
-        <div id="bookoptions"><p>{{ form.bookoptions.label_tag }}<p> {{ form.bookoptions }} </div>
-    </form>
+    <a href="{% url 'new_download' id=songbook.id slug=songbook.slug %}">
+        <span data-icon="new-layout">
+            {% trans "Créer une mise en page" %}
+        </span>
+    </a>
 {% endblock %}

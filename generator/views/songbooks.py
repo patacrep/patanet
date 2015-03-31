@@ -474,6 +474,32 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
         return get_object_or_404(Songbook, id=id, slug=slug)
 
 
+class NewLayout(OwnerRequiredMixin, CreateView):
+    """Create new parameters for songbook rendering
+    """
+    model = Layout
+    template_name = 'generator/new_download.html'
+    form_class = LayoutForm
+
+    def get_success_url(self):
+        return reverse('download_songbook',
+                        kwargs={"id": self.kwargs["id"],
+                                "slug": self.kwargs["slug"]})
+
+    def form_valid(self, form):
+        form.user = self.request.user
+        messages.success(self.request, _(u"La mise en page a été crée."))
+        return super(NewLayout, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(NewLayout, self).get_context_data(**kwargs)
+        id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        songbook = get_object_or_404(Songbook, id=id, slug=slug)
+        context['songbook'] = songbook
+        return context
+
+
 class LayoutList(OwnerRequiredMixin, CreateView):
     """Setup the parameters for songbook rendering
     """

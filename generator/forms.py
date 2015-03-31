@@ -212,13 +212,13 @@ class LayoutForm(forms.ModelForm):
                   ("a5", _(u"A5")),
                  )
     OPTIONS = [
-            ('diagram', _(u"Diagrammes d'accords")),
-            ('importantdiagramonly', _(u"Diagrammes important seulement")),
+            ('diagram', _(u"Rappel des diagrammes d'accords")),
+            ('importantdiagramonly', _(u"Rappel des diagrammes importants")),
             #('repeatchords', _(u"Accords sur tous les couplets")),
             #('tabs', _(u"Tablatures")),
             #('lilypond', _(u'Partitions Lilypond')),
             ('pictures', _(u"Couvertures d'albums")),
-            ('onesongperpage', _(u"Une chanson par page")),
+            ('onesongperpage', _(u"Saut de page avant chaque chanson")),
             ]
 
     # papersize = forms.ChoiceField(
@@ -239,6 +239,7 @@ class LayoutForm(forms.ModelForm):
         new_layout = super(LayoutForm, self).save(commit=False)
         bookoptions = self.cleaned_data.get('bookoptions', None)
 
+        new_layout.user = self.user
         new_layout.bookoptions = bookoptions
         new_layout.other_options = {
                         #"papersize": self.cleaned_data["papersize"],
