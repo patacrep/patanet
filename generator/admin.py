@@ -79,8 +79,14 @@ class TaskAdmin(admin.ModelAdmin):
 admin.site.register(Task, TaskAdmin)
 
 
+def make_layout_public(modeladmin, request, queryset):
+    queryset.update(user_id=0)
+make_layout_public.short_description = _(u'Rendre les mise en page utilisables par tous')
+
+
 class LayoutAdmin(admin.ModelAdmin):
     list_display = ('name',)
+    actions = [make_layout_public]
 
 admin.site.register(Layout, LayoutAdmin)
 
