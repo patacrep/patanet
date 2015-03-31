@@ -561,5 +561,7 @@ def render_songbook(request, id, slug):
 
         import generator.tasks as tasks
         tasks.queue_render_task(gen_task.id)
+    elif state == GeneratorTask.State.ERROR:
+        messages.error(request, _(u"Le bug doit être corrigé pour relancer la compilation: merci de contacter un administrateur"))
 
     return redirect(reverse('download_songbook', kwargs={"id":id, "slug":slug}))
