@@ -27,8 +27,16 @@
         <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
             {% trans "Relancer la compilation" %}
         </a><br/>
-        <small>
-            {% trans "Echec de la compilation" %}
-        </small>
+        {% if user.is_superuser %}
+            <small>
+                <a href="{% url 'admin:generator_task_change' task.id %}">
+                    {% trans "Voir dans Django administration" %}
+                </a>
+            </small>
+        {% else %}
+            <small>
+                {% trans "Echec de la compilation" %}
+            </small>
+        {% endif %}
     {% endif %}
 {% endif %}
