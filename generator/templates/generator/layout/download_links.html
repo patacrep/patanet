@@ -1,0 +1,34 @@
+{% load i18n %}{% load setting %} 
+{% setting MEDIA_URL as MEDIA_URL %}
+
+{% if task.state = 'FINISHED' %}
+    <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank">
+        {% trans "Télécharger" %}
+    </a><br/>
+    <small>
+        <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}&amp;force=true">
+            {% trans "Recompiler" %}
+        </a>
+    </small>
+{% elif task.state = 'QUEUED' %}
+    <small>
+        {% trans "Compilation en attente..." %}
+    </small>
+{% elif task.state = 'IN_PROCESS' %}
+    <small>
+        {% trans "Compilation en cours..." %}
+    </small>
+{% else %}
+    {% if not task %}
+        <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
+            {% trans "Compiler" %}
+        </a><br/>&nbsp;
+    {% else %}
+        <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
+            {% trans "Relancer la compilation" %}
+        </a><br/>
+        <small>
+            {% trans "Echec de la compilation" %}
+        </small>
+    {% endif %}
+{% endif %}

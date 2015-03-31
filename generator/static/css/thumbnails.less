@@ -1,0 +1,57 @@
+.thumbnail{
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    background-color: #E6F6E6;
+    min-height: 200px;
+    margin: .3em;
+
+    &.new-layout a{
+        box-sizing: border-box;
+        text-align: center;
+        min-height: 200px;
+        padding: 1em;
+        font-weight: bold;
+        display: block;
+    }
+
+    &:hover .other{
+        opacity: 1;
+    }
+}
+
+ul.main.options{
+    padding: 0 1em;
+    text-align: center;
+    font-weight: bold;
+    li{
+        display: inline;
+    }
+}
+ul.other.options{
+    opacity: 0;
+    padding: 0 .5em;
+    li{ 
+        list-style-type: none;
+        &:before{
+            content: "- ";
+        }
+    }
+}
+
+.download_links{
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    small{
+        font-weight: normal;
+        font-style: italic;
+        a{
+            font-style: normal;
+        }
+    }
+}

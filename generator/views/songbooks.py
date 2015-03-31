@@ -26,7 +26,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
-from django.db.models import Count, Prefetch, F
+from django.db.models import Count, Prefetch, F, Q
 from django.core.exceptions import ValidationError
 
 
@@ -500,35 +500,28 @@ class NewLayout(OwnerRequiredMixin, CreateView):
         return context
 
 
-class LayoutList(OwnerRequiredMixin, CreateView):
+class LayoutList(OwnerRequiredMixin, ListView):
     """Setup the parameters for songbook rendering
     """
     model = Layout
+    context_object_name = "layouts"
     template_name = 'generator/download_songbook.html'
-    form_class = LayoutForm
 
-    def get_success_url(self):
-        return reverse('render_songbook',
-                        kwargs={"id": self.kwargs["id"],
-                                "slug": self.kwargs["slug"]})
-
-    def form_valid(self, form):
-        messages.success(self.request, _(u"La mise en page a été crée."))
-        rst = super(LayoutList, self).form_valid(form)
-
-        # Set the session for layout generation
-        self.request.session["layout"] = self.object.id
-        return rst
+    def get_queryset(self):
+        return Layout.objects.filter(
+                    Q(user_id=self.request.user.id)
+                    | Q(user_id=None)
+                )
 
     def get_context_data(self, **kwargs):
         context = super(LayoutList, self).get_context_data(**kwargs)
+
         id = self.kwargs.get('id', None)
         slug = self.kwargs.get('slug', None)
         songbook = Songbook.objects.get(id=id, slug=slug)
         context['songbook'] = songbook
+
         context['form_options'] = LayoutForm.OPTIONS
-        context['existing_tasks'] = GeneratorTask.objects.filter(
-                                                    songbook=songbook)
         return context
 
 
@@ -540,9 +533,6 @@ def render_songbook(request, id, slug):
     songbook = Songbook.objects.get(id=id)
 
     layout_id = request.REQUEST.get("layout", 0)
-
-    if layout_id == 0:
-        layout_id = request.session["layout"]
 
     layout = Layout.objects.get(id=layout_id)
 
