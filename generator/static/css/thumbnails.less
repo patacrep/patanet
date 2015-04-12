@@ -36,9 +36,22 @@
         right: 0;
         bottom: 40px;
         background:url("@{static-url}img/bookoption/book_portrait.png") center center no-repeat;
+        &.chorded:before{
+            content: " ";
+            height: 32px;
+            position: absolute;
+            right: 0;
+            left: 40px;
+            bottom: 17px;
+            background:url("@{static-url}img/bookoption/guitar.png") center center no-repeat;
+        }
     }
     .landscape{
         background-image:url("@{static-url}img/bookoption/book_landscape.png");
+        &.chorded:before{
+            left: 63px;
+            bottom: 24px;
+        }
     }
 }
 
