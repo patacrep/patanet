@@ -15,11 +15,11 @@
         &nbsp;
     {% endif %}
 {% elif task.state = 'QUEUED' %}
-    <small>
+    <small class="update-me task" data-task="{{ task.id }}">
         {% trans "Compilation en attente..." %}
     </small>
 {% elif task.state = 'IN_PROCESS' %}
-    <small>
+    <small class="update-me task" data-task="{{ task.id }}">
         {% trans "Compilation en cours..." %}
     </small>
 {% else %}

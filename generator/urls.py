@@ -26,7 +26,7 @@ from generator.views import SongList, SongView, SongSearch, ArtistList, \
      UpdateSongbook, DeleteSongbook, NewLayout, LayoutList, ArtistView,\
      reset_password, reset_password_confirm, password_reset_done, \
      password_reset_complete, move_or_delete_items, login_complete, \
-    FlatPage
+    FlatPage, get_task_link
 
 
 urlpatterns = patterns('generator.views',
@@ -95,6 +95,8 @@ urlpatterns = patterns('generator.views',
     url(r'^songbooks/(?P<id>\d+)-(?P<slug>[\w-]+)/download',
                 LayoutList.as_view(),
                 name="download_songbook"),
+    url(r'^songbooks/task/(?P<id>\d+)/link',
+                'get_task_link'),
 
 )
 

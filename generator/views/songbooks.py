@@ -525,6 +525,18 @@ class LayoutList(OwnerRequiredMixin, ListView):
         return context
 
 
+def get_task_link(request, id):
+    task = get_object_or_404(GeneratorTask, id=id)
+    songbook = task.songbook
+    if not songbook.is_public and request.user.id != songbook.user_id:
+        return redirect(reverse('denied'))
+    context = {
+        'task': task,
+        'songbook': songbook
+    }
+    return render(request, 'generator/layout/download_links.html', context)
+
+
 @owner_required(('id', 'id'))
 def render_songbook(request, id, slug):
     """Trigger the generation of a songbook

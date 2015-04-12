@@ -478,6 +478,46 @@ $(function() {
 
     }
 
+    var check_all_downloads = function(){
+        $('.update-me.task').each(function(index, elt){
+            var task_id = elt.dataset.task;
+            check_downloads(elt.parentNode, task_id);
+        })
+    }
+
+    var check_downloads = function(element, task_id){
+
+        function get_status(){
+
+
+            var data = {};
+
+            var url = baseurl+'songbooks/task/';
+            url += task_id;
+            url += '/link';
+
+            $.post(url, data)
+
+                // successfully treated
+                .done(function(data) {
+                    element.innerHTML = data.trim();
+                    if($(element.firstChild).hasClass('update-me')){
+                        // not rendered yet: need to check again
+                        setTimeout(get_status, 4000);
+                    }
+                })
+                // failure
+                .fail(function(data) {
+                    console.log('Something wrong on the server side :');
+                    console.log(data.responseText);
+                    if(confirm('Unexpected server response, you should try to reload the page')){
+                        document.location.reload();
+                    }
+                });
+        }
+        setTimeout(get_status, 5000);
+    }
+
     // Execute code
     ordering();
     auto_template_name();
@@ -486,4 +526,5 @@ $(function() {
     insert_new_section_via_js();
     toggle_see_more($('.item-container.songbook'));
     add_sorting_callback($('button.sort'));
+    check_all_downloads();
 });
