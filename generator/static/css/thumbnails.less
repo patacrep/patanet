@@ -36,6 +36,7 @@
         right: 0;
         bottom: 40px;
         background:url("@{static-url}img/bookoption/book_portrait.png") center center no-repeat;
+        &.lyric:before,
         &.chorded:before{
             content: " ";
             height: 32px;
@@ -45,9 +46,13 @@
             bottom: 17px;
             background:url("@{static-url}img/bookoption/guitar.png") center center no-repeat;
         }
+        &.lyric:before{
+            background-image:url("@{static-url}img/bookoption/microphone.png");
+        }
     }
     .landscape{
         background-image:url("@{static-url}img/bookoption/book_landscape.png");
+        &.lyric:before,
         &.chorded:before{
             left: 63px;
             bottom: 24px;
