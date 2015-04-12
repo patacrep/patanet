@@ -488,7 +488,7 @@ class NewLayout(OwnerRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.user = self.request.user
-        messages.success(self.request, _(u"La mise en page a été crée."))
+        messages.success(self.request, _(u"La mise en page a été créée."))
         return super(NewLayout, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
