@@ -1,8 +1,11 @@
+
+@thumbnail-bg:#E6F6E6;
+
 .thumbnail{
     display: inline-block;
     position: relative;
     vertical-align: top;
-    background-color: #E6F6E6;
+    background-color: @thumbnail-bg;
     min-height: 200px;
     margin: .3em;
 
@@ -18,6 +21,25 @@
     &:hover .other{
         opacity: 1;
     }
+
+    
+    &:hover .landscape,
+    &:hover .portrait{
+        opacity: 0.3;
+    }
+
+    .landscape,
+    .portrait{
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        bottom: 40px;
+        background:url("@{static-url}img/bookoption/book_portrait.png") center center no-repeat;
+    }
+    .landscape{
+        background-image:url("@{static-url}img/bookoption/book_landscape.png");
+    }
 }
 
 ul.main.options{
@@ -31,11 +53,22 @@ ul.main.options{
 ul.other.options{
     opacity: 0;
     padding: 0 .5em;
+    position: relative;
+    text-shadow: -1px 0 @thumbnail-bg, 0 1px @thumbnail-bg, 1px 0 @thumbnail-bg, 0 -1px @thumbnail-bg;
     li{ 
         list-style-type: none;
         &:before{
             content: "- ";
         }
+    }
+
+    &:empty:before{
+        content: attr(data-empty);
+        display: block;
+        text-align: center;
+        font-style: italic;
+        color: #555;
+        padding-top: 3em;
     }
 }
 

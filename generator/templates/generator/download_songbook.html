@@ -14,7 +14,6 @@
         {% spaceless %}
         {% for layout in layouts %}
             <div class="thumbnail" >
-                <div class="{{ layout.other_options.orientation }} {{ layout.booktype }}"></div>
                 <ul class="main options">
                     <li>
                         {% if layout.other_options.orientation == "landscape" %}
@@ -31,7 +30,8 @@
                         {% endif %}
                     </li>
                 </ul>
-                <ul class="other options">
+                <div class="{{ layout.other_options.orientation }} {{ layout.booktype }}"></div>
+                <ul class="other options" data-empty="{% trans "Aucune option" %}">
                     {% for option in form_options %}
                         {% if option.0 in layout.bookoptions %}
                             <li>{{ option.1 }}</li>
