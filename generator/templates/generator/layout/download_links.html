@@ -8,7 +8,7 @@
     {% if task.hash != songbook.hash %}
         <small>
             <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
-                {% trans "Recompiler" %}
+                {% trans "Regénérer" %}
             </a>
         </small>
     {% else %}
@@ -16,20 +16,20 @@
     {% endif %}
 {% elif task.state = 'QUEUED' %}
     <small class="update-me task" data-task="{{ task.id }}">
-        {% trans "Compilation en attente..." %}
+        {% trans "Génération en attente..." %}
     </small>
 {% elif task.state = 'IN_PROCESS' %}
     <small class="update-me task" data-task="{{ task.id }}">
-        {% trans "Compilation en cours..." %}
+        {% trans "Génération en cours..." %}
     </small>
 {% else %}
     {% if not task %}
         <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
-            {% trans "Compiler" %}
+            {% trans "Générer" %}
         </a><br/>&nbsp;
     {% else %}
         <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
-            {% trans "Relancer la compilation" %}
+            {% trans "Relancer la génération" %}
         </a><br/>
         {% if user.is_superuser %}
             <small>
@@ -39,7 +39,7 @@
             </small>
         {% else %}
             <small>
-                {% trans "Echec de la compilation" %}
+                {% trans "Echec de la génération" %}
             </small>
         {% endif %}
     {% endif %}
