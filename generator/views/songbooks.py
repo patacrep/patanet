@@ -521,6 +521,7 @@ class LayoutList(OwnerRequiredMixin, ListView):
         slug = self.kwargs.get('slug', None)
         songbook = Songbook.objects.get(id=id, slug=slug)
         context['songbook'] = songbook
+        context['songbook_hash'] = songbook.hash()
 
         context['form_options'] = LayoutForm.OPTIONS
         context['can_edit'] = True
@@ -534,7 +535,8 @@ def get_task_link(request, id):
         return redirect(reverse('denied'))
     context = {
         'task': task,
-        'songbook': songbook
+        'songbook': songbook,
+        'songbook_hash' : songbook.hash()
     }
     return render(request, 'generator/layout/download_links.html', context)
 

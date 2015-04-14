@@ -5,7 +5,7 @@
     <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank">
         {% trans "Télécharger" %}
     </a><br/>
-    {% if task.hash != songbook.hash %}
+    {% if task.hash != songbook_hash %}
         <small>
             <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
                 {% trans "Regénérer" %}
