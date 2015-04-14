@@ -35,10 +35,12 @@
     {% endif %}
 {% else %}
     <small class="update-me task" data-task="{{ task.id }}">
-        {% if task.state = 'IN_PROCESS' %}
-            {% trans "Génération en cours..." %}
-        {% else %}
-            {% trans "Génération en attente..." %}
-        {% endif %}
+        <span data-icon="processing">
+            {% if task.state = 'IN_PROCESS' %}
+                {% trans "Génération en cours..." %}
+            {% else %}
+                {% trans "Génération en attente..." %}
+            {% endif %}
+        </span>
     </small>
 {% endif %}
