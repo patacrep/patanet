@@ -1,7 +1,11 @@
 {% load i18n %}{% load setting %} 
 {% setting MEDIA_URL as MEDIA_URL %}
 
-{% if task.state = 'FINISHED' %}
+{% if not task %}
+        <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
+            {% trans "Générer" %}
+        </a><br/>&nbsp;
+{% elif task.state = 'FINISHED' %}
     <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank">
         {% trans "Télécharger" %}
     </a><br/>
@@ -14,33 +18,27 @@
     {% else %}
         &nbsp;
     {% endif %}
-{% elif task.state = 'QUEUED' %}
-    <small class="update-me task" data-task="{{ task.id }}">
-        {% trans "Génération en attente..." %}
-    </small>
-{% elif task.state = 'IN_PROCESS' %}
-    <small class="update-me task" data-task="{{ task.id }}">
-        {% trans "Génération en cours..." %}
-    </small>
-{% else %}
-    {% if not task %}
-        <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
-            {% trans "Générer" %}
-        </a><br/>&nbsp;
+{% elif task.state = 'ERROR' %}
+    <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
+        {% trans "Relancer la génération" %}
+    </a><br/>
+    {% if user.is_superuser %}
+        <small>
+            <a href="{% url 'admin:generator_task_change' task.id %}">
+                {% trans "Voir dans Django administration" %}
+            </a>
+        </small>
     {% else %}
-        <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
-            {% trans "Relancer la génération" %}
-        </a><br/>
-        {% if user.is_superuser %}
-            <small>
-                <a href="{% url 'admin:generator_task_change' task.id %}">
-                    {% trans "Voir dans Django administration" %}
-                </a>
-            </small>
-        {% else %}
-            <small>
-                {% trans "Echec de la génération" %}
-            </small>
-        {% endif %}
+        <small>
+            {% trans "Echec de la génération" %}
+        </small>
     {% endif %}
+{% else %}
+    <small class="update-me task" data-task="{{ task.id }}">
+        {% if task.state = 'IN_PROCESS' %}
+            {% trans "Génération en cours..." %}
+        {% else %}
+            {% trans "Génération en attente..." %}
+        {% endif %}
+    </small>
 {% endif %}
