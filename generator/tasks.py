@@ -29,22 +29,29 @@ def queue_render_task(task_id):
 
     task = GeneratorTask.objects.get(id=task_id)
     task.state = GeneratorTask.State.IN_PROCESS
-    task.save()
-
-    try:
-        filename = generate_songbook(task.songbook, task.layout)
-    except GeneratorError as e:
-        task.state = GeneratorTask.State.ERROR
-        task.result = {"error_msg": str(e)}
+    try: # try to recover if the render process is interrupted
         task.save()
-        LOGGER.error("Failed task {0} (state : {1}): {2}"\
-                      .format(task.id, task.state, e))
 
-        return
+        try:
+            filename = generate_songbook(task.songbook, task.layout)
+        except GeneratorError as e:
+            task.state = GeneratorTask.State.ERROR
+            task.result = {"error_msg": str(e)}
+            task.save()
+            LOGGER.error("Failed task {0} (state : {1}): {2}"\
+                          .format(task.id, task.state, e))
 
-    task.state = GeneratorTask.State.FINISHED
-    task.result = {"file": "{0}".format(filename)}
-    task.save()
+            return
+
+        task.state = GeneratorTask.State.FINISHED
+        task.result = {"file": "{0}".format(filename)}
+        task.save()
+    except (KeyboardInterrupt, SystemExit):
+        task.state = GeneratorTask.State.ERROR
+        task.result = {"error_msg": "SystemExit"}
+        task.save()
+        raise
+        
 
     LOGGER.info("Finished task {0} (state : {1}) with result {2}"\
                  .format(task.id, task.state, task.result))

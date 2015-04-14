@@ -564,8 +564,8 @@ def render_songbook(request, id, slug):
 
     # Build cases
     build = gen_task is None or \
-            ((state == GeneratorTask.State.FINISHED or \
-              state == GeneratorTask.State.ERROR)  and force) or\
+            (state == GeneratorTask.State.FINISHED and force) or\
+            (state == GeneratorTask.State.ERROR and (force or gen_task.result['error_msg'] == "SystemExit")) or\
             gen_task.hash != songbook.hash()
 
     if build:
