@@ -512,7 +512,7 @@ class LayoutList(OwnerRequiredMixin, ListView):
     def get_queryset(self):
         return Layout.objects.filter(
                     Q(user_id=self.request.user.id)
-                    | Q(user_id=None)
+                    | Q(user_id=0)
                 )
 
     def get_context_data(self, **kwargs):
