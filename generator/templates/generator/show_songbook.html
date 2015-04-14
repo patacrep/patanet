@@ -20,8 +20,6 @@
             {% endif %}
             <h4>{% trans "Téléchargement" %}</h4>
             <div class="public thumbnails">
-                <!-- TODO: include the same layout list than in the private songbook list -->
-                <!-- TODO: include the layout options in the list -->
                 {% spaceless %}
                     {% for task in songbook.tasks.all %}
                         {% if task.state = 'FINISHED' %}
