@@ -549,6 +549,7 @@ def render_songbook(request, id, slug):
     """
     force = request.REQUEST.get("force", False)
     songbook = Songbook.objects.get(id=id)
+    songbook_hash = songbook.hash()
 
     layout_id = request.REQUEST.get("layout", 0)
 
@@ -564,11 +565,11 @@ def render_songbook(request, id, slug):
     build = created or \
             (state == GeneratorTask.State.FINISHED and force) or\
             (state == GeneratorTask.State.ERROR and (force or gen_task.result['error_msg'] == "SystemExit")) or\
-            gen_task.hash != songbook.hash()
+            gen_task.hash != songbook_hash
 
     if build:
         gen_task.result = {}
-        gen_task.hash = songbook.hash()
+        gen_task.hash = songbook_hash
         gen_task.state = GeneratorTask.State.QUEUED
         gen_task.save()
 
