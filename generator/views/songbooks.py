@@ -188,6 +188,7 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
         
         context['items_list'] = items_list
         context['form_options'] = LayoutForm.OPTIONS
+        context['songbook_hash'] = self.object.hash()
         if self.request.user.id == self.object.user_id:
             context['can_edit'] = True
         else:

@@ -29,7 +29,10 @@
         {% if can_edit %}
             {% include "generator/layout/download_links.html" %}
         {% else %}
-            <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank">
+            <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank"
+            {% if task.hash != songbook_hash %}
+                data-icon="outdated" title="{% trans "Cette édition contient une ancienne version du carnet." %}" 
+            {% endif %}>
                 {% trans "Télécharger" %}
             </a>
         {% endif %}
