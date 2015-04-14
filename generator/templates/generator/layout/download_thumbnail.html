@@ -26,6 +26,12 @@
     </ul>
 
     <div class="download_links">
-        {% include "generator/layout/download_links.html" %}
+        {% if can_edit %}
+            {% include "generator/layout/download_links.html" %}
+        {% else %}
+            <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank">
+                {% trans "Télécharger" %}
+            </a>
+        {% endif %}
     </div>
 </div>

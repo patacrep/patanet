@@ -187,6 +187,7 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
         items_list.extend(song_list[song_index:])
         
         context['items_list'] = items_list
+        context['form_options'] = LayoutForm.OPTIONS
         if self.request.user.id == self.object.user_id:
             context['can_edit'] = True
         else:
@@ -522,6 +523,7 @@ class LayoutList(OwnerRequiredMixin, ListView):
         context['songbook'] = songbook
 
         context['form_options'] = LayoutForm.OPTIONS
+        context['can_edit'] = True
         return context
 
 

@@ -107,3 +107,36 @@ ul.other.options{
         }
     }
 }
+
+.public.thumbnails{
+    .thumbnail{
+        display: block;
+        min-height: 140px;
+
+        .portrait{
+            top: 20px;
+            bottom: 20px;
+            
+            &.lyric:before,
+            &.chorded:before{
+                bottom: 5px;
+            }
+        }
+
+        .landscape{
+            &.lyric:before,
+            &.chorded:before{
+                bottom: 0;
+            }
+        }
+    }
+    ul.main.options{
+        font-size: .8em;
+    }
+    ul.other.options{
+        font-size: .8em;
+        &:empty:before{
+            padding-top: 2.5em;
+        }
+    }
+}
