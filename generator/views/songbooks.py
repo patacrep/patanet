@@ -536,6 +536,7 @@ def get_task_link(request, id):
         return redirect(reverse('denied'))
     context = {
         'task': task,
+        'layout': task.layout,
         'songbook': songbook,
         'songbook_hash' : songbook.hash()
     }
