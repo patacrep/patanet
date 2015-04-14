@@ -554,24 +554,19 @@ def render_songbook(request, id, slug):
 
     layout = Layout.objects.get(id=layout_id)
 
-    try:
-        gen_task = GeneratorTask.objects.get(songbook=songbook,
-                                             layout=layout)
+    gen_task, created = GeneratorTask.objects.get_or_create(
+                                songbook=songbook,
+                                layout=layout)
+    if not created:
         state = gen_task.state
-    except GeneratorTask.DoesNotExist:
-        gen_task = None
-        state = None
 
     # Build cases
-    build = gen_task is None or \
+    build = created or \
             (state == GeneratorTask.State.FINISHED and force) or\
             (state == GeneratorTask.State.ERROR and (force or gen_task.result['error_msg'] == "SystemExit")) or\
             gen_task.hash != songbook.hash()
 
     if build:
-        gen_task, _created = GeneratorTask.objects.get_or_create(
-                                    songbook=songbook,
-                                    layout=layout)
         gen_task.result = {}
         gen_task.hash = songbook.hash()
         gen_task.state = GeneratorTask.State.QUEUED
