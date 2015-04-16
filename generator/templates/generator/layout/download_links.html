@@ -12,7 +12,7 @@
     {% if task.hash != songbook_hash %}
         <small>
             <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
-                {% trans "Regénérer" %}
+                {% trans "Mettre à jour" %}
             </a>
         </small>
     {% else %}
