@@ -73,7 +73,7 @@ def contact(request):
                 return render(request, 'generator/contact.html', locals())
             return redirect('home')
     else:
-        form = ContactForm()
+        form = ContactForm(initial={'subject': request.GET.get('subject')})
     return render(request, 'generator/contact.html', locals())
 
 

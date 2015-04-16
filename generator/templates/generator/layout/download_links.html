@@ -22,17 +22,12 @@
     <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
         {% trans "Relancer la génération" %}
     </a><br/>
-    {% if user.is_superuser %}
-        <small>
-            <a href="{% url 'admin:generator_task_change' task.id %}">
-                {% trans "Voir dans Django administration" %}
-            </a>
-        </small>
-    {% else %}
-        <small>
-            {% trans "Echec de la génération" %}
-        </small>
-    {% endif %}
+    <small>
+        {% trans "Erreur" %} - 
+        <a href="{% url 'contact' %}?subject=Error+task+{{task.id}}">
+            {% trans "Veuillez nous contacter" %}
+        </a>
+    </small>
 {% else %}
     <small class="update-me task" data-task="{{ task.id }}">
         <span data-icon="processing">
