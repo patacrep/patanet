@@ -131,9 +131,8 @@ def make_layout_public(modeladmin, request, queryset):
 make_layout_public.short_description = _(u'Rendre les mise en page utilisables par tous')
 
 
-@add_link_field('task', 'task')
 class LayoutAdmin(admin.ModelAdmin):
-    list_display = ('name', 'link', )
+    list_display = ('name', )
     actions = [make_layout_public]
 
 admin.site.register(Layout, LayoutAdmin)
