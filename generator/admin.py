@@ -28,6 +28,12 @@ from django.conf import settings
 def id_attr(instance):
     return "n° " + str(instance.id)
 
+# Add a link to a related object AdminView (via ForeignKey)
+# String target_model: name of model to link to
+# String field:        field name in the current `instance`, so instance.field = TargetModel() 
+#                      (usually the same as target_mode)
+# String field_name: name of this field in the ModelAdmin class
+# adapted from http://stackoverflow.com/a/13287201/3207406
 def add_link_field(target_model = None, field = '', app='generator', field_name='link',
                    link_text=id_attr):
     def add_link(cls):
