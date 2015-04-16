@@ -13,7 +13,7 @@
     <div class="thumbnails">
         {% spaceless %}
         {% for layout in layouts %}
-            {% with layout.task.get as task %}
+            {% with layout.songbook_task.0 as task %}
                 {% include "generator/layout/download_thumbnail.html" %}
             {% endwith %}
         {% endfor %}

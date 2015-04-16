@@ -286,7 +286,7 @@ class Task(models.Model):
                                  related_name="tasks",
                                  verbose_name=_(u"carnet"))
     layout = models.ForeignKey(Layout,
-                                related_name="task",
+                                related_name="tasks",
                                 verbose_name=_(u"Mise en page"))
     hash = models.CharField(max_length=40,
                             verbose_name=_(u"contenu"))

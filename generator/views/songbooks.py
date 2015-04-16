@@ -509,20 +509,24 @@ class LayoutList(OwnerRequiredMixin, ListView):
     context_object_name = "layouts"
     template_name = 'generator/download_songbook.html'
 
-    def get_queryset(self):
+    def get_queryset(self, **kwargs):
+
+        id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        self.songbook = Songbook.objects.get(id=id, slug=slug)
         return Layout.objects.filter(
                     Q(user_id=self.request.user.id)
                     | Q(user_id=0)
-                )
+                ).prefetch_related(Prefetch(
+                                            'tasks', 
+                                            queryset=GeneratorTask.objects.filter(songbook=self.songbook), 
+                                            to_attr='songbook_task'))
 
     def get_context_data(self, **kwargs):
         context = super(LayoutList, self).get_context_data(**kwargs)
 
-        id = self.kwargs.get('id', None)
-        slug = self.kwargs.get('slug', None)
-        songbook = Songbook.objects.get(id=id, slug=slug)
-        context['songbook'] = songbook
-        context['songbook_hash'] = songbook.hash()
+        context['songbook'] = self.songbook
+        context['songbook_hash'] = self.songbook.hash()
 
         context['form_options'] = LayoutForm.OPTIONS
         context['can_edit'] = True
