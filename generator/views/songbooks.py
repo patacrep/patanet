@@ -503,7 +503,7 @@ class NewLayout(OwnerRequiredMixin, CreateView):
 
 
 class LayoutList(OwnerRequiredMixin, ListView):
-    """Setup the parameters for songbook rendering
+    """Show the layout available for download/generation
     """
     model = Layout
     context_object_name = "layouts"
@@ -534,6 +534,10 @@ class LayoutList(OwnerRequiredMixin, ListView):
 
 
 def get_task_link(request, id):
+    """
+    Return the status/download links of a taks
+    Should be called via AJAX
+    """
     task = get_object_or_404(GeneratorTask, id=id)
     songbook = task.songbook
     if not songbook.is_public and request.user.id != songbook.user_id:
