@@ -1,0 +1,143 @@
+
+@thumbnail-bg:#E6F6E6;
+
+.thumbnail{
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    background-color: @thumbnail-bg;
+    min-height: 200px;
+    margin: .3em;
+
+    &.new-layout a{
+        box-sizing: border-box;
+        text-align: center;
+        min-height: 200px;
+        padding: 1em;
+        font-weight: bold;
+        display: block;
+        background:url("@{static-url}img/bookoption/book_create.png") center center no-repeat;
+    }
+
+    &:hover .other{
+        opacity: 1;
+    }
+
+    
+    &:hover .landscape,
+    &:hover .portrait{
+        opacity: 0.3;
+    }
+
+    .landscape,
+    .portrait{
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        bottom: 40px;
+        background:url("@{static-url}img/bookoption/book_portrait.png") center center no-repeat;
+        &.lyric:before,
+        &.chorded:before{
+            content: " ";
+            height: 32px;
+            position: absolute;
+            right: 0;
+            left: 40px;
+            bottom: 17px;
+            background:url("@{static-url}img/bookoption/guitar.png") center center no-repeat;
+        }
+        &.lyric:before{
+            background-image:url("@{static-url}img/bookoption/microphone.png");
+        }
+    }
+    .landscape{
+        background-image:url("@{static-url}img/bookoption/book_landscape.png");
+        &.lyric:before,
+        &.chorded:before{
+            left: 63px;
+            bottom: 24px;
+        }
+    }
+}
+
+ul.main.options{
+    padding: 0 1em;
+    text-align: center;
+    font-weight: bold;
+    li{
+        display: inline;
+    }
+}
+ul.other.options{
+    opacity: 0;
+    padding: 0 .5em;
+    position: relative;
+    text-shadow: -1px 0 @thumbnail-bg, 0 1px @thumbnail-bg, 1px 0 @thumbnail-bg, 0 -1px @thumbnail-bg;
+    li{ 
+        list-style-type: none;
+        &:before{
+            content: "- ";
+        }
+    }
+
+    &:empty:before{
+        content: attr(data-empty);
+        display: block;
+        text-align: center;
+        font-style: italic;
+        color: #555;
+        padding-top: 3em;
+    }
+}
+
+.download_links{
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    small{
+        font-weight: normal;
+        font-style: italic;
+        a{
+            font-style: normal;
+        }
+    }
+}
+
+.public.thumbnails{
+    .thumbnail{
+        display: block;
+        min-height: 140px;
+
+        .landscape,
+        .portrait{
+            top: 20px;
+            bottom: 20px;
+            
+            &.lyric:before,
+            &.chorded:before{
+                bottom: 5px;
+            }
+        }
+
+        .landscape{
+            &.lyric:before,
+            &.chorded:before{
+                bottom: 13px;
+            }
+        }
+    }
+    ul.main.options{
+        font-size: .8em;
+    }
+    ul.other.options{
+        font-size: .8em;
+        &:empty:before{
+            padding-top: 2.5em;
+        }
+    }
+}

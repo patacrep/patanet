@@ -1,0 +1,28 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %}{% endblock %}
+
+{% block headertitle %}
+    {% blocktrans with songbook=songbook.title %}
+    Téléchargement - {{ songbook }}
+    {% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+    
+    <div class="thumbnails">
+        {% spaceless %}
+        {% for layout in layouts %}
+            {% with layout.songbook_task.0 as task %}
+                {% include "generator/layout/download_thumbnail.html" %}
+            {% endwith %}
+        {% endfor %}
+        <div class="thumbnail new-layout" >
+            <a href="{% url 'new_download' id=songbook.id slug=songbook.slug %}">
+                {% trans "Créer une mise en page" %}
+            </a>
+        </div>
+        {% endspaceless %}
+    </div>
+
+{% endblock %}

@@ -26,7 +26,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
-from django.db.models import Count, Prefetch, F
+from django.db.models import Count, Prefetch, F, Q
 from django.core.exceptions import ValidationError
 
 
@@ -187,6 +187,8 @@ class ShowSongbook(OwnerOrPublicRequiredMixin, DetailView):
         items_list.extend(song_list[song_index:])
         
         context['items_list'] = items_list
+        context['form_options'] = LayoutForm.OPTIONS
+        context['songbook_hash'] = self.object.hash()
         if self.request.user.id == self.object.user_id:
             context['can_edit'] = True
         else:
@@ -474,36 +476,79 @@ class DeleteSongbook(OwnerRequiredMixin, DeleteView):
         return get_object_or_404(Songbook, id=id, slug=slug)
 
 
-class LayoutList(OwnerRequiredMixin, CreateView):
-    """Setup the parameters for songbook rendering
+class NewLayout(OwnerRequiredMixin, CreateView):
+    """Create new parameters for songbook rendering
     """
     model = Layout
-    template_name = 'generator/setup_rendering.html'
+    template_name = 'generator/new_download.html'
     form_class = LayoutForm
 
     def get_success_url(self):
-        return reverse('render_songbook',
+        return reverse('download_songbook',
                         kwargs={"id": self.kwargs["id"],
                                 "slug": self.kwargs["slug"]})
 
     def form_valid(self, form):
-        messages.success(self.request, _(u"La mise en page a été crée."))
-        rst = super(LayoutList, self).form_valid(form)
+        form.user = self.request.user
+        messages.success(self.request, _(u"La mise en page a été créée."))
+        return super(NewLayout, self).form_valid(form)
 
-        # Set the session for layout generation
-        self.request.session["layout"] = self.object.id
-        return rst
+    def get_context_data(self, **kwargs):
+        context = super(NewLayout, self).get_context_data(**kwargs)
+        id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        songbook = get_object_or_404(Songbook, id=id, slug=slug)
+        context['songbook'] = songbook
+        return context
+
+
+class LayoutList(OwnerRequiredMixin, ListView):
+    """Show the layout available for download/generation
+    """
+    model = Layout
+    context_object_name = "layouts"
+    template_name = 'generator/download_songbook.html'
+
+    def get_queryset(self, **kwargs):
+
+        id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        self.songbook = Songbook.objects.get(id=id, slug=slug)
+        return Layout.objects.filter(
+                    Q(user_id=self.request.user.id)
+                    | Q(user_id=0)
+                ).prefetch_related(Prefetch(
+                                            'tasks', 
+                                            queryset=GeneratorTask.objects.filter(songbook=self.songbook), 
+                                            to_attr='songbook_task'))
 
     def get_context_data(self, **kwargs):
         context = super(LayoutList, self).get_context_data(**kwargs)
-        id = self.kwargs.get('id', None)
-        slug = self.kwargs.get('slug', None)
-        songbook = Songbook.objects.get(id=id, slug=slug)
-        context['songbook'] = songbook
+
+        context['songbook'] = self.songbook
+        context['songbook_hash'] = self.songbook.hash()
+
         context['form_options'] = LayoutForm.OPTIONS
-        context['existing_tasks'] = GeneratorTask.objects.filter(
-                                                    songbook=songbook)
+        context['can_edit'] = True
         return context
+
+
+def get_task_link(request, id):
+    """
+    Return the status/download links of a taks
+    Should be called via AJAX
+    """
+    task = get_object_or_404(GeneratorTask, id=id)
+    songbook = task.songbook
+    if not songbook.is_public and request.user.id != songbook.user_id:
+        return redirect(reverse('denied'))
+    context = {
+        'task': task,
+        'layout': task.layout,
+        'songbook': songbook,
+        'songbook_hash' : songbook.hash()
+    }
+    return render(request, 'generator/layout/download_links.html', context)
 
 
 @owner_required(('id', 'id'))
@@ -512,38 +557,33 @@ def render_songbook(request, id, slug):
     """
     force = request.REQUEST.get("force", False)
     songbook = Songbook.objects.get(id=id)
+    songbook_hash = songbook.hash()
 
     layout_id = request.REQUEST.get("layout", 0)
 
-    if layout_id == 0:
-        layout_id = request.session["layout"]
-
     layout = Layout.objects.get(id=layout_id)
 
-    try:
-        gen_task = GeneratorTask.objects.get(songbook=songbook,
-                                             layout=layout)
+    gen_task, created = GeneratorTask.objects.get_or_create(
+                                songbook=songbook,
+                                layout=layout)
+    if not created:
         state = gen_task.state
-    except GeneratorTask.DoesNotExist:
-        gen_task = None
-        state = None
 
     # Build cases
-    build = gen_task is None or \
-            ((state == GeneratorTask.State.FINISHED or \
-              state == GeneratorTask.State.ERROR)  and force) or\
-            gen_task.hash != songbook.hash()
+    build = created or \
+            (state == GeneratorTask.State.FINISHED and force) or\
+            (state == GeneratorTask.State.ERROR and (force or gen_task.result.get('error_msg') == "SystemExit")) or\
+            gen_task.hash != songbook_hash
 
     if build:
-        gen_task, _created = GeneratorTask.objects.get_or_create(
-                                    songbook=songbook,
-                                    layout=layout)
         gen_task.result = {}
-        gen_task.hash = songbook.hash()
+        gen_task.hash = songbook_hash
         gen_task.state = GeneratorTask.State.QUEUED
         gen_task.save()
 
         import generator.tasks as tasks
         tasks.queue_render_task(gen_task.id)
+    elif state == GeneratorTask.State.ERROR:
+        messages.error(request, _(u"Le bug doit être corrigé pour relancer la compilation: merci de contacter un administrateur"))
 
-    return redirect(reverse('setup_rendering', kwargs={"id":id, "slug":slug}))
+    return redirect(reverse('download_songbook', kwargs={"id":id, "slug":slug}))

@@ -19,7 +19,7 @@
                         {% trans "Description" %}
                     </a>
                 </li>
-            {% url 'setup_rendering' id=id slug=slug as url %}
+            {% url 'download_songbook' id=id slug=slug as url %}
                 <li{% if request.path == url %} class="active"{% endif %}>
                     <a href="{{ url }}" data-icon="save">
                         {% trans "Téléchargement" %}

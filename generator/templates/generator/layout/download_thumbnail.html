@@ -1,0 +1,40 @@
+{% load i18n %}
+<div class="thumbnail" >
+    <ul class="main options">
+        <li>
+            {% if layout.other_options.orientation == "landscape" %}
+                {% trans "Paysage" %}
+            {% else %}
+                {% trans "Portrait" %}
+            {% endif %}
+        </li>
+        <li>
+            {% if layout.booktype == "chorded" %}
+                {% trans "avec accords" %}
+            {% else %}
+                {% trans "sans accords" %}
+            {% endif %}
+        </li>
+    </ul>
+    <div class="{{ layout.other_options.orientation }} {{ layout.booktype }}"></div>
+    <ul class="other options" data-empty="{% trans "Aucune option" %}">
+        {% for option in form_options %}
+            {% if option.0 in layout.bookoptions %}
+                <li>{{ option.1 }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <div class="download_links">
+        {% if can_edit %}
+            {% include "generator/layout/download_links.html" %}
+        {% else %}
+            <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank"
+            {% if task.hash != songbook_hash %}
+                data-icon="outdated" title="{% trans "Cette édition contient une ancienne version du carnet." %}" 
+            {% endif %}>
+                {% trans "Télécharger" %}
+            </a>
+        {% endif %}
+    </div>
+</div>

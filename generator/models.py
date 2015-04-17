@@ -89,7 +89,7 @@ class Songbook(models.Model):
         return self.title
 
     def hash(self):
-        return hashlib.sha1(str(self.get_as_json()).encode()).hexdigest()
+        return hashlib.sha1(str(sorted(self.get_as_json().items())).encode()).hexdigest()
 
     def count_songs(self):
         count = ItemsInSongbook.objects.filter(
@@ -211,14 +211,15 @@ class Layout(models.Model):
 
     name = models.CharField(max_length=100,
                             verbose_name=_(u"nom de la mise en page"))
+    user = models.ForeignKey(User, related_name='layouts', blank=True)
 
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
 
-    bookoptions = JSONField()
-    other_options = JSONField()
+    bookoptions = JSONField(default={}, blank=True)
+    other_options = JSONField(default={}, blank=True)
 
     template = models.CharField(max_length=100,
                                  verbose_name=_(u"gabarit"),
@@ -235,6 +236,7 @@ class Layout(models.Model):
 
     class Meta:
         verbose_name = _(u"Mise en page")
+        ordering = ["user_id", "id"]
 
 
 class ItemsInSongbook(models.Model):
@@ -284,7 +286,8 @@ class Task(models.Model):
                                  related_name="tasks",
                                  verbose_name=_(u"carnet"))
     layout = models.ForeignKey(Layout,
-                               verbose_name=_(u"Mise en page"))
+                                related_name="tasks",
+                                verbose_name=_(u"Mise en page"))
     hash = models.CharField(max_length=40,
                             verbose_name=_(u"contenu"))
     last_updated = models.DateTimeField(auto_now=True,
@@ -293,6 +296,9 @@ class Task(models.Model):
                              choices=STATES,
                              verbose_name=_(u"état"))
     result = JSONField(verbose_name=_(u"résultat"))
+
+    class Meta:
+        unique_together = ('songbook', 'layout',)
 
     def __unicode__(self):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
