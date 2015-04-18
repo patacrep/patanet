@@ -64,8 +64,19 @@ $(function() {
                  // Only send the token to relative URLs i.e. locally.
                  xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
              }
-         } 
+         },
+         error: function(data){
+             ajax_failure(data);
+         }
     });
+
+    var ajax_failure = function(data){
+        console.log('Something wrong on the server side :');
+        console.log(data);
+        if(confirm('Unexpected server response, you should try to reload the page')){
+            document.location.reload();
+        }
+    }
 
     var set_rank_according_to_dom = function() {
         var i = 1;
@@ -203,11 +214,7 @@ $(function() {
                         patanet.display_messages(data.messages);
                         return;
                     }
-                    console.log('Something wrong on the server side :');
-                    console.log(data);
-                    if(confirm('Unexpected server response, you should try to reload the page')){
-                        document.location.reload();
-                    }
+                    ajax_failure(data);
                     return;
                 }
 
@@ -237,14 +244,6 @@ $(function() {
                     toggle_add_remove_all_button(artist_counter);
                 }
 
-            })
-            // failure
-            .fail(function(data) {
-                console.log('Something wrong on the server side :');
-                console.log(data.responseText);
-                if(confirm('Unexpected server response, you should try to reload the page')){
-                    document.location.reload();
-                }
             })
             // anyway
             .always(function() {
@@ -294,11 +293,7 @@ $(function() {
                         window.scrollTo(0, 0);
                         return;
                     }
-                    console.log('Something wrong on the server side :');
-                    console.log(data);
-                    if(confirm('Unexpected server response, you should try to reload the page')){
-                        document.location.reload();
-                    }
+                    ajax_failure(data);
                     return;
                 }
                 if(elt.checked){
@@ -323,11 +318,6 @@ $(function() {
             })
             // failure
             .fail(function(data) {
-                console.log('Something wrong on the server side :');
-                console.log(data.responseText);
-                if(confirm('Unexpected server response, you should try to reload the page')){
-                    document.location.reload();
-                }
                 elt.checked = !add_song;
             })
             // anyway
@@ -504,14 +494,6 @@ $(function() {
                     if($(element.firstChild).hasClass('update-me')){
                         // not rendered yet: need to check again
                         setTimeout(get_status, 4000);
-                    }
-                })
-                // failure
-                .fail(function(data) {
-                    console.log('Something wrong on the server side :');
-                    console.log(data.responseText);
-                    if(confirm('Unexpected server response, you should try to reload the page')){
-                        document.location.reload();
                     }
                 });
         }
