@@ -479,20 +479,17 @@ $(function() {
 
         function get_status(){
 
-
-            var data = {};
-
             var url = baseurl+'songbooks/task/';
             url += task_id;
             url += '/link';
 
-            $.post(url, data)
+            $.get(url)
 
                 // successfully treated
                 .done(function(data) {
                     element.innerHTML = data.trim();
                     if($(element.firstChild).hasClass('update-me')){
-                        // not rendered yet: need to check again
+                        // not rendered yet: need to check again later
                         setTimeout(get_status, 4000);
                     }
                 });
