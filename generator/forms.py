@@ -28,7 +28,7 @@ from django.core.exceptions import ValidationError
 
 from captcha.fields import CaptchaField
 
-from generator.models import Song, Songbook, Layout
+from generator.models import Song, Songbook, Layout, Papersize
 
 
 class RegisterForm(UserCreationForm):
@@ -203,14 +203,11 @@ class LayoutForm(forms.ModelForm):
 
     class Meta:
         model = Layout
-        fields = ('booktype', 'orientation', 'name')
+        fields = ('papersize', 'orientation', 'booktype', 'name', )
 
     ORIENTATIONS = (("portrait", _(u"Portrait")),
                     ("landscape", _(u"Paysage")),
                     )
-    PAPERSIZES = (("a4", _(u"A4")),
-                  ("a5", _(u"A5")),
-                 )
     OPTIONS = [
             ('diagram', _(u"Rappel des diagrammes d'accords")),
             ('importantdiagramonly', _(u"Rappel des diagrammes importants")),
@@ -221,13 +218,14 @@ class LayoutForm(forms.ModelForm):
             ('onesongperpage', _(u"Saut de page avant chaque chanson")),
             ]
 
-    # papersize = forms.ChoiceField(
-    #                        choices=PAPERSIZES,
-    #                        label=_("Taille du papier"))
+    papersize = forms.ModelChoiceField(
+                            queryset=Papersize.objects.all(), 
+                            empty_label=None,
+                            label=_("Taille"))
 
     orientation = forms.ChoiceField(
                             choices=ORIENTATIONS,
-                            label=_("Orientation du papier"))
+                            label=_("Orientation"))
 
     bookoptions = forms.MultipleChoiceField(
                             choices=OPTIONS,
@@ -242,7 +240,6 @@ class LayoutForm(forms.ModelForm):
         new_layout.user = self.user
         new_layout.bookoptions = bookoptions
         new_layout.other_options = {
-                        #"papersize": self.cleaned_data["papersize"],
                         "orientation": self.cleaned_data["orientation"],
                         }
 
