@@ -23,6 +23,7 @@ from django.conf.global_settings import LANGUAGES
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
+from django.core.exceptions import ValidationError
 
 from jsonfield import JSONField
 import hashlib
@@ -225,7 +226,7 @@ class Papersize(models.Model):
     def clean(self):
         # Don't allow draft entries to have a pub_date.
         if self.width > self.height:
-            raise ValidationError(_('Les dimensions doivent être donné pour un formar portrait.'))
+            raise ValidationError(_('Les dimensions doivent être donné pour un format portrait (hauteur >= largeur).'))
     def __str__(self):
         return self.name
 
