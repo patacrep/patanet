@@ -2,17 +2,13 @@
 <div class="thumbnail" >
     <ul class="main options">
         <li>
+            {{ layout.papersize.name }}
+        </li>
+        <li>
             {% if layout.other_options.orientation == "landscape" %}
                 {% trans "Paysage" %}
             {% else %}
                 {% trans "Portrait" %}
-            {% endif %}
-        </li>
-        <li>
-            {% if layout.booktype == "chorded" %}
-                {% trans "avec accords" %}
-            {% else %}
-                {% trans "sans accords" %}
             {% endif %}
         </li>
     </ul>
