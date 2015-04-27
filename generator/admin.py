@@ -20,7 +20,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 
-from generator.models import Song, Artist, Songbook, Task, Layout, ItemsInSongbook
+from generator.models import Song, Artist, Songbook, Task, Layout, ItemsInSongbook, Papersize
 
 import re
 from django.conf import settings
@@ -136,6 +136,12 @@ class LayoutAdmin(admin.ModelAdmin):
     actions = [make_layout_public]
 
 admin.site.register(Layout, LayoutAdmin)
+
+
+class PapersizeAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+
+admin.site.register(Papersize, PapersizeAdmin)
 
 class ItemsInSongbookAdmin(admin.ModelAdmin):
     list_display = ('songbook_title','item','rank',)

@@ -200,6 +200,36 @@ class Section(models.Model):
         super(Section, self).save(*args, **kwargs)
 
 
+class Papersize(models.Model):
+    """
+    This class holds paper information for generating a songbook.
+    All size are in millimetters..
+    """
+
+    name = models.CharField(max_length=200,
+                            verbose_name=_(u"nom du format")
+                            )
+
+    width = models.IntegerField()
+    height = models.IntegerField()
+
+    left = models.IntegerField()
+    right = models.IntegerField()
+    top = models.IntegerField()
+    bottom = models.IntegerField()
+    bindingoffset = models.IntegerField()
+
+    class Meta:
+        verbose_name = _("Papier")
+
+    def clean(self):
+        # Don't allow draft entries to have a pub_date.
+        if self.width > self.height:
+            raise ValidationError(_('Les dimensions doivent être donné pour un formar portrait.'))
+    def __str__(self):
+        return self.name
+
+
 class Layout(models.Model):
     """
     This class holds layout information for generating a songbook.
@@ -217,6 +247,8 @@ class Layout(models.Model):
                                  choices=BOOKTYPES,
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
+
+    papersize = models.ForeignKey(Papersize, related_name='layouts', default=1)
 
     bookoptions = JSONField(default={}, blank=True)
     other_options = JSONField(default={}, blank=True)
