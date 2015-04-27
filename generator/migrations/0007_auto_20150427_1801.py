@@ -8,8 +8,8 @@ import generator.models
 def insert_initial(apps, schema_editor):
     Papersize = apps.get_model("generator", "Papersize")
     Papersize.objects.bulk_create([
-        Papersize(id=1, name="A4", width=210, height=297, top=20, right=20, bottom=20, left=20, bindingoffset=0),
-        Papersize(name="A5", width=148, height=210, top=15, right=15, bottom=15, left=15, bindingoffset=0),
+        Papersize(id=1, name="A4", width=210, height=297, top=13, right=18, bottom=13, left=18, bindingoffset=0),
+        Papersize(name="A5", width=148, height=210, top=10, right=13, bottom=10, left=13, bindingoffset=0),
     ])
 
 # make the operation reversible.
