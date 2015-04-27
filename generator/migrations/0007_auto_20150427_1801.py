@@ -9,8 +9,12 @@ def insert_initial(apps, schema_editor):
     Papersize = apps.get_model("generator", "Papersize")
     Papersize.objects.bulk_create([
         Papersize(id=1, name="A4", width=210, height=297, top=20, right=20, bottom=20, left=20, bindingoffset=0),
+        Papersize(name="A5", width=148, height=210, top=15, right=15, bottom=15, left=15, bindingoffset=0),
     ])
 
+# make the operation reversible.
+def noop(apps, schema_editor):
+    pass
 
 
 class Migration(migrations.Migration):
@@ -44,5 +48,5 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(to='generator.Papersize', related_name='layouts', default=1),
             preserve_default=True,
         ),
-        migrations.RunPython(insert_initial),
+        migrations.RunPython(insert_initial, noop),
     ]
