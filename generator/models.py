@@ -257,8 +257,6 @@ class Layout(models.Model):
               ("lyric", _(u"Sans accords")),
               )
 
-    name = models.CharField(max_length=100,
-                            verbose_name=_(u"nom de la mise en page"))
     user = models.ForeignKey(User, related_name='layouts', blank=True)
 
     booktype = models.CharField(max_length=10,

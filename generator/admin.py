@@ -132,7 +132,7 @@ make_layout_public.short_description = _(u'Rendre les mise en page utilisables p
 
 
 class LayoutAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('id', 'papersize', )
     actions = [make_layout_public]
 
 admin.site.register(Layout, LayoutAdmin)
