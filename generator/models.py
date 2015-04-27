@@ -230,6 +230,23 @@ class Papersize(models.Model):
     def __str__(self):
         return self.name
 
+    def get_as_json(self):
+        """Return a JSON representation of the papersize"""
+        equivalent = [
+            ('papersize', 'name'),
+            ('width', 'width'),
+            ('height', 'height'),
+            ('margin_top', 'top'),
+            ('margin_left', 'left'),
+            ('margin_bottom', 'bottom'),
+            ('margin_right', 'right'),
+            ('bindingoffset', 'bindingoffset'),
+        ]
+        layout = {}
+        for tex, field in equivalent:
+            layout[tex] = getattr(self, field)
+        return layout
+
 
 class Layout(models.Model):
     """
@@ -265,6 +282,7 @@ class Layout(models.Model):
         layout["bookoptions"] = self.bookoptions
         layout["template"] = self.template
         layout.update(self.other_options)
+        layout.update(self.papersize.get_as_json())
         return layout
 
     class Meta:
