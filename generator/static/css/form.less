@@ -158,19 +158,33 @@ form{
 
 	&.new_layout {
 	    width:100%;
+        display: table;
 	    .field_container {
 	    	display: table-cell;
+            white-space: nowrap;
+            padding-right: .5em;
 	    	div{
 	    		display: table;
 	    		width: 95%;
 	    	}
-	    	input,
-	    	select{
+	    	input[type=radio]{
+                display: inline-block;
+                position: absolute;
+                right: 6px;
+                top: 11px;
+            }
+            select{
+                width: 100%;
+            }
+            label{
 	    		width: 100%;
+                padding:0 25px;
+                position: relative;
+                line-height: 2.5em;
 	    	}
 
 	        @media (max-width:@screen-sm){
-	    		display: table-footer;
+                display: table-caption;
 	        }
 	    }
 	    #bookoptions {
@@ -190,9 +204,12 @@ form{
 	            }
 	        }
 	        @media (max-width:@screen-sm){
-	    		display: table-caption;
+                display: table-footer;
 	        }
 	    }
+        .submit{
+            display: table-row;
+        }
 
 	}
 

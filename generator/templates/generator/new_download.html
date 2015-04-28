@@ -9,18 +9,18 @@
     <form class="new_layout" method="post" action="">
         {% csrf_token %}
         <div class="field_container">
-          <div>
             {% for field in form.visible_fields %}
                 {{ field.errors }}
-                {% if field.name != "bookoptions" %}
+                {% if field.name == "papersize" %}
                     <p>{{ field.label_tag }} {{ field }} </p>
+                {% elif field.name != "bookoptions" %}
+                    <p> {{ field }} </p>
                 {% endif %}
             {% endfor %}
-            <p>
-              <input type="submit" value="{% trans "Créer une mise en page" %}"/>
-            </p>
-          </div>
         </div>
         <div id="bookoptions"><p>{{ form.bookoptions.label_tag }}<p> {{ form.bookoptions }} </div>
+        <div class="submit">
+          <input type="submit" value="{% trans "Créer une mise en page" %}"/>
+        </div>
     </form>
 {% endblock %}

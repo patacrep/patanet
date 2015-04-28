@@ -254,7 +254,7 @@ class Layout(models.Model):
     """
 
     BOOKTYPES = (("chorded", _(u"Avec accords")),
-              ("lyric", _(u"Sans accords")),
+              ("lyric", _(u"Paroles seulement")),
               )
 
     user = models.ForeignKey(User, related_name='layouts', blank=True)
