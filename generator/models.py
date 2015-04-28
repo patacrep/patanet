@@ -278,6 +278,15 @@ class Layout(models.Model):
                                  verbose_name=_(u"gabarit"),
                                  default="data.tex")
 
+    def name(self):
+        if self.other_options['orientation'] == 'portrait':
+            name = _('{papername} Portrait'
+                     ).format(papername=self.papersize.name)
+        else:
+            name = _('{papername} Paysage'
+                     ).format(papername=self.papersize.name)
+        return name
+
     def get_as_json(self):
         """Return a JSON representation of the layout"""
         layout = {}
