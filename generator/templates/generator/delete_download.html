@@ -1,0 +1,51 @@
+{% extends "generator/layout/full_layout.html" %} {% load i18n %}
+
+{% block title %}{% endblock %}
+
+{% block headertitle %}
+	{% blocktrans with songbook=songbook.title %}
+	Suppression d'une mise en page - {{songbook}}
+	{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+	<p>
+        {% blocktrans with name=layout.name type=layout.booktype_name %}
+        	Suppression de la mise en page <em><strong>{{name}} - {{type}}</strong></em>.
+        {% endblocktrans %}
+        <br/><br/>
+        {% if layout.tasks.count %}
+            {% trans "Les carnets suivants ont été générés avec cette mise en page:" %}
+            </p>
+            <ul>
+                {% for task in layout.tasks.all %}
+                    <li>{{ task.songbook.title }}</li>
+                {% endfor %}
+            </ul>
+            <p>
+        {% else %}
+            {% trans "Aucun carnet n'a été généré avec cette mise en page." %}
+        {% endif %}
+	</p>
+	<form method="post" action="">
+		{% csrf_token %}
+		<p>
+            {% trans "Êtes vous sûr de vouloir supprimer..." %}<br/>
+            {% if songbook_affected %}
+                <input type="submit" value="{% blocktrans with title=songbook.title %}...le fichier pdf du carnet '{{title}}'{% endblocktrans %}" name="this_songbook"/><br/>
+            {% endif %}
+            {% if layout.tasks.count %}
+                {% if layout.tasks.count > 1 or not songbook_affected %}
+                    <input type="submit" value="{% trans '...les fichiers pdf de tous les carnets' %}" name="all_songbooks"/>
+                    <br/>
+                {% endif %}
+                {% if layout.user_id %}
+                    <input type="submit" value="{% trans '...les fichiers pdf de tous les carnets et la mise en page' %}" name="everything"/>
+                {% endif %}
+                <br/>
+            {% elif layout.user_id %}
+                <input type="submit" value="{% trans '...la mise en page' %}" name="everything"/>
+            {% endif %}
+		</p>
+	</form>
+{% endblock %}

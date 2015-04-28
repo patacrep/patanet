@@ -24,4 +24,9 @@
             </a>
         {% endif %}
     </div>
+    {% if can_edit %}
+        {% if layout.user_id > 0 or task %}
+            <a href="{% url 'delete_download' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}" class="remove">&times;</a>
+        {% endif %}
+    {% endif %}
 </div>

@@ -318,6 +318,10 @@ class Layout(models.Model):
                      ).format(papername=self.papersize.name)
         return name
 
+    def booktype_name(self):
+        types = dict(self.BOOKTYPES)
+        return types[self.booktype]
+
     def get_as_json(self):
         """Return a JSON representation of the layout"""
         layout = {}
