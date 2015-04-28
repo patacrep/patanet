@@ -230,22 +230,27 @@ class Papersize(models.Model):
     def __str__(self):
         return self.name
 
-    def get_as_json(self):
-        """Return a JSON representation of the papersize"""
-        equivalent = [
-            ('papersize', 'name'),
-            ('width', 'width'),
-            ('height', 'height'),
-            ('margin_top', 'top'),
-            ('margin_left', 'left'),
-            ('margin_bottom', 'bottom'),
-            ('margin_right', 'right'),
-            ('bindingoffset', 'bindingoffset'),
+    def get_geometry(self):
+        """Return a list containing the geometry properties for the papersize"""
+        
+        geometry = []
+
+        geometry.append("paperwidth=" + str(self.width) + "mm")
+        geometry.append("paperheight=" + str(self.height) + "mm")
+        
+        geometry.append("asymmetric")
+        
+        fields = [
+            'top',
+            'left',
+            'bottom',
+            'right',
+            'bindingoffset',
         ]
-        layout = {}
-        for tex, field in equivalent:
-            layout[tex] = getattr(self, field)
-        return layout
+        for field in fields:
+            geometry.append(field + "=" + str(getattr(self, field)) + "mm")
+
+        return geometry
 
 
 class Layout(models.Model):
@@ -280,7 +285,25 @@ class Layout(models.Model):
         layout["bookoptions"] = self.bookoptions
         layout["template"] = self.template
         layout.update(self.other_options)
-        layout.update(self.papersize.get_as_json())
+
+        orientation = self.other_options['orientation']
+
+        geometry = self.papersize.get_geometry()
+        geometry.append(orientation)
+
+        layout['geometry'] = ",\n  ".join(geometry)
+
+        if orientation == 'portrait':
+            used_width = self.papersize.width
+        else:
+            used_width = self.papersize.height
+
+        if used_width >= 297:
+            layout['column_adjustment'] = 'one_more'
+        elif used_width <= 148:
+            layout['column_adjustment'] = 'only_one'
+        else:
+            layout['column_adjustment'] = 'none'
         return layout
 
     class Meta:
