@@ -484,9 +484,9 @@ class NewLayout(OwnerRequiredMixin, CreateView):
     form_class = LayoutForm
 
     def get_success_url(self):
-        return reverse('download_songbook',
+        return reverse('render_songbook',
                         kwargs={"id": self.kwargs["id"],
-                                "slug": self.kwargs["slug"]})
+                                "slug": self.kwargs["slug"]}) + '?layout=' + str(self.object.id)
 
     def form_valid(self, form):
         form.user = self.request.user
