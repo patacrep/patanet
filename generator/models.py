@@ -20,6 +20,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.conf.global_settings import LANGUAGES
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
@@ -28,6 +29,7 @@ from django.core.exceptions import ValidationError
 from jsonfield import JSONField
 import hashlib
 import re
+import os
 
 
 class Artist(models.Model):
@@ -377,6 +379,14 @@ class ItemsInSongbook(models.Model):
         super(ItemsInSongbook, self).save(*args, **kwargs)
 
 
+class TaskDeleteError(Exception):
+
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return "[Task delete impossible] {0}". format(self.message)
+
 class Task(models.Model):
     """Model holding information for asynchronous PDF generation"""
 
@@ -413,3 +423,16 @@ class Task(models.Model):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
                                     songbook=self.songbook.title,
                                     layout=self.layout.id))
+
+    def delete(self, *args, **kwargs):
+        if self.state in (self.State.IN_PROCESS, self.State.QUEUED):
+            raise TaskDeleteError("The task state prevent it from being deleted.")
+
+        super(Task, self).delete(*args, **kwargs)
+
+        media_path = os.path.join(settings.MEDIA_ROOT, "PDF")
+        prefix = str(self.songbook_id) + '-' + str(self.layout_id) + '-'
+
+        files = [p for p in os.listdir(media_path) if p.startswith(prefix)]
+        for f in files:
+            os.remove(os.path.join(media_path, f))
