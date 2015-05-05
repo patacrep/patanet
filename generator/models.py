@@ -224,7 +224,7 @@ class Papersize(models.Model):
         verbose_name = _("Papier")
 
     def clean(self):
-        # Don't allow draft entries to have a pub_date.
+        # The format must be portrait.
         if self.width > self.height:
             raise ValidationError(_('Les dimensions doivent être donné pour un format portrait (hauteur >= largeur).'))
     def __str__(self):
