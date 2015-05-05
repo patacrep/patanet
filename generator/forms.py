@@ -240,7 +240,7 @@ class LayoutForm(forms.ModelForm):
 
     booktype = forms.ChoiceField(
                             choices=Layout.BOOKTYPES,
-                            label=_("Orientation"),
+                            label=_("Type de carnet"),
                             widget=InlineRadioSelect)
 
     bookoptions = forms.MultipleChoiceField(
