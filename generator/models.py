@@ -230,7 +230,7 @@ class Papersize(models.Model):
     def __str__(self):
         return self.name
 
-    def get_geometry(self):
+    def latex_geometry(self):
         """Return a list containing the geometry properties for the papersize"""
         
         geometry = []
@@ -297,7 +297,7 @@ class Layout(models.Model):
 
         orientation = self.other_options['orientation']
 
-        geometry = self.papersize.get_geometry()
+        geometry = self.papersize.latex_geometry()
         geometry.append(orientation)
 
         layout['geometry'] = ",\n  ".join(geometry)
