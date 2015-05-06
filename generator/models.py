@@ -208,7 +208,8 @@ class Papersize(models.Model):
     """
 
     name = models.CharField(max_length=200,
-                            verbose_name=_(u"nom du format")
+                            verbose_name=_(u"nom du format"),
+                            help_text=_("de préférence indépendant de la langue (A4, 4:3, 4″)")
                             )
 
     width = models.IntegerField(_("Largeur"), help_text=_("en mm"))
