@@ -236,36 +236,48 @@ class Papersize(models.Model):
     class Meta:
         verbose_name = _("Papier")
 
-    def clean(self):
-        try:
-            # The format must be portrait: the orientation will be chosen on Layout creation.
-            if self.width > self.height:
-                raise ValidationError(_('Les dimensions doivent être données pour un format portrait (hauteur ≥ largeur).'))
-        except TypeError:
-            pass
-
     def __str__(self):
         return self.name
 
-    def latex_geometry(self):
+    def latex_geometry(self, landscape_orientation=False):
         """Return a list containing the geometry properties for the papersize"""
+
+        width = self.width
+        height = self.height
+
+        # Should the page be rotated clockwise
+        rotate_page = landscape_orientation and height >= width
+
+        if rotate_page:
+            width, height = height, width
         
         geometry = []
 
-        geometry.append("paperwidth=" + str(self.width) + "mm")
-        geometry.append("paperheight=" + str(self.height) + "mm")
+        geometry.append("paperwidth=" + str(width) + "mm")
+        geometry.append("paperheight=" + str(height) + "mm")
         
         geometry.append("asymmetric")
         
         fields = [
             'top',
-            'left',
-            'bottom',
             'right',
+            'bottom',
+            'left',
             'bindingoffset',
         ]
-        for field in fields:
-            geometry.append(field + "=" + str(getattr(self, field)) + "mm")
+        
+        rotated_fields = [
+            'right',
+            'bottom',
+            'left',
+            'top',
+            'bindingoffset',
+        ]
+        for idx, field in enumerate(fields):
+            if rotate_page:
+                geometry.append(field + "=" + str(getattr(self, field)) + "mm")
+            else:
+                geometry.append(rotated_fields[idx] + "=" + str(getattr(self, field)) + "mm")
 
         return geometry
 
@@ -312,17 +324,16 @@ class Layout(models.Model):
         layout["template"] = self.template
         layout.update(self.other_options)
 
-        orientation = self.other_options['orientation']
+        landscape_orientation = (self.other_options['orientation'] == 'landscape')
 
-        geometry = self.papersize.latex_geometry()
-        geometry.append(orientation)
+        geometry = self.papersize.latex_geometry(landscape_orientation)
 
         layout['geometry'] = ",\n  ".join(geometry)
 
-        if orientation == 'portrait':
-            used_width = self.papersize.width
-        else:
+        if landscape_orientation and self.papersize.height >= self.papersize.width:
             used_width = self.papersize.height
+        else:
+            used_width = self.papersize.width
 
         if used_width >= 297:
             layout['column_adjustment'] = 'one_more'
