@@ -229,9 +229,10 @@ class LayoutForm(forms.ModelForm):
             ]
 
     papersize = forms.ModelChoiceField(
-                            queryset=Papersize.objects.all(), 
+                            queryset=Papersize.objects.extra(select={'surface': 'width * height'}).extra(order_by=['surface']).all(), 
                             empty_label=None,
-                            label=_("Taille"))
+                            label=_("Taille"),
+                            initial=1)
 
     orientation = forms.ChoiceField(
                             choices=ORIENTATIONS,
