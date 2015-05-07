@@ -237,9 +237,12 @@ class Papersize(models.Model):
         verbose_name = _("Papier")
 
     def clean(self):
-        # The format must be portrait: the orientation will be chosen on Layout creation.
-        if self.width and self.height and self.width > self.height:
-            raise ValidationError(_('Les dimensions doivent être données pour un format portrait (hauteur ≥ largeur).'))
+        try:
+            # The format must be portrait: the orientation will be chosen on Layout creation.
+            if self.width > self.height:
+                raise ValidationError(_('Les dimensions doivent être données pour un format portrait (hauteur ≥ largeur).'))
+        except TypeError:
+            pass
 
     def __str__(self):
         return self.name
