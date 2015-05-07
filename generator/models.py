@@ -239,7 +239,7 @@ class Papersize(models.Model):
     def clean(self):
         # The format must be portrait.
         if self.width and self.height and self.width > self.height:
-            self.width, self.height = self.height, self.width
+            raise ValidationError(_('Les dimensions doivent être donné pour un format portrait (hauteur >= largeur).'))
 
     def __str__(self):
         return self.name
