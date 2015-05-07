@@ -212,14 +212,26 @@ class Papersize(models.Model):
                             help_text=_("de préférence indépendant de la langue (A4, 4:3, 4″)")
                             )
 
-    width = models.IntegerField(_("Largeur"), help_text=_("en mm"))
-    height = models.IntegerField(_("Hauteur"), help_text=_("en mm"))
+    width = models.IntegerField(_("Largeur"),
+                                help_text=_("en mm"))
+    height = models.IntegerField(_("Hauteur"),
+                                help_text=_("en mm"))
 
-    left = models.IntegerField(_("Marge à gauche"), help_text=_("en mm"))
-    right = models.IntegerField(_("Marge à droite"), help_text=_("en mm"))
-    top = models.IntegerField(_("Marge supérieure"), help_text=_("en mm"))
-    bottom = models.IntegerField(_("Marge inférieure"), help_text=_("en mm"))
-    bindingoffset = models.IntegerField(_("Reliure"), help_text=_("en mm"))
+    left = models.IntegerField(_("Marge à gauche"),
+                                help_text=_("en mm"),
+                                default=15)
+    right = models.IntegerField(_("Marge à droite"),
+                                help_text=_("en mm"),
+                                default=15)
+    top = models.IntegerField(_("Marge en haut"),
+                                help_text=_("en mm"),
+                                default=15)
+    bottom = models.IntegerField(_("Marge en bas"),
+                                help_text=_("en mm"),
+                                default=15)
+    bindingoffset = models.IntegerField(_("Reliure"),
+                                help_text=_("en mm"),
+                                default=0)
 
     class Meta:
         verbose_name = _("Papier")
