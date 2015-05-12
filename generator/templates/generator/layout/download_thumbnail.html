@@ -1,21 +1,8 @@
 {% load i18n %}
 <div class="thumbnail" >
-    <ul class="main options">
-        <li>
-            {% if layout.other_options.orientation == "landscape" %}
-                {% trans "Paysage" %}
-            {% else %}
-                {% trans "Portrait" %}
-            {% endif %}
-        </li>
-        <li>
-            {% if layout.booktype == "chorded" %}
-                {% trans "avec accords" %}
-            {% else %}
-                {% trans "sans accords" %}
-            {% endif %}
-        </li>
-    </ul>
+    <h3>
+        {{ layout.name }}
+    </h3>
     <div class="{{ layout.other_options.orientation }} {{ layout.booktype }}"></div>
     <ul class="other options" data-empty="{% trans "Aucune option" %}">
         {% for option in form_options %}

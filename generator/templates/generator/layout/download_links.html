@@ -11,7 +11,8 @@
     </a><br/>
     {% if task.hash != songbook_hash %}
         <small>
-            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
+            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}"
+                data-icon="outdated" title="{% trans "Le carnet a changé depuis la génération du fichier PDF." %}" >
                 {% trans "Mettre à jour" %}
             </a>
         </small>

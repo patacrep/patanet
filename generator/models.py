@@ -23,6 +23,7 @@ from django.conf.global_settings import LANGUAGES
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
+from django.core.exceptions import ValidationError
 
 from jsonfield import JSONField
 import hashlib
@@ -200,23 +201,104 @@ class Section(models.Model):
         super(Section, self).save(*args, **kwargs)
 
 
+class Papersize(models.Model):
+    """
+    This class holds paper information for generating a songbook.
+    All size are in millimetters..
+    """
+
+    name = models.CharField(max_length=200,
+                            verbose_name=_(u"nom du format"),
+                            help_text=_("de préférence indépendant de la langue (A4, 4:3, 4″)")
+                            )
+
+    width = models.PositiveIntegerField(_("Largeur"),
+                                help_text=_("en mm"))
+    height = models.PositiveIntegerField(_("Hauteur"),
+                                help_text=_("en mm"))
+
+    left = models.PositiveIntegerField(_("Marge à gauche"),
+                                help_text=_("en mm"),
+                                default=15)
+    right = models.PositiveIntegerField(_("Marge à droite"),
+                                help_text=_("en mm"),
+                                default=15)
+    top = models.PositiveIntegerField(_("Marge en haut"),
+                                help_text=_("en mm"),
+                                default=15)
+    bottom = models.PositiveIntegerField(_("Marge en bas"),
+                                help_text=_("en mm"),
+                                default=15)
+    bindingoffset = models.PositiveIntegerField(_("Reliure"),
+                                help_text=_("en mm"),
+                                default=0)
+
+    class Meta:
+        verbose_name = _("Papier")
+
+    def __str__(self):
+        return self.name
+
+    def latex_geometry(self, landscape_orientation=False):
+        """Return a list containing the geometry properties for the papersize"""
+
+        width = self.width
+        height = self.height
+
+        # Should the page be rotated clockwise
+        rotate_page = landscape_orientation and height >= width
+
+        if rotate_page:
+            width, height = height, width
+        
+        geometry = []
+
+        geometry.append("paperwidth=" + str(width) + "mm")
+        geometry.append("paperheight=" + str(height) + "mm")
+        
+        geometry.append("asymmetric")
+        
+        fields = [
+            'top',
+            'right',
+            'bottom',
+            'left',
+            'bindingoffset',
+        ]
+        
+        rotated_fields = [
+            'right',
+            'bottom',
+            'left',
+            'top',
+            'bindingoffset',
+        ]
+        for idx, field in enumerate(fields):
+            if rotate_page:
+                geometry.append(rotated_fields[idx] + "=" + str(getattr(self, field)) + "mm")
+            else:
+                geometry.append(field + "=" + str(getattr(self, field)) + "mm")
+
+        return geometry
+
+
 class Layout(models.Model):
     """
     This class holds layout information for generating a songbook.
     """
 
     BOOKTYPES = (("chorded", _(u"Avec accords")),
-              ("lyric", _(u"Sans accords")),
+              ("lyric", _(u"Paroles seulement")),
               )
 
-    name = models.CharField(max_length=100,
-                            verbose_name=_(u"nom de la mise en page"))
     user = models.ForeignKey(User, related_name='layouts', blank=True)
 
     booktype = models.CharField(max_length=10,
                                  choices=BOOKTYPES,
                                  default="chorded",
                                  verbose_name=_(u"type de carnet"))
+
+    papersize = models.ForeignKey(Papersize, related_name='layouts', default=1)
 
     bookoptions = JSONField(default={}, blank=True)
     other_options = JSONField(default={}, blank=True)
@@ -225,6 +307,15 @@ class Layout(models.Model):
                                  verbose_name=_(u"gabarit"),
                                  default="data.tex")
 
+    def name(self):
+        if self.other_options['orientation'] == 'portrait':
+            name = _('{papername} Portrait'
+                     ).format(papername=self.papersize.name)
+        else:
+            name = _('{papername} Paysage'
+                     ).format(papername=self.papersize.name)
+        return name
+
     def get_as_json(self):
         """Return a JSON representation of the layout"""
         layout = {}
@@ -232,6 +323,24 @@ class Layout(models.Model):
         layout["bookoptions"] = self.bookoptions
         layout["template"] = self.template
         layout.update(self.other_options)
+
+        landscape_orientation = (self.other_options['orientation'] == 'landscape')
+
+        geometry = self.papersize.latex_geometry(landscape_orientation)
+
+        layout['geometry'] = ",\n  ".join(geometry)
+
+        if landscape_orientation and self.papersize.height >= self.papersize.width:
+            used_width = self.papersize.height
+        else:
+            used_width = self.papersize.width
+
+        if used_width >= 297:
+            layout['column_adjustment'] = 'one_more'
+        elif used_width <= 148:
+            layout['column_adjustment'] = 'only_one'
+        else:
+            layout['column_adjustment'] = 'none'
         return layout
 
     class Meta:

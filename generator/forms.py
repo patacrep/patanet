@@ -22,13 +22,23 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import mail_admins, send_mail
 from django.utils.html import escape
+from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 
 from captcha.fields import CaptchaField
 
-from generator.models import Song, Songbook, Layout
+from generator.models import Song, Songbook, Layout, Papersize
+
+
+class InlineRadioFieldRenderer(forms.widgets.RadioFieldRenderer):
+    def render(self):
+        return mark_safe(u'\n%s\n' % u'\n'.join([u'%s'
+                % w for w in self]))
+
+class InlineRadioSelect(forms.widgets.RadioSelect):
+    renderer = InlineRadioFieldRenderer
 
 
 class RegisterForm(UserCreationForm):
@@ -203,14 +213,11 @@ class LayoutForm(forms.ModelForm):
 
     class Meta:
         model = Layout
-        fields = ('booktype', 'orientation', 'name')
+        fields = ('papersize', 'orientation', 'booktype', )
 
     ORIENTATIONS = (("portrait", _(u"Portrait")),
                     ("landscape", _(u"Paysage")),
                     )
-    PAPERSIZES = (("a4", _(u"A4")),
-                  ("a5", _(u"A5")),
-                 )
     OPTIONS = [
             ('diagram', _(u"Rappel des diagrammes d'accords")),
             ('importantdiagramonly', _(u"Rappel des diagrammes importants")),
@@ -221,13 +228,21 @@ class LayoutForm(forms.ModelForm):
             ('onesongperpage', _(u"Saut de page avant chaque chanson")),
             ]
 
-    # papersize = forms.ChoiceField(
-    #                        choices=PAPERSIZES,
-    #                        label=_("Taille du papier"))
+    papersize = forms.ModelChoiceField(
+                            queryset=Papersize.objects.extra(select={'surface': 'width * height'}).extra(order_by=['surface']).all(), 
+                            empty_label=None,
+                            label=_("Taille"),
+                            initial=1)
 
     orientation = forms.ChoiceField(
                             choices=ORIENTATIONS,
-                            label=_("Orientation du papier"))
+                            label=_("Orientation"),
+                            widget=InlineRadioSelect)
+
+    booktype = forms.ChoiceField(
+                            choices=Layout.BOOKTYPES,
+                            label=_("Type de carnet"),
+                            widget=InlineRadioSelect)
 
     bookoptions = forms.MultipleChoiceField(
                             choices=OPTIONS,
@@ -242,7 +257,6 @@ class LayoutForm(forms.ModelForm):
         new_layout.user = self.user
         new_layout.bookoptions = bookoptions
         new_layout.other_options = {
-                        #"papersize": self.cleaned_data["papersize"],
                         "orientation": self.cleaned_data["orientation"],
                         }
 
