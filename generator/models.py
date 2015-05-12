@@ -275,9 +275,9 @@ class Papersize(models.Model):
         ]
         for idx, field in enumerate(fields):
             if rotate_page:
-                geometry.append(field + "=" + str(getattr(self, field)) + "mm")
-            else:
                 geometry.append(rotated_fields[idx] + "=" + str(getattr(self, field)) + "mm")
+            else:
+                geometry.append(field + "=" + str(getattr(self, field)) + "mm")
 
         return geometry
 
