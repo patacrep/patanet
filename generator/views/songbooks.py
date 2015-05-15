@@ -523,17 +523,15 @@ class DeleteLayout(OwnerRequiredMixin, DeleteView):
                     songbook_id=self.kwargs.get('id', None)
                 )
         
-        delete_error = 0
+        delete_error = False
         for task in tasks:
             try:
                 task.delete()
             except TaskDeleteError as e:
-                delete_error += 1
+                delete_error = True
 
-        if delete_error == 1:
-            messages.error(self.request, _(u"Carnet en cours de compilation: suppression impossible"))
-        elif delete_error > 1:
-            messages.error(self.request, _(u"Carnets en cours de compilation: suppression impossible"))
+        if delete_error:
+            messages.error(self.request, _(u"Carnet(s) en cours de compilation: suppression impossible"))
 
         elif request.POST.get('everything') and self.request.user.id == self.object.user_id:
             messages.success(self.request, _(u"Suppression effectuée"), extra_tags='removal')
