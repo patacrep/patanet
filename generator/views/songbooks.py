@@ -534,8 +534,9 @@ class DeleteLayout(OwnerRequiredMixin, DeleteView):
             messages.error(self.request, _(u"Carnet(s) en cours de compilation: suppression impossible"))
 
         elif request.POST.get('everything') and self.request.user.id == self.object.user_id:
+            response = super().delete(request, *args, **kwargs)
             messages.success(self.request, _(u"Suppression effectuée"), extra_tags='removal')
-            return super(DeleteLayout, self).delete(request, *args, **kwargs)
+            return response
         else:
             messages.success(self.request, _(u"Suppression effectuée"), extra_tags='removal')
         
