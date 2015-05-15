@@ -28,12 +28,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.db.models import Count, Prefetch, F, Q
 from django.core.exceptions import ValidationError
+from django.http import HttpResponseRedirect
 
 
 from generator.decorators import LoginRequiredMixin, OwnerOrPublicRequiredMixin, \
                                 OwnerRequiredMixin, owner_required, return_json_on_ajax
 from generator.models import Songbook, ItemsInSongbook, Song, \
-                             Task as GeneratorTask, Layout, Artist, Section
+                             Task as GeneratorTask, TaskDeleteError, Layout, Artist, Section
 from generator.forms import SongbookCreationForm, LayoutForm, validate_latex_free
 
 
@@ -500,6 +501,62 @@ class NewLayout(OwnerRequiredMixin, CreateView):
         songbook = get_object_or_404(Songbook, id=id, slug=slug)
         context['songbook'] = songbook
         return context
+
+
+class DeleteLayout(OwnerRequiredMixin, DeleteView):
+    """Delete a songbook layout
+    """
+    model = Layout
+    template_name = 'generator/delete_download.html'
+    form_class = LayoutForm
+
+    def get_success_url(self):
+        return reverse('download_songbook',
+                        kwargs={"id": self.kwargs["id"],
+                                "slug": self.kwargs["slug"]})
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        tasks = self.object.tasks.filter(songbook__user_id=self.request.user.id)
+        if not request.POST.get('all_songbooks'):
+            tasks = tasks.filter(
+                    songbook_id=self.kwargs.get('id', None)
+                )
+        
+        delete_error = False
+        for task in tasks:
+            try:
+                task.delete()
+            except TaskDeleteError as e:
+                delete_error = True
+
+        if delete_error:
+            messages.error(self.request, _(u"Carnet(s) en cours de compilation: suppression impossible"))
+
+        elif request.POST.get('everything') and self.request.user.id == self.object.user_id:
+            response = super().delete(request, *args, **kwargs)
+            messages.success(self.request, _(u"Suppression effectuée"), extra_tags='removal')
+            return response
+        else:
+            messages.success(self.request, _(u"Suppression effectuée"), extra_tags='removal')
+        
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteLayout, self).get_context_data(**kwargs)
+        id = self.kwargs.get('id', None)
+        slug = self.kwargs.get('slug', None)
+        songbook = get_object_or_404(Songbook, id=id, slug=slug)
+        context['songbook'] = songbook
+        task_id = [ task.id for task in self.object.tasks.all()]
+        if songbook.tasks.filter(id__in=task_id).count():
+            context['songbook_affected'] = 1
+        context['songbook'] = songbook
+        return context
+
+    def get_object(self, queryset=None):
+        layout_id = self.request.REQUEST.get("layout", 0)
+        return get_object_or_404(Layout, id=layout_id)
 
 
 class LayoutList(OwnerRequiredMixin, ListView):
