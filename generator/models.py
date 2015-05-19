@@ -22,6 +22,7 @@ from django.contrib.contenttypes import generic
 from django.conf.global_settings import LANGUAGES
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.functional import cached_property
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 from django.core.exceptions import ValidationError
@@ -30,6 +31,9 @@ from jsonfield import JSONField
 import hashlib
 import re
 import os
+
+from patanet.settings import SONGS_LIBRARY_DIR
+from generator.songs import parse_song
 
 
 class Artist(models.Model):
@@ -43,6 +47,20 @@ class Artist(models.Model):
     class Meta:
         verbose_name = _(u"artiste")
         ordering = ["name"]
+
+class Chord():
+    # TODO : correct parsing
+    def __init__(self):
+        self.shift = 1
+        self.frets = ['X',3,3,2,1,1]
+        self.fingers = [1,3,4,2,1,1]
+        self.name = "F#m"
+
+    def frets_str(self):
+        return ''.join(map(str, self.frets))
+
+    def fingers_str(self):
+        return ''.join(map(str, self.fingers))
 
 
 class Song(models.Model):
@@ -65,6 +83,32 @@ class Song(models.Model):
     class Meta:
         verbose_name = _(u"chant")
         ordering = ["title"]
+
+    def content(self):
+        # TODO: correct parsing
+        path = os.path.join(SONGS_LIBRARY_DIR, 'songs', self.file_path)
+        return parse_song(path)
+
+    def chords(self):
+        # TODO: correct parsing and rendering
+        return [Chord(), Chord()] * 3
+
+    def album_name(self):
+        # TODO: correct parsing
+        return "En attendant les caravanes"
+
+    @cached_property
+    def album_cover_url(self):
+        # TODO: correct parsing
+        from random import randint
+        if randint(0,1):
+            return "http://loic-lantoine.wifeo.com/images/e/ena/En-Attendant-Les-Caravanes-rueketcaravanes.jpg"
+        else:
+            return ""
+
+    def website_url(self):
+        # TODO: correct parsing
+        return "http://www.sinsemilia.com/"
 
 ###############################################################
 
