@@ -1,0 +1,10 @@
+<div 
+    class="chord-diagram" 
+    data-shift="{{ chord.shift }}" 
+    data-frets="{{ chord.frets_str }}" 
+    {% if chord.fingers_str %}
+    data-fingers="{{ chord.fingers_str }}"
+    {% endif %}
+    data-name="{{ chord.name }}"
+    >
+</div>

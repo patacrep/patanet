@@ -1,4 +1,4 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}{% load staticfiles %}
 
 {% block title %}<span class="song_title">{{ song.title }}</span>{% endblock %}
 
@@ -34,7 +34,6 @@
 		    </form>
     {% endif %}
 
-	<br/>
 	{% comment %}
 	{% get_language_info for song.language as lang %}
 	<p class="infos">en {{lang.name_local}}<br />
@@ -46,7 +45,35 @@
 	</p>
 	{% endcomment %}
 	{% if user.is_authenticated %}
-		<div class="song_content">{{ content|safe }}</div>
+        <div class="song_information"> 
+            <ul>
+                {% if song.album_cover_url or song.album_name %}
+                    <li class="cover">
+                        {% if song.album_cover_url %}
+                            <img src="{{ song.album_cover_url }}">
+                        {% endif %}
+                        {% if song.album_name %}
+                            <span>
+                                {% blocktrans with album_name=song.album_name %}
+                                    Album: <em>{{ album_name }}</em>
+                                {% endblocktrans %}
+                            <span>
+                        {% endif %}
+                    </li>
+                {% endif %}
+                {% if song.website_url %}
+                    <li>
+                        <a href="{{ song.website_url }}" class="song_url">{{ song.website_url }}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="song_chords">
+            {% for chord in song.chords %}
+                {% include 'generator/widgets/chord.html' %}
+            {% endfor %}
+        </div>
+		<div class="song_content"><pre>{{ song.content }}</pre></div>
 	{% endif %}
 
 {% endblock %}

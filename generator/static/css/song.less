@@ -136,3 +136,62 @@ main{
         white-space: pre;
     }
 }
+
+.song_information{
+    float: right;
+    padding: 6px;
+    background-color: #F8F8F8;
+    ul{
+        list-style: none;
+        padding: 0 1em;
+    }
+
+    .cover{
+        text-align: center;
+        position: relative;
+        min-height: 20px;
+        
+        img{
+            max-width: 250px;
+        }
+
+        img ~ span{
+            position: absolute;
+            bottom: 3px;
+            right: 0;
+            left: 0;
+            display: inline-block;
+            background-color: #fff;
+            background-color: rgba(255,255,255,0.9);
+            opacity: 0;
+            padding: .4em;
+        }
+    }
+    &:hover .cover span{
+        opacity: 1;
+    }
+
+    .song_url{
+        display: inline-block;
+        max-width: 250px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: .9em;
+    }
+}
+
+div.chord-diagram{
+    position: relative;
+    padding: 1em .5em .5em;
+
+    &:before{
+        content: attr(data-name);
+        position: absolute;
+        left: 0;
+        right: 0;
+        top:0em;
+        text-align: center;
+
+    }
+}
