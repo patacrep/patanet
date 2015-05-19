@@ -506,4 +506,5 @@ $(function() {
     toggle_see_more($('.item-container.songbook'));
     add_sorting_callback($('button.sort'));
     check_all_downloads();
+    chordDiagram.on_load();
 });
