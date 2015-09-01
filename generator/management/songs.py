@@ -20,7 +20,7 @@ from django.conf.global_settings import LANGUAGES
 from django.utils.text import slugify
 
 from generator.models import Song, Artist
-from patacrep.latex import parsesong
+from patacrep.latex import parse_song
 
 import pygit2 as git
 import pprint
@@ -30,7 +30,8 @@ LOGGER = logging.getLogger(__name__)
 
 def import_song(filepath, song_directory):
     '''Import a song in the database'''
-    data = parsesong(filepath, "UTF8")
+    with open(filepath) as song:
+        data = parse_song(song.read(), filepath)
     LOGGER.info("Processing " +
                 pprint.pformat(data['@titles'][0]))
 
