@@ -69,7 +69,7 @@ def login_complete(request):
 
     if songbook_number == 0:
         messages.success(request, _(u"Bienvenue! "
-                                u"Pour commencer, vous pouvez créez un carnet de chant."))
+                                u"Pour commencer, vous pouvez créer un carnet de chant."))
         return redirect(reverse('new_songbook'))
     elif songbook_number == 1:
         songbook = songbooks[0];
