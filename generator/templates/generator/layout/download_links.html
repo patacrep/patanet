@@ -6,18 +6,21 @@
             {% trans "Générer" %}
         </a><br/>&nbsp;
 {% elif task.state = 'FINISHED' %}
-    <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank">
-        {% trans "Télécharger" %}
-    </a><br/>
-    {% if task.hash != songbook_hash %}
+    {% if task.hash = songbook_hash %}
+        <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" target="_blank">
+            {% trans "Télécharger" %}
+        </a><br/>
+        &nbsp;
+    {% else %}
+        <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}" >
+            {% trans "Mettre à jour" %}
+        </a><br/>
         <small>
-            <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}"
-                data-icon="outdated" title="{% trans "Le carnet a changé depuis la génération du fichier PDF." %}" >
-                {% trans "Mettre à jour" %}
+            <a href="{{ MEDIA_URL }}PDF/{{task.result.file}}" 
+            data-icon="outdated" title="{% trans "Le carnet a changé depuis la génération du fichier PDF." %}" target="_blank">
+                {% trans "Télécharger" %}
             </a>
         </small>
-    {% else %}
-        &nbsp;
     {% endif %}
 {% elif task.state = 'ERROR' %}
     <a href="{% url 'render_songbook' id=songbook.id slug=songbook.slug %}?layout={{layout.id}}">
