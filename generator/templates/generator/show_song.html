@@ -34,46 +34,62 @@
 		    </form>
     {% endif %}
 
-	{% comment %}
-	{% get_language_info for song.language as lang %}
-	<p class="infos">en {{lang.name_local}}<br />
-	{% if song.capo != None %}
-		Utiliser un capodastre en position {{ song.capo }}.
-	{% else %}
-		Pas de capo pour ce chant
-	{% endif %}
-	</p>
-	{% endcomment %}
 	{% if user.is_authenticated %}
+        {% if content.failed %}
+            <strong style="color:red;font-size:1.5em">
+            The parsing of the song failed!
+            </strong>
+
+        {% endif %}
         <div class="song_information"> 
             <ul>
-                {% if song.album_cover_url or song.album_name %}
+                {% if content.cover_url or content.album %}
                     <li class="cover">
-                        {% if song.album_cover_url %}
-                            <img src="{{ song.album_cover_url }}">
+                        {% if content.cover_url %}
+                            <img src="{% static content.cover_url %}">
                         {% endif %}
-                        {% if song.album_name %}
+                        {% if content.album %}
                             <span>
-                                {% blocktrans with album_name=song.album_name %}
+                                {% blocktrans with album_name=content.album %}
                                     Album: <em>{{ album_name }}</em>
                                 {% endblocktrans %}
                             <span>
                         {% endif %}
                     </li>
                 {% endif %}
-                {% if song.website_url %}
+                {% if content.url %}
                     <li>
-                        <a href="{{ song.website_url }}" class="song_url">{{ song.website_url }}</a>
+                        <a href="{{ content.url }}" class="song_url">{{ content.url }}</a>
+                    </li>
+                {% endif %}
+
+                {% if content.languages %}
+                    <li>
+                        Languages:
+                        {% for language in content.languages %}
+                            {{language}}
+                        {% endfor %}
+                        {% comment %}
+                        get_language_info works only with 'fr' (not 'french')
+                        {% get_language_info for language as lang %}
+                            <p class="infos">en {{lang.name_local}}<br />
+                            </p>
+                        {% endcomment %}
                     </li>
                 {% endif %}
             </ul>
         </div>
+        {% if content.capo != None %}
+            {% blocktrans with capo=content.capo %}
+                Utiliser un capodastre en position {{ capo }}.
+            {% endblocktrans %}
+        {% endif %}
         <div class="song_chords">
-            {% for chord in song.chords %}
+            {% for chord in content.chords %}
                 {% include 'generator/widgets/chord.html' %}
             {% endfor %}
         </div>
-		<div class="song_content"><pre>{{ song.content }}</pre></div>
+		<div class="song_content"><pre>{{ content.full_content }}</pre></div>
 	{% endif %}
 
 {% endblock %}

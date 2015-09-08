@@ -31,6 +31,7 @@ LOGGER = logging.getLogger(__name__)
 def import_song(filepath, song_directory):
     '''Import a song in the database'''
     with open(filepath) as song:
+        #TODO: PROBABLY BROKEN
         data = parse_song(song.read(), filepath)
     LOGGER.info("Processing " +
                 pprint.pformat(data['@titles'][0]))

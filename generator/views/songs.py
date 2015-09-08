@@ -34,8 +34,6 @@ from generator.songs import parse_song
 from generator.views.utils import LetterListView
 
 
-from patanet.settings import SONGS_LIBRARY_DIR
-
 class SongList(CurrentSongbookMixin, LetterListView):
     model = Song
     context_object_name = "song_list"
@@ -51,8 +49,7 @@ class ArtistView(CurrentSongbookMixin, DetailView):
 
 
 def _read_song(song):
-    path = os.path.join(SONGS_LIBRARY_DIR, 'songs', song.file_path)
-    return parse_song(path)
+    return parse_song(song.file_path)
 
 
 class SongView(CurrentSongbookMixin, DetailView):

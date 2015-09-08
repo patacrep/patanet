@@ -85,30 +85,7 @@ class Song(models.Model):
         ordering = ["title"]
 
     def content(self):
-        # TODO: correct parsing
-        path = os.path.join(SONGS_LIBRARY_DIR, 'songs', self.file_path)
-        return parse_song(path)
-
-    def chords(self):
-        # TODO: correct parsing and rendering
-        return [Chord(), Chord()] * 3
-
-    def album_name(self):
-        # TODO: correct parsing
-        return "En attendant les caravanes"
-
-    @cached_property
-    def album_cover_url(self):
-        # TODO: correct parsing
-        from random import randint
-        if randint(0,1):
-            return "http://loic-lantoine.wifeo.com/images/e/ena/En-Attendant-Les-Caravanes-rueketcaravanes.jpg"
-        else:
-            return ""
-
-    def website_url(self):
-        # TODO: correct parsing
-        return "http://www.sinsemilia.com/"
+        return parse_song(self.file_path)
 
 ###############################################################
 
