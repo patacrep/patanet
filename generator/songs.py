@@ -84,7 +84,7 @@ def get_chords(metadata):
         if not strings:
             return ''
         # Need a fix on the JS lib to join with a space
-        return ''.join([str(pos) if pos else 'x' for pos in strings])
+        return ''.join([str(pos) if pos is not None else 'x' for pos in strings])
 
     for raw_chord in raw_chords:
         chord = {
