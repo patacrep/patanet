@@ -88,7 +88,7 @@ def get_chords(metadata):
 
     for raw_chord in raw_chords:
         chord = {
-            'key': raw_chord.key.chord,
+            'key': raw_chord.key.chord.replace('&','♭').replace('#','♯'),
             'basefret': raw_chord.basefret if raw_chord.basefret else 0,
             'frets':  string_pos(raw_chord.frets),
             'fingers':  string_pos(raw_chord.fingers),
