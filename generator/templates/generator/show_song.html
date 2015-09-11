@@ -51,7 +51,7 @@
                         {% if content.album %}
                             <span>
                                 {% blocktrans with album_name=content.album %}
-                                    Album: <em>{{ album_name }}</em>
+                                    <small>Album: </small><em>{{ album_name }}</em>
                                 {% endblocktrans %}
                             <span>
                         {% endif %}
