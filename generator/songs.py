@@ -59,7 +59,7 @@ def parse_song(filename):
         'url': get_data(metadata, 'url'),
         'chords': get_chords(metadata),
         'fullpath': song_model.fullpath,
-        'capo': None, #Not implemented by patacrep yet
+        'capo': get_data(metadata, 'capo'),
         'languages': song_model.languages,
     }
 

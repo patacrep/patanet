@@ -79,10 +79,12 @@
                 {% endif %}
             </ul>
         </div>
-        {% if content.capo != None %}
-            {% blocktrans with capo=content.capo %}
-                Utiliser un capodastre en position {{ capo }}.
-            {% endblocktrans %}
+        {% if content.capo %}
+            <div class="capo">
+                {% blocktrans with capo=content.capo %}
+                    Capo: {{ capo }}
+                {% endblocktrans %}
+            </div>
         {% endif %}
         <div class="song_chords">
             {% for chord in content.chords %}
