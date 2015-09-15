@@ -63,20 +63,20 @@
                     </li>
                 {% endif %}
 
+                {% comment %}
                 {% if content.languages %}
                     <li>
                         Languages:
                         {% for language in content.languages %}
                             {{language}}
                         {% endfor %}
-                        {% comment %}
                         get_language_info works only with 'fr' (not 'french')
                         {% get_language_info for language as lang %}
                             <p class="infos">en {{lang.name_local}}<br />
                             </p>
-                        {% endcomment %}
                     </li>
                 {% endif %}
+                {% endcomment %}
             </ul>
         </div>
         {% if content.capo %}
