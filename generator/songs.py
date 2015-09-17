@@ -50,7 +50,6 @@ def parse_song(filename):
     more = {
         'failed': (song.titles == []),
         'cover_url': get_cover_url(song, datadir),
-        'chords': get_chords(song.data),
     }
 
     with open(song.fullpath) as fd:
@@ -58,26 +57,6 @@ def parse_song(filename):
 
     setattr(song, 'more', more)
     return song
-
-def get_chords(metadata):
-    raw_chords = metadata.get('define', [])
-    chords = []
-
-    def string_pos(strings):
-        if not strings:
-            return ''
-        # Need a fix on the JS lib to join with a space
-        return ''.join([str(pos) if pos is not None else 'x' for pos in strings])
-
-    for raw_chord in raw_chords:
-        chord = {
-            'key': raw_chord.key.chord.replace('&', '♭').replace('#','♯'),
-            'basefret': raw_chord.basefret if raw_chord.basefret else 0,
-            'frets':  string_pos(raw_chord.frets),
-            'fingers':  string_pos(raw_chord.fingers),
-        }
-        chords.append(chord)
-    return chords
 
 def get_cover_url(song, datadir):
     cover_file = song.get_cover_fullpath()

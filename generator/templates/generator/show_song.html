@@ -87,7 +87,7 @@
             </div>
         {% endif %}
         <div class="song_chords">
-            {% for chord in content.more.chords %}
+            {% for chord in content.data.define %}
                 {% include 'generator/widgets/chord.html' %}
             {% endfor %}
         </div>
