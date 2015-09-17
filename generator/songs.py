@@ -44,40 +44,23 @@ def parse_song(filename):
 
     datadir = settings.SONGS_LIBRARY_DIR
     config = DEFAULT_CONFIG.copy()
-    song_model = ChordproSong(datadir, relpath, config)
-    song_model.parse(config)
-    failed = song_model.titles == []
+    song = ChordproSong(datadir, relpath, config)
+    song.parse(config)
 
-
-    metadata = song_model.data
-
-    basedir = os.path.dirname(song_model.fullpath)
-
-    song = {
-        'album': get_data(metadata, 'album'),
-        'cover_url': get_cover_url(metadata, basedir, datadir),
-        'url': get_data(metadata, 'url'),
-        'chords': get_chords(metadata),
-        'fullpath': song_model.fullpath,
-        'capo': get_data(metadata, 'capo'),
-        'languages': song_model.languages,
+    more = {
+        'failed': (song.titles == []),
+        'cover_url': get_cover_url(song, datadir),
+        'chords': get_chords(song.data),
     }
 
+    with open(song.fullpath) as fd:
+        more['full_content'] = fd.read()
 
-    if failed:
-        song['failed'] = True
-
-    with open(song['fullpath']) as fd:
-        song['full_content'] = fd.read()
+    setattr(song, 'more', more)
     return song
 
-def get_data(metadata, key, default=None):
-    if key in metadata:
-        return metadata[key]
-    return default
-
 def get_chords(metadata):
-    raw_chords = get_data(metadata, 'define', [])
+    raw_chords = metadata.get('define', [])
     chords = []
 
     def string_pos(strings):
@@ -88,7 +71,7 @@ def get_chords(metadata):
 
     for raw_chord in raw_chords:
         chord = {
-            'key': raw_chord.key.chord.replace('&','♭').replace('#','♯'),
+            'key': raw_chord.key.chord.replace('&', '♭').replace('#','♯'),
             'basefret': raw_chord.basefret if raw_chord.basefret else 0,
             'frets':  string_pos(raw_chord.frets),
             'fingers':  string_pos(raw_chord.fingers),
@@ -96,19 +79,9 @@ def get_chords(metadata):
         chords.append(chord)
     return chords
 
-def get_cover_path(file_without_ext):
-    exts = ['', '.jpg', '.png']
-    for ext in exts:
-        print(file_without_ext + ext)
-        if os.path.isfile(file_without_ext + ext):
-            return file_without_ext + ext
-    raise FileNotFoundError()
-
-def get_cover_url(metadata, basedir, datadir):
-    cov = get_data(metadata, 'cov')
-    if not cov:
+def get_cover_url(song, datadir):
+    cover_file = song.get_cover_fullpath()
+    if not cover_file:
         return None
-    cover_without_ext = os.path.join(basedir, str(cov))
-    coverfile = get_cover_path(cover_without_ext)
-    relfile = str(PurePosixPath(coverfile).relative_to(datadir))
+    relfile = str(PurePosixPath(cover_file).relative_to(datadir))
     return relfile

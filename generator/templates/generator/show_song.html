@@ -35,7 +35,7 @@
     {% endif %}
 
 	{% if user.is_authenticated %}
-        {% if content.failed %}
+        {% if content.more.failed %}
             <strong style="color:red;font-size:1.5em">
             The parsing of the song failed!
             </strong>
@@ -43,31 +43,31 @@
         {% endif %}
         <div class="song_information"> 
             <ul>
-                {% if content.cover_url or content.album %}
+                {% if content.more.cover_url or content.data.album %}
                     <li class="cover">
-                        {% if content.cover_url %}
-                            <img src="{% static content.cover_url %}">
+                        {% if content.more.cover_url %}
+                            <img src="{% static content.more.cover_url %}">
                         {% endif %}
-                        {% if content.album %}
+                        {% if content.data.album %}
                             <span>
-                                {% blocktrans with album_name=content.album %}
+                                {% blocktrans with album_name=content.data.album %}
                                     <small>Album: </small><em>{{ album_name }}</em>
                                 {% endblocktrans %}
                             <span>
                         {% endif %}
                     </li>
                 {% endif %}
-                {% if content.url %}
+                {% if content.data.url %}
                     <li>
-                        <a href="{{ content.url }}" class="song_url">{{ content.url }}</a>
+                        <a href="{{ content.data.url }}" class="song_url">{{ content.data.url }}</a>
                     </li>
                 {% endif %}
 
                 {% comment %}
-                {% if content.languages %}
+                {% if content.data.languages %}
                     <li>
                         Languages:
-                        {% for language in content.languages %}
+                        {% for language in content.data.languages %}
                             {{language}}
                         {% endfor %}
                         get_language_info works only with 'fr' (not 'french')
@@ -79,19 +79,19 @@
                 {% endcomment %}
             </ul>
         </div>
-        {% if content.capo %}
+        {% if content.data.capo %}
             <div class="capo">
-                {% blocktrans with capo=content.capo %}
+                {% blocktrans with capo=content.data.capo %}
                     Capo: {{ capo }}
                 {% endblocktrans %}
             </div>
         {% endif %}
         <div class="song_chords">
-            {% for chord in content.chords %}
+            {% for chord in content.more.chords %}
                 {% include 'generator/widgets/chord.html' %}
             {% endfor %}
         </div>
-		<div class="song_content"><pre>{{ content.full_content }}</pre></div>
+		<div class="song_content"><pre>{{ content.more.full_content }}</pre></div>
 	{% endif %}
 
 {% endblock %}
