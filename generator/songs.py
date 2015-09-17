@@ -59,7 +59,7 @@ def parse_song(filename):
     return song
 
 def get_cover_url(song, datadir):
-    cover_file = song.get_cover_fullpath()
+    cover_file = song.get_cover_fullpath([datadir])
     if not cover_file:
         return None
     relfile = str(PurePosixPath(cover_file).relative_to(datadir))
