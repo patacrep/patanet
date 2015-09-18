@@ -44,6 +44,7 @@ def parse_song(filename):
 
     datadir = settings.SONGS_LIBRARY_DIR
     config = DEFAULT_CONFIG.copy()
+    config['datadir'].append(datadir)
     song = ChordproSong(datadir, relpath, config)
     song.parse(config)
 
@@ -59,8 +60,7 @@ def parse_song(filename):
     return song
 
 def get_cover_url(song, datadir):
-    cover_file = song.get_cover_fullpath([datadir])
-    if not cover_file:
+    if not song.cover_filepath:
         return None
-    relfile = str(PurePosixPath(cover_file).relative_to(datadir))
+    relfile = str(PurePosixPath(song.cover_filepath).relative_to(datadir))
     return relfile
