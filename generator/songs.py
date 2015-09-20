@@ -31,6 +31,7 @@ from pathlib import PurePosixPath
 import os
 
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 
 def parse_song(filename):
@@ -48,15 +49,15 @@ def parse_song(filename):
     song = ChordproSong(datadir, relpath, config)
     song.parse(config)
 
-    more = {
+    output = song.fullpath
+    output_format = 'html'
+
+    song.more = {
         'failed': (song.titles == []),
         'cover_url': get_cover_url(song, datadir),
+        'body': mark_safe(song.render(output, output_format, "song_body")),
     }
 
-    with open(song.fullpath) as fd:
-        more['full_content'] = fd.read()
-
-    setattr(song, 'more', more)
     return song
 
 def get_cover_url(song, datadir):

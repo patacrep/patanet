@@ -50,16 +50,16 @@ main{
     }
     
     .chord{
-        display:inline-block;
-    }
-    .chord-name{
-        display:block;
-        font-style:italic;
-        color:@hint-color;
-        sup{
-            font-size:0.9em;
-            top:-3px;
-        }
+        color: fadeout(@link-col, 20%);
+        line-height: 200%;
+        vertical-align: bottom;
+        display: inline-block;
+        position: relative;
+        top: -15px;
+        font-weight: normal;
+        width: 0;
+        white-space: nowrap;
+        font-size:90%;
     }
     .chord-text{
         display:block;
@@ -90,21 +90,21 @@ main{
             content:"\00a0\00d7";
         }
     }
+    p.verse:before {
+        content: counter(verse-counter) ".";
+        counter-increment: verse-counter;
+        display: inline-block;
+        margin-left:-1em;
+        margin-right: 1em;
+        width: 0;
+        color:#333;
+    }
     
-    .song-content {
+    .song_content {
         counter-reset: verse-counter;
-        //font-family:serif;
-        .verse{
-            position:relative;
-            &:before {
-                color:@hint-color;
-                content: counter(verse-counter);
-                counter-increment: verse-counter;
-                position:absolute;
-                display:inline-block;
-                left: -.8em;
-            }
-        }
+        font-family: @font-s;
+        margin-left:2em;
+        line-height: 200%;
     }
     
     .transposition,
