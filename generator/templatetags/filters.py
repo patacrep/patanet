@@ -26,7 +26,7 @@ register = template.Library()
 
 @register.filter
 def first_letter(name):
-	return letter_page(name)
+    return letter_page(name)
 
 @register.filter
 def intersection_id(objects, ids):
@@ -35,6 +35,6 @@ def intersection_id(objects, ids):
 
 @register.simple_tag
 def latex_free_attributes():
-	attributes = latex_free_dict()
-	attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
-	return attr
+    attributes = latex_free_dict()
+    attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
+    return attr
