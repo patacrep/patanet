@@ -38,3 +38,15 @@ def latex_free_attributes():
     attributes = latex_free_dict()
     attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
     return attr
+
+@register.simple_tag
+def render_ast(song, content, template=None, output_format="html"):
+    if content == song:
+        content = None
+        if template is None:
+            template = "song"
+
+    if template is None:
+        template = content.template()
+
+    return song.render(song.fullpath, output_format, content, template)

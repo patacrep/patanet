@@ -55,7 +55,7 @@ def parse_song(filename):
     song.more = {
         'failed': (song.titles == []),
         'cover_url': get_cover_url(song, datadir),
-        'body': mark_safe(song.render(output, output_format, "song_body")),
+        'body': mark_safe(song.render(output, output_format, None, "song_body")),
     }
 
     return song
