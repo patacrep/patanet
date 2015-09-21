@@ -27,6 +27,7 @@ from patacrep.build import DEFAULT_CONFIG
 from patacrep.songs.chordpro import ChordproSong
 
 from pathlib import PurePosixPath
+from functools import wraps
 
 import os
 
@@ -43,10 +44,23 @@ def parse_song(filename):
 
     relpath = os.path.join('songs', filename)
 
-    datadir = settings.SONGS_LIBRARY_DIR
+    datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
     config = DEFAULT_CONFIG.copy()
     config['datadir'].append(datadir)
     song = ChordproSong(datadir, relpath, config)
+
+    def path_decorator(f):
+        """Transform the filepath to an URL"""
+        @wraps(f)
+        def wrapper(*args, **kwds):
+            filepath = f(*args, **kwds)
+            if not filepath:
+                return None
+            relpath = str(PurePosixPath(filepath).relative_to(datadir))
+            return relpath
+        return wrapper
+    song.search_file = path_decorator(song.search_file)
+
     song.parse(config)
 
     output = song.fullpath
@@ -54,7 +68,6 @@ def parse_song(filename):
 
     song.more = {
         'failed': (song.titles == []),
-        'cover_url': get_cover_url(song, datadir),
         'body': mark_safe(song.render(output, output_format, None, "song_body")),
     }
 
