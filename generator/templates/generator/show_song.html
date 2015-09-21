@@ -46,7 +46,7 @@
                 {% if content.more.cover_url or content.data.album %}
                     <li class="cover">
                         {% if content.cover_filepath %}
-                            <img src="{% static content.cover_filepath %}">
+                            <img src="{{ content.cover_filepath }}">
                         {% endif %}
                         {% if content.data.album %}
                             <span>

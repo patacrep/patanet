@@ -33,6 +33,7 @@ import os
 
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from django.templatetags.static import static
 
 
 def parse_song(filename):
@@ -57,7 +58,7 @@ def parse_song(filename):
             if not filepath:
                 return None
             relpath = str(PurePosixPath(filepath).relative_to(datadir))
-            return relpath
+            return static(relpath)
         return wrapper
     song.search_file = path_decorator(song.search_file)
 
