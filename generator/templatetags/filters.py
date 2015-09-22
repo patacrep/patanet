@@ -40,13 +40,5 @@ def latex_free_attributes():
     return attr
 
 @register.simple_tag
-def render_ast(song, content, template=None, output_format="html"):
-    if content == song:
-        content = None
-        if template is None:
-            template = "song"
-
-    if template is None:
-        template = content.template()
-
-    return song.render(song.fullpath, output_format, content, template)
+def render_song(song, output_format="html"):
+    return song.render(song.fullpath, output_format)

@@ -86,14 +86,7 @@
                 {% endblocktrans %}
             </div>
         {% endif %}
-        <div class="song_chords">
-            {% for chord in content.data.define %}
-                {% include 'generator/widgets/chord.html' %}
-                {% render_ast content chord %}
-            {% endfor %}
-        </div>
-		<div class="song_content">{{ content.more.body }}</div>
-        {% render_ast content content "song_body" %}
+        {% render_song content %}
 	{% endif %}
 
 {% endblock %}

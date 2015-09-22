@@ -19,7 +19,7 @@ Functions for song file (.sgc) rendering.
 """
 
 
-from patanet.settings import SONGS_LIBRARY_DIR
+from patanet.settings import SONGS_LIBRARY_DIR, PROJECT_ROOT
 
 
 from patacrep.songs.chordpro import ChordproSong
@@ -49,6 +49,8 @@ def parse_song(filename):
     config = DEFAULT_CONFIG.copy()
     config['datadir'].append(datadir)
     song = ChordproSong(datadir, relpath, config)
+    custom_template = os.path.join(settings.PROJECT_ROOT, 'templates', 'song')
+    song.add_template_path(custom_template)
 
     def path_decorator(f):
         """Transform the filepath to an URL"""
@@ -64,12 +66,8 @@ def parse_song(filename):
 
     song.parse(config)
 
-    output = song.fullpath
-    output_format = 'html'
-
     song.more = {
         'failed': (song.titles == []),
-        'body': mark_safe(song.render(output, output_format, None, "song_body")),
     }
 
     return song
