@@ -45,8 +45,8 @@
             <ul>
                 {% if content.more.cover_url or content.data.album %}
                     <li class="cover">
-                        {% if content.cover_filepath %}
-                            <img src="{{ content.cover_filepath }}">
+                        {% if content|songcover %}
+                            <img src="{{ content|songcover }}">
                         {% endif %}
                         {% if content.data.album %}
                             <span>

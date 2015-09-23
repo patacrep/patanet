@@ -42,3 +42,10 @@ def latex_free_attributes():
 @register.simple_tag
 def render_song(song):
     return song.render_html()
+
+@register.filter
+def songcover(song):
+    """Get the path to the cover file (or None if not found)"""
+    if 'cov' not in song.data:
+        return None
+    return song.search_image(song.data['cov'].argument)
