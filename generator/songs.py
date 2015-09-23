@@ -44,32 +44,24 @@ class Chordpro2HtmlSong(ChordproSong):
         relpath = os.path.join('songs', filename)
 
         datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
+        print(datadir)
         config = DEFAULT_CONFIG.copy()
         config['datadir'].append(datadir)
         super().__init__(datadir, relpath, config)
-
-        # TODO Clean after this line
-        def path_decorator(f):
-            """Transform the filepath to an URL"""
-            @wraps(f)
-            def wrapper(*args, **kwds):
-                filepath = f(*args, **kwds)
-                if not filepath:
-                    return None
-                relpath = str(PurePosixPath(filepath).relative_to(datadir))
-                return static(relpath)
-            return wrapper
-        self.search_file = path_decorator(self.search_file)
 
         self.more = {
             'failed': (self.titles == []),
         }
 
+    def search_file(self, filename, extensions=None, directories=None):
+        return static(PurePosixPath(super().search_file(filename, extensions, directories)).relative_to(self.datadir).as_posix())
+
     def render_html(self):
-        # TODO: Clean this file
-        custom_template = os.path.join(settings.PROJECT_ROOT, 'templates', 'song')
-        self.add_template_path(custom_template)
-        return super().render("html", None)
+        return super().render(
+            "html",
+            None,
+            templatedirs=[os.path.join(settings.PROJECT_ROOT, 'templates', 'song')],
+            )
 
 
     def get_cover_url(self, datadir):
