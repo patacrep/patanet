@@ -69,7 +69,7 @@ class Chordpro2HtmlSong(ChordproSong):
         # TODO: Clean this file
         custom_template = os.path.join(settings.PROJECT_ROOT, 'templates', 'song')
         self.add_template_path(custom_template)
-        return super().render(None, "html")
+        return super().render("html", None)
 
 
     def get_cover_url(self, datadir):
