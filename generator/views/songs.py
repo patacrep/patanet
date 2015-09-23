@@ -30,7 +30,7 @@ from django.conf import settings
 
 from generator.decorators import CurrentSongbookMixin, LoginRequiredMixin
 from generator.models import Song, Artist
-from generator.songs import parse_song
+from generator.songs import Chordpro2HtmlSong
 from generator.views.utils import LetterListView
 
 
@@ -49,7 +49,7 @@ class ArtistView(CurrentSongbookMixin, DetailView):
 
 
 def _read_song(song):
-    return parse_song(song.file_path)
+    return Chordpro2HtmlSong(song.file_path)
 
 
 class SongView(CurrentSongbookMixin, DetailView):

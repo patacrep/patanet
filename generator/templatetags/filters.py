@@ -40,5 +40,5 @@ def latex_free_attributes():
     return attr
 
 @register.simple_tag
-def render_song(song, output_format="html"):
-    return song.render(song.fullpath, output_format)
+def render_song(song):
+    return song.render_html()

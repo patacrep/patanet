@@ -22,7 +22,6 @@ Functions for song file (.sgc) rendering.
 from patanet.settings import SONGS_LIBRARY_DIR, PROJECT_ROOT
 
 
-from patacrep.songs.chordpro import ChordproSong
 from patacrep.build import DEFAULT_CONFIG
 from patacrep.songs.chordpro import ChordproSong
 
@@ -35,45 +34,46 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.templatetags.static import static
 
+class Chordpro2HtmlSong(ChordproSong):
 
-def parse_song(filename):
-    """Parse song 'filename', and return the corresponding HTML code."""
-    # TODO: Clean this file
+    def __init__(self, filename):
+        # TODO: Clean this hack
+        # Hack to read the .sgc file
+        filename += "c"
 
-    # Hack to read the .sgc file
-    filename += "c"
+        relpath = os.path.join('songs', filename)
 
-    relpath = os.path.join('songs', filename)
+        datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
+        config = DEFAULT_CONFIG.copy()
+        config['datadir'].append(datadir)
+        super().__init__(datadir, relpath, config)
 
-    datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
-    config = DEFAULT_CONFIG.copy()
-    config['datadir'].append(datadir)
-    song = ChordproSong(datadir, relpath, config)
-    custom_template = os.path.join(settings.PROJECT_ROOT, 'templates', 'song')
-    song.add_template_path(custom_template)
+        # TODO Clean after this line
+        def path_decorator(f):
+            """Transform the filepath to an URL"""
+            @wraps(f)
+            def wrapper(*args, **kwds):
+                filepath = f(*args, **kwds)
+                if not filepath:
+                    return None
+                relpath = str(PurePosixPath(filepath).relative_to(datadir))
+                return static(relpath)
+            return wrapper
+        self.search_file = path_decorator(self.search_file)
 
-    def path_decorator(f):
-        """Transform the filepath to an URL"""
-        @wraps(f)
-        def wrapper(*args, **kwds):
-            filepath = f(*args, **kwds)
-            if not filepath:
-                return None
-            relpath = str(PurePosixPath(filepath).relative_to(datadir))
-            return static(relpath)
-        return wrapper
-    song.search_file = path_decorator(song.search_file)
+        self.more = {
+            'failed': (self.titles == []),
+        }
 
-    song.parse(config)
+    def render_html(self):
+        # TODO: Clean this file
+        custom_template = os.path.join(settings.PROJECT_ROOT, 'templates', 'song')
+        self.add_template_path(custom_template)
+        return super().render(None, "html")
 
-    song.more = {
-        'failed': (song.titles == []),
-    }
 
-    return song
-
-def get_cover_url(song, datadir):
-    if not song.cover_filepath:
-        return None
-    relfile = str(PurePosixPath(song.cover_filepath).relative_to(datadir))
-    return relfile
+    def get_cover_url(self, datadir):
+        if not self.cover_filepath:
+            return None
+        relfile = str(PurePosixPath(self.cover_filepath).relative_to(datadir))
+        return relfile
