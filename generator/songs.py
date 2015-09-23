@@ -44,7 +44,6 @@ class Chordpro2HtmlSong(ChordproSong):
         relpath = os.path.join('songs', filename)
 
         datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
-        print(datadir)
         config = DEFAULT_CONFIG.copy()
         config['datadir'].append(datadir)
         super().__init__(datadir, relpath, config)
