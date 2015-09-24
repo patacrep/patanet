@@ -53,7 +53,10 @@ class Chordpro2HtmlSong(ChordproSong):
         }
 
     def search_file(self, filename, extensions=None, directories=None):
-        return static(PurePosixPath(super().search_file(filename, extensions, directories)).relative_to(self.datadir).as_posix())
+        filepath = super().search_file(filename, extensions, directories)
+        if not filepath:
+            return None
+        return static(PurePosixPath(filepath).relative_to(self.datadir).as_posix())
 
     def render_html(self):
         return super().render(
