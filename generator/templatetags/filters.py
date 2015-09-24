@@ -33,12 +33,6 @@ def intersection_id(objects, ids):
     object_ids = [obj.id for obj in objects]
     return set.intersection(set(ids), set(object_ids))
 
-@register.simple_tag
-def latex_free_attributes():
-    attributes = latex_free_dict()
-    attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
-    return attr
-
 @register.filter
 def search_image(image, song):
     """Get the path to an image file (or None if not found)"""
@@ -46,3 +40,12 @@ def search_image(image, song):
         return None
     arg = image.argument
     return song.search_image(image.argument, True)
+
+## Template tags
+##############################################
+
+@register.simple_tag
+def latex_free_attributes():
+    attributes = latex_free_dict()
+    attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
+    return attr
