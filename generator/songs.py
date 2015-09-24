@@ -64,10 +64,3 @@ class Chordpro2HtmlSong(ChordproSong):
             None,
             templatedirs=[os.path.join(settings.PROJECT_ROOT, 'templates', 'song')],
             )
-
-
-    def get_cover_url(self, datadir):
-        if not self.cover_filepath:
-            return None
-        relfile = str(PurePosixPath(self.cover_filepath).relative_to(datadir))
-        return relfile
