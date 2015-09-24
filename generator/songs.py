@@ -19,10 +19,9 @@ Functions for song file (.sgc) rendering.
 """
 
 
-from patanet.settings import SONGS_LIBRARY_DIR
+from patanet.settings import SONGS_LIBRARY_DIR, PROJECT_ROOT
 
 
-from patacrep.songs.chordpro import ChordproSong
 from patacrep.build import DEFAULT_CONFIG
 from patacrep.songs.chordpro import ChordproSong
 
@@ -32,36 +31,37 @@ import os
 
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from django.templatetags.static import static
 
+class Chordpro2HtmlSong(ChordproSong):
 
-def parse_song(filename):
-    """Parse song 'filename', and return the corresponding HTML code."""
-    # TODO: Clean this file
+    def __init__(self, filename):
+        # TODO: Clean this hack
+        # Hack to read the .sgc file
+        filename += "c"
 
-    # Hack to read the .sgc file
-    filename += "c"
+        relpath = os.path.join('songs', filename)
 
-    relpath = os.path.join('songs', filename)
+        datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
+        config = DEFAULT_CONFIG.copy()
+        config['datadir'].append(datadir)
+        super().__init__(datadir, relpath, config)
 
-    datadir = settings.SONGS_LIBRARY_DIR
-    config = DEFAULT_CONFIG.copy()
-    config['datadir'].append(datadir)
-    song = ChordproSong(datadir, relpath, config)
-    song.parse(config)
+        self.more = {
+            'failed': (self.titles == []),
+        }
 
-    output = song.fullpath
-    output_format = 'html'
+    def search_file(self, filename, extensions=None, directories=None):
+        filepath = super().search_file(filename, extensions, directories)
+        if not filepath:
+            return None
+        return static(PurePosixPath(filepath).relative_to(self.datadir).as_posix())
 
-    song.more = {
-        'failed': (song.titles == []),
-        'cover_url': get_cover_url(song, datadir),
-        'body': mark_safe(song.render(output, output_format, "song_body")),
-    }
-
-    return song
-
-def get_cover_url(song, datadir):
-    if not song.cover_filepath:
-        return None
-    relfile = str(PurePosixPath(song.cover_filepath).relative_to(datadir))
-    return relfile
+    def render_html(self):
+        return mark_safe(
+                super().render(
+                "html",
+                None,
+                templatedirs=[os.path.join(settings.PROJECT_ROOT, 'templates', 'song')],
+                )
+            )
