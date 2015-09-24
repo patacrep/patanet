@@ -58,8 +58,10 @@ class Chordpro2HtmlSong(ChordproSong):
         return static(PurePosixPath(filepath).relative_to(self.datadir).as_posix())
 
     def render_html(self):
-        return super().render(
-            "html",
-            None,
-            templatedirs=[os.path.join(settings.PROJECT_ROOT, 'templates', 'song')],
+        return mark_safe(
+                super().render(
+                "html",
+                None,
+                templatedirs=[os.path.join(settings.PROJECT_ROOT, 'templates', 'song')],
+                )
             )

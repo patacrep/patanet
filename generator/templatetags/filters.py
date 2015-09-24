@@ -39,10 +39,6 @@ def latex_free_attributes():
     attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
     return attr
 
-@register.simple_tag
-def render_song(song):
-    return song.render_html()
-
 @register.filter
 def search_image(image, song):
     """Get the path to an image file (or None if not found)"""
