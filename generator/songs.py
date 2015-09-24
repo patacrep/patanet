@@ -26,7 +26,6 @@ from patacrep.build import DEFAULT_CONFIG
 from patacrep.songs.chordpro import ChordproSong
 
 from pathlib import PurePosixPath
-from functools import wraps
 
 import os
 
