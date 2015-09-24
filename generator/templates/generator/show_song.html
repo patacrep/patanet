@@ -43,10 +43,11 @@
         {% endif %}
         <div class="song_information"> 
             <ul>
-                {% if content.more.cover_url or content.data.album %}
+                {% with content.data.cov|search_image:content as songcover %}
+                {% if songcover or content.data.album %}
                     <li class="cover">
-                        {% if content|songcover %}
-                            <img src="{{ content|songcover }}">
+                        {% if songcover %}
+                            <img src="{{ songcover }}">
                         {% endif %}
                         {% if content.data.album %}
                             <span>
@@ -57,6 +58,7 @@
                         {% endif %}
                     </li>
                 {% endif %}
+                {% endwith %}
                 {% if content.data.url %}
                     <li>
                         <a href="{{ content.data.url }}" class="song_url">{{ content.data.url }}</a>

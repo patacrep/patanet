@@ -44,8 +44,9 @@ def render_song(song):
     return song.render_html()
 
 @register.filter
-def songcover(song):
-    """Get the path to the cover file (or None if not found)"""
-    if 'cov' not in song.data:
+def search_image(image, song):
+    """Get the path to an image file (or None if not found)"""
+    if not image:
         return None
-    return song.search_image(song.data['cov'].argument)
+    arg = image.argument
+    return song.search_image(image.argument, True)
