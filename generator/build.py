@@ -17,8 +17,7 @@
 from generator.models import Songbook, Layout, Task
 from django.conf import settings
 
-from patacrep.build import SongbookBuilder
-from patacrep.errors import SongbookError
+from generator.patacrep import build_songbook
 
 import os
 import hashlib
@@ -63,12 +62,7 @@ def generate_songbook(songbook, layout):
         os.makedirs(SONGBOOKS_PDFS)
         os.chdir(SONGBOOKS_PDFS)
 
-    builder = SongbookBuilder(content, tmpfile)
-
-    for step in ["tex", "pdf", "sbx", "pdf", "clean"]:
-        try:
-            builder.build_steps([step])
-        except SongbookError as e:
-            raise GeneratorError("Error during the step '{0}': {1}".format(step, e))
+    steps = ["tex", "pdf", "sbx", "pdf", "clean"]
+    build_songbook(content, tmpfile, steps)
 
     return tmpfile + ".pdf"
