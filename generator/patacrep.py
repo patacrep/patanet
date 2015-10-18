@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Patacrep Team
+#    Copyright (C) 2015 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -13,25 +13,31 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 """
-Functions for song file (.sgc) rendering.
+Patacrep bridge
 """
-
-
-from patanet.settings import SONGS_LIBRARY_DIR, PROJECT_ROOT
-
-
-from patacrep.build import DEFAULT_CONFIG
-from patacrep.songs.chordpro import ChordproSong
 
 from pathlib import PurePosixPath
-
-import os
 
 from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.templatetags.static import static
+
+import os
+
+from patacrep.build import SongbookBuilder, DEFAULT_CONFIG
+from patacrep.errors import SongbookError
+from patacrep.songs.chordpro import ChordproSong
+
+def build_songbook(content, outputfile, steps):
+    builder = SongbookBuilder(content, outputfile)
+    for step in steps:
+        try:
+            builder.build_steps([step])
+        except SongbookError as e:
+            from generator.build import GeneratorError
+            raise GeneratorError("Error during the step '{0}': {1}".format(step, e))
+
 
 class Chordpro2HtmlSong(ChordproSong):
 
