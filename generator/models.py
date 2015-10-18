@@ -33,7 +33,7 @@ import re
 import os
 
 from patanet.settings import SONGS_LIBRARY_DIR
-from generator.songs import Chordpro2HtmlSong
+from generator.patacrep import Chordpro2HtmlSong
 
 
 class Artist(models.Model):

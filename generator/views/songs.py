@@ -30,7 +30,7 @@ from django.conf import settings
 
 from generator.decorators import CurrentSongbookMixin, LoginRequiredMixin
 from generator.models import Song, Artist
-from generator.songs import Chordpro2HtmlSong
+from generator.patacrep import Chordpro2HtmlSong
 from generator.views.utils import LetterListView
 
 
