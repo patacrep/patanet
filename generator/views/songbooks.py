@@ -555,7 +555,7 @@ class DeleteLayout(OwnerRequiredMixin, DeleteView):
         return context
 
     def get_object(self, queryset=None):
-        layout_id = self.request.REQUEST.get("layout", 0)
+        layout_id = self.request.GET.get("layout", 0)
         return get_object_or_404(Layout, id=layout_id)
 
 
@@ -612,11 +612,11 @@ def get_task_link(request, id):
 def render_songbook(request, id, slug):
     """Trigger the generation of a songbook
     """
-    force = request.REQUEST.get("force", False)
+    force = request.GET.get("force", False)
     songbook = Songbook.objects.get(id=id)
     songbook_hash = songbook.hash()
 
-    layout_id = request.REQUEST.get("layout", 0)
+    layout_id = request.GET.get("layout", 0)
 
     layout = Layout.objects.get(id=layout_id)
 

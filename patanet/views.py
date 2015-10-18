@@ -20,8 +20,8 @@ from django.shortcuts import redirect
 
 
 def setlang(request):
-    lang = request.REQUEST.get("lang", "")
-    next_url = request.REQUEST.get("next", "/")
+    lang = request.GET.get("lang", "")
+    next_url = request.GET.get("next", "/")
     if lang=="":
         return redirect(next_url)
     next_path = "/".join(next_url.split('/')[2:])
