@@ -18,7 +18,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes import fields
 from django.conf.global_settings import LANGUAGES
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -75,7 +75,7 @@ class Song(models.Model):
                                related_name="songs")
     file_path = models.CharField(max_length=500)
     object_hash = models.CharField(max_length=50)
-    items_in_songbook = generic.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
+    items_in_songbook = fields.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
     def __unicode__(self):
         return self.title
@@ -214,7 +214,7 @@ class Section(models.Model):
                             verbose_name=_(u"nom de section"),
                             validators=[latex_free_validator]
                             )
-    items_in_songbook = generic.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
+    items_in_songbook = fields.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
     def __unicode__(self):
         return self.name
@@ -381,7 +381,7 @@ class ItemsInSongbook(models.Model):
     """
     item_type = models.ForeignKey(ContentType)
     item_id = models.PositiveIntegerField()
-    item = generic.GenericForeignKey('item_type', 'item_id')
+    item = fields.GenericForeignKey('item_type', 'item_id')
     songbook = models.ForeignKey(Songbook)
     rank = models.IntegerField(_(u"position"))
 
