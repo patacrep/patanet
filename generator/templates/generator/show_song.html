@@ -92,7 +92,11 @@
         <div class="song_content">
             {{ content.render_verses }}
         </div>
-	{% endif %}
+    {% else %}
+        <p>
+            <em>{% trans "Le contenu du chant est seulement accessible aux utilisateurs connectés." %}</em>
+        </p>
+    {% endif %}
 
 {% endblock %}
 
