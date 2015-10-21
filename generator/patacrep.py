@@ -27,7 +27,7 @@ import os
 
 from patacrep.build import SongbookBuilder, DEFAULT_CONFIG
 from patacrep.errors import SongbookError
-from patacrep.songs.chordpro import Chordpro2HtmlSong as PChordpro2HtmlSong
+from patacrep.songs.chordpro import Chordpro2HtmlSong
 
 def build_songbook(content, outputfile, steps):
     builder = SongbookBuilder(content, outputfile)
@@ -39,7 +39,7 @@ def build_songbook(content, outputfile, steps):
             raise GeneratorError("Error during the step '{0}': {1}".format(step, e))
 
 
-class Chordpro2HtmlSong(PChordpro2HtmlSong):
+class HtmlSong(Chordpro2HtmlSong):
 
     def __init__(self, filename):
         # TODO: Clean this hack

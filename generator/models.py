@@ -33,7 +33,7 @@ import re
 import os
 
 from patanet.settings import SONGS_LIBRARY_DIR
-from generator.patacrep import Chordpro2HtmlSong
+from generator.patacrep import HtmlSong
 
 
 class Artist(models.Model):
@@ -85,7 +85,7 @@ class Song(models.Model):
         ordering = ["title"]
 
     def content(self):
-        return Chordpro2HtmlSong(self.file_path)
+        return HtmlSong(self.file_path)
 
 ###############################################################
 
