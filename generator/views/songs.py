@@ -30,7 +30,6 @@ from django.conf import settings
 
 from generator.decorators import CurrentSongbookMixin, LoginRequiredMixin
 from generator.models import Song, Artist
-from generator.patacrep import Chordpro2HtmlSong
 from generator.views.utils import LetterListView
 
 
@@ -48,10 +47,6 @@ class ArtistView(CurrentSongbookMixin, DetailView):
     template_name = "generator/show_artist.html"
 
 
-def _read_song(song):
-    return Chordpro2HtmlSong(song.file_path)
-
-
 class SongView(CurrentSongbookMixin, DetailView):
     context_object_name = "song"
     model = Song
@@ -64,7 +59,7 @@ class SongView(CurrentSongbookMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SongView, self).get_context_data(**kwargs)
-        context['content'] = _read_song(context['song'])
+        context['content'] = context['song'].content
         return context
 
 
@@ -155,5 +150,5 @@ class UpdateSong(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['content'] = _read_song(context['song'])
+        context['content'] = context['song'].content
         return context
