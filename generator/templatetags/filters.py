@@ -39,7 +39,7 @@ def search_image(image, song):
     if not image:
         return None
     arg = image.argument
-    return song.search_image(image.argument, True)
+    return song.search_image(image.argument)
 
 ## Template tags
 ##############################################

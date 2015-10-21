@@ -88,7 +88,10 @@
                 {% endblocktrans %}
             </div>
         {% endif %}
-        {{ content.render_html }}
+        {{ content.render_defines }}
+        <div class="song_content">
+            {{ content.render_verses }}
+        </div>
 	{% endif %}
 
 {% endblock %}

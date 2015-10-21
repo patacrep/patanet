@@ -27,7 +27,7 @@ import os
 
 from patacrep.build import SongbookBuilder, DEFAULT_CONFIG
 from patacrep.errors import SongbookError
-from patacrep.songs.chordpro import ChordproSong
+from patacrep.songs.chordpro import Chordpro2HtmlSong as PChordpro2HtmlSong
 
 def build_songbook(content, outputfile, steps):
     builder = SongbookBuilder(content, outputfile)
@@ -39,7 +39,7 @@ def build_songbook(content, outputfile, steps):
             raise GeneratorError("Error during the step '{0}': {1}".format(step, e))
 
 
-class Chordpro2HtmlSong(ChordproSong):
+class Chordpro2HtmlSong(PChordpro2HtmlSong):
 
     def __init__(self, filename):
         # TODO: Clean this hack
@@ -51,23 +51,30 @@ class Chordpro2HtmlSong(ChordproSong):
         datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
         config = DEFAULT_CONFIG.copy()
         config['datadir'].append(datadir)
-        super().__init__(datadir, relpath, config)
+        super().__init__(relpath, config, datadir=datadir)
 
         self.more = {
             'failed': (self.titles == []),
         }
 
-    def search_file(self, filename, extensions=None, directories=None):
-        filepath = super().search_file(filename, extensions, directories)
-        if not filepath:
-            return None
-        return static(PurePosixPath(filepath).relative_to(self.datadir).as_posix())
-
-    def render_html(self):
-        return mark_safe(
-                super().render(
-                "html",
-                None,
-                templatedirs=[os.path.join(settings.PROJECT_ROOT, 'templates', 'song')],
+    def search_file(self, filename, extensions=None, *, datadirs=None):
+        try:
+            datadir, filename, extension = self.search_datadir_file(filename, extensions, datadirs)
+            filepath = os.path.join(datadir, filename + extension)
+            return static(PurePosixPath(filepath).relative_to(self.datadir).as_posix())
+        except FileNotFoundError:
+            LOGGER.warning(
+                "Song '%s' (datadir '%s'): File '%s' not found.",
+                self.subpath, self.datadir, filename,
                 )
+            return None
+
+    def render_verses(self):
+        return mark_safe(
+                super().render("html", template="song_body")
+            )
+
+    def render_defines(self):
+        return mark_safe(
+                super().render("html", template="content_define_list")
             )
