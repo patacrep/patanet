@@ -71,10 +71,10 @@ class HtmlSong(Chordpro2HtmlSong):
 
     def render_verses(self):
         return mark_safe(
-                super().render("html", template="song_body")
+                super().render(template="song_body")
             )
 
     def render_defines(self):
         return mark_safe(
-                super().render("html", template="content_define_list")
+                super().render(template="content_define_list")
             )
