@@ -16,34 +16,38 @@
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from django.db import transaction
 
-from generator.management.songs import import_song
+from generator.patacrep import extract_metadata
+from generator.management.songs import import_songs
 
 import os
+from pathlib import PurePosixPath
+import logging
 
+LOGGER = logging.getLogger(__name__)
 SONGS_DIR = os.path.join(settings.SONGS_LIBRARY_DIR, "songs")
 
-@transaction.atomic
 class Command(BaseCommand):
     args = ""
     help = "Import song information into db"
 
     def handle(self, *args, **options):
+        metadata = []
         for root, _dirs, filenames in os.walk(SONGS_DIR,
                                              topdown=True,
                                              onerror=_file_error,
                                              followlinks=False):
             for filename in filenames:
-                if filename.lower().endswith(".sg"):
-                    filepath = os.path.realpath(os.path.join(root, filename))
+                if filename.lower().endswith(".sgc"):
+                    fullpath = os.path.join(root, filename)
+                    filepath = str(PurePosixPath(fullpath).relative_to(SONGS_DIR))
                     try:
-                        import_song(filepath, SONGS_DIR)
+                        metadata.append(extract_metadata(filepath, settings.SONGS_LIBRARY_DIR))
                     except IOError as e:
                         self.stderr.write("*** Failed processing file : "
-                                          + filepath)
+                                          + fullpath)
                         self.stderr.write("    I/O error({0}): {1}"
                                           .format(e.errno, e.strerror))
-
+        import_songs(metadata)
 def _file_error(error):
     print(error)
