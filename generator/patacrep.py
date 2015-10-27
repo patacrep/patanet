@@ -38,20 +38,31 @@ def build_songbook(content, outputfile, steps):
             from generator.build import GeneratorError
             raise GeneratorError("Error during the step '{0}': {1}".format(step, e))
 
+def extract_metadata(filepath, datadir):
+    song = HtmlSong(filepath, datadir)
+    metadata = {
+        'authors': song.authors,
+        'titles':  song.titles,
+        'lang':  song.lang,
+        'filepath':  filepath,
+        'datadir':  datadir,
+        'fullpath':  song.fullpath,
+    }
+    return metadata
 
 class HtmlSong(Chordpro2HtmlSong):
 
-    def __init__(self, filename):
-        # TODO: Clean this hack
-        # Hack to read the .sgc file
-        filename += "c"
+    def __init__(self, filename, datadir=None):
+        filename = os.path.join('songs', filename)
 
-        relpath = os.path.join('songs', filename)
-
-        datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
+        if not datadir:
+            datadir = os.path.abspath(settings.SONGS_LIBRARY_DIR)
         config = DEFAULT_CONFIG.copy()
         config['datadir'].append(datadir)
-        super().__init__(relpath, config, datadir=datadir)
+
+        # without the encoding, the reading fails
+        config['encoding'] = 'utf-8'
+        super().__init__(filename, config, datadir=datadir)
 
         self.more = {
             'failed': (self.titles == []),
