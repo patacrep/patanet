@@ -16,19 +16,13 @@
 """
 Songs management utilities
 """
-from django.conf.global_settings import LANGUAGES
 from django.utils.text import slugify
 from django.db import transaction
 
 from generator.models import Song, Artist
-from patacrep.latex import parse_song
 
 import pygit2 as git
-import pprint
-import os
 import logging
-from functools import lru_cache
-import time
 
 LOGGER = logging.getLogger(__name__)
 
