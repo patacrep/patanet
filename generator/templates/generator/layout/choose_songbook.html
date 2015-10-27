@@ -1,50 +1,58 @@
 {% load i18n %}
 
 {% if request.user.is_authenticated %}
-	<div class="current-object choose">
+    <div class="current-object choose">
         <a href="{% url 'songbook_private_list' %}" class="related">
             {% trans "Mes carnets" %}
         </a>
-		<form method="get" action="{% url 'set_current_songbook' %}">
-			<input type="hidden" name="next" value="{{ request.path }}"/>
-			<p>
-				<label>
-					{% trans "Veuillez choisir un carnet" %}
-				</label>
-				<select name="songbook">
-					{% for songbook in user.songbooks.all %}
-						<option value="{{ songbook.pk }}">
-							{{ songbook.title }}
-						</option>
-					{% endfor %}
-				</select><input type="submit" value="{% trans "Choisir" %}"/>
-			</p>
-			<p>
-				<label>
-					{% trans "ou" %}
-				</label>
-			    <a href="{% url 'new_songbook' %}">
-			        {% trans "créer un nouveau carnet" %}
-			    </a>
-	    </p>
-		</form>
-	</div>
+        <form method="get" action="{% url 'set_current_songbook' %}">
+            <input type="hidden" name="next" value="{{ request.path }}"/>
+            <p>
+                <label>
+                    {% trans "Choisissez un carnet existant" %}
+                </label>
+                {% with user.songbooks.all as songbooks %}
+                {% if songbooks %}
+                    <select name="songbook">
+                        {% for songbook in songbooks %}
+                            <option value="{{ songbook.pk }}">
+                                {{ songbook.title }}
+                            </option>
+                        {% endfor %}
+                    </select><input type="submit" value="{% trans "Choisir" %}"/>
+                {% else %}
+                    <em>
+                        {% trans "aucun carnet" %}
+                    </em>
+                {% endif %}
+                {% endwith %}
+            </p>
+            <p>
+                <label>
+                    {% trans "ou" %}
+                </label>
+                <a href="{% url 'new_songbook' %}">
+                    {% trans "créez un nouveau carnet" %}
+                </a>
+            </p>
+        </form>
+    </div>
 {% else %}
-	<div class="current-object login">
-		<h3>
-			{% url 'login' as login_url %}
-			{% url 'register' as register_url %}
+    <div class="current-object login">
+        <h3>
+            {% url 'login' as login_url %}
+            {% url 'register' as register_url %}
 
-			{% blocktrans %}
-				Pour créer votre carnet de chant,<br/>
-				 veuillez vous
-			    <a href="{{ login_url }}">connecter</a>
-			    ou vous
-			    <a href="{{ register_url }}">inscrire</a>.
+            {% blocktrans %}
+                Pour créer votre carnet de chant,<br/>
+                 veuillez vous
+                <a href="{{ login_url }}">connecter</a>
+                ou vous
+                <a href="{{ register_url }}">inscrire</a>.
 
-			{% endblocktrans %}
-		</h3>
-	</div>
+            {% endblocktrans %}
+        </h3>
+    </div>
 {% endif %}
 
 {% include "generator/menu/search.html" %}
