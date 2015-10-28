@@ -41,7 +41,7 @@ class Artist(models.Model):
     name = models.CharField(max_length=100, verbose_name=_(u'Nom'))
     slug = models.SlugField(max_length=100, unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -77,7 +77,7 @@ class Song(models.Model):
     object_hash = models.CharField(max_length=50)
     items_in_songbook = fields.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     class Meta:
@@ -109,7 +109,7 @@ class Songbook(models.Model):
                               verbose_name=_(u"auteur"),
                               default="")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def hash(self):
@@ -216,7 +216,7 @@ class Section(models.Model):
                             )
     items_in_songbook = fields.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
@@ -385,7 +385,7 @@ class ItemsInSongbook(models.Model):
     songbook = models.ForeignKey(Songbook)
     rank = models.IntegerField(_(u"position"))
 
-    def __unicode__(self):
+    def __str__(self):
         return _('"{item_type}" : "{item}", dans le carnet "{songbook}"'
                  ).format(item=self.item,
                           item_type=self.item_type,
@@ -444,7 +444,7 @@ class Task(models.Model):
     class Meta:
         unique_together = ('songbook', 'layout',)
 
-    def __unicode__(self):
+    def __str__(self):
         return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
                                     songbook=self.songbook.title,
                                     layout=self.layout.id))
