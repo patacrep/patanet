@@ -33,28 +33,28 @@ def import_songs(metadata):
     songs = []
     for song in metadata:
         title = song['titles'][0]
+        file_path = song['filepath']
 
-        if song['filepath'] in catalog.filepaths:
-            LOGGER.info(
-                "Skip: "
-                + title
+        if file_path in catalog.filepaths:
+            LOGGER.info("Skip: " + title
                 + "\t\t\t\t\t- Already in Database")
             continue
 
-        object_hash = git.hashfile(song['fullpath'])
+        slug = catalog.get_song_slug(title)
         artist_id = catalog.get_artist_id(song['authors'][0])
-        song_slug = catalog.get_song_slug(title)
-        data = {
-            'artist_id' :    artist_id,
-            'title'     :    title,
-            'language'  :    song['lang'],
-            'slug'      :    song_slug,
-            'file_path' :    song['filepath'],
-            'object_hash':   object_hash,
-        }
+        language = song['lang']
+        object_hash = git.hashfile(song['fullpath'])
 
-        LOGGER.info("Adding: " + title)
+        data = {}
+        for i in (
+            'title', 'file_path',
+            'slug', 'artist_id',
+            'language', 'object_hash',
+            ):
+            data[i] = locals()[i]
+
         model = Song(**data)
+        LOGGER.info("Add: " + title)
         songs.append(model)
 
     Song.objects.bulk_create(songs)
@@ -87,10 +87,9 @@ class Catalog:
                 tmp_slug = slug + '-' + str(i)
 
             LOGGER.info(
-                "Slug collision: "
+                "SlugCollision: "
                 + slug + ". Use "
-                + tmp_slug + " instead for "
-                + title)
+                + tmp_slug + " instead for " + title)
             slug = tmp_slug
 
         self.song_slugs.add(slug)
@@ -98,7 +97,7 @@ class Catalog:
 
     def _init_artists(self):
         artists = Artist.objects.values_list('id', 'slug', 'name')
-        self.artists = {slug: (id, name) for id, slug, name in artists}
+        self.artists = { slug: (id, name) for id, slug, name in artists }
 
     def get_artist_name(self, name_tuple):
         last_name, first_name = name_tuple
@@ -119,8 +118,7 @@ class Catalog:
                 LOGGER.warning(
                     "*** Artist name differs though "
                     "slugs are equal : "
-                    + artist_name + " / "
-                    + name)
+                    + artist_name + " / " + name)
             return id
         except KeyError:
             model = Artist.objects.create(
