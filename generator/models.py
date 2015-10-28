@@ -445,9 +445,9 @@ class Task(models.Model):
         unique_together = ('songbook', 'layout',)
 
     def __str__(self):
-        return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
+        return str(_(u"Carnet '{songbook}', mise en page n°{layout}".format(
                                     songbook=self.songbook.title,
-                                    layout=self.layout.id))
+                                    layout=self.layout.id)))
 
     def delete(self, *args, **kwargs):
         if self.state in (self.State.IN_PROCESS, self.State.QUEUED):
