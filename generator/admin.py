@@ -118,7 +118,11 @@ class TaskAdmin(admin.ModelAdmin):
         match = re.search('([^" \']+\.log)', msg)
         if(match):
             url = settings.MEDIA_URL +'PDF/' + match.group(0)
-            return mark_safe("<a href='%s'>Voir les logs</a>" % url)
+            texurl = url[:-3] + "tex"
+            return mark_safe(
+                "Fichier <a href='%s'>.log</a>, <a href='%s'>.tex</a>"
+                % (url, texurl)
+                )
         return None
 
     log_link.allow_tags = True
