@@ -44,8 +44,8 @@ class GeneratorError(Exception):
         return "[PDF Generator error] {0}". format(self.message)
 
 
-def generate_songbook(songbook, layout):
-    """Generate a PDF file by combining a songbook and a layout"""
+def prepare_songbook(songbook, layout):
+    """Return the filename and songbook content"""
 
     content = {}
     content.update(songbook.get_as_json())
@@ -56,6 +56,10 @@ def generate_songbook(songbook, layout):
     tmpfile = str(songbook.id) + '-' + str(layout.id) + '-' + \
               hashlib.sha1(str(content).encode()).hexdigest()[0:20]
 
+    return tmpfile, content
+
+def generate_songbook(filename, content):
+    """Generate a PDF file from the content"""
     try:
         os.chdir(SONGBOOKS_PDFS)
     except OSError:
@@ -63,6 +67,6 @@ def generate_songbook(songbook, layout):
         os.chdir(SONGBOOKS_PDFS)
 
     steps = ["tex", "pdf", "sbx", "pdf", "clean"]
-    build_songbook(content, tmpfile, steps)
+    build_songbook(content, filename, steps)
 
-    return tmpfile + ".pdf"
+    return filename + ".pdf"

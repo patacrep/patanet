@@ -17,7 +17,7 @@
 
 from background_task import background
 from generator.models import Task as GeneratorTask
-from generator.build import generate_songbook, GeneratorError
+from generator.build import prepare_songbook, generate_songbook, GeneratorError
 
 import datetime
 import logging
@@ -32,8 +32,10 @@ def queue_render_task(task_id):
     try: # try to recover if the render process is interrupted
         task.save()
 
+        filename, content = prepare_songbook(task.songbook, task.layout)
+
         try:
-            filename = generate_songbook(task.songbook, task.layout)
+            filename = generate_songbook(filename, content)
         except GeneratorError as e:
             task.state = GeneratorTask.State.ERROR
             task.result = {"error_msg": str(e)}
