@@ -18,10 +18,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes import fields
 from django.conf.global_settings import LANGUAGES
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.functional import cached_property
 from django.dispatch.dispatcher import receiver
 from django.db.models.signals import post_save
 from django.core.exceptions import ValidationError
@@ -31,18 +32,35 @@ import hashlib
 import re
 import os
 
+from patanet.settings import SONGS_LIBRARY_DIR
+from generator.patacrep import HtmlSong
+
 
 class Artist(models.Model):
 
     name = models.CharField(max_length=100, verbose_name=_(u'Nom'))
     slug = models.SlugField(max_length=100, unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = _(u"artiste")
         ordering = ["name"]
+
+class Chord():
+    # TODO : correct parsing
+    def __init__(self):
+        self.shift = 1
+        self.frets = ['X',3,3,2,1,1]
+        self.fingers = [1,3,4,2,1,1]
+        self.name = "F#m"
+
+    def frets_str(self):
+        return ''.join(map(str, self.frets))
+
+    def fingers_str(self):
+        return ''.join(map(str, self.fingers))
 
 
 class Song(models.Model):
@@ -57,14 +75,17 @@ class Song(models.Model):
                                related_name="songs")
     file_path = models.CharField(max_length=500)
     object_hash = models.CharField(max_length=50)
-    items_in_songbook = generic.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
+    items_in_songbook = fields.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     class Meta:
         verbose_name = _(u"chant")
         ordering = ["title"]
+
+    def content(self):
+        return HtmlSong(self.file_path)
 
 ###############################################################
 
@@ -88,7 +109,7 @@ class Songbook(models.Model):
                               verbose_name=_(u"auteur"),
                               default="")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def hash(self):
@@ -193,9 +214,9 @@ class Section(models.Model):
                             verbose_name=_(u"nom de section"),
                             validators=[latex_free_validator]
                             )
-    items_in_songbook = generic.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
+    items_in_songbook = fields.GenericRelation('ItemsInSongbook', content_type_field='item_type', object_id_field='item_id')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
@@ -360,11 +381,11 @@ class ItemsInSongbook(models.Model):
     """
     item_type = models.ForeignKey(ContentType)
     item_id = models.PositiveIntegerField()
-    item = generic.GenericForeignKey('item_type', 'item_id')
+    item = fields.GenericForeignKey('item_type', 'item_id')
     songbook = models.ForeignKey(Songbook)
     rank = models.IntegerField(_(u"position"))
 
-    def __unicode__(self):
+    def __str__(self):
         return _('"{item_type}" : "{item}", dans le carnet "{songbook}"'
                  ).format(item=self.item,
                           item_type=self.item_type,
@@ -423,10 +444,10 @@ class Task(models.Model):
     class Meta:
         unique_together = ('songbook', 'layout',)
 
-    def __unicode__(self):
-        return _(u"Carnet '{songbook}', mise en page n°{layout}".format(
+    def __str__(self):
+        return str(_(u"Carnet '{songbook}', mise en page n°{layout}".format(
                                     songbook=self.songbook.title,
-                                    layout=self.layout.id))
+                                    layout=self.layout.id)))
 
     def delete(self, *args, **kwargs):
         if self.state in (self.State.IN_PROCESS, self.State.QUEUED):

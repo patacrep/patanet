@@ -20,7 +20,7 @@ import os
 
 import re
 
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView
 from django.shortcuts import redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -28,13 +28,10 @@ from django.db.models import Q
 from django.conf import settings
 
 
-from generator.decorators import CurrentSongbookMixin
+from generator.decorators import CurrentSongbookMixin, LoginRequiredMixin
 from generator.models import Song, Artist
-from generator.songs import parse_song
 from generator.views.utils import LetterListView
 
-
-from patanet.settings import SONGS_LIBRARY_DIR
 
 class SongList(CurrentSongbookMixin, LetterListView):
     model = Song
@@ -50,11 +47,6 @@ class ArtistView(CurrentSongbookMixin, DetailView):
     template_name = "generator/show_artist.html"
 
 
-def _read_song(song):
-    path = os.path.join(SONGS_LIBRARY_DIR, 'songs', song.file_path)
-    return parse_song(path)
-
-
 class SongView(CurrentSongbookMixin, DetailView):
     context_object_name = "song"
     model = Song
@@ -67,7 +59,7 @@ class SongView(CurrentSongbookMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SongView, self).get_context_data(**kwargs)
-        context['content'] = _read_song(context['song'])
+        context['content'] = context['song'].content
         return context
 
 
@@ -144,3 +136,19 @@ def random_song(request):
                             kwargs={'artist': song['artist__slug'],
                                     'slug': song['slug']}
                             ))
+
+
+class UpdateSong(LoginRequiredMixin, UpdateView):
+    context_object_name = "song"
+    model = Song
+    template_name = "generator/update_song.html"
+
+    def get_queryset(self):
+        return Song.objects.filter(
+                        artist__slug=self.kwargs['artist'],
+                        slug=self.kwargs['slug'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['content'] = context['song'].content
+        return context

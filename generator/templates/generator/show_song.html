@@ -1,4 +1,4 @@
-{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}
+{% extends "generator/layout/full_layout.html" %} {% load i18n %} {% load filters %}{% load staticfiles %}
 
 {% block title %}<span class="song_title">{{ song.title }}</span>{% endblock %}
 
@@ -34,20 +34,69 @@
 		    </form>
     {% endif %}
 
-	<br/>
-	{% comment %}
-	{% get_language_info for song.language as lang %}
-	<p class="infos">en {{lang.name_local}}<br />
-	{% if song.capo != None %}
-		Utiliser un capodastre en position {{ song.capo }}.
-	{% else %}
-		Pas de capo pour ce chant
-	{% endif %}
-	</p>
-	{% endcomment %}
 	{% if user.is_authenticated %}
-		<div class="song_content">{{ content|safe }}</div>
-	{% endif %}
+        {% if content.more.failed %}
+            <strong style="color:red;font-size:1.5em">
+            The parsing of the song failed!
+            </strong>
+
+        {% endif %}
+        <div class="song_information"> 
+            <ul>
+                {% with content.data.cov|search_image:content as songcover %}
+                {% if songcover or content.data.album %}
+                    <li class="cover">
+                        {% if songcover %}
+                            <img src="{{ songcover }}">
+                        {% endif %}
+                        {% if content.data.album %}
+                            <span>
+                                {% blocktrans with album_name=content.data.album %}
+                                    <small>Album: </small><em>{{ album_name }}</em>
+                                {% endblocktrans %}
+                            <span>
+                        {% endif %}
+                    </li>
+                {% endif %}
+                {% endwith %}
+                {% if content.data.url %}
+                    <li>
+                        <a href="{{ content.data.url }}" class="song_url">{{ content.data.url }}</a>
+                    </li>
+                {% endif %}
+
+                {% comment %}
+                {% if content.data.languages %}
+                    <li>
+                        Languages:
+                        {% for language in content.data.languages %}
+                            {{language}}
+                        {% endfor %}
+                        get_language_info works only with 'fr' (not 'french')
+                        {% get_language_info for language as lang %}
+                            <p class="infos">en {{lang.name_local}}<br />
+                            </p>
+                    </li>
+                {% endif %}
+                {% endcomment %}
+            </ul>
+        </div>
+        {% if content.data.capo %}
+            <div class="capo">
+                {% blocktrans with capo=content.data.capo %}
+                    Capo: {{ capo }}
+                {% endblocktrans %}
+            </div>
+        {% endif %}
+        {{ content.render_defines }}
+        <div class="song_content">
+            {{ content.render_verses }}
+        </div>
+    {% else %}
+        <p>
+            <em>{% trans "Le contenu du chant est seulement accessible aux utilisateurs connectés." %}</em>
+        </p>
+    {% endif %}
 
 {% endblock %}
 

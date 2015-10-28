@@ -26,7 +26,7 @@ from generator.views import SongList, SongView, SongSearch, ArtistList, \
      UpdateSongbook, DeleteSongbook, NewLayout, DeleteLayout, LayoutList, ArtistView,\
      reset_password, reset_password_confirm, password_reset_done, \
      password_reset_complete, move_or_delete_items, login_complete, \
-    FlatPage, get_task_link
+     FlatPage, get_task_link, UpdateSong
 
 
 urlpatterns = patterns('generator.views',
@@ -34,9 +34,9 @@ urlpatterns = patterns('generator.views',
     url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/$',
                 SongView.as_view(),
                 name='show_song'),
-    # url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/edit$',
-                # MISSING_VIEW,
-                # name='edit_song'),
+    url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/edit$',
+                UpdateSong.as_view(),
+                name='edit_song'),
     # url(r'^songs/(?P<artist>[\w-]+)/(?P<slug>[\w-]+)/history$',
                 # MISSING_VIEW,
                 # name='song_history'),

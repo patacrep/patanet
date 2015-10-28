@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    Copyright (C) 2014 The Patacrep Team
+#    Copyright (C) 2015 The Patacrep Team
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -14,12 +14,14 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Functions for song file (.sg) rendering.
-"""
+from django.core.management.base import BaseCommand
 
-def parse_song(filename):
-    """Parse song 'filename', and return the corresponding HTML code."""
-    # TODO
-    with open(filename) as fd:
-        return fd.read()
+from generator.models import Artist, Songbook
+
+class Command(BaseCommand):
+    args = ""
+    help = "Remove all songs, artists and songbooks from the db"
+
+    def handle(self, *args, **options):
+        Artist.objects.all().delete()
+        Songbook.objects.all().delete()

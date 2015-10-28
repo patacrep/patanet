@@ -50,16 +50,17 @@ main{
     }
     
     .chord{
-        display:inline-block;
-    }
-    .chord-name{
-        display:block;
-        font-style:italic;
-        color:@hint-color;
-        sup{
-            font-size:0.9em;
-            top:-3px;
-        }
+        color: fadeout(@link-col, 20%);
+        line-height: 200%;
+        vertical-align: bottom;
+        display: inline-block;
+        position: relative;
+        top: -15px;
+        font-weight: normal;
+        width: 0;
+        white-space: nowrap;
+        font-size:90%;
+        font-family:@font-ss;
     }
     .chord-text{
         display:block;
@@ -90,21 +91,21 @@ main{
             content:"\00a0\00d7";
         }
     }
+    p.verse:before {
+        content: counter(verse-counter) ".";
+        counter-increment: verse-counter;
+        display: inline-block;
+        margin-left:-1.5em;
+        margin-right: 1.5em;
+        width: 0;
+        color:#333;
+    }
     
-    .song-content {
+    .song_content {
         counter-reset: verse-counter;
-        //font-family:serif;
-        .verse{
-            position:relative;
-            &:before {
-                color:@hint-color;
-                content: counter(verse-counter);
-                counter-increment: verse-counter;
-                position:absolute;
-                display:inline-block;
-                left: -.8em;
-            }
-        }
+        font-family: @font-s;
+        margin-left:2em;
+        line-height: 200%;
     }
     
     .transposition,
@@ -131,8 +132,62 @@ main{
     }
 }
 
-.song_content{
-    p{
-        white-space: pre;
+.song_information{
+    float: right;
+    padding: 6px;
+    background-color: #F8F8F8;
+    ul{
+        list-style: none;
+        padding: 0 1em;
+    }
+
+    .cover{
+        text-align: center;
+        position: relative;
+        min-height: 20px;
+        min-width: 200px;
+        
+        img{
+            max-width: 250px;
+        }
+
+        img ~ span{
+            position: absolute;
+            bottom: 3px;
+            right: 0;
+            left: 0;
+            display: inline-block;
+            background-color: #fff;
+            background-color: rgba(255,255,255,0.9);
+            opacity: 0;
+            padding: .4em;
+        }
+    }
+    &:hover .cover span{
+        opacity: 1;
+    }
+
+    .song_url{
+        display: inline-block;
+        max-width: 250px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: .9em;
+    }
+}
+
+div.chord-diagram{
+    position: relative;
+    padding: 1em .5em .5em;
+
+    &:before{
+        content: attr(data-name);
+        position: absolute;
+        left: 0;
+        right: 0;
+        top:0em;
+        text-align: center;
+
     }
 }

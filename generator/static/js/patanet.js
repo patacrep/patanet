@@ -392,6 +392,11 @@ $(function() {
             return;
         }
         var prefix_bg = letters.first().css('background-color');
+        if(prefix_bg == 'transparent'){
+            // if for some reason the CSS wasn't loaded
+            setTimeout(letters_overview_background, 500);
+            return;
+        }
         prefix_bg = prefix_bg.substr(0, prefix_bg.length - 4);
         $('.letter_overview a').each(function(){
             $this = $(this);
@@ -506,4 +511,5 @@ $(function() {
     toggle_see_more($('.item-container.songbook'));
     add_sorting_callback($('button.sort'));
     check_all_downloads();
+    chordDiagram.on_load();
 });

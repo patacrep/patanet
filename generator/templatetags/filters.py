@@ -26,15 +26,26 @@ register = template.Library()
 
 @register.filter
 def first_letter(name):
-	return letter_page(name)
+    return letter_page(name)
 
 @register.filter
 def intersection_id(objects, ids):
     object_ids = [obj.id for obj in objects]
     return set.intersection(set(ids), set(object_ids))
 
+@register.filter
+def search_image(image, song):
+    """Get the path to an image file (or None if not found)"""
+    if not image:
+        return None
+    arg = image.argument
+    return song.search_image(image.argument)
+
+## Template tags
+##############################################
+
 @register.simple_tag
 def latex_free_attributes():
-	attributes = latex_free_dict()
-	attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
-	return attr
+    attributes = latex_free_dict()
+    attr = ' '.join("{}='{!s}'".format(key,val) for (key,val) in attributes.items())
+    return attr

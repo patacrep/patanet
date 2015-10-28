@@ -1,0 +1,10 @@
+<div 
+    class="chord-diagram" 
+    data-shift="{{ chord.basefret|default:0 }}" 
+    data-frets="{% include 'generator/widgets/chord_strings.html' with strings=chord.frets %}" 
+    {% if chord.fingers %}
+    data-fingers="{% include 'generator/widgets/chord_strings.html' with strings=chord.fingers %}"
+    {% endif %}
+    data-name="{{ chord.pretty_key }}"
+    >
+</div>
