@@ -1,7 +1,7 @@
 Patanet
 ============
 
-Web interface for songbook generation, as part of the [patacrep](http://www.patacrep.com/fr/index.php) project.
+Web interface for songbook generation, as part of the [patacrep](http://www.patacrep.fr/fr/index.php) project.
 
 Build with Django 1.7, only suport python 2.7 for now, should be quickly updated to Python >= 3.3.
 
